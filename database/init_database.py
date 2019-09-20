@@ -1,15 +1,10 @@
 from pymongo import *
 from flask import g
-
-###################################
-DB_HOST = 'localhost:27017'
-DB_ID = 'root'
-DB_PW = 'imlisgod'
-###################################
+from db_info import *
 
 def get_db():
     if 'db_client' not in g:
-        db_client = MongoClient('mongodb://%s:%s@%s' %(DB_ID, DB_PW, DB_HOST))
+        db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
         g.db_client = db_client
 
     if 'db' not in g:
