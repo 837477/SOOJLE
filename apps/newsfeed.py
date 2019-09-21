@@ -15,7 +15,7 @@ def get_newsfeed(type, tags, date, pagenation, page):
 	else:
 		date = datetime.strptime(date, '%Y-%m-%d')
 
-	result = find_posts(g.db, None, tag_list, date, pagenation)
+	result = find_posts(g.db, None, tag_list, date, pagenation, page)
 
 	return jsonify(
 		posts = dumps(result),
