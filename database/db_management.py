@@ -29,5 +29,5 @@ def find_user(db, user_id):
 #뉴스피드 관련############################################
 
 def find_posts(db, type, tags, date, pagenation, page):
-	result = db['posts'].find({'$or': [{'tag': {'$in': tags}}, {'date': {'$lte': date}}] }).skip((page-1)*pagenation).limit(page*pagenation)
+	result = db['posts'].find({'$or': [{'tag': {'$in': tags}}, {'date': {'$lte': date}}]}).skip((page-1)*pagenation).limit(page*pagenation)
 	return result
