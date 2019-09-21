@@ -22,7 +22,7 @@ from init_database import *
 from global_func import *
 ###########################################
 #APPS
-import main, auth, error
+import main, auth, newsfeed, error
 
 application = Flask(__name__, instance_relative_config=True)
 cors = CORS(application)
@@ -38,6 +38,7 @@ def main_app(test_config = None):
 	#페이지들
 	application.register_blueprint(main.BP)
 	application.register_blueprint(auth.BP)
+	application.register_blueprint(newsfeed.BP)
 
 @application.before_request
 def before_request():

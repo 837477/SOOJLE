@@ -16,7 +16,7 @@ def sign_in_up():
 	USER_ID = request.form['id']
 	USER_PW = request.form['pw']
 
-	user = select_user(g.db, USER_ID)
+	user = find_user(g.db, USER_ID)
 
 	if user is None:
 		sejong_api_result = dosejong_api(USER_ID, USER_PW)
@@ -33,7 +33,7 @@ def sign_in_up():
 				sejong_api_result['major']
 				)
 
-	user = select_user(g.db, USER_ID)
+	user = find_user(g.db, USER_ID)
 	
 	if check_password_hash(user['user_pw'], USER_PW):
 		return jsonify(
