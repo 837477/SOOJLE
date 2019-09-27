@@ -1,6 +1,7 @@
 from bson.objectid import ObjectId
 from global_func import *
-from datetime import datetime
+from datetime import datetime, timedelta
+import pymongo
 
 #######################################################
 #사용자 관련#############################################
@@ -21,19 +22,17 @@ def find_user(db, user_id):
 
 #특정 유저 토픽 불러오기
 def find_user_topic(db, user_id):
-	result = db['user'].find_one({'user_id': user_id},
-		{'_id':0, 'topic':1})
+	result = db['user'].find_one({'_id': ObjectId(user_id)}, {'_id':0, 'topic':1})
 	return result['topic']
 
 #특정 유저 태그 불러오기
 def find_user_tag(db, user_id):
-	result = db['user'].find_one({'user_id': user_id},
-		{'_id':0, 'tag':1})
+	result = db['user'].find_one({'_id': ObjectId(user_id)}, {'_id':0, 'tag':1})
 	return result['tag']
 
 #유저와 문서의 유사도 갱신
 def update_user_post_similarity(db, user_id, similarity):
-	db['user'].update({'_id': user_id}, {'similarity': similarity})
+	db['user'].update({'_id': ObjectId(user_id)}, {'similarity': similarity})
 	return "success"
 
 #######################################################
@@ -42,11 +41,17 @@ def find_newsfeed(db, type, tags, date, pagenation, page):
 	result = db['test_posts1'].find({'$or': [{'tag': {'$in': tags}}, {'date': {'$lte': date}}]}).skip((page-1)*pagenation).limit(page*pagenation)
 	return result
 
+def find_recommendation_newsfeed(db, num):
+	now_date = datetime.now()
+	date = now_date + timedelta(days=-90)
+	result = db['test_posts1'].find({'date': {'$gte': date}}).sort([('interests', -1)]).limit(num)
+	return result
+
 #######################################################
 #포스트 관련#############################################
 #포스트 전체 가져오기(post_obi만 가져옴.)
 def find_all_posts(db):
-	result = db['posts'].find({}, {'_id': 1})
+	result = db['test_posts1'].find({}, {'_id': 1})
 	return list(result)
 
 #포스트 좋아요

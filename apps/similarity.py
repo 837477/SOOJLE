@@ -1,13 +1,17 @@
 from flask import *
+from pymongo import *
 from db_management import *
 from numpy import dot
 from numpy.linalg import norm
 import numpy
 
+from global_func import *
 from db_info import *
 
 BP = Blueprint('similarity', __name__)
 
+@BP.route('/test')
+@logging_time
 def similarity_run():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client['soojle']
@@ -36,7 +40,7 @@ def similarity(user_id, post_id, except_ = 0):
 	TOS = ToS(user_id, post_id)
 	TAS = TaS(user_id, post_id)
 	IS = Is(post_id, 0.5, 0.5, 1)
-	random = rand_view = numpy.random.rand(0, 1)
+	random = rand_view = numpy.random.random()
 
 	return TOS * (1 + TAS) + IS + random + except_
 

@@ -30,5 +30,14 @@ def get_newsfeed(type=None, tags=None, date=None, pagenation=None, page=None):
 		posts = dumps(result),
 		result = "success")
 
+@BP.route('/get_recommendation_newsfeed/<int:num>')
+def get_recommendation_newsfeed(num):
+	result = find_recommendation_newsfeed(g.db, num)
+
+	return jsonify(
+		posts = dumps(result),
+		result = "success")
+
+
 #############################################
 #############################################
