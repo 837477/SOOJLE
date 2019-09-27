@@ -19,21 +19,12 @@ def sign_in_up():
 	user = find_user(g.db, USER_ID)
 
 	if user is None:
-		sejong_api_result = dosejong_api(USER_ID, USER_PW)
-		if not sejong_api_result['result']:
-			sejong_api_result = sjlms_api(USER_ID, USER_PW)
-		
-		if not sejong_api_result['result']:
-			return jsonify(result = "not_sejong")
-		else:
-			insert_user(g.db,
-				USER_ID,
-				generate_password_hash(USER_PW),
-				sejong_api_result['name'],
-				sejong_api_result['major']
-				)
+		result = refresh_sejong_portal(USER_ID, USER_PW)
 
-	user = find_user(g.db, USER_ID)
+	if result == "success":
+		user = find_user(g.db, USER_ID)
+	else:
+		return jsonify(result = "not sejong")
 	
 	if check_password_hash(user['user_pw'], USER_PW):
 		return jsonify(
@@ -42,14 +33,29 @@ def sign_in_up():
 				identity = USER_ID,
 				expires_delta=False)
 			)
-	else:
-		return jsonify(result = "incorrect_password")
+	
+	result = refresh_sejong_portal(USER_ID, USER_PW)
 
+	if result == "success":
+		user = find_user(g.db, USER_ID)
+	else:
+		return jsonify(result = "not sejong")
+
+	if check_password_hash(user['user_pw'], USER_PW):
+		return jsonify(
+			result = "success",
+			access_token = create_access_token(
+				identity = USER_ID,
+				expires_delta=False)
+			)
+	else:
+		return jsonify(result = "pw incorrect")
+		
 #회원정보 반환
-@BP.route('/get_user_info')
+@BP.route('/get_userinfo')
 @jwt_required
 def get_user_info():
-	user = select_user(g.db, 'get_jwt_identity()')
+	user = find_user(g.db, get_jwt_identity())
 
 	if user is None: abort(400)
 
@@ -59,3 +65,24 @@ def get_user_info():
 		user_name = user['user_name'],
 		user_major = user['user_major']
 		)
+
+###############################################
+###############################################
+def refresh_sejong_portal(USER_ID, USER_PW):
+	sejong_api_result = dosejong_api(USER_ID, USER_PW)
+	if not sejong_api_result['result']:
+		sejong_api_result = sjlms_api(USER_ID, USER_PW)
+		if not sejong_api_result['result']:
+			sejong_api_result = uis_api(USER_ID, USER_PW)
+		
+	if not sejong_api_result['result']:
+		return "not sejong"
+	else:
+		insert_user(g.db,
+			USER_ID,
+			generate_password_hash(USER_PW),
+			sejong_api_result['name'],
+			sejong_api_result['major']
+			)
+
+	return "success"
