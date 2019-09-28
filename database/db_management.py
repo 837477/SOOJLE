@@ -48,11 +48,24 @@ def find_user_tag(db, user_id):
 	result = db['user'].find_one({'_id': ObjectId(user_id)}, {'_id':0, 'tag':1})
 	return result['tag']
 
+#특정 유저 similarity 불러오기
+def find_user_similarity(db, user_id):
+	result = db['user'].find_one({'user_id': user_id}, {'similarity': 1})
+	return result['similarity']
+
 #유저와 문서의 유사도 갱신
 def update_user_post_similarity(db, user_id, similarity):
 	db['user'].update({'_id': ObjectId(user_id)}, {'$set': {'similarity': similarity}})
 	return "success"
 
+#유저가 접근한 게시물 갱신
+def update_post_user_access(db, user_id, access_obj):
+	item = []
+	item.append(access_obj)
+
+	db['user'].update({'user_id': user_id}, {'item': item})
+
+	return "success"
 #######################################################
 #뉴스피드 관련############################################
 #각각의 뉴스피드 반환 (공지, 알바구인 등등)
@@ -61,9 +74,14 @@ def find_newsfeed(db, type, tags, date, pagenation, page):
 	return result
 
 #인기 뉴스피드
-def find_recommendation_newsfeed(db, num):
+def find_popularity_newsfeed(db, num):
 	result = db['test_posts1'].find({}).sort([('date', -1)]).limit(num).sort([('interests', -1)])
 	return result
+
+#추천 뉴스피드
+def find_recommendation_newsfeed(db, sort_similarity):
+	result = db['test_posts1'].find({'$or': sort_similarity})
+	return dumps(result)
 
 #######################################################
 #포스트 관련#############################################

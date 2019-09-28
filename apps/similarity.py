@@ -51,7 +51,8 @@ def similarity_run():
 			result = TOS * (1 + TAS) + IS + RANDOM
 
 			#해당 포스트와, 계산된 sim의 결과를 사전으로 만듬.
-			sim_dict[str(POST['_id'])] = result
+			sim_dict['_id'] = POST['_id']
+			sim_dict['similarity'] = result
 			#유저의 sim 리스트목록에 추가.
 			sim_result.append(sim_dict)
 

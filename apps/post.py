@@ -28,6 +28,22 @@ def post_view(obi):
 
 	return jsonify(result = result)
 
+#유저가 접근 게시물 등록
+@BP.route('/post_user_access/<string:obi>')
+def post_user_access(obi):
+	access_obj = {}
+	
+	topic = find_post_topic(g.db, obi)
+	tag = find_post_tag(g.db, obi)
+
+	access_obj['_id'] = ObjectId(obi)
+	access_obj['topic'] = topic
+	access_obj['tag'] = tag
+
+	update_post_user_access(g.db, user_id, access_obj)
+
+
+
 ################################################
 ################################################
 
