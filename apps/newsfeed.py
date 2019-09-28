@@ -6,11 +6,6 @@ from datetime import datetime
 
 BP = Blueprint('newsfeed', __name__)
 
-@BP.route('/get_newsfeed')
-@BP.route('/get_newsfeed/<int:pagenation>/<int:page>')
-@BP.route('/get_newsfeed/<int:type>/<int:pagenation>/<int:page>')
-@BP.route('/get_newsfeed/<string:tags>/<int:pagenation>/<int:page>')
-@BP.route('/get_newsfeed/<int:type>/<string:tags>/<int:pagenation>/<int:page>')
 @BP.route('/get_newsfeed/<int:type>/<string:tags>/<string:date>/<int:pagenation>/<int:page>')
 def get_newsfeed(type=None, tags=None, date=None, pagenation=None, page=None):
 	
@@ -31,7 +26,7 @@ def get_newsfeed(type=None, tags=None, date=None, pagenation=None, page=None):
 		result = "success")
 
 @BP.route('/get_recommendation_newsfeed/<int:num>')
-def get_recommendation_newsfeed(num):
+def get_recommendation_newsfeed(num=200):
 	result = find_recommendation_newsfeed(g.db, num)
 
 	return jsonify(

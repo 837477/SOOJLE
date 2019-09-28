@@ -15,3 +15,12 @@ def close_db():
     db_client = g.pop('db_client', None)
     if db_client is not None:
         db_client.close()
+
+def init_database():
+    db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+    db = db_client['soojle']
+
+    db['variable'].insert({'key': 'highest_view', 'value': 0})
+    db['variable'].insert({'key': 'highest_fav_cnt', 'value': 0})
+
+    db_client.close()

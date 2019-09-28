@@ -35,6 +35,10 @@ application.config.update(
 jwt = JWTManager(application)
 
 def main_app(test_config = None):
+	#디비 초기 설정
+	#init_database()
+	#백그라운드 작업
+	schedule_init()
 	#페이지들
 	application.register_blueprint(main.BP)
 	application.register_blueprint(auth.BP)
