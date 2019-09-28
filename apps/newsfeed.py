@@ -36,8 +36,8 @@ def get_popularity_newsfeed(num=200):
 		result = "success")
 
 #추천 뉴스피드
-@BP.route('/get_recommendation_newsfeed')
-def get_recommendation_newsfeed():
+@BP.route('/get_recommendation_newsfeed/<int:num>')
+def get_recommendation_newsfeed(num):
 	#해당 유저의 유사도를 가져온다.
 	user_similarity = find_user_similarity(g.db, "16011092")
 
@@ -52,7 +52,7 @@ def get_recommendation_newsfeed():
 		del post['similarity']
 
 	#정렬된 post_obi를 db에서 찾기 (or연산임 해당 obi들이 있는건 그냥 다 가지고옴)
-	result = find_recommendation_newsfeed(g.db, sort_similarity[:100])
+	result = find_recommendation_newsfeed(g.db, sort_similarity[:num])
 
 	return jsonify(
 		posts = result)
