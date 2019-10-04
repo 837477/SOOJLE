@@ -28,34 +28,34 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, t
 
 	return dumps(result)
 
+#특정 유저, 특정 필드 목록 반환 (원하는 필드를 1하면 그 필드들만 반환됨)
+def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None):
+	
+	show_dict = {'_id': 0}
+	if _id is not None:
+		show_dict['_id'] = 1
+	if user_id is not None:
+		show_dict['user_id'] = 1
+	if user_pw is not None:
+		show_dict['user_pw'] = 1
+	if user_name is not None:
+		show_dict['user_name'] = 1
+	if user_major is not None:
+		show_dict['user_major'] = 1
+	if topic is not None:
+		show_dict['topic'] = 1
+	if tag is not None:
+		show_dict['tag'] = 1
+	if fav_list is not None:
+		show_dict['fav_list'] = 1
+
+	result = db['user'].find_one({'user_id': user_id}, show_dict)
+
+	return result
+
 #유저 생성
 def insert_user(db, user_id, user_pw, user_name, user_major):
 	result = db['user'].insert({'user_id': user_id, 'user_pw': user_pw, 'user_name': user_name, 'user_major': user_major})
-	return "success"
-
-#특정 유저 찾기
-def find_user(db, user_id):
-	result = db['user'].find_one({'user_id': user_id}, {'_id': 0, 'user_id': 1, 'user_pw': 1, 'user_name': 1, 'user_major': 1})
-	return result
-
-#특정 유저 토픽 불러오기
-def find_user_topic(db, user_id):
-	result = db['user'].find_one({'_id': ObjectId(user_id)}, {'_id':0, 'topic':1})
-	return result['topic']
-
-#특정 유저 태그 불러오기
-def find_user_tag(db, user_id):
-	result = db['user'].find_one({'_id': ObjectId(user_id)}, {'_id':0, 'tag':1})
-	return result['tag']
-
-#특정 유저 similarity 불러오기
-def find_user_similarity(db, user_id):
-	result = db['user'].find_one({'user_id': user_id}, {'similarity': 1})
-	return result['similarity']
-
-#유저와 문서의 유사도 갱신
-def update_user_post_similarity(db, user_id, similarity):
-	db['user'].update({'_id': ObjectId(user_id)}, {'$set': {'similarity': similarity}})
 	return "success"
 
 #유저가 접근한 게시물 갱신
@@ -77,11 +77,6 @@ def find_newsfeed(db, type, tags, date, pagenation, page):
 def find_popularity_newsfeed(db, num):
 	result = db['test_posts1'].find({}).sort([('date', -1)]).limit(num).sort([('interests', -1)])
 	return result
-
-#추천 뉴스피드
-def find_recommendation_newsfeed(db, sort_similarity):
-	result = db['test_posts1'].find({'$or': sort_similarity})
-	return dumps(result)
 
 #######################################################
 #포스트 관련#############################################

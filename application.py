@@ -22,7 +22,7 @@ from init_database import *
 from global_func import *
 ###########################################
 #APPS
-import main, auth, newsfeed, error, similarity
+import main, auth, newsfeed, error
 
 application = Flask(__name__, instance_relative_config=True)
 cors = CORS(application)
@@ -41,7 +41,6 @@ def main_app(test_config = None):
 	application.register_blueprint(main.BP)
 	application.register_blueprint(auth.BP)
 	application.register_blueprint(newsfeed.BP)
-	application.register_blueprint(similarity.BP)
 
 @application.before_request
 def before_request():

@@ -16,7 +16,7 @@ def sign_in_up():
 	USER_ID = request.form['id']
 	USER_PW = request.form['pw']
 
-	user = find_user(g.db, USER_ID)
+	user = find_user(g.db, user_id=1, user_pw=1)
 
 	if user is None:
 		result = refresh_sejong_portal(USER_ID, USER_PW)
