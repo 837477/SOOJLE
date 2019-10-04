@@ -1,12 +1,14 @@
 from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
-from global_func import *
 from datetime import datetime, timedelta
+#####################################
+from global_func import *
+#####################################
 
 #######################################################
 #사용자 관련#############################################
 #전체 유저 목록 반환 (원하는 필드를 1하면 그 필드들만 반환됨)
-def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None):
+def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, newsfeed_list=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None:
@@ -23,13 +25,19 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, t
 		show_dict['tag'] = 1
 	if fav_list is not None:
 		show_dict['fav_list'] = 1
+	if view_list is not None:
+		show_dict['view_list'] = 1
+	if search_list is not None:
+		show_dict['search_list'] = 1
+	if newsfeed_list is not None:
+		show_dict['newsfeed_list'] = 1
 
 	result = db['user'].find({}, show_dict)
 
 	return dumps(result)
 
 #특정 유저, 특정 필드 목록 반환 (원하는 필드를 1하면 그 필드들만 반환됨)
-def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None):
+def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, newsfeed_list=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None:
@@ -48,6 +56,12 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_maj
 		show_dict['tag'] = 1
 	if fav_list is not None:
 		show_dict['fav_list'] = 1
+	if view_list is not None:
+		show_dict['view_list'] = 1
+	if search_list is not None:
+		show_dict['search_list'] = 1
+	if newsfeed_list is not None:
+		show_dict['newsfeed_list'] = 1
 
 	result = db['user'].find_one({'user_id': user_id}, show_dict)
 
@@ -58,14 +72,43 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 	result = db['user'].insert({'user_id': user_id, 'user_pw': user_pw, 'user_name': user_name, 'user_major': user_major})
 	return "success"
 
-#유저가 접근한 게시물 갱신
-def update_post_user_access(db, user_id, access_obj):
-	item = []
-	item.append(access_obj)
-
-	db['user'].update({'user_id': user_id}, {'item': item})
+#######################fav_list########################
+#유저 fav_list에 요소 추가
+def update_user_fav_list_push(db, _id, fav_obj):
+	db['user'].update(
+		{'_id': ObjectId(_id)},
+		{'$push': {'fav_list': fav_obj}}
+	)
 
 	return "success"
+#유저 fav_list에 요소 삭제 (좋아요 취소한 경)
+def update_user_fav_list_pull(db, _id, fav_obj_id):
+	db['user'].update(
+		{'_id': _id},
+		{'$pull': {'fav_list': {'_id': fav_obj_id}}}
+	)
+
+	return "success"
+#유저 fav_list 중복 체크용
+def check_user_fav_list(db, _id, fav_obj_id):
+	result = db['user'].find_one(
+		{'_id': _id}, 
+		{'fav_list': {'$elemMatch': {'_id': ObjectId(fav_obj_id)}}}
+	)
+	return result
+#######################################################
+
+#######################view_list#######################
+#유저 view_list에 요소 추가
+def update_user_view_list_push(db, _id, view_obj):
+	db['user'].update(
+		{'_id': ObjectId(_id)},
+		{'$push': {'view_list': view_obj}}
+	)
+
+	return "success"
+#######################################################
+	
 #######################################################
 #뉴스피드 관련############################################
 #각각의 뉴스피드 반환 (공지, 알바구인 등등)
@@ -124,42 +167,81 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 		result = db['test_posts1'].find({}, show_dict).sort([('date', -1)]).skip(skip_).limit(limit_)
 
 	return dumps(result)
+#특정 포스트 가져오기 (가져오고 싶은 필드만 1로 지정하여 보내주면 됨)
+def find_post(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, interests=None):
+
+	show_dict = {'_id': 0}
+
+	if _id is not None:
+		show_dict['_id'] = 1
+	if title is not None:
+		show_dict['title'] = 1
+	if date is not None:
+		show_dict['date'] = 1
+	if post is not None:
+		show_dict['post'] = 1
+	if tag is not None:
+		show_dict['tag'] = 1
+	if img is not None:
+		show_dict['img'] = 1
+	if url is not None:
+		show_dict['url'] = 1
+	if hashed is not None:
+		show_dict['hashed'] = 1
+	if info is not None:
+		show_dict['info'] = 1
+	if view is not None:
+		show_dict['view'] = 1
+	if fav_cnt is not None:
+		show_dict['fav_cnt'] = 1
+	if title_token is not None:
+		show_dict['title_token'] = 1
+	if token is not None:
+		show_dict['token'] = 1
+	if topic is not None:
+		show_dict['topic'] = 1
+	if interests is not None:
+		show_dict['interests'] = 1
+
+	result = db['test_posts4'].find_one({'_id': ObjectId(_id)}, show_dict)
+
+	return result
 
 #포스트 좋아요
-def update_post_like(db, post_obi):
-	db['posts'].update({'_id': ObjectId(post_obi)}, {'$inc': {'fav_cnt': 1}})
-	return "success"
+def update_post_like(db, post):
+	#해당 포스트를 좋아요 수 하나 카운트, popularity 갱신.
+	db['test_posts4'].update_many(
+		{'_id': ObjectId(post['_id'])}, 
+		{
+			'$inc': {'fav_cnt': 1}, 
+			'$set': {'popularity': (post['fav_cnt']+1)*3 + post['view']}
+		}
+	)
 
+	return "success"
 #포스트 좋아요 취소
-def update_post_unlike(db, post_obi):
-	db['posts'].update({'_id': ObjectId(post_obi)}, {'$inc': {'fav_cnt': -1}})
+def update_post_unlike(db, post):
+	#해당 포스트를 좋아요 수 -1 카운트, popularity 갱신.
+	db['test_posts4'].update_many(
+		{'_id': ObjectId(post['_id'])}, 
+		{
+			'$inc': {'fav_cnt': -1}, 
+			'$set': {'popularity': (post['fav_cnt']-1)*3 + post['view']}
+		}
+	)
+
 	return "success"
 
 #포스트 조회수 올리기
-def update_post_view(db, post_obi):
-	db['posts'].update({'_id': ObjectId(post_obi)}, {'$inc': {'view': 1}})
+def update_post_view(db, post):
+	db['test_posts4'].update_one(
+		{'_id': ObjectId(post['_id'])}, 
+		{
+			'$inc': {'view': 1, 'popularity': 1}
+		}
+	)
+
 	return "success"
-
-#단일 포스트 조회수 불러오기
-def find_post_view(db, post_obi):
-	result = db['test_posts1'].find_one({'_id': ObjectId(post_obi)}, {'_id':0, 'view':1})
-	return result['view']
-
-#단일 포스트 토픽 목록 불러오기
-def find_post_topic(db, post_obi):
-	result = db['test_posts1'].find_one({'_id': ObjectId(post_obi)}, {'_id':0, 'topic':1})
-	return result['topic']
-
-#단일 포스트 태그 목록 불러오기
-def find_post_tag(db, post_obi):
-	result = db['test_posts1'].find_one({'_id': ObjectId(post_obi)}, {'_id':0, 'tag':1})
-	return result['tag']
-
-#단일 포스트 좋아요 수 불러오기
-def find_post_fav_cnt(db, post_obi):
-	result = db['test_posts1'].find_one({'_id': ObjectId(post_obi)}, {'_id':0, 'fav_cnt':1})
-	return result['fav_cnt']
-
 ###############################################
 #variable###################################### 
 #정적 테이블 변수 불러오기

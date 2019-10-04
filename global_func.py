@@ -29,6 +29,8 @@ def schedule_init():
 
 #######################################################
 #백그라운드 프로세스#######################################
+
+#포스트의 최고 좋아요, 조회수 갱신
 def update_posts_highest():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client['soojle']
@@ -40,7 +42,6 @@ def update_posts_highest():
 	update_posts_highest_fav_cnt(db)
 
 	db_client.close()
-
 
 #######################################################
 #전역 함수###############################################

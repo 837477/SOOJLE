@@ -1,14 +1,17 @@
 from flask import *
 from bson.json_util import dumps
-from db_management import *
-from global_func import *
 from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm
 import operator
-
+#####################################
+from db_management import *
+from global_func import *
+#####################################
 BP = Blueprint('newsfeed', __name__)
+#####################################
 
+#####################################
 @BP.route('/get_newsfeed/<int:type>/<string:tags>/<string:date>/<int:pagenation>/<int:page>')
 def get_newsfeed(type=None, tags=None, date=None, pagenation=None, page=None):
 	
