@@ -8,6 +8,7 @@ from flask_cors import CORS
 sys.path.insert(0,'./')
 sys.path.insert(0,'../')
 sys.path.insert(0,'../SJ_Auth')
+sys.path.insert(0,'../IML_Tokenizer/src')
 sys.path.insert(0,'./database')
 sys.path.insert(0,'./apps')
 sys.path.insert(0,'/home/iml/')
@@ -22,7 +23,7 @@ from init_database import *
 from global_func import *
 ###########################################
 #APPS
-import main, auth, newsfeed, post, error
+import main, auth, newsfeed, post, search, error, interest
 
 application = Flask(__name__, instance_relative_config=True)
 cors = CORS(application)
@@ -36,12 +37,14 @@ jwt = JWTManager(application)
 
 def main_app(test_config = None):
 	#백그라운드 작업
-	schedule_init()
+	#schedule_init()
 	#페이지들
 	application.register_blueprint(main.BP)
 	application.register_blueprint(auth.BP)
 	application.register_blueprint(newsfeed.BP)
 	application.register_blueprint(post.BP)
+	application.register_blueprint(search.BP)
+	application.register_blueprint(interest.BP)
 
 @application.before_request
 def before_request():

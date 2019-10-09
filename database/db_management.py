@@ -72,7 +72,7 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 	result = db['user'].insert({'user_id': user_id, 'user_pw': user_pw, 'user_name': user_name, 'user_major': user_major})
 	return "success"
 
-#######################fav_list########################
+#fav_list####################
 #유저 fav_list에 요소 추가
 def update_user_fav_list_push(db, _id, fav_obj):
 	db['user'].update(
@@ -96,18 +96,27 @@ def check_user_fav_list(db, _id, fav_obj_id):
 		{'fav_list': {'$elemMatch': {'_id': ObjectId(fav_obj_id)}}}
 	)
 	return result
-#######################################################
+#############################
 
-#######################view_list#######################
+#view_list###################
 #유저 view_list에 요소 추가
 def update_user_view_list_push(db, _id, view_obj):
 	db['user'].update(
 		{'_id': ObjectId(_id)},
 		{'$push': {'view_list': view_obj}}
 	)
-
 	return "success"
-#######################################################
+#############################
+
+#search_list###################
+#유저 search_list에 요소 추가
+def update_user_search_list_push(db, _id, search_keyword):
+	db['user'].update(
+		{'_id': ObjectId(_id)},
+		{'$push': {'search_list': {'$each': search_keyword}}}
+	)
+	return "success"
+#############################
 	
 #######################################################
 #뉴스피드 관련############################################
@@ -118,7 +127,7 @@ def find_newsfeed(db, type, tags, date, pagenation, page):
 
 #인기 뉴스피드
 def find_popularity_newsfeed(db, num):
-	result = db['test_posts1'].find({}).sort([('date', -1)]).limit(num).sort([('interests', -1)])
+	result = db['test_posts4'].find({}).sort([('date', -1)]).limit(num).sort([('interests', -1)])
 	return result
 
 #######################################################
@@ -161,10 +170,10 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 
 	if limit_ is None:
 		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts1'].find({}, show_dict).sort([('date', -1)]).skip(skip_)
+		result = db['test_posts4'].find({}, show_dict).sort([('date', -1)]).skip(skip_)
 	else:
 		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts1'].find({}, show_dict).sort([('date', -1)]).skip(skip_).limit(limit_)
+		result = db['test_posts4'].find({}, show_dict).sort([('date', -1)]).skip(skip_).limit(limit_)
 
 	return dumps(result)
 #특정 포스트 가져오기 (가져오고 싶은 필드만 1로 지정하여 보내주면 됨)
@@ -256,7 +265,7 @@ def update_variable(db, key, value):
 
 #조회수 랭킹1위 수 갱신
 def update_posts_highest_view(db):
-	highest_view = db['test_posts1'].find({}, {'view': 1}).sort([('view', -1)]).limit(1)
+	highest_view = db['test_posts4'].find({}, {'view': 1}).sort([('view', -1)]).limit(1)
 	highest_view = list(highest_view)[0]['view']
 
 	highest_view_id = db['variable'].find_one({'key': 'highest_view'}, {'_id': 1})
@@ -271,7 +280,7 @@ def update_posts_highest_view(db):
 
 #좋아요 랭킹1위 수 갱신
 def update_posts_highest_fav_cnt(db):
-	highest_fav_cnt = db['test_posts1'].find({}, {'fav_cnt':1}).sort([('fav_cnt', -1)]).limit(1)
+	highest_fav_cnt = db['test_posts4'].find({}, {'fav_cnt':1}).sort([('fav_cnt', -1)]).limit(1)
 	highest_fav_cnt = list(highest_fav_cnt)[0]['fav_cnt']
 
 	highest_fav_cnt_id = db['variable'].find_one({'key': 'highest_fav_cnt'}, {'_id': 1})

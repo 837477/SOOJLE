@@ -20,7 +20,7 @@ def schedule_init():
 
 	#매 시간마다 실행
 	# weeks, days, hours, minutes, seconds
-	scheduler.add_job(func = update_posts_highest, trigger = "interval", seconds = 10, timezone = t_zone)
+	#scheduler.add_job(func = update_posts_highest, trigger = "interval", seconds = 10, timezone = t_zone)
 	
 	# start_date='2010-10-10 09:30', end_date='2014-06-15 11:00'
 	scheduler.start()
@@ -31,17 +31,17 @@ def schedule_init():
 #백그라운드 프로세스#######################################
 
 #포스트의 최고 좋아요, 조회수 갱신
-def update_posts_highest():
-	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
-	db = db_client['soojle']
+#def update_posts_highest():
+	#db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+	#db = db_client['soojle']
 
 	#모든 포스트 중에서 가장 높은 view수 갱신
-	update_posts_highest_view(db)
+	#update_posts_highest_view(db)
 
 	#모든 포스트 중에서 가장 높은 fav_cnt수 갱신
-	update_posts_highest_fav_cnt(db)
+	#update_posts_highest_fav_cnt(db)
 
-	db_client.close()
+	#db_client.close()
 
 #######################################################
 #전역 함수###############################################
