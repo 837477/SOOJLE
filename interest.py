@@ -1,7 +1,6 @@
 from flask import *
 from flask_jwt_extended import *
 from werkzeug import *
-##########################################
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from operator import itemgetter
@@ -14,13 +13,16 @@ from global_func import *
 import jpype
 from tknizer import get_tk
 ##########################################
+import LDA
+##########################################
 BP = Blueprint('interest', __name__)
 #####################################
 
+#사용자 관심도 측정
 @BP.route('/testtest/<int:num>')
 def measurement_run(num):
 	#사용자의 fav_list, view_list, search_list를 가져온다.
-	USER = find_user(g.db, user_id="XXXXXXX", fav_list=1, view_list=1, search_list=1)
+	USER = find_user(g.db, user_id="16011092", fav_list=1, view_list=1, search_list=1)
 
 	#시간순 정렬(최신순)
 	fav_list = sorted(USER['fav_list'], key=itemgetter('date'), reverse=True)
@@ -57,6 +59,7 @@ def measurement_run(num):
 	fav_tag = pd.DataFrame(fav_tag, columns = ['tags'])
 	fav_tag = fav_tag.groupby('tags').size() * 4
 
+
 	##################사용자가 접근한 게시물##################
 
 	###LDA Format###
@@ -69,4 +72,7 @@ def measurement_run(num):
 	###Tag Format###
 	view_tag = pd.DataFrame(view_tag, columns = ['tags'])
 	view_tag = view_tag.groupby('tags').size() * 3
+
+	###############사용자가 검색을 수행한 키워드###############
+
 

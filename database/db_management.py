@@ -11,7 +11,7 @@ from global_func import *
 def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, newsfeed_list=None):
 	
 	show_dict = {'_id': 0}
-	if _id is not None:
+	if _id is not None: 
 		show_dict['_id'] = 1
 	if user_id is not None:
 		show_dict['user_id'] = 1
@@ -72,6 +72,11 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 	result = db['user'].insert({'user_id': user_id, 'user_pw': user_pw, 'user_name': user_name, 'user_major': user_major})
 	return "success"
 
+#유저 관심도 초기화
+def update_unset_user_interest(db, _id):
+	db['user'].update({'_id': ObjectId(_id)}, {'$unset': {'fav_list':1, 'view_list':1, 'search_list':1 }})
+	return "success"
+
 #fav_list####################
 #유저 fav_list에 요소 추가
 def update_user_fav_list_push(db, _id, fav_obj):
@@ -117,7 +122,19 @@ def update_user_search_list_push(db, _id, search_keyword):
 	)
 	return "success"
 #############################
-	
+
+
+#######################################################
+#검색 관련###############################################
+def find_token(db, token_list):
+	result = db['test_posts5'].find({'$or': [ {'title_token': {'$all': token_list}}, {'token': {'$all': token_list}} ]}).limit(200)
+
+	print(result)
+	#result = db['test_posts5'].find({'token': {'$all': token_list}}).limit(100)
+
+	return dumps(result)
+
+
 #######################################################
 #뉴스피드 관련############################################
 #각각의 뉴스피드 반환 (공지, 알바구인 등등)
@@ -170,12 +187,13 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 
 	if limit_ is None:
 		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts4'].find({}, show_dict).sort([('date', -1)]).skip(skip_)
+		result = db['test_posts5'].find({}, show_dict).sort([('date', -1)]).skip(skip_)
 	else:
 		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts4'].find({}, show_dict).sort([('date', -1)]).skip(skip_).limit(limit_)
+		result = db['test_posts5'].find({}, show_dict).sort([('date', -1)]).skip(skip_).limit(limit_)
 
-	return dumps(result)
+	return result
+
 #특정 포스트 가져오기 (가져오고 싶은 필드만 1로 지정하여 보내주면 됨)
 def find_post(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, interests=None):
 
@@ -251,6 +269,11 @@ def update_post_view(db, post):
 	)
 
 	return "success"
+###############################################
+#admin######################################### 
+
+
+
 ###############################################
 #variable###################################### 
 #정적 테이블 변수 불러오기

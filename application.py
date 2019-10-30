@@ -8,9 +8,11 @@ from flask_cors import CORS
 sys.path.insert(0,'./')
 sys.path.insert(0,'../')
 sys.path.insert(0,'../SJ_Auth')
+sys.path.insert(0,'../SJ_AI/src')
 sys.path.insert(0,'../IML_Tokenizer/src')
 sys.path.insert(0,'./database')
 sys.path.insert(0,'./apps')
+###########################################
 sys.path.insert(0,'/home/iml/')
 sys.path.insert(0,'/home/iml/SOOJLE/')
 sys.path.insert(0,'/home/iml/SOOJLE_Crawler/src/')
@@ -23,7 +25,7 @@ from init_database import *
 from global_func import *
 ###########################################
 #APPS
-import main, auth, newsfeed, post, search, error, interest
+import main, auth, newsfeed, post, search, admin, error, interest
 
 application = Flask(__name__, instance_relative_config=True)
 cors = CORS(application)
@@ -44,6 +46,8 @@ def main_app(test_config = None):
 	application.register_blueprint(newsfeed.BP)
 	application.register_blueprint(post.BP)
 	application.register_blueprint(search.BP)
+	application.register_blueprint(admin.BP)
+
 	application.register_blueprint(interest.BP)
 
 @application.before_request
