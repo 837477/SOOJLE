@@ -34,7 +34,7 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, t
 
 	result = db['user'].find({}, show_dict)
 
-	return dumps(result)
+	return result
 
 #특정 유저, 특정 필드 목록 반환 (원하는 필드를 1하면 그 필드들만 반환됨)
 def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, newsfeed_list=None):
@@ -77,7 +77,6 @@ def update_unset_user_interest(db, _id):
 	db['user'].update({'_id': ObjectId(_id)}, {'$unset': {'fav_list':1, 'view_list':1, 'search_list':1 }})
 	return "success"
 
-#fav_list####################
 #유저 fav_list에 요소 추가
 def update_user_fav_list_push(db, _id, fav_obj):
 	db['user'].update(
@@ -86,14 +85,15 @@ def update_user_fav_list_push(db, _id, fav_obj):
 	)
 
 	return "success"
-#유저 fav_list에 요소 삭제 (좋아요 취소한 경)
+
+#유저 fav_list에 요소 삭제 (좋아요 취소한 경우)
 def update_user_fav_list_pull(db, _id, fav_obj_id):
 	db['user'].update(
 		{'_id': _id},
 		{'$pull': {'fav_list': {'_id': fav_obj_id}}}
 	)
-
 	return "success"
+
 #유저 fav_list 중복 체크용
 def check_user_fav_list(db, _id, fav_obj_id):
 	result = db['user'].find_one(
@@ -101,9 +101,7 @@ def check_user_fav_list(db, _id, fav_obj_id):
 		{'fav_list': {'$elemMatch': {'_id': ObjectId(fav_obj_id)}}}
 	)
 	return result
-#############################
 
-#view_list###################
 #유저 view_list에 요소 추가
 def update_user_view_list_push(db, _id, view_obj):
 	db['user'].update(
@@ -111,9 +109,7 @@ def update_user_view_list_push(db, _id, view_obj):
 		{'$push': {'view_list': view_obj}}
 	)
 	return "success"
-#############################
 
-#search_list###################
 #유저 search_list에 요소 추가
 def update_user_search_list_push(db, _id, search_keyword):
 	db['user'].update(
@@ -121,25 +117,19 @@ def update_user_search_list_push(db, _id, search_keyword):
 		{'$push': {'search_list': {'$each': search_keyword}}}
 	)
 	return "success"
-#############################
-
 
 #######################################################
 #검색 관련###############################################
 def find_token(db, token_list):
-	result = db['test_posts5'].find({'$or': [ {'title_token': {'$all': token_list}}, {'token': {'$all': token_list}} ]}).limit(200)
-
-	print(result)
-	#result = db['test_posts5'].find({'token': {'$all': token_list}}).limit(100)
-
-	return dumps(result)
+	result = db['test_posts5'].find({'$or': [ {'title_token': {'$in': token_list}}, {'token': {'$in': token_list}}, {'tag': {'$in': token_list}} ]}, {'_id':0, 'title':1}).limit(200)
+	return result
 
 
 #######################################################
 #뉴스피드 관련############################################
 #각각의 뉴스피드 반환 (공지, 알바구인 등등)
 def find_newsfeed(db, type, tags, date, pagenation, page):
-	result = db['test_posts1'].find({'$or': [{'tag': {'$in': tags}}, {'date': {'$lte': date}}]}).skip((page-1)*pagenation).limit(page*pagenation)
+	result = db['test_posts5'].find({'$or': [{'tag': {'$in': tags}}, {'date': {'$lte': date}}]}).skip((page-1)*pagenation).limit(page*pagenation)
 	return result
 
 #인기 뉴스피드
@@ -188,6 +178,7 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 	if limit_ is None:
 		#기본적으로 날짜순 정렬 (최신)
 		result = db['test_posts5'].find({}, show_dict).sort([('date', -1)]).skip(skip_)
+
 	else:
 		#기본적으로 날짜순 정렬 (최신)
 		result = db['test_posts5'].find({}, show_dict).sort([('date', -1)]).skip(skip_).limit(limit_)
@@ -230,14 +221,14 @@ def find_post(db, _id=None, title=None, date=None, post=None, tag=None, img=None
 	if interests is not None:
 		show_dict['interests'] = 1
 
-	result = db['test_posts4'].find_one({'_id': ObjectId(_id)}, show_dict)
+	result = db['test_posts5'].find_one({'_id': ObjectId(_id)}, show_dict)
 
 	return result
 
 #포스트 좋아요
 def update_post_like(db, post):
 	#해당 포스트를 좋아요 수 하나 카운트, popularity 갱신.
-	db['test_posts4'].update_many(
+	db['test_posts5'].update_many(
 		{'_id': ObjectId(post['_id'])}, 
 		{
 			'$inc': {'fav_cnt': 1}, 
@@ -249,7 +240,7 @@ def update_post_like(db, post):
 #포스트 좋아요 취소
 def update_post_unlike(db, post):
 	#해당 포스트를 좋아요 수 -1 카운트, popularity 갱신.
-	db['test_posts4'].update_many(
+	db['test_posts5'].update_many(
 		{'_id': ObjectId(post['_id'])}, 
 		{
 			'$inc': {'fav_cnt': -1}, 
@@ -261,7 +252,7 @@ def update_post_unlike(db, post):
 
 #포스트 조회수 올리기
 def update_post_view(db, post):
-	db['test_posts4'].update_one(
+	db['test_posts5'].update_one(
 		{'_id': ObjectId(post['_id'])}, 
 		{
 			'$inc': {'view': 1, 'popularity': 1}
