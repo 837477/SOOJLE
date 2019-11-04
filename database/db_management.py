@@ -7,8 +7,8 @@ from global_func import *
 
 #######################################################
 #사용자 관련#############################################
-#전체 유저 목록 반환 (원하는 필드를 1하면 그 필드들만 반환됨)
-def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, newsfeed_list=None):
+#전체 유저 목록 반환
+def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, tag_sum=None, newsfeed_list=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None: 
@@ -23,6 +23,8 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, t
 		show_dict['topic'] = 1
 	if tag is not None:
 		show_dict['tag'] = 1
+	if tag_sum is not None:
+		show_dict['tag_sum'] = 1
 	if fav_list is not None:
 		show_dict['fav_list'] = 1
 	if view_list is not None:
@@ -36,8 +38,8 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, t
 
 	return result
 
-#특정 유저, 특정 필드 목록 반환 (원하는 필드를 1하면 그 필드들만 반환됨)
-def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, newsfeed_list=None):
+#특정 유저, 특정 필드 목록 반환
+def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, tag_sum=None, newsfeed_list=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None:
@@ -54,6 +56,8 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_maj
 		show_dict['topic'] = 1
 	if tag is not None:
 		show_dict['tag'] = 1
+	if tag_sum is not None:
+		show_dict['tag_sum'] = 1
 	if fav_list is not None:
 		show_dict['fav_list'] = 1
 	if view_list is not None:
@@ -124,23 +128,22 @@ def find_token(db, token_list):
 	result = db['test_posts5'].find({'$or': [ {'title_token': {'$in': token_list}}, {'token': {'$in': token_list}}, {'tag': {'$in': token_list}} ]}, {'_id':0, 'title':1}).limit(200)
 	return result
 
-
 #######################################################
 #뉴스피드 관련############################################
-#각각의 뉴스피드 반환 (공지, 알바구인 등등)
+#토픽별 뉴스피드 반환
 def find_newsfeed(db, type, tags, date, pagenation, page):
 	result = db['test_posts5'].find({'$or': [{'tag': {'$in': tags}}, {'date': {'$lte': date}}]}).skip((page-1)*pagenation).limit(page*pagenation)
 	return result
 
 #인기 뉴스피드
 def find_popularity_newsfeed(db, num):
-	result = db['test_posts4'].find({}).sort([('date', -1)]).limit(num).sort([('interests', -1)])
+	result = db['test_posts5'].find({}, {'_id':0, 'post':0}).sort([('date', -1)]).limit(num).sort([('popularity', -1)])
 	return result
 
 #######################################################
 #포스트 관련#############################################
-#포스트 전체 가져오기 (가져오고 싶은 필드만 1로 지정하여 보내주면 됨)
-def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, interests=None, skip_=0, limit_=None):
+#포스트 전체 가져오기
+def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, popularity=None, interests=None, skip_=0, limit_=None):
 
 	show_dict = {'_id': 0}
 
@@ -172,6 +175,8 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 		show_dict['token'] = 1
 	if topic is not None:
 		show_dict['topic'] = 1
+	if popularity is not None:
+		show_dict['popularity'] = 1
 	if interests is not None:
 		show_dict['interests'] = 1
 
@@ -186,7 +191,7 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 	return result
 
 #특정 포스트 가져오기 (가져오고 싶은 필드만 1로 지정하여 보내주면 됨)
-def find_post(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, interests=None):
+def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, popularity=None, interests=None):
 
 	show_dict = {'_id': 0}
 
@@ -218,46 +223,31 @@ def find_post(db, _id=None, title=None, date=None, post=None, tag=None, img=None
 		show_dict['token'] = 1
 	if topic is not None:
 		show_dict['topic'] = 1
+	if popularity is not None:
+		show_dict['popularity'] = 1
 	if interests is not None:
 		show_dict['interests'] = 1
 
-	result = db['test_posts5'].find_one({'_id': ObjectId(_id)}, show_dict)
+	result = db['test_posts5'].find_one({'_id': ObjectId(post_obi)}, show_dict)
 
 	return result
 
 #포스트 좋아요
-def update_post_like(db, post):
-	#해당 포스트를 좋아요 수 하나 카운트, popularity 갱신.
-	db['test_posts5'].update_many(
-		{'_id': ObjectId(post['_id'])}, 
-		{
-			'$inc': {'fav_cnt': 1}, 
-			'$set': {'popularity': (post['fav_cnt']+1)*3 + post['view']}
-		}
-	)
+def update_post_like(db, post_obi):
+	db['test_posts5'].update({'_id': ObjectId(post_obi)}, {'$inc': {'fav_cnt': 1, 'popularity': 3}})
 
 	return "success"
+
 #포스트 좋아요 취소
 def update_post_unlike(db, post):
-	#해당 포스트를 좋아요 수 -1 카운트, popularity 갱신.
-	db['test_posts5'].update_many(
-		{'_id': ObjectId(post['_id'])}, 
-		{
-			'$inc': {'fav_cnt': -1}, 
-			'$set': {'popularity': (post['fav_cnt']-1)*3 + post['view']}
-		}
-	)
+	db['test_posts5'].update_many({'_id': ObjectId(post['_id'])}, {'$inc': {'fav_cnt': -1, 'popularity': -3}})
 
 	return "success"
 
 #포스트 조회수 올리기
 def update_post_view(db, post):
 	db['test_posts5'].update_one(
-		{'_id': ObjectId(post['_id'])}, 
-		{
-			'$inc': {'view': 1, 'popularity': 1}
-		}
-	)
+		{'_id': ObjectId(post['_id'])}, {'$inc': {'view': 1, 'popularity': 1}})
 
 	return "success"
 ###############################################
@@ -275,34 +265,4 @@ def find_variable(db, key):
 #정적 테이블 변수 수정하기
 def update_variable(db, key, value):
 	db['variable'].update({'key': key}, {'$set': {'value': value }})
-	return "success"
-
-#조회수 랭킹1위 수 갱신
-def update_posts_highest_view(db):
-	highest_view = db['test_posts4'].find({}, {'view': 1}).sort([('view', -1)]).limit(1)
-	highest_view = list(highest_view)[0]['view']
-
-	highest_view_id = db['variable'].find_one({'key': 'highest_view'}, {'_id': 1})
-
-	if highest_view_id is None:
-		db['variable'].insert({'key': 'highest_view', 'value': 0})
-		highest_view_id = db['variable'].find_one({'key': 'highest_view'}, {'_id': 1})
-
-	db['variable'].update({'_id': ObjectId(highest_view_id['_id'])}, {'$set': {'value': highest_view}})
-
-	return "success"
-
-#좋아요 랭킹1위 수 갱신
-def update_posts_highest_fav_cnt(db):
-	highest_fav_cnt = db['test_posts4'].find({}, {'fav_cnt':1}).sort([('fav_cnt', -1)]).limit(1)
-	highest_fav_cnt = list(highest_fav_cnt)[0]['fav_cnt']
-
-	highest_fav_cnt_id = db['variable'].find_one({'key': 'highest_fav_cnt'}, {'_id': 1})
-
-	if highest_fav_cnt_id is None:
-		db['variable'].insert({'key': 'highest_fav_cnt', 'value': 0})
-		highest_fav_cnt_id = db['variable'].find_one({'key': 'highest_fav_cnt'}, {'_id': 1})
-
-	db['variable'].update({'_id': ObjectId(highest_fav_cnt_id['_id'])}, {'$set': {'value': highest_fav_cnt}})
-	
 	return "success"	

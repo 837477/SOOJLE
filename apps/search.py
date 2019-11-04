@@ -25,7 +25,7 @@ def search_():
 	tokenizer_result = get_tk(search_str)
 
 	if not tokenizer_result:
-		return jsonify(result = "search error")
+		return jsonify(result = "NONE")
 
 	#jwt 토큰이 들어오면, 유저 검색 기록에 기록!
 	if get_jwt_identity():

@@ -27,7 +27,7 @@ def post_like(obi):
 	POST = find_post(g.db, _id=obi, topic=1, token=1, tag=1, fav_cnt=1, view=1)
 
 	#DB 해당 포스트 좋아요 (안에서 popularity 또한 갱신)
-	update_post_like(g.db, POST)
+	update_post_like(g.db, POST['_id'])
 
 	#유저에 들어갈 좋아요 누른 post 인코딩
 	fav_obj = {}
