@@ -8,7 +8,7 @@ from global_func import *
 #######################################################
 #사용자 관련#############################################
 #전체 유저 목록 반환
-def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, tag_sum=None, newsfeed_list=None):
+def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None: 
@@ -31,6 +31,8 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, t
 		show_dict['view_list'] = 1
 	if search_list is not None:
 		show_dict['search_list'] = 1
+	if ft_vector is not None:
+		show_dict['ft_vector'] = 1
 	if newsfeed_list is not None:
 		show_dict['newsfeed_list'] = 1
 
@@ -39,7 +41,7 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, t
 	return result
 
 #특정 유저, 특정 필드 목록 반환
-def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, tag_sum=None, newsfeed_list=None):
+def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None:
@@ -64,6 +66,8 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_maj
 		show_dict['view_list'] = 1
 	if search_list is not None:
 		show_dict['search_list'] = 1
+	if ft_vector is not None:
+		show_dict['ft_vector'] = 1
 	if newsfeed_list is not None:
 		show_dict['newsfeed_list'] = 1
 
@@ -115,17 +119,23 @@ def update_user_view_list_push(db, _id, view_obj):
 	return "success"
 
 #유저 search_list에 요소 추가
-def update_user_search_list_push(db, _id, search_keyword):
+def update_user_search_list_push(db, _id, search_obj):
 	db['user'].update(
 		{'_id': ObjectId(_id)},
-		{'$push': {'search_list': {'$each': search_keyword}}}
+		{'$push': {'search_list': search_obj}}
 	)
 	return "success"
 
 #######################################################
 #검색 관련###############################################
+def find_title_token(db, token_list):
+	#API를 따로 부르기 때문에 데이트 소트 안시키고 반환.
+	result = db['test_posts5'].find({'title_token': {'$in': token_list}}, {'_id':0, 'title':1, 'title_token': 1, 'data': 1})
+	return result
+
 def find_token(db, token_list):
-	result = db['test_posts5'].find({'$or': [ {'title_token': {'$in': token_list}}, {'token': {'$in': token_list}}, {'tag': {'$in': token_list}} ]}, {'_id':0, 'title':1}).limit(200)
+	#API를 따로 부르기 때문에 데이트 소트 안시키고 반환.
+	result = db['test_posts5'].find({'token': {'$in': token_list}}, {'_id':0, 'title':1, 'token': 1, 'data': 1})
 	return result
 
 #######################################################
@@ -143,7 +153,7 @@ def find_popularity_newsfeed(db, num):
 #######################################################
 #포스트 관련#############################################
 #포스트 전체 가져오기
-def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, popularity=None, interests=None, skip_=0, limit_=None):
+def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None, skip_=0, limit_=None):
 
 	show_dict = {'_id': 0}
 
@@ -175,10 +185,10 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 		show_dict['token'] = 1
 	if topic is not None:
 		show_dict['topic'] = 1
+	if ft_vector is not None:
+		show_dict['ft_vector'] = 1
 	if popularity is not None:
 		show_dict['popularity'] = 1
-	if interests is not None:
-		show_dict['interests'] = 1
 
 	if limit_ is None:
 		#기본적으로 날짜순 정렬 (최신)
@@ -191,7 +201,7 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 	return result
 
 #특정 포스트 가져오기 (가져오고 싶은 필드만 1로 지정하여 보내주면 됨)
-def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, popularity=None, interests=None):
+def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None):
 
 	show_dict = {'_id': 0}
 
@@ -223,10 +233,10 @@ def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None
 		show_dict['token'] = 1
 	if topic is not None:
 		show_dict['topic'] = 1
+	if ft_vector is not None:
+		show_dict['ft_vector'] = 1
 	if popularity is not None:
 		show_dict['popularity'] = 1
-	if interests is not None:
-		show_dict['interests'] = 1
 
 	result = db['test_posts5'].find_one({'_id': ObjectId(post_obi)}, show_dict)
 

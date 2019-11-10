@@ -30,7 +30,7 @@ def schedule_init():
 	scheduler = BackgroundScheduler()
 
 	#특정 시간마다 실행
-	#scheduler.add_job(measurement_run(100), 'cron', hour = 22, minute = 5, timezone = t_zone)
+	scheduler.add_job(measurement_run(100), 'cron', hour = 16, minute = 26, timezone = t_zone)
 
 	#매 시간마다 실행
 	# weeks, days, hours, minutes, seconds
@@ -64,55 +64,103 @@ def measurement_run(num):
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 	
-	USER_list = db['user'].find({}, {
-		'fav_list': {'$slice': num}, 
-		'view_list': {'$slice': num}, 
-		'search_list': {'$slice': num}
+	mongo_num = num * -1
+	USER_list = db['user'].find({"user_id": "test"}, {
+		'fav_list': {'$slice': mongo_num}, 
+		'view_list': {'$slice': mongo_num}, 
+		'search_list': {'$slice': mongo_num}
 		})
 
+	# USER_list = db['user'].find({}, {
+	# 	'fav_list': {'$slice': num}, 
+	# 	'view_list': {'$slice': num}, 
+	# 	'search_list': {'$slice': num}
+	# 	})
+
 	for USER in USER_list:
-		fav_view_tag = []
+		fav_tag = []
+		view_tag = []
+		fav_token = []
+		view_token = []
 
-		#fav topic numpy array
+		#사용자가 관심 기능을 수행한 게시물 ##########################
 		fav_topic = np.zeros(LDA.NUM_TOPICS)
-
-		#view topic numpy array
-		view_topic = np.zeros(LDA.NUM_TOPICS)
-
 		for fav in USER['fav_list']:
 			fav_topic += fav['topic']
-			fav_view_tag += fav['tag'] * 4
+			fav_tag += fav['tag']
+			fav_token += fav['token']
 
+		#FAS 전용
+		fav_doc = (fav_tag + fav_token) * 2
+
+		fav_tag *= 4
+		fav_topic *= 4
+		fav_topic /= num
+
+		#사용자가 접근을 수행한 게시물 ##############################
+		view_topic = np.zeros(LDA.NUM_TOPICS)
 		for view in USER['view_list']:
 			view_topic += view['topic']
-			fav_view_tag += view['tag'] * 3
+			view_tag += view['tag']
+			view_token += view['token']
 
-		search_topic = LDA.get_topics(USER['search_list'])
+		#FAS 전용
+		view_doc = fav_tag + fav_token
 
-		fav_topic /= num
+		view_tag *= 3
+		view_topic *= 3
 		view_topic /= num
 
-		#사용자가 관심 기능을 수행한 게시물
-		fav_topic *= 4
-
-		#사용자가 접근을 수행한 게시물
-		view_topic *= 3
-
-		#사용자가 검색을 수행한 키워드
+		#사용자가 검색을 수행한 키워드 ##############################
+		search_keyword_list = USER['search_list'][num*2:]
+		search_topic = LDA.get_topics(search_keyword_list)
 		search_topic *= 3
 
+		#FAS 전용
+		similarwords = []
+
+		for search_keyword in search_keyword_list:
+			for keyword in FastText.sim_words(search_keyword):
+				if keyword[1] >= 0.7: 
+					similarwords.append(keyword[0])
+				else: break
+
+		search_doc = search_keyword_list + similarwords
+
+		############################################################################
+
+		#LDA Topic
 		topic_result = (fav_topic + view_topic + search_topic)/10
+		
+		#FASTTEXT
+		user_vector = FastText.get_doc_vector(fav_doc + view_doc + search_doc)
 
-		tag_dict = dict(Counter(fav_view_tag))
+		#TAG
+		tag_dict = dict(Counter(fav_tag + view_tag))
 		tag_dict = sorted(tag_dict.items(), key=lambda x: x[1], reverse = True)
-
+		#빈도수 랭킹 상위 X위 까지 보관.
 		tag_result = {}
-		for i in range(15):
-			tag_result[tag_dict[i][0]] = tag_dict[i][1]
 
+		if len(tag_dict) >= 10:
+			for i in range(10):
+				tag_result[tag_dict[i][0]] = tag_dict[i][1]
+		else:
+			for i in range(len(tag_dict)):
+				tag_result[tag_dict[i][0]] = tag_dict[i][1]
+					
 		USER_TAG_SUM = sum(tag_result.values())
+		#1.5배 증가
+		USER_TAG_SUM *= 3
+		USER_TAG_SUM //= 2
 
-		db['user'].update({'_id': USER['_id']}, {'$set': {'topic': list(topic_result), 'tag': tag_result, 'tag_sum': USER_TAG_SUM}})
+		############################################################################
+
+		db['user'].update({'_id': USER['_id']}, {'$set': {
+			'topic': list(topic_result), 
+			'tag': tag_result, 
+			'tag_sum': USER_TAG_SUM,
+			'ft_vector': user_vector.tolist()
+			}})
 
 #조회수 랭킹1위 수 갱신
 def update_posts_highest_view(db):
