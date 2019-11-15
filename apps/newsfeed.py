@@ -16,44 +16,18 @@ BP = Blueprint('newsfeed', __name__)
 #####################################
 
 #토픽별 뉴스피드
-@BP.route('/get_topic_newsfeed/<int:type_num>')
-def get_topic_newsfeed(type_num=None):
-	POST_LIST = find_all_posts(g.db, _id=1, view=1, fav_cnt=1, info=1, title=1, post=1, url=1, img=1, limit_=3000)
-	POST_LIST = loads(POST_LIST)
+@BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
+@logging_time
+def get_newsfeed_of_topic(newsfeed_name):
+	#요청한 뉴스피드에 대한 정보를 가져온다.
+	newsfeed_type = find_newsfeed_of_topic(g.db, newsfeed_name)
 
-	result = []
+	#info를 정규표현식으로 부르기위해 or연산자로 join
+	info = "|".join(newsfeed_type['info'])
 
-	#대학교
-	if None:
-		for POST in POST_LIST:
-			if PSOT['info'] == 'XXX':
-				result.append(POST)
-	#진로&구인
-	elif type_num == 1:
-		for POST in POST_LIST:
-			if PSOT['info'] == 'XXX':
-				result.append(POST)
-	#공머전&행사
-	elif type_num == 1:
-		for POST in POST_LIST:
-			if PSOT['info'] == 'XXX':
-				result.append(POST)
-	#동아리&모임
-	elif type_num == 1:
-		for POST in POST_LIST:
-			if PSOT['info'] == 'XXX':
-				result.append(POST)
-	#장터
-	elif type_num == 1:
-		for POST in POST_LIST:
-			if PSOT['info'] == 'XXX':
-				result.append(POST)
-	#자유
-	else:
-		for POST in POST_LIST:
-			if PSOT['info'] == 'XXX':
-				result.append(POST)
-	
+	result = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], 200)
+
+	#다른 게시물은 for문으로 DB에서 불러온 게시글을 돌리기 때문에 Object_id만 dumps가 가능했는데, 이 API같은 경우는, for문을 안돌리기 때문에 전체 dumps로 줘야한다. JS에서 parse필수!
 	return jsonify(
 		result = "success",
 		newsfeed = dumps(result))

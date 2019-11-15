@@ -130,19 +130,42 @@ def update_user_search_list_push(db, _id, search_obj):
 #검색 관련###############################################
 def find_title_token(db, token_list):
 	#API를 따로 부르기 때문에 데이트 소트 안시키고 반환.
-	result = db['test_posts5'].find({'title_token': {'$in': token_list}}, {'_id':0, 'title':1, 'title_token': 1, 'data': 1})
+	result = db['test_posts6'].find({'title_token': {'$in': token_list}}, {'_id':0, 'title':1, 'title_token': 1, 'data': 1})
 	return result
 
 def find_token(db, token_list):
 	#API를 따로 부르기 때문에 데이트 소트 안시키고 반환.
-	result = db['test_posts5'].find({'token': {'$in': token_list}}, {'_id':0, 'title':1, 'token': 1, 'data': 1})
+	result = db['test_posts6'].find({'token': {'$in': token_list}}, {'_id':0, 'title':1, 'token': 1, 'data': 1})
 	return result
+
+def find_all_token(db, title_token_list, token_list):
+	result = db['test_posts6'].find(
+		{'$and': 
+			[{'date' : {'$gt': datetime(2019, 5, 1, 00, 00, 00)}}, 
+				{'$or': 
+					[{'token': {'$in': token_list}}, {'title_token': {'$in': title_token_list}}]
+				}
+			]
+		}, {'_id': 0, 'title': 1, 'title_token': 1, 'token': 1, 'data': 1})
+	return result	
 
 #######################################################
 #뉴스피드 관련############################################
-#토픽별 뉴스피드 반환
-def find_newsfeed(db, type, tags, date, pagenation, page):
-	result = db['test_posts5'].find({'$or': [{'tag': {'$in': tags}}, {'date': {'$lte': date}}]}).skip((page-1)*pagenation).limit(page*pagenation)
+#토픽별 뉴스피드 타입 반환
+def find_newsfeed_of_topic(db, newsfeed_name):
+	result = db['newsfeed_of_topic'].find_one({'newsfeed_name': newsfeed_name}, {'_id': 0})
+	return result
+
+def find_newsfeed(db, info, tag, negative_tag, num):
+	result = db['test_posts6'].find({
+		'$or':[
+			{'info': {'$regex': info}},
+			{'tag': {'$nin': negative_tag}},
+			{'tag': {'$in': tag}},
+			{'token': {'$in': tag}}
+			]
+		}).sort([('date', -1)]).limit(num)
+
 	return result
 
 #인기 뉴스피드
@@ -192,11 +215,11 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 
 	if limit_ is None:
 		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts5'].find({}, show_dict).sort([('date', -1)]).skip(skip_)
+		result = db['test_posts6'].find({}, show_dict).sort([('date', -1)]).skip(skip_)
 
 	else:
 		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts5'].find({}, show_dict).sort([('date', -1)]).skip(skip_).limit(limit_)
+		result = db['test_posts6'].find({}, show_dict).sort([('date', -1)]).skip(skip_).limit(limit_)
 
 	return result
 

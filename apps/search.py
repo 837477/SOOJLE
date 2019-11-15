@@ -17,6 +17,53 @@ BP = Blueprint('search', __name__)
 #JAVA 스레드 이동.
 jpype.attachThreadToJVM()
 
+@BP.route('/search_intergrate', methods = ['POST'])
+def search_intergrate():
+	start = time.time()
+
+	search_str = request.form['search']
+
+	#공백 제거
+	del_space = search_str.split(' ')
+	
+	#토크나이저 처리
+	tokenizer_str = tknizer.get_tk(search_str)
+	#뽑힌 토크나이저가 없으면, 반환 결과 없다고 반환한다.
+	if not tokenizer_str: 
+		return jsonify(result = "NONE")
+	
+	#뽑힌 토크나이저를 페텍을 이용하여 유사토큰을 추출!
+	similarity_list = []
+	for word in tokenizer_str:
+		for sim_word in FastText.sim_words(word):
+			if sim_word[1] >= 0.7: 
+				similarity_list.append(sim_word[0])
+			else: break	
+
+	#추출된 토큰들의 중복 제거! (특히 페텍으로 뽑힌 토큰들!)
+	finally_token_list = list(set(tokenizer_str + similarity_list))
+
+	#추출된 토클들을 DB에서 찾는다.
+	search_post_list = find_all_token(g.db, del_space, finally_token_list)
+	search_post_list = list(search_post_list)
+
+	for post in search_post_list:
+		#DB에서 불러온 포스트의 title_token과 기존의 공백제거된 검색어랑 finally_tokne_list 와 각각 교집합을 시킨다.
+		title_intersection = set(post['title_token']) & set(del_space)
+		token_intersection = set(post['token']) & set(finally_token_list)
+
+		post['inter_cnt'] = len(title_intersection) + len(token_intersection) 
+
+	
+	search_post_list = sorted(search_post_list, key=operator.itemgetter('inter_cnt'), reverse=True)
+
+	print("time :", time.time() - start)
+	print(len(search_post_list))
+
+	return jsonify(
+		result = "success",
+		search_result = search_post_list[:100])
+
 @BP.route('/search_title', methods = ['POST'])
 def search_title():
 	start = time.time()
@@ -98,6 +145,8 @@ def search_ft_token():
 			if sim_word[1] >= 0.7: 
 				similarity_list.append(sim_word[0])
 			else: break	
+
+	similarity_list = list(set(similarity_list))
 
 	#FastText similarity 처리된 검색어를 token을 DB에서 찾는다.
 	search_post_list = find_token(g.db, similarity_list)

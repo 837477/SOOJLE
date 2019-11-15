@@ -18,15 +18,14 @@ def sign_in_up():
 	USER_ID = request.form['id']
 	USER_PW = request.form['pw']
 
-	user = find_user(g.db, user_id=USER_ID)
+	user = find_user(g.db, user_id=USER_ID, user_pw=1)
 
 	if user is None:
 		result = refresh_sejong_portal(USER_ID, USER_PW)
 
-	if result == "success":
-		user = find_user(g.db, USER_ID)
-	else:
-		return jsonify(result = "not sejong")
+		#위 refresh_sejong_portal()을 통과 못했다면 3개의 로그인 api를 통과하지 못한 것.
+		if result == "not sejong":
+			return jsonify(result = "not sejong")
 	
 	if check_password_hash(user['user_pw'], USER_PW):
 		return jsonify(
@@ -35,23 +34,8 @@ def sign_in_up():
 				identity = USER_ID,
 				expires_delta=False)
 			)
-	
-	result = refresh_sejong_portal(USER_ID, USER_PW)
-
-	if result == "success":
-		user = find_user(g.db, USER_ID)
 	else:
-		return jsonify(result = "not sejong")
-
-	if check_password_hash(user['user_pw'], USER_PW):
-		return jsonify(
-			result = "success",
-			access_token = create_access_token(
-				identity = USER_ID,
-				expires_delta=False)
-			)
-	else:
-		return jsonify(result = "pw incorrect")
+		return jsonify(result = "incorrect pw")
 		
 #회원정보 반환
 @BP.route('/get_userinfo')
@@ -97,6 +81,7 @@ def get_specific_userinfo(type_num=None):
 	return jsonify(
 		result = 'success',
 		USER = dumps(USER))
+
 ###############################################
 ###############################################
 def refresh_sejong_portal(USER_ID, USER_PW):
