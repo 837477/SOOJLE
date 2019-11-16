@@ -15,6 +15,8 @@ from global_func import *
 BP = Blueprint('newsfeed', __name__)
 #####################################
 
+return_num = 200
+
 #토픽별 뉴스피드
 @BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
 @logging_time
@@ -25,35 +27,34 @@ def get_newsfeed_of_topic(newsfeed_name):
 	#info를 정규표현식으로 부르기위해 or연산자로 join
 	info = "|".join(newsfeed_type['info'])
 
-	result = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], 200)
+	result = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], return_num)
 
-	#다른 게시물은 for문으로 DB에서 불러온 게시글을 돌리기 때문에 Object_id만 dumps가 가능했는데, 이 API같은 경우는, for문을 안돌리기 때문에 전체 dumps로 줘야한다. JS에서 parse필수!
 	return jsonify(
 		result = "success",
 		newsfeed = dumps(result))
 
 #인기 뉴스피드
-@BP.route('/get_popularity_newsfeed/<int:num>/<int:page>')
-def get_popularity_newsfeed(num, page):
-	#num : 몇개 대상 page : 반환 개수!
+@BP.route('/get_popularity_newsfeed<int:num>')
+def get_popularity_newsfeed(num):
 	result = find_popularity_newsfeed(g.db, num)
-	result = list(result)
 
 	return jsonify(
 		result = "success",
-		newsfeed = result[:page])
+		newsfeed = dumps(result))
 
 #추천 뉴스피드
 @BP.route('/get_recommendation_newsfeed')
 @jwt_optional
 def get_recommendation_newsfeed():
-	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, url=1, img=1, limit_=20000)
+	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, url=1, img=1, date=1, limit_=20000)
 
 	POST_LIST = list(POST_LIST)
 
 	if get_jwt_identity():
 		#유저를 _id, topic리스트, tag리스트 만 가져온다.
 		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
+
+		if USER is None: abort(400)
 
 		#캐싱된 가장 높은 좋아요 수를 가져온다.
 		Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
@@ -87,92 +88,16 @@ def get_recommendation_newsfeed():
 			result = TOS + TAS + FAS + RANDOM
 
 			del POST['topic']
-			del POST['tag']
 			del POST['ft_vector']
+			del POST['view']
+			del POST['tag']
 
-			#########################################
-			#테스트 반환 디버깅용
 			POST['_id'] = dumps(POST['_id'])
 			POST['similarity'] = result
-			POST['TOS'] = TOS
-			POST['TAS'] = TAS
-			POST['FAS'] = FAS
-			POST['RANDOM'] = RANDOM
-			#########################################
 
 		#similarity를 기준으로 내림차순 정렬.
 		POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
 
 	return jsonify(
 		result = "success",
-		newsfeed = POST_LIST[:200])
-
-#################################################
-#################################################
-#################################################
-@BP.route('/refresh_measurement', methods=['POST'])
-#@BP.route('/refresh_measurement')
-def refresh_measurement():
-	LDA_ = request.form['LDA']
-	FAST_ = request.form['FAST']
-
-	USER = find_user(g.db, _id=1, user_id="test")
-
-	#JAVA 스레드 이동.
-	jpype.attachThreadToJVM()
-	#토크나이저 실행!!
-	LDA_ = get_tk(LDA_)
-	FAST_ = get_tk(FAST_)
-
-	LDA_result = LDA.get_topics(LDA_)
-	FAST_result = FastText.get_doc_vector(FAST_)
-
-	update_user_search_list_push(g.db, USER['_id'], (LDA_ + FAST_))
-
-	POST_LIST = find_all_posts(g.db, _id=1, topic=1, token=1, ft_vector=1, tag=1)
-	POST_LIST = list(POST_LIST)
-
-	for POST in POST_LIST:
-		#TOS 작업
-		TOS = dot(LDA_result, POST['topic'])/(norm(LDA_result)*norm(POST['topic']))
-
-		#FAS 작업
-		FAS = FastText.vec_sim(FAST_result, POST['ft_vector'])
-
-		POST['similarity'] = TOS + FAS
-
-	#similarity를 기준으로 내림차순 정렬.
-	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
-
-	cnt = 0
-	for i in range(1000):
-		if cnt != 500:
-			fav_obj = {}
-			fav_obj['_id'] = POST_LIST[i]['_id']
-			fav_obj['topic'] = POST_LIST[i]['topic']
-			fav_obj['token'] = POST_LIST[i]['token']
-			fav_obj['tag'] = POST_LIST[i]['tag']
-			fav_obj['date'] = datetime.now()
-
-			#유저 fav_list에 추가.
-			result = update_user_fav_list_push(g.db, USER['_id'], fav_obj)
-
-		view_obj = {}
-		view_obj['_id'] = POST_LIST[i]['_id']
-		view_obj['topic'] = POST_LIST[i]['topic']
-		view_obj['token'] = POST_LIST[i]['token']
-		view_obj['tag'] = POST_LIST[i]['tag']
-		view_obj['date'] = datetime.now()
-
-		#유저 view_list에 추가.
-		update_user_view_list_push(g.db, USER['_id'], view_obj)
-
-		cnt += 1
-
-	measurement_run(400)
-
-	return jsonify(result = "success")
-
-
-
-
+		newsfeed = POST_LIST[:return_num])

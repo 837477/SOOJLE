@@ -10,6 +10,7 @@ sys.path.insert(0,'../')
 sys.path.insert(0,'../SJ_Auth')
 sys.path.insert(0,'../SJ_AI/src')
 sys.path.insert(0,'../IML_Tokenizer/src')
+sys.path.insert(0,'../../IML_Tokenizer/src/')
 sys.path.insert(0,'./database')
 sys.path.insert(0,'./apps')
 ###########################################
@@ -19,7 +20,6 @@ sys.path.insert(0,'/home/iml/SOOJLE_Crawler/src/')
 sys.path.insert(0,'/home/iml/SJ_Auth')
 sys.path.insert(0,'/home/iml/SJ_AI/src')
 sys.path.insert(0,'/home/iml/IML_Tokenizer/src/')
-sys.path.insert(0,'../../IML_Tokenizer/src/')
 ###########################################
 from init_database import *
 from global_func import *

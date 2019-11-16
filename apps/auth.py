@@ -19,13 +19,16 @@ def sign_in_up():
 	USER_PW = request.form['pw']
 
 	user = find_user(g.db, user_id=USER_ID, user_pw=1)
-
+	result = "success"
 	if user is None:
 		result = refresh_sejong_portal(USER_ID, USER_PW)
 
-		#위 refresh_sejong_portal()을 통과 못했다면 3개의 로그인 api를 통과하지 못한 것.
-		if result == "not sejong":
-			return jsonify(result = "not sejong")
+	#위 refresh_sejong_portal()을 통과 못했다면 3개의 로그인 api를 통과하지 못한 것.
+	if result == "not sejong":
+		return jsonify(result = "not sejong")
+	#세종대학교 내부 전산 오류
+	elif result == "api error":
+		return jsonify(result = "api error")
 	
 	if check_password_hash(user['user_pw'], USER_PW):
 		return jsonify(
@@ -62,12 +65,10 @@ def get_specific_userinfo(type_num=None):
 	if USER is None:
 		return jsonify(result = "user is not define")
 
-	#1 = 좋아요 리스트
-	#2 = 접근한 리스트
-	#3 = 검색기록 리스트
-	#4 = 접근한 뉴스피드 리스트
-	#None = 전체
-	if type_num == 1:
+	if type_num == 0:
+		USER = find_user(g.db, user_id=get_jwt_identity(), fav_list=1, view_list=1, search_list=1, newsfeed_list=1)
+
+	elif type_num == 1:
 		USER = find_user(g.db, user_id=get_jwt_identity(), fav_list=1)
 	elif type_num == 2:
 		USER = find_user(g.db, user_id=get_jwt_identity(), view_list=1)
@@ -75,8 +76,6 @@ def get_specific_userinfo(type_num=None):
 		USER = find_user(g.db, user_id=get_jwt_identity(), search_list=1)
 	elif type_num == 4:
 		USER = find_user(g.db, user_id=get_jwt_identity(), newsfeed_list=1)
-	else:
-		USER = find_user(g.db, user_id=get_jwt_identity(), fav_list=1, view_list=1, search_list=1, newsfeed_list=1)
 
 	return jsonify(
 		result = 'success',
@@ -85,12 +84,21 @@ def get_specific_userinfo(type_num=None):
 ###############################################
 ###############################################
 def refresh_sejong_portal(USER_ID, USER_PW):
-	sejong_api_result = dosejong_api(USER_ID, USER_PW)
+	try:
+		sejong_api_result = dosejong_api(USER_ID, USER_PW)
+	except:
+		return "api error"
 	if not sejong_api_result['result']:
-		sejong_api_result = sjlms_api(USER_ID, USER_PW)
+		try:
+			sejong_api_result = sjlms_api(USER_ID, USER_PW)
+		except:
+			return "api error"
 		if not sejong_api_result['result']:
-			sejong_api_result = uis_api(USER_ID, USER_PW)
-		
+			try:
+				sejong_api_result = uis_api(USER_ID, USER_PW)
+			except:
+				return "api error"
+
 	if not sejong_api_result['result']:
 		return "not sejong"
 	else:

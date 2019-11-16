@@ -6,6 +6,7 @@ from bson.json_util import dumps
 from bson.objectid import ObjectId
 from datetime import timedelta, datetime
 import operator
+import math
 ##########################################
 from db_management import *
 from global_func import *
@@ -17,153 +18,114 @@ BP = Blueprint('search', __name__)
 #JAVA 스레드 이동.
 jpype.attachThreadToJVM()
 
-@BP.route('/search_intergrate', methods = ['POST'])
-def search_intergrate():
-	start = time.time()
+def match_score(token1, token2):
+	MC = len(set(token1) & set(token2))
+	MR = MC / len(token1)
+	return MC * (1 + MR + math.floor(MR))
 
+@BP.route('/priority_search/<int:num>', methods = ['POST'])
+def priority_search(num):
 	search_str = request.form['search']
+
+	#검색어로 시작되는 포스트들을 1차 regex 검색!
+	title_regex = find_title_regex(g.db, search_str)
+	title_regex = list(title_regex)
 
 	#공백 제거
-	del_space = search_str.split(' ')
-	
-	#토크나이저 처리
-	tokenizer_str = tknizer.get_tk(search_str)
-	#뽑힌 토크나이저가 없으면, 반환 결과 없다고 반환한다.
-	if not tokenizer_str: 
-		return jsonify(result = "NONE")
-	
-	#뽑힌 토크나이저를 페텍을 이용하여 유사토큰을 추출!
-	similarity_list = []
-	for word in tokenizer_str:
+	del_space_str = search_str.split(' ')
+
+	#토크나이져 작업
+	tokenizer_list = tknizer.get_tk(search_str)
+
+	#FastText를 이용한 유사단어 추출
+	ft_similarity_list = []
+	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
 			if sim_word[1] >= 0.7: 
-				similarity_list.append(sim_word[0])
+				ft_similarity_list.append(sim_word[0])
 			else: break	
 
-	#추출된 토큰들의 중복 제거! (특히 페텍으로 뽑힌 토큰들!)
-	finally_token_list = list(set(tokenizer_str + similarity_list))
+	#토크나이져 처리된 리스트를 대상으로 검색하고, aggregate로 ids처리하여 posts 추출
+	aggregate_posts = find_aggregate(g.db, tokenizer_list, 0)
+	aggregate_posts = list(aggregate_posts)
 
-	#추출된 토클들을 DB에서 찾는다.
-	search_post_list = find_all_token(g.db, del_space, finally_token_list)
-	search_post_list = list(search_post_list)
+	#regex와 aggregate로 뽑힌 포스트를 합친다.
+	aggregate_posts += title_regex
 
-	for post in search_post_list:
-		#DB에서 불러온 포스트의 title_token과 기존의 공백제거된 검색어랑 finally_tokne_list 와 각각 교집합을 시킨다.
-		title_intersection = set(post['title_token']) & set(del_space)
-		token_intersection = set(post['token']) & set(finally_token_list)
+	for post in aggregate_posts:
+		post['_id'] = dumps(post['_id'])
+		T1 = match_score(del_space_str, post['title_token'])
+		T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
+		T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
 
-		post['inter_cnt'] = len(title_intersection) + len(token_intersection) 
+		post['similarity'] = T1 + T2 + T3
 
-	
-	search_post_list = sorted(search_post_list, key=operator.itemgetter('inter_cnt'), reverse=True)
+		#필요없는 반환 값 삭제
+		del post['title_token']
+		del post['token']
+		del post['tag']
+		del post['popularity']
 
-	print("time :", time.time() - start)
-	print(len(search_post_list))
+	#구해진 similarity로 내림차순 정렬
+	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('similarity'), reverse=True)
 
+	#데이터로 들어온 상위 num개만 반환
 	return jsonify(
 		result = "success",
-		search_result = search_post_list[:100])
+		search_result = aggregate_posts[:num])
 
-@BP.route('/search_title', methods = ['POST'])
-def search_title():
-	start = time.time()
-
+@BP.route('/category_search/<int:community_check>/<int:num>', methods = ['POST'])
+def category_search(community_check, num):
 	search_str = request.form['search']
+
+	#검색어로 시작되는 포스트들을 1차 regex 검색!
+	title_regex = find_title_regex(g.db, search_str)
+	title_regex = list(title_regex)
 
 	#공백 제거
-	del_space = search_str.split(' ')
+	del_space_str = search_str.split(' ')
 
-	#공백이 제거된 검색어를 title_token을 DB에서 찾는다.
-	search_post_list = find_title_token(g.db, del_space)
-	search_post_list = list(search_post_list)
+	#토크나이져 작업
+	tokenizer_list = tknizer.get_tk(search_str)
 
-	for post in search_post_list:
-		#DB에서 불러온 포스트의 title_token과 공백제거된 검색어랑 교집합을 시킨다.
-		intersection = set(post['title_token']) & set(del_space)
-		#교집합 시킨 갯수를 해당 포스트의 inter_cnt에 넣어준다.
-		#기여도는 10000배
-		post['inter_cnt'] = len(intersection) * 10000
-
-	search_post_list = sorted(search_post_list, key=operator.itemgetter('inter_cnt'), reverse=True)
-
-	print("time :", time.time() - start)
-	print(len(search_post_list))
-
-	return jsonify(
-		result = "success",
-		search_result = search_post_list[:100])
-
-@BP.route('/search_token', methods = ['POST'])
-def search_token():
-	start = time.time()
-
-	search_str = request.form['search']
-
-	#토크나이저 처리
-	tokenizer_str = tknizer.get_tk(search_str)
-
-	#뽑힌 토크나이저가 없으면, 반환 결과 없다고 반환한다.
-	if not tokenizer_str:
-		return jsonify(result = "NONE")
-
-	#토크나이저 처리된 검색어를 token을 DB에서 찾는다.
-	search_post_list = find_token(g.db, tokenizer_str)
-	search_post_list = list(search_post_list)
-
-	for post in search_post_list:
-		#DB에서 불러온 포스트의 token과 토크나이저 처리된 검색어랑 교집합을 시킨다.
-		intersection = set(post['token']) & set(tokenizer_str)
-		#교집합 시킨 갯수를 해당 포스트의 inter_cnt에 넣어준다.
-		#기여도는 5000배
-		post['inter_cnt'] = len(intersection) * 5000
-
-	search_post_list = sorted(search_post_list, key=operator.itemgetter('inter_cnt'), reverse=True)
-
-	print("time :", time.time() - start)
-	print(len(search_post_list))
-
-	return jsonify(
-		result = "success",
-		search_result = search_post_list[:100])
-
-@BP.route('/search_ft_token', methods = ['POST'])
-def search_ft_token():
-	start = time.time()
-
-	search_str = request.form['search']
-
-	#토크나이저 처리
-	tokenizer_str = tknizer.get_tk(search_str)
-
-	#뽑힌 토크나이저가 없으면, 반환 결과 없다고 반환한다.
-	if not tokenizer_str:
-		return jsonify(result = "NONE")
-
-	similarity_list = []
-	for word in tokenizer_str:
+	#FastText를 이용한 유사단어 추출
+	ft_similarity_list = []
+	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
 			if sim_word[1] >= 0.7: 
-				similarity_list.append(sim_word[0])
+				ft_similarity_list.append(sim_word[0])
 			else: break	
 
-	similarity_list = list(set(similarity_list))
+	#비 커뮤니티만!
+	if community_check == 1:
+		aggregate_posts = find_aggregate(g.db, tokenizer_list, 1)
+	#커뮤니티만!
+	else:
+		aggregate_posts = find_aggregate(g.db, tokenizer_list, 2)
 
-	#FastText similarity 처리된 검색어를 token을 DB에서 찾는다.
-	search_post_list = find_token(g.db, similarity_list)
-	search_post_list = list(search_post_list)
+	aggregate_posts = list(aggregate_posts)
 
-	for post in search_post_list:
-		#DB에서 불러온 포스트의 token과 토크나이저 처리된 검색어랑 교집합을 시킨다.
-		intersection = set(post['token']) & set(similarity_list)
-		#교집합 시킨 갯수를 해당 포스트의 inter_cnt에 넣어준다.
-		#기여도는 5000배
-		post['inter_cnt'] = len(intersection) * 2000
+	#regex와 aggregate로 뽑힌 포스트를 합친다.
+	aggregate_posts += title_regex
 
-	search_post_list = sorted(search_post_list, key=operator.itemgetter('inter_cnt'), reverse=True)
+	for post in aggregate_posts:
+		post['_id'] = dumps(post['_id'])
+		T1 = match_score(del_space_str, post['title_token'])
+		T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
+		T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
 
-	print("time :", time.time() - start)
-	print(len(search_post_list))
+		post['similarity'] = T1 + T2 + T3
 
+		#필요없는 반환 값 삭제
+		del post['title_token']
+		del post['token']
+		del post['tag']
+		del post['popularity']
+
+	#구해진 similarity로 내림차순 정렬
+	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('similarity'), reverse=True)
+
+	#데이터로 들어온 상위 num개만 반환
 	return jsonify(
 		result = "success",
-		search_result = search_post_list[:100])
+		search_result = aggregate_posts[:num])

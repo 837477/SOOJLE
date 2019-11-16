@@ -71,106 +71,371 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_maj
 	if newsfeed_list is not None:
 		show_dict['newsfeed_list'] = 1
 
-	result = db['user'].find_one({'user_id': user_id}, show_dict)
+	result = db['user'].find_one(
+		{
+			'user_id': user_id
+		}, 
+		show_dict)
 
 	return result
 
 #유저 생성
 def insert_user(db, user_id, user_pw, user_name, user_major):
-	result = db['user'].insert({'user_id': user_id, 'user_pw': user_pw, 'user_name': user_name, 'user_major': user_major})
+	result = db['user'].insert(
+		{
+			'user_id': user_id,
+			'user_pw': user_pw,
+			'user_name': user_name,
+			'user_major': user_major
+		})
+
 	return "success"
 
 #유저 관심도 초기화
 def update_unset_user_interest(db, _id):
-	db['user'].update({'_id': ObjectId(_id)}, {'$unset': {'fav_list':1, 'view_list':1, 'search_list':1 }})
+	db['user'].update(
+		{
+			'_id': ObjectId(_id)
+		},
+		{
+			'$unset': 
+			{
+				'fav_list':1,
+				'view_list':1,
+				'search_list':1
+			}
+		})
 	return "success"
 
 #유저 fav_list에 요소 추가
 def update_user_fav_list_push(db, _id, fav_obj):
 	db['user'].update(
-		{'_id': ObjectId(_id)},
-		{'$push': {'fav_list': fav_obj}}
+		{
+			'_id': ObjectId(_id)
+		},
+		{
+			'$push': 
+			{
+				'fav_list': fav_obj
+			}
+		}
 	)
-
 	return "success"
 
 #유저 fav_list에 요소 삭제 (좋아요 취소한 경우)
 def update_user_fav_list_pull(db, _id, fav_obj_id):
 	db['user'].update(
-		{'_id': _id},
-		{'$pull': {'fav_list': {'_id': fav_obj_id}}}
+		{
+			'_id': _id
+		},
+		{
+			'$pull': 
+			{
+				'fav_list': 
+				{
+					'_id': fav_obj_id
+				}
+			}
+		}
 	)
 	return "success"
 
 #유저 fav_list 중복 체크용
 def check_user_fav_list(db, _id, fav_obj_id):
 	result = db['user'].find_one(
-		{'_id': _id}, 
-		{'fav_list': {'$elemMatch': {'_id': ObjectId(fav_obj_id)}}}
+		{
+			'_id': _id
+		}, 
+		{
+			'fav_list': 
+			{
+				'$elemMatch': 
+				{
+					'_id': ObjectId(fav_obj_id)
+				}
+			}
+		}
 	)
 	return result
 
 #유저 view_list에 요소 추가
 def update_user_view_list_push(db, _id, view_obj):
 	db['user'].update(
-		{'_id': ObjectId(_id)},
-		{'$push': {'view_list': view_obj}}
+		{
+			'_id': ObjectId(_id)
+		},
+		{
+			'$push': 
+			{
+				'view_list': view_obj
+			}
+		}
 	)
 	return "success"
 
 #유저 search_list에 요소 추가
 def update_user_search_list_push(db, _id, search_obj):
 	db['user'].update(
-		{'_id': ObjectId(_id)},
-		{'$push': {'search_list': search_obj}}
+		{
+			'_id': ObjectId(_id)
+		},
+		{
+			'$push': 
+			{
+				'search_list': search_obj
+			}
+		}
 	)
 	return "success"
 
 #######################################################
 #검색 관련###############################################
-def find_title_token(db, token_list):
-	#API를 따로 부르기 때문에 데이트 소트 안시키고 반환.
-	result = db['test_posts6'].find({'title_token': {'$in': token_list}}, {'_id':0, 'title':1, 'title_token': 1, 'data': 1})
-	return result
-
-def find_token(db, token_list):
-	#API를 따로 부르기 때문에 데이트 소트 안시키고 반환.
-	result = db['test_posts6'].find({'token': {'$in': token_list}}, {'_id':0, 'title':1, 'token': 1, 'data': 1})
-	return result
-
-def find_all_token(db, title_token_list, token_list):
+#post title regex 검색
+def find_title_regex(db, search_str):
 	result = db['test_posts6'].find(
-		{'$and': 
-			[{'date' : {'$gt': datetime(2019, 5, 1, 00, 00, 00)}}, 
-				{'$or': 
-					[{'token': {'$in': token_list}}, {'title_token': {'$in': title_token_list}}]
+		{
+			'title': {'$regex':search_str}
+		}, 
+		{
+			'title':1,
+			'date':1, 
+			'img':1, 
+			'url':1, 
+			'fav_cnt': 1, 
+			'title_token': 1, 
+			'token': 1, 
+			'tag': 1, 
+			'popularity': 1
+		}
+	)
+	return result
+
+#가상 post ids용 반환
+def find_aggregate(db, tokenizer_list, type_check):
+	now_time = datetime.now()
+
+	#커뮤니티 + 비커뮤니티 통합 버젼
+	if type_check == 0:
+		result = db['test_posts6'].aggregate([
+		{
+			'$project':
+			{
+				'_id':1, 
+				'title':1,
+				'date':1,
+				'img': 1,
+				'url': 1,
+				'fav_cnt': 1,
+				#########################
+				'title_token':1,
+				'token':1,
+				'tag':1,
+				'popularity':1
+			}
+		},
+		{
+			'$match': 
+			{
+				'token': {'$in': tokenizer_list}
+			}
+		},
+		{
+			'$addFields':
+			{
+				'ids': 
+				{
+					'$divide':['$popularity', {'$subtract':[now_time, '$date']}]
 				}
-			]
-		}, {'_id': 0, 'title': 1, 'title_token': 1, 'token': 1, 'data': 1})
-	return result	
+			}
+		},
+		{
+			'$sort': 
+			{
+				'ids': -1, 
+				'date': -1
+			}
+		},
+		{'$limit': 10000}
+	])
+
+	#비커뮤니티 버젼
+	elif type_check == 1:
+		result = db['test_posts6'].aggregate([
+		{
+			'$project':
+			{
+				'_id':1, 
+				'title':1,
+				'date':1,
+				'img': 1,
+				'url': 1,
+				'fav_cnt': 1,
+				#########################
+				'title_token':1,
+				'token':1,
+				'tag':1,
+				'popularity':1
+			}
+		},
+		{
+			'$match': 
+			{
+				'$and': 
+				[
+					{'token': {'$in': tokenizer_list}},
+					{'tag': {'$nin': ['커뮤니티']}}
+				]
+			}
+		},
+		{
+			'$addFields':
+			{
+				'ids': 
+				{
+					'$divide':['$popularity', {'$subtract':[now_time, '$date']}]
+				}
+			}
+		},
+		{
+			'$sort': 
+			{
+				'ids': -1, 
+				'date': -1
+			}
+		},
+		{'$limit': 50000}
+	])
+
+	#커뮤니티 버젼
+	else:
+		result = db['test_posts6'].aggregate([
+		{
+			'$project':
+			{
+				'_id':1, 
+				'title':1,
+				'date':1,
+				'img': 1,
+				'url': 1,
+				'fav_cnt': 1,
+				#########################
+				'title_token':1,
+				'token':1,
+				'tag':1,
+				'popularity':1
+			}
+		},
+		{
+			'$match': 
+			{
+				'$and': 
+				[
+					{'token': {'$in': tokenizer_list}},
+					{'tag': {'$in': ['커뮤니티']}}
+				]
+			}
+		},
+		{
+			'$addFields':
+			{
+				'ids': 
+				{
+					'$divide':['$popularity', {'$subtract':[now_time, '$date']}]
+				}
+			}
+		},
+		{
+			'$sort': 
+			{
+				'ids': -1, 
+				'date': -1
+			}
+		},
+		{'$limit': 50000}
+	])
+
+	return result
+
+#title 토큰 검색
+def find_title_token(db, token_list):
+	result = db['test_posts6'].find(
+		{
+			'title_token': {'$in': token_list}
+		}, 
+		{
+			'_id':0, 
+			'title':1, 
+			'title_token': 1, 
+			'data': 1
+		}
+	)
+	return result
+
+#token 검색
+def find_token(db, token_list):
+	result = db['test_posts6'].find(
+		{
+			'token': {'$in': token_list}
+		}, 
+		{
+			'_id':0, 
+			'title':1, 
+			'token': 1, 
+			'data': 1
+		}
+	)
+	return result
 
 #######################################################
 #뉴스피드 관련############################################
 #토픽별 뉴스피드 타입 반환
 def find_newsfeed_of_topic(db, newsfeed_name):
-	result = db['newsfeed_of_topic'].find_one({'newsfeed_name': newsfeed_name}, {'_id': 0})
+	result = db['newsfeed_of_topic'].find_one(
+		{
+			'newsfeed_name': newsfeed_name
+		}, 
+		{
+			'_id': 0
+		}
+	)
 	return result
 
 def find_newsfeed(db, info, tag, negative_tag, num):
-	result = db['test_posts6'].find({
-		'$or':[
-			{'info': {'$regex': info}},
-			{'tag': {'$nin': negative_tag}},
-			{'tag': {'$in': tag}},
-			{'token': {'$in': tag}}
+	result = db['test_posts6'].find(
+		{
+			'$or':
+			[
+				{'info': {'$regex': info}},
+				{'tag': {'$nin': negative_tag}},
+				{'tag': {'$in': tag}},
+				{'token': {'$in': tag}}
 			]
-		}).sort([('date', -1)]).limit(num)
-
+		},
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'url': 1
+		}
+		).sort([('date', -1)]).limit(num)
 	return result
 
 #인기 뉴스피드
 def find_popularity_newsfeed(db, num):
-	result = db['test_posts5'].find({}, {'_id':0, 'post':0}).sort([('date', -1)]).limit(num).sort([('popularity', -1)])
+	result = db['test_posts6'].find(
+		{}, 
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'url': 1,
+			'popularity': 1
+		}
+		).sort([('date', -1)]).limit(num).sort([('popularity', -1)])
 	return result
 
 #######################################################
@@ -215,11 +480,17 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 
 	if limit_ is None:
 		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts6'].find({}, show_dict).sort([('date', -1)]).skip(skip_)
+		result = db['test_posts6'].find(
+			{}, 
+			show_dict
+		).sort([('date', -1)]).skip(skip_)
 
 	else:
 		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts6'].find({}, show_dict).sort([('date', -1)]).skip(skip_).limit(limit_)
+		result = db['test_posts6'].find(
+			{}, 
+			show_dict
+		).sort([('date', -1)]).skip(skip_).limit(limit_)
 
 	return result
 
@@ -261,26 +532,57 @@ def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None
 	if popularity is not None:
 		show_dict['popularity'] = 1
 
-	result = db['test_posts5'].find_one({'_id': ObjectId(post_obi)}, show_dict)
+	result = db['test_posts6'].find_one(
+		{
+			'_id': ObjectId(post_obi)
+		}, 
+		show_dict
+	)
 
 	return result
 
 #포스트 좋아요
 def update_post_like(db, post_obi):
-	db['test_posts5'].update({'_id': ObjectId(post_obi)}, {'$inc': {'fav_cnt': 1, 'popularity': 3}})
-
+	db['test_posts6'].update(
+		{
+			'_id': ObjectId(post_obi)
+		}, 
+		{
+			'$inc': {'fav_cnt': 1, 'popularity': 3}
+		}
+	)
 	return "success"
 
 #포스트 좋아요 취소
 def update_post_unlike(db, post):
-	db['test_posts5'].update_many({'_id': ObjectId(post['_id'])}, {'$inc': {'fav_cnt': -1, 'popularity': -3}})
-
+	db['test_posts6'].update_many(
+		{
+			'_id': ObjectId(post['_id'])
+		}, 
+		{
+			'$inc': 
+			{
+				'fav_cnt': -1, 
+				'popularity': -3
+			}
+		}
+	)
 	return "success"
 
 #포스트 조회수 올리기
 def update_post_view(db, post):
-	db['test_posts5'].update_one(
-		{'_id': ObjectId(post['_id'])}, {'$inc': {'view': 1, 'popularity': 1}})
+	db['test_posts6'].update_one(
+		{
+			'_id': ObjectId(post['_id'])
+		}, 
+		{
+			'$inc': 
+			{
+				'view': 1, 
+				'popularity': 1
+			}
+		}
+	)
 
 	return "success"
 ###############################################

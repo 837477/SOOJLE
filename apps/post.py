@@ -17,6 +17,7 @@ BP = Blueprint('post', __name__)
 @jwt_required
 def post_like(obi):
 	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
+	
 	if USER is None: abort(400)
 
 	#중복 좋아요 체크.
@@ -68,8 +69,6 @@ def post_view(obi):
 
 	result = update_post_view(g.db, POST)
 
-	############################################
-
 	if get_jwt_identity():
 		USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
 
@@ -85,8 +84,5 @@ def post_view(obi):
 		result = update_user_view_list_push(g.db, USER['_id'], view_obj)
 
 	return jsonify(result = result)
-
-################################################
-################################################
 
 
