@@ -191,168 +191,322 @@ def update_user_search_list_push(db, _id, search_obj):
 #######################################################
 #검색 관련###############################################
 #post title regex 검색
-def find_title_regex(db, search_str):
-	result = db['test_posts6'].find(
-		{
-			'title': {'$regex':search_str}
-		}, 
-		{
-			'title':1,
-			'date':1, 
-			'img':1, 
-			'url':1, 
-			'fav_cnt': 1, 
-			'title_token': 1, 
-			'token': 1, 
-			'tag': 1, 
-			'popularity': 1
-		}
-	)
+def find_title_regex(db, search_str, type_check):
+	return_dict = {
+		'title':1,
+		'date':1, 
+		'img':1, 
+		'url':1, 
+		'fav_cnt': 1, 
+		'title_token': 1, 
+		'token': 1, 
+		'tag': 1, 
+		'popularity': 1
+	}
+
+	#priority
+	if type_check == 0:
+		result = db['test_posts6'].find(
+			{
+				'title': {'$regex':search_str}
+			}, 
+			return_dict
+		)
+
+	#진로&구인
+	elif type_check == 1:
+		search_type = db['newsfeed_of_topic'].find_one(
+			{
+				'newsfeed_name': '진로&구인'
+			}, 
+			{
+				'_id': 0,
+				'info': 1
+			}
+		)
+		info = "|".join(search_type['info'])
+
+		result = db['test_posts6'].find(
+			{
+				'$and':
+				[
+					{'title': {'$regex':search_str}},
+					{'info': {'$regex': info}}
+				]
+			}, 
+			return_dict
+		)
+	
+	#공모전&행사 + 동아리&모임
+	elif type_check == 2:
+		search_type = db['newsfeed_of_topic'].find(
+			{
+				'$or':
+				[
+					{'newsfeed_name': '공모전&행사'},
+					{'newsfeed_name': '동아리&모임'}
+				]
+			}, 
+			{
+				'_id': 0,
+				'info': 1
+			}
+		)
+		search_type = list(search_type)
+		temp_list = search_type[0]['info'] + search_type[1]['info']
+		info = "|".join(temp_list)
+
+		result = db['test_posts6'].find(
+			{
+				'$and':
+				[
+					{'title': {'$regex':search_str}},
+					{'info': {'$regex': info}}
+				]
+			}, 
+			return_dict
+		)
+
+	#나머지
+	elif type_check == 3:
+		search_type = db['newsfeed_of_topic'].find(
+			{
+				'$or':
+				[
+					{'newsfeed_name': '진로&구인'},
+					{'newsfeed_name': '공모전&행사'},
+					{'newsfeed_name': '동아리&모임'}
+				]
+			}, 
+			{
+				'_id': 0,
+				'info': 1
+			}
+		)
+		search_type = list(search_type)
+		info = []
+		
+		for temp in search_type:
+			info += temp['info']
+
+		for i in info:
+			if i[0] == '^':
+				i = i[1:]
+			if i[-1] == '$':
+				i = i[:-1]
+
+		info = '^(?!(' + "|".join(info) + '|everytime_))'
+
+		result = db['test_posts6'].find(
+			{
+				'$and':
+				[
+					{'title': {'$regex':search_str}},
+					{'info': {'$regex': info}}
+				]
+			}, 
+			return_dict
+		)
+
+	#커뮤니티
+	else:
+		result = db['test_posts6'].find(
+			{
+				'$and':
+				[
+					{'title': {'$regex':search_str}},
+					{'info': {'$regex': '^everytime_'}}
+				]
+				
+			}, 
+			return_dict
+		)
+	
 	return result
 
 #가상 post ids용 반환
 def find_aggregate(db, tokenizer_list, type_check):
 	now_time = datetime.now()
 
-	#커뮤니티 + 비커뮤니티 통합 버젼
+	project = {
+		'$project':
+		{
+			'_id':1, 
+			'title':1,
+			'date':1,
+			'img': 1,
+			'url': 1,
+			'fav_cnt': 1,
+			###############
+			'title_token':1,
+			'token':1,
+			'tag':1,
+			'popularity':1
+		}
+	}
+	addFields = {
+		'$addFields':
+		{
+			'ids': 
+			{
+				'$divide':['$popularity', {'$subtract':[now_time, '$date']}]
+			}
+		}
+	}
+	sort = {
+		'$sort': 
+		{
+			'ids': -1, 
+			'date': -1
+		}
+	}
+	limit = {'$limit': 10000}
+	#priority
 	if type_check == 0:
 		result = db['test_posts6'].aggregate([
-		{
-			'$project':
+			project, 
 			{
-				'_id':1, 
-				'title':1,
-				'date':1,
-				'img': 1,
-				'url': 1,
-				'fav_cnt': 1,
-				#########################
-				'title_token':1,
-				'token':1,
-				'tag':1,
-				'popularity':1
-			}
-		},
-		{
-			'$match': 
-			{
-				'token': {'$in': tokenizer_list}
-			}
-		},
-		{
-			'$addFields':
-			{
-				'ids': 
+				'$match': 
 				{
-					'$divide':['$popularity', {'$subtract':[now_time, '$date']}]
+					'token': {'$in': tokenizer_list}
 				}
-			}
-		},
-		{
-			'$sort': 
-			{
-				'ids': -1, 
-				'date': -1
-			}
-		},
-		{'$limit': 10000}
-	])
+			}, 
+			addFields, 
+			sort, 
+			limit		
+		])
 
-	#비커뮤니티 버젼
+	#진로&구인
 	elif type_check == 1:
-		result = db['test_posts6'].aggregate([
-		{
-			'$project':
+		search_type = db['newsfeed_of_topic'].find_one(
 			{
-				'_id':1, 
-				'title':1,
-				'date':1,
-				'img': 1,
-				'url': 1,
-				'fav_cnt': 1,
-				#########################
-				'title_token':1,
-				'token':1,
-				'tag':1,
-				'popularity':1
-			}
-		},
-		{
-			'$match': 
+				'newsfeed_name': '진로&구인'
+			}, 
 			{
-				'$and': 
-				[
-					{'token': {'$in': tokenizer_list}},
-					{'tag': {'$nin': ['커뮤니티']}}
-				]
+				'_id': 0,
+				'info': 1
 			}
-		},
-		{
-			'$addFields':
-			{
-				'ids': 
-				{
-					'$divide':['$popularity', {'$subtract':[now_time, '$date']}]
-				}
-			}
-		},
-		{
-			'$sort': 
-			{
-				'ids': -1, 
-				'date': -1
-			}
-		},
-		{'$limit': 50000}
-	])
+		)
+		info = "|".join(search_type['info'])
 
-	#커뮤니티 버젼
+		result = db['test_posts6'].aggregate([
+			project,
+			{
+				'$match': 
+				{
+					'$and': 
+					[
+						{'token': {'$in': tokenizer_list}},
+						{'info': {'$regex': info}}
+					]
+				}
+			},
+			addFields,
+			sort,
+			limit
+		])
+
+	#공모전&행사 + 동아리&모임
+	elif type_check == 2:
+		search_type = db['newsfeed_of_topic'].find(
+			{
+				'$or':
+				[
+					{'newsfeed_name': '공모전&행사'},
+					{'newsfeed_name': '동아리&모임'}
+				]
+			}, 
+			{
+				'_id': 0,
+				'info': 1
+			}
+		)
+		search_type = list(search_type)
+		temp_list = search_type[0]['info'] + search_type[1]['info']
+		info = "|".join(temp_list)
+
+		result = db['test_posts6'].aggregate([
+			project,
+			{
+				'$match': 
+				{
+					'$and': 
+					[
+						{'token': {'$in': tokenizer_list}},
+						{'info': {'$regex': info}}
+					]
+				}
+			},
+			addFields,
+			sort,
+			limit
+		])
+
+	#나머지
+	elif type_check == 3:
+		search_type = db['newsfeed_of_topic'].find(
+			{
+				'$or':
+				[
+					{'newsfeed_name': '진로&구인'},
+					{'newsfeed_name': '공모전&행사'},
+					{'newsfeed_name': '동아리&모임'}
+				]
+			}, 
+			{
+				'_id': 0,
+				'info': 1
+			}
+		)
+		search_type = list(search_type)
+		info = []
+		
+		for temp in search_type:
+			info += temp['info']
+
+		for i in info:
+			if i[0] == '^':
+				i = i[1:]
+			if i[-1] == '$':
+				i = i[:-1]
+
+		info = '^(?!(' + "|".join(info) + '|everytime_))'
+
+		result = db['test_posts6'].aggregate([
+			project,
+			{
+				'$match': 
+				{
+					'$and': 
+					[
+						{'token': {'$in': tokenizer_list}},
+						{'info': {'$regex': info}}
+					]
+				}
+			},
+			addFields,
+			sort,
+			limit
+		])
+
+	#커뮤니티
 	else:
 		result = db['test_posts6'].aggregate([
-		{
-			'$project':
+			project,
 			{
-				'_id':1, 
-				'title':1,
-				'date':1,
-				'img': 1,
-				'url': 1,
-				'fav_cnt': 1,
-				#########################
-				'title_token':1,
-				'token':1,
-				'tag':1,
-				'popularity':1
-			}
-		},
-		{
-			'$match': 
-			{
-				'$and': 
-				[
-					{'token': {'$in': tokenizer_list}},
-					{'tag': {'$in': ['커뮤니티']}}
-				]
-			}
-		},
-		{
-			'$addFields':
-			{
-				'ids': 
+				'$match': 
 				{
-					'$divide':['$popularity', {'$subtract':[now_time, '$date']}]
+					'$and': 
+					[
+						{'token': {'$in': tokenizer_list}},
+						{'info': {'$regex': '^everytime_'}}
+					]
 				}
-			}
-		},
-		{
-			'$sort': 
-			{
-				'ids': -1, 
-				'date': -1
-			}
-		},
-		{'$limit': 50000}
-	])
+			},
+			addFields,
+			sort,
+			limit
+		])
 
 	return result
 

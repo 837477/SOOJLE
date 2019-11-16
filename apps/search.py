@@ -28,7 +28,7 @@ def priority_search(num):
 	search_str = request.form['search']
 
 	#검색어로 시작되는 포스트들을 1차 regex 검색!
-	title_regex = find_title_regex(g.db, search_str)
+	title_regex = find_title_regex(g.db, search_str, 0)
 	title_regex = list(title_regex)
 
 	#공백 제거
@@ -55,8 +55,16 @@ def priority_search(num):
 	for post in aggregate_posts:
 		post['_id'] = dumps(post['_id'])
 		T1 = match_score(del_space_str, post['title_token'])
-		T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
-		T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
+		
+		if tokenizer_list:
+			T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
+		else:
+			T2 =0
+
+		if ft_similarity_list:
+			T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
+		else:
+			T3 = 0
 
 		post['similarity'] = T1 + T2 + T3
 
@@ -79,7 +87,7 @@ def category_search(community_check, num):
 	search_str = request.form['search']
 
 	#검색어로 시작되는 포스트들을 1차 regex 검색!
-	title_regex = find_title_regex(g.db, search_str)
+	title_regex = find_title_regex(g.db, search_str, community_check)
 	title_regex = list(title_regex)
 
 	#공백 제거
@@ -96,12 +104,7 @@ def category_search(community_check, num):
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
-	#비 커뮤니티만!
-	if community_check == 1:
-		aggregate_posts = find_aggregate(g.db, tokenizer_list, 1)
-	#커뮤니티만!
-	else:
-		aggregate_posts = find_aggregate(g.db, tokenizer_list, 2)
+	aggregate_posts = find_aggregate(g.db, tokenizer_list, community_check)
 
 	aggregate_posts = list(aggregate_posts)
 
@@ -111,8 +114,16 @@ def category_search(community_check, num):
 	for post in aggregate_posts:
 		post['_id'] = dumps(post['_id'])
 		T1 = match_score(del_space_str, post['title_token'])
-		T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
-		T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
+
+		if tokenizer_list:
+			T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
+		else:
+			T2 =0
+
+		if ft_similarity_list:
+			T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
+		else:
+			T3 = 0
 
 		post['similarity'] = T1 + T2 + T3
 
