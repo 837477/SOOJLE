@@ -4,8 +4,7 @@ from db_info import *
 
 def get_db():
     if 'db_client' not in g:
-        #db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
-        db_client = MongoClient("192.168.0.29", 27017)
+        db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
         g.db_client = db_client
 
     if 'db' not in g:
@@ -19,8 +18,7 @@ def close_db():
 
 #몽고디비 첫 start collection 체킹 및 초기화
 def init_db():
-	db_client = MongoClient("192.168.0.29", 27017)
-	#db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
 	#현재 db에 있는 collection 이름을 리스트로 불러온다.
