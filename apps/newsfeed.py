@@ -15,12 +15,18 @@ from global_func import *
 BP = Blueprint('newsfeed', __name__)
 #####################################
 
-return_num = 200
+return_num = 300
 
 #토픽별 뉴스피드
 @BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
-@logging_time
+@jwt_optional
 def get_newsfeed_of_topic(newsfeed_name):
+	#user_logging!
+	if get_jwt_identity():
+		insert_user_log(g.db, get_jwt_identity(), request.url)
+	else:
+		insert_user_log(g.db, request.remote_addr, request.url)
+
 	#요청한 뉴스피드에 대한 정보를 가져온다.
 	newsfeed_type = find_newsfeed_of_topic(g.db, newsfeed_name)
 
@@ -34,9 +40,16 @@ def get_newsfeed_of_topic(newsfeed_name):
 		newsfeed = dumps(result))
 
 #인기 뉴스피드
-@BP.route('/get_popularity_newsfeed<int:num>')
-def get_popularity_newsfeed(num):
-	result = find_popularity_newsfeed(g.db, num)
+@BP.route('/get_popularity_newsfeed')
+@jwt_optional
+def get_popularity_newsfeed():
+	#user_logging!
+	if get_jwt_identity():
+		insert_user_log(g.db, get_jwt_identity(), request.url)
+	else:
+		insert_user_log(g.db, request.remote_addr, request.url)
+
+	result = find_popularity_newsfeed(g.db, return_num)
 
 	return jsonify(
 		result = "success",
@@ -46,11 +59,14 @@ def get_popularity_newsfeed(num):
 @BP.route('/get_recommendation_newsfeed')
 @jwt_optional
 def get_recommendation_newsfeed():
-	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, url=1, img=1, date=1, limit_=20000)
+	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, url=1, img=1, date=1, limit_=15000)
 
 	POST_LIST = list(POST_LIST)
 
 	if get_jwt_identity():
+		#user_logging
+		insert_user_log(g.db, get_jwt_identity(), request.url)
+
 		#유저를 _id, topic리스트, tag리스트 만 가져온다.
 		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
 
@@ -60,7 +76,7 @@ def get_recommendation_newsfeed():
 		Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
 		#캐싱된 가장 높은 조회수를 가져온다.
 		Maxviews = find_variable(g.db, 'highest_view')
-		
+
 		for POST in POST_LIST:
 			#TOS 작업
 			TOS = dot(USER['topic'], POST['topic'])/(norm(USER['topic'])*norm(POST['topic']))
@@ -92,12 +108,15 @@ def get_recommendation_newsfeed():
 			del POST['view']
 			del POST['tag']
 
-			POST['_id'] = dumps(POST['_id'])
 			POST['similarity'] = result
 
 		#similarity를 기준으로 내림차순 정렬.
 		POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
+	
+	#Token이 안들어왔을 때
+	else:
+		insert_user_log(g.db, request.remote_addr, request.url)
 
 	return jsonify(
 		result = "success",
-		newsfeed = POST_LIST[:return_num])
+		newsfeed = dumps(POST_LIST[:return_num]))

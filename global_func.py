@@ -2,8 +2,7 @@ import sys
 sys.path.insert(0,'../')
 sys.path.insert(0,'../IML_Tokenizer/src/')
 sys.path.insert(0,'../SJ_AI/src')
-sys.path.insert(0,'database/')
-
+sys.path.insert(0,'./database/')
 import atexit
 import time
 from pymongo import *
@@ -14,6 +13,8 @@ from collections import Counter
 from operator import itemgetter
 from tzlocal import get_localzone
 from datetime import timedelta, datetime
+import json
+import re
 #######################################################
 from db_management import *
 from db_info import *
@@ -23,7 +24,9 @@ from tknizer import get_tk
 import LDA
 import FastText
 #######################################################
-
+db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+db = db_client["soojle"]
+#######################################################
 # BackgroundScheduler Initialize
 def schedule_init():
 	t_zone = get_localzone()
@@ -42,12 +45,7 @@ def schedule_init():
 
 #######################################################
 #전역 함수###############################################
-def get_nowtime():
-	now = datetime.now()
-	encode_time = now.strftime('%Y-%m-%d %H:%M:%S')
-
-	return encode_time
-
+#함수 시간 측정
 def logging_time(original_fn):
     def wrapper_fn(*args, **kwargs):
         start_time = time.time()
@@ -57,25 +55,73 @@ def logging_time(original_fn):
         return result
     return wrapper_fn
 
+#날짜 마이너스 연산
+def get_default_day(day):
+	date = datetime.now() - timedelta(days = day)
+	return date
+
 #######################################################
 #Background Func#######################################
+#실시간 검색어 함수 preprocess
+def preprocess(doc):
+	emoji_pattern = re.compile("["
+		u"\U0001F600-\U0001F64F"  # emoticons
+		u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+		u"\U0001F680-\U0001F6FF"  # transport & map symbols
+		u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+		"]+", flags=re.UNICODE)
+	doc = re.sub(r'\s+'," ", doc)
+	doc = doc.lower()
+	doc = re.sub(r'[-=+,#/\?:^$.@*\"※~&%ㆍ!』\\‘|\(\)\[\]\<\>`\'…》]', '', doc)
+	doc = emoji_pattern.sub(r'', doc)
+	doc = re.compile('[^ ㄱ-ㅣ가-힣|a-z]+').sub('', doc)
+	return doc
+#실시간 검색어 추출 함수
+def real_time_keywords(search_input):
+	temp = [i['search_split'] for i in search_input]
+	check_list = []
+	for i in range(len(temp)):
+		temp_word = []
+		for j in range(len(temp[i])):
+			temp[i][j] = preprocess(temp[i][j])
+			if len(temp[i][j]) > 1: temp_word.append(temp[i][j])
+		check_list.append(temp_word)
+	
+	result = {}
+	for words in check_list:
+		# 단일 단어 추가
+		for i in range(len(words)):
+			if words[i] in result: result[words[i]] += 1
+			else: result[words[i]] = 1
+		
+		# 연속 단어 추가(정방향)
+		for i in range(2,len(words)):
+			key = " ".join(words[0:i+1])
+			if key in result: result[key] += 1
+			else: result[key] = 1
+
+	result = sorted(result.items(), key = itemgetter(0))
+	temp = []
+	for i in range(len(result)-1):
+		if ((result[i+1][0].startswith(result[i][0]) or result[i+1][0].endswith(result[i][0])) and result[i+1][1] >= result[i][1]): 
+			continue
+		temp.append(result[i])
+	result = sorted(temp, key = lambda x: len(x[0]))   
+	result = sorted(result, key = itemgetter(1), reverse = True)
+	return result
+#실시간 검색어 캐싱 함수
+def real_time_insert():
+	search_log_list = find_search_logging(db)
+	search_log_list = list(search_log_list)
+
+	real_tiem_result = real_time_keywords(search_log_list)
+
+	insert_search_realtime(db, real_tiem_result)
+
 #사용자 관심도 측정
 def measurement_run(num):
-	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
-	db = db_client["soojle"]
-	
-	mongo_num = num * -1
-	USER_list = db['user'].find({"user_id": "test"}, {
-		'fav_list': {'$slice': mongo_num}, 
-		'view_list': {'$slice': mongo_num}, 
-		'search_list': {'$slice': mongo_num}
-		})
-
-	# USER_list = db['user'].find({}, {
-	# 	'fav_list': {'$slice': num}, 
-	# 	'view_list': {'$slice': num}, 
-	# 	'search_list': {'$slice': num}
-	# 	})
+	#모든 유저의 관심도 측정 지표를 다 가져온다.
+	USER_list = find_user_measurement(db, num)
 
 	for USER in USER_list:
 		fav_tag = []

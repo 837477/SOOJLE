@@ -21,11 +21,11 @@ sys.path.insert(0,'/home/iml/SJ_Auth')
 sys.path.insert(0,'/home/iml/SJ_AI/src')
 sys.path.insert(0,'/home/iml/IML_Tokenizer/src/')
 ###########################################
-from init_database import *
 from global_func import *
+from init_database import *
 ###########################################
 #APPS
-import main, auth, newsfeed, post, search, admin, error
+import main, auth, newsfeed, post, search, admin, analysis, simulation, error
 
 application = Flask(__name__, instance_relative_config=True)
 cors = CORS(application)
@@ -48,7 +48,10 @@ def main_app(test_config = None):
 	application.register_blueprint(newsfeed.BP)
 	application.register_blueprint(post.BP)
 	application.register_blueprint(search.BP)
+	application.register_blueprint(analysis.BP)
 	application.register_blueprint(admin.BP)
+
+	application.register_blueprint(simulation.BP)
 
 @application.before_request
 def before_request():

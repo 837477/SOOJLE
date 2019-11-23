@@ -1,8 +1,10 @@
 from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
 from datetime import datetime, timedelta
+import numpy
 #####################################
 from global_func import *
+import global_func
 #####################################
 
 #######################################################
@@ -81,31 +83,51 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_maj
 
 #유저 생성
 def insert_user(db, user_id, user_pw, user_name, user_major):
+	topic_temp = numpy.ones(26)
+	topic = (topic_temp / topic_temp.sum()).tolist()
+
+	ft_vector = (numpy.zeros(30)).tolist()
+	tag = {}
+	tag_sum = 1
+	fav_list = []
+	view_list = []
+	search_list = []
+
 	result = db['user'].insert(
 		{
 			'user_id': user_id,
 			'user_pw': user_pw,
 			'user_name': user_name,
-			'user_major': user_major
+			'user_major': user_major,
+			'ft_vector': ft_vector,
+			'tag': tag,
+			'tag_sum': tag_sum,
+			'topic': topic,
+			'fav_list': fav_list,
+			'view_list': view_list,
+			'search_list': search_list
 		})
 
 	return "success"
 
-#유저 관심도 초기화
-def update_unset_user_interest(db, _id):
-	db['user'].update(
+#유저 fav_list 중복 체크용
+def check_user_fav_list(db, _id, post_obi):
+	result = db['user'].find_one(
 		{
-			'_id': ObjectId(_id)
-		},
+			'_id': _id
+		}, 
 		{
-			'$unset': 
+			'fav_list': 
 			{
-				'fav_list':1,
-				'view_list':1,
-				'search_list':1
+				'$elemMatch': 
+				{
+					'_id': post_obi
+				}
 			}
-		})
-	return "success"
+		}
+	)
+
+	return result
 
 #유저 fav_list에 요소 추가
 def update_user_fav_list_push(db, _id, fav_obj):
@@ -123,7 +145,7 @@ def update_user_fav_list_push(db, _id, fav_obj):
 	return "success"
 
 #유저 fav_list에 요소 삭제 (좋아요 취소한 경우)
-def update_user_fav_list_pull(db, _id, fav_obj_id):
+def update_user_fav_list_pull(db, _id, post_obi):
 	db['user'].update(
 		{
 			'_id': _id
@@ -133,30 +155,12 @@ def update_user_fav_list_pull(db, _id, fav_obj_id):
 			{
 				'fav_list': 
 				{
-					'_id': fav_obj_id
+					'_id': post_obi
 				}
 			}
 		}
 	)
 	return "success"
-
-#유저 fav_list 중복 체크용
-def check_user_fav_list(db, _id, fav_obj_id):
-	result = db['user'].find_one(
-		{
-			'_id': _id
-		}, 
-		{
-			'fav_list': 
-			{
-				'$elemMatch': 
-				{
-					'_id': ObjectId(fav_obj_id)
-				}
-			}
-		}
-	)
-	return result
 
 #유저 view_list에 요소 추가
 def update_user_view_list_push(db, _id, view_obj):
@@ -174,10 +178,10 @@ def update_user_view_list_push(db, _id, view_obj):
 	return "success"
 
 #유저 search_list에 요소 추가
-def update_user_search_list_push(db, _id, search_obj):
+def update_user_search_list_push(db, user_id, search_obj):
 	db['user'].update(
 		{
-			'_id': ObjectId(_id)
+			'user_id': user_id
 		},
 		{
 			'$push': 
@@ -186,6 +190,205 @@ def update_user_search_list_push(db, _id, search_obj):
 			}
 		}
 	)
+	return "success"
+
+#######################################################
+#뉴스피드 관련############################################
+#토픽별 뉴스피드 타입 반환
+def find_newsfeed_of_topic(db, newsfeed_name):
+	result = db['newsfeed_of_topic'].find_one(
+		{
+			'newsfeed_name': newsfeed_name
+		}, 
+		{
+			'_id': 0
+		}
+	)
+	return result
+
+def find_newsfeed(db, info, tag, negative_tag, num):
+	result = db['test_posts6'].find(
+		{
+			'$and':
+			[
+				{'info': {'$regex': info}},
+				{'tag': {'$nin': negative_tag}},
+				{'tag': {'$in': tag}}
+			]
+		},
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'url': 1
+		}
+		).sort([('date', -1)]).limit(num)
+	return result
+
+#인기 뉴스피드
+def find_popularity_newsfeed(db, num):
+	result = db['test_posts6'].find(
+		{}, 
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'url': 1,
+			'popularity': 1
+		}
+		).sort([('date', -1)]).limit(num).sort([('popularity', -1)])
+	return result
+
+#######################################################
+#포스트 관련#############################################
+#포스트 전체 가져오기
+def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None, skip_=0, limit_=None):
+
+	show_dict = {'_id': 0}
+
+	if _id is not None:
+		show_dict['_id'] = 1
+	if title is not None:
+		show_dict['title'] = 1
+	if date is not None:
+		show_dict['date'] = 1
+	if post is not None:
+		show_dict['post'] = 1
+	if tag is not None:
+		show_dict['tag'] = 1
+	if img is not None:
+		show_dict['img'] = 1
+	if url is not None:
+		show_dict['url'] = 1
+	if hashed is not None:
+		show_dict['hashed'] = 1
+	if info is not None:
+		show_dict['info'] = 1
+	if view is not None:
+		show_dict['view'] = 1
+	if fav_cnt is not None:
+		show_dict['fav_cnt'] = 1
+	if title_token is not None:
+		show_dict['title_token'] = 1
+	if token is not None:
+		show_dict['token'] = 1
+	if topic is not None:
+		show_dict['topic'] = 1
+	if ft_vector is not None:
+		show_dict['ft_vector'] = 1
+	if popularity is not None:
+		show_dict['popularity'] = 1
+
+	if limit_ is None:
+		#기본적으로 날짜순 정렬 (최신)
+		result = db['test_posts6'].find(
+			{}, 
+			show_dict
+		).sort([('date', -1)]).skip(skip_)
+
+	else:
+		#기본적으로 날짜순 정렬 (최신)
+		result = db['test_posts6'].find(
+			{}, 
+			show_dict
+		).sort([('date', -1)]).skip(skip_).limit(limit_)
+
+	return result
+
+#특정 포스트 가져오기 (가져오고 싶은 필드만 1로 지정하여 보내주면 됨)
+def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None):
+
+	show_dict = {'_id': 0}
+
+	if _id is not None:
+		show_dict['_id'] = 1
+	if title is not None:
+		show_dict['title'] = 1
+	if date is not None:
+		show_dict['date'] = 1
+	if post is not None:
+		show_dict['post'] = 1
+	if tag is not None:
+		show_dict['tag'] = 1
+	if img is not None:
+		show_dict['img'] = 1
+	if url is not None:
+		show_dict['url'] = 1
+	if hashed is not None:
+		show_dict['hashed'] = 1
+	if info is not None:
+		show_dict['info'] = 1
+	if view is not None:
+		show_dict['view'] = 1
+	if fav_cnt is not None:
+		show_dict['fav_cnt'] = 1
+	if title_token is not None:
+		show_dict['title_token'] = 1
+	if token is not None:
+		show_dict['token'] = 1
+	if topic is not None:
+		show_dict['topic'] = 1
+	if ft_vector is not None:
+		show_dict['ft_vector'] = 1
+	if popularity is not None:
+		show_dict['popularity'] = 1
+
+	result = db['test_posts6'].find_one(
+		{
+			'_id': ObjectId(post_obi)
+		}, 
+		show_dict
+	)
+
+	return result
+
+#포스트 좋아요
+def update_post_like(db, post_obi):
+	db['test_posts6'].update(
+		{
+			'_id': ObjectId(post_obi)
+		}, 
+		{
+			'$inc': {'fav_cnt': 1, 'popularity': 3}
+		}
+	)
+	return "success"
+
+#포스트 좋아요 취소
+def update_post_unlike(db, post_obi):
+	db['test_posts6'].update_many(
+		{
+			'_id': ObjectId(post_obi)
+		}, 
+		{
+			'$inc': 
+			{
+				'fav_cnt': -1, 
+				'popularity': -3
+			}
+		}
+	)
+	return "success"
+
+#포스트 조회수 올리기
+def update_post_view(db, post_obi):
+	db['test_posts6'].update_one(
+		{
+			'_id': ObjectId(post_obi)
+		}, 
+		{
+			'$inc': 
+			{
+				'view': 1, 
+				'popularity': 1
+			}
+		}
+	)
+
 	return "success"
 
 #######################################################
@@ -324,6 +527,20 @@ def find_title_regex(db, search_str, type_check):
 	
 	return result
 
+#post post regex 검색
+def find_post_regex(db, regex_str):
+	result = db['test_posts6'].find(
+			{
+				'post': {'$regex':regex_str}
+			}, 
+			{
+				'title': 1,
+				'post': 1,
+				'url': 1
+			}
+		)
+	return result
+
 #가상 post ids용 반환
 def find_aggregate(db, tokenizer_list, type_check):
 	now_time = datetime.now()
@@ -337,6 +554,7 @@ def find_aggregate(db, tokenizer_list, type_check):
 			'img': 1,
 			'url': 1,
 			'fav_cnt': 1,
+			'info': 1,
 			###############
 			'title_token':1,
 			'token':1,
@@ -360,7 +578,8 @@ def find_aggregate(db, tokenizer_list, type_check):
 			'date': -1
 		}
 	}
-	limit = {'$limit': 10000}
+	limit = {'$limit': 50000}
+
 	#priority
 	if type_check == 0:
 		result = db['test_posts6'].aggregate([
@@ -373,7 +592,7 @@ def find_aggregate(db, tokenizer_list, type_check):
 			}, 
 			addFields, 
 			sort, 
-			limit		
+			{'$limit': 10000}
 		])
 
 	#진로&구인
@@ -540,209 +759,84 @@ def find_token(db, token_list):
 	)
 	return result
 
-#######################################################
-#뉴스피드 관련############################################
-#토픽별 뉴스피드 타입 반환
-def find_newsfeed_of_topic(db, newsfeed_name):
-	result = db['newsfeed_of_topic'].find_one(
+###############################################
+#measurement################################### 
+def find_user_measurement(db, num):
+	mongo_num = num * -1
+	result = db['user'].find({}, {
+		'fav_list': {'$slice': mongo_num}, 
+		'view_list': {'$slice': mongo_num}, 
+		'search_list': {'$slice': mongo_num}
+		})
+
+	return result
+
+###############################################
+#logging####################################### 
+#search_logging에 search_obj 추가
+def insert_search_logging(db, user_id, split_list):
+	db['search_logging'].insert(
 		{
-			'newsfeed_name': newsfeed_name
-		}, 
+			'user_id': user_id,
+			'search_split': split_list,
+			'date': datetime.now()
+		}
+	)
+	return "success"
+
+#search_logging 가져온다.
+def find_search_logging(db):
+	result = db['search_logging'].find(
+		{
+			'date':
+			{
+				'$gte': global_func.get_default_day(7)
+			}
+		},
+		{
+			'_id': 0,
+			'search_split': 1
+		}
+	).sort([('date', -1)])
+
+	return result
+
+#user_log에 기록!
+def insert_user_log(db, user_id, url):
+	db['user_log'].insert(
+		{
+			'user_id': user_id,
+			'url': url,
+			'date': datetime.now()
+		}
+	)
+	return "success"
+
+#search_realtime에 기록!
+def insert_search_realtime(db, real_time_list):
+	db['search_realtime'].insert(
+		{
+			'real_time' : real_time_list,
+			'date': datetime.now()
+		}
+	)
+	return "success"
+
+#search_realtime 가져오기!
+def find_search_realtime(db):
+	result = db['search_realtime'].find_one(
+		{},
 		{
 			'_id': 0
 		}
 	)
 	return result
 
-def find_newsfeed(db, info, tag, negative_tag, num):
-	result = db['test_posts6'].find(
-		{
-			'$or':
-			[
-				{'info': {'$regex': info}},
-				{'tag': {'$nin': negative_tag}},
-				{'tag': {'$in': tag}},
-				{'token': {'$in': tag}}
-			]
-		},
-		{
-			'_id': 1,
-			'title': 1,
-			'date': 1,
-			'img': 1,
-			'fav_cnt': 1,
-			'url': 1
-		}
-		).sort([('date', -1)]).limit(num)
-	return result
-
-#인기 뉴스피드
-def find_popularity_newsfeed(db, num):
-	result = db['test_posts6'].find(
-		{}, 
-		{
-			'_id': 1,
-			'title': 1,
-			'date': 1,
-			'img': 1,
-			'fav_cnt': 1,
-			'url': 1,
-			'popularity': 1
-		}
-		).sort([('date', -1)]).limit(num).sort([('popularity', -1)])
-	return result
-
-#######################################################
-#포스트 관련#############################################
-#포스트 전체 가져오기
-def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None, skip_=0, limit_=None):
-
-	show_dict = {'_id': 0}
-
-	if _id is not None:
-		show_dict['_id'] = 1
-	if title is not None:
-		show_dict['title'] = 1
-	if date is not None:
-		show_dict['date'] = 1
-	if post is not None:
-		show_dict['post'] = 1
-	if tag is not None:
-		show_dict['tag'] = 1
-	if img is not None:
-		show_dict['img'] = 1
-	if url is not None:
-		show_dict['url'] = 1
-	if hashed is not None:
-		show_dict['hashed'] = 1
-	if info is not None:
-		show_dict['info'] = 1
-	if view is not None:
-		show_dict['view'] = 1
-	if fav_cnt is not None:
-		show_dict['fav_cnt'] = 1
-	if title_token is not None:
-		show_dict['title_token'] = 1
-	if token is not None:
-		show_dict['token'] = 1
-	if topic is not None:
-		show_dict['topic'] = 1
-	if ft_vector is not None:
-		show_dict['ft_vector'] = 1
-	if popularity is not None:
-		show_dict['popularity'] = 1
-
-	if limit_ is None:
-		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts6'].find(
-			{}, 
-			show_dict
-		).sort([('date', -1)]).skip(skip_)
-
-	else:
-		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts6'].find(
-			{}, 
-			show_dict
-		).sort([('date', -1)]).skip(skip_).limit(limit_)
-
-	return result
-
-#특정 포스트 가져오기 (가져오고 싶은 필드만 1로 지정하여 보내주면 됨)
-def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None):
-
-	show_dict = {'_id': 0}
-
-	if _id is not None:
-		show_dict['_id'] = 1
-	if title is not None:
-		show_dict['title'] = 1
-	if date is not None:
-		show_dict['date'] = 1
-	if post is not None:
-		show_dict['post'] = 1
-	if tag is not None:
-		show_dict['tag'] = 1
-	if img is not None:
-		show_dict['img'] = 1
-	if url is not None:
-		show_dict['url'] = 1
-	if hashed is not None:
-		show_dict['hashed'] = 1
-	if info is not None:
-		show_dict['info'] = 1
-	if view is not None:
-		show_dict['view'] = 1
-	if fav_cnt is not None:
-		show_dict['fav_cnt'] = 1
-	if title_token is not None:
-		show_dict['title_token'] = 1
-	if token is not None:
-		show_dict['token'] = 1
-	if topic is not None:
-		show_dict['topic'] = 1
-	if ft_vector is not None:
-		show_dict['ft_vector'] = 1
-	if popularity is not None:
-		show_dict['popularity'] = 1
-
-	result = db['test_posts6'].find_one(
-		{
-			'_id': ObjectId(post_obi)
-		}, 
-		show_dict
-	)
-
-	return result
-
-#포스트 좋아요
-def update_post_like(db, post_obi):
-	db['test_posts6'].update(
-		{
-			'_id': ObjectId(post_obi)
-		}, 
-		{
-			'$inc': {'fav_cnt': 1, 'popularity': 3}
-		}
-	)
-	return "success"
-
-#포스트 좋아요 취소
-def update_post_unlike(db, post):
-	db['test_posts6'].update_many(
-		{
-			'_id': ObjectId(post['_id'])
-		}, 
-		{
-			'$inc': 
-			{
-				'fav_cnt': -1, 
-				'popularity': -3
-			}
-		}
-	)
-	return "success"
-
-#포스트 조회수 올리기
-def update_post_view(db, post):
-	db['test_posts6'].update_one(
-		{
-			'_id': ObjectId(post['_id'])
-		}, 
-		{
-			'$inc': 
-			{
-				'view': 1, 
-				'popularity': 1
-			}
-		}
-	)
-
-	return "success"
 ###############################################
 #admin######################################### 
 
-
+###############################################
+#analysis######################################
 
 ###############################################
 #variable###################################### 

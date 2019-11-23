@@ -23,7 +23,9 @@ def match_score(token1, token2):
 	MR = MC / len(token1)
 	return MC * (1 + MR + math.floor(MR))
 
+#priority_검색
 @BP.route('/priority_search/<int:num>', methods = ['POST'])
+@jwt_optional
 def priority_search(num):
 	search_str = request.form['search']
 
@@ -32,7 +34,7 @@ def priority_search(num):
 	title_regex = list(title_regex)
 
 	#공백 제거
-	del_space_str = search_str.split(' ')
+	del_space_list = search_str.split(' ')
 
 	#토크나이져 작업
 	tokenizer_list = tknizer.get_tk(search_str)
@@ -44,6 +46,25 @@ def priority_search(num):
 			if sim_word[1] >= 0.7: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
+
+	if get_jwt_identity():
+		#user_logging!
+		insert_user_log(g.db, get_jwt_identity(), request.url)
+
+		#USER 정보를 불러온다.
+		USER = find_user(g.db, user_id=get_jwt_identity(), _id=1)
+
+		#잘못된 USER 정보(잘못된 Token)일 때
+		if USER is None: abort(400)
+
+		#DB search 로깅!
+		search_logging(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
+
+	else:
+		#user_logging!
+		insert_user_log(g.db, request.remote_addr, request.url)
+		#DB search 로깅!
+		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
 
 	#토크나이져 처리된 리스트를 대상으로 검색하고, aggregate로 ids처리하여 posts 추출
 	aggregate_posts = find_aggregate(g.db, tokenizer_list, 0)
@@ -53,20 +74,18 @@ def priority_search(num):
 	aggregate_posts += title_regex
 
 	for post in aggregate_posts:
-		post['_id'] = dumps(post['_id'])
-		T1 = match_score(del_space_str, post['title_token'])
+		T1 = match_score(del_space_list, post['title_token'])
 		
 		if tokenizer_list:
 			T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
-		else:
-			T2 =0
+		else: T2 =0
 
 		if ft_similarity_list:
 			T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
-		else:
-			T3 = 0
+		else: T3 = 0
 
 		post['similarity'] = T1 + T2 + T3
+		post['_id'] = str(post['_id'])
 
 		#필요없는 반환 값 삭제
 		del post['title_token']
@@ -82,12 +101,20 @@ def priority_search(num):
 		result = "success",
 		search_result = aggregate_posts[:num])
 
-@BP.route('/category_search/<int:community_check>/<int:num>', methods = ['POST'])
-def category_search(community_check, num):
+#category_검색
+@BP.route('/category_search/<int:type_check>/<int:num>', methods = ['POST'])
+@jwt_optional
+def category_search(type_check, num):
+	#user_logging!
+	if get_jwt_identity():
+		insert_user_log(g.db, get_jwt_identity(), request.url)
+	else:
+		insert_user_log(g.db, request.remote_addr, request.url)
+
 	search_str = request.form['search']
 
 	#검색어로 시작되는 포스트들을 1차 regex 검색!
-	title_regex = find_title_regex(g.db, search_str, community_check)
+	title_regex = find_title_regex(g.db, search_str, type_check)
 	title_regex = list(title_regex)
 
 	#공백 제거
@@ -104,7 +131,7 @@ def category_search(community_check, num):
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
-	aggregate_posts = find_aggregate(g.db, tokenizer_list, community_check)
+	aggregate_posts = find_aggregate(g.db, tokenizer_list, type_check)
 
 	aggregate_posts = list(aggregate_posts)
 
@@ -112,7 +139,6 @@ def category_search(community_check, num):
 	aggregate_posts += title_regex
 
 	for post in aggregate_posts:
-		post['_id'] = dumps(post['_id'])
 		T1 = match_score(del_space_str, post['title_token'])
 
 		if tokenizer_list:
@@ -126,6 +152,7 @@ def category_search(community_check, num):
 			T3 = 0
 
 		post['similarity'] = T1 + T2 + T3
+		post['_id'] = str(post['_id'])
 
 		#필요없는 반환 값 삭제
 		del post['title_token']
@@ -140,3 +167,47 @@ def category_search(community_check, num):
 	return jsonify(
 		result = "success",
 		search_result = aggregate_posts[:num])
+
+#domain_검색
+@BP.route('/domain_search', methods = ['POST'])
+@jwt_optional
+def domain_search():
+	search_str = request.form['search']
+
+	#토크나이져 작업
+	tokenizer_list = tknizer.get_tk(search_str)
+
+	#FastText를 이용한 유사단어 추출
+	ft_similarity_list = []
+	for word in tokenizer_list:
+		for sim_word in FastText.sim_words(word):
+			if sim_word[1] >= 0.7: 
+				ft_similarity_list.append(sim_word[0])
+			else: break	
+
+	regex_list = tokenizer_list + ft_similarity_list
+	regex_str = "|".join(regex_list)
+
+	result = find_post_regex(g.db, regex_str)
+
+	return jsonify(
+		result = "success",
+		search_result = list(result))
+
+
+#search_logging 기록!
+def search_logging(db, user_id, original_str, split_list, tokenizer_list, similarity_list):
+	
+	if user_id:
+		USER_search_obj = {}
+		USER_search_obj['original'] = original_str
+		USER_search_obj['search_split'] = split_list
+		USER_search_obj['tokenizer_split'] = tokenizer_list
+		USER_search_obj['similarity_split'] = similarity_list
+		USER_search_obj['date'] = datetime.now()
+
+		#유저 searching 기록!
+		update_user_search_list_push(db, user_id, USER_search_obj)
+
+	#공용 searching 기록!
+	insert_search_logging(db, user_id, split_list)

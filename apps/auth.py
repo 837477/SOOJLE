@@ -1,17 +1,19 @@
 from flask import *
 from werkzeug.security import *
 from flask_jwt_extended import *
+import operator
 ###########################################
 from db_management import *
 from sj_auth import *
+from pprint import pprint
 ###########################################
 BP = Blueprint('auth', __name__)
 ###########################################
 
-#######################################################
-#페이지 URL#############################################
+###########################################
+#페이지 URL#################################
 
-#######################################################
+###########################################
 #로그인 및 회원가입(토큰발행) (OK)
 @BP.route('/sign_in_up', methods=['POST'])
 def sign_in_up():
@@ -19,17 +21,22 @@ def sign_in_up():
 	USER_PW = request.form['pw']
 
 	user = find_user(g.db, user_id=USER_ID, user_pw=1)
-	result = "success"
+
 	if user is None:
 		result = refresh_sejong_portal(USER_ID, USER_PW)
+	else:
+		result = "success"
 
-	#위 refresh_sejong_portal()을 통과 못했다면 3개의 로그인 api를 통과하지 못한 것.
+	#위 refresh_sejong_portal()을 통과 못했다면 3개의 로그인 api를 통과하지 못한 것. (통과했다면 result 값이 success임)
 	if result == "not sejong":
 		return jsonify(result = "not sejong")
+	
 	#세종대학교 내부 전산 오류
 	elif result == "api error":
 		return jsonify(result = "api error")
 	
+	user = find_user(g.db, user_id=USER_ID, user_pw=1)
+
 	if check_password_hash(user['user_pw'], USER_PW):
 		return jsonify(
 			result = "success",
@@ -44,7 +51,7 @@ def sign_in_up():
 @BP.route('/get_userinfo')
 @jwt_required
 def get_user_info():
-	user = find_user(g.db, user_id=get_jwt_identity(), user_name=1, user_major = 1)
+	user = find_user(g.db, user_id=get_jwt_identity(), user_name=1, user_major=1, fav_list=1)
 
 	if user is None:
 		return jsonify("not found")
@@ -53,33 +60,30 @@ def get_user_info():
 		result = "success",
 		user_id = user['user_id'],
 		user_name = user['user_name'],
-		user_major = user['user_major']
+		user_major = user['user_major'],
+		user_fav_list = user['fav_list']
 		)
 
 #회원정보 특정 필드 반환
 @BP.route('/get_specific_userinfo/<int:type_num>')
 @jwt_required
 def get_specific_userinfo(type_num=None):
-	USER = find_user(g.db, user_id=USER_ID)
+	USER = find_user(g.db, user_id=get_jwt_identity())
 
-	if USER is None:
-		return jsonify(result = "user is not define")
+	if USER is None: abort(400)
 
 	if type_num == 0:
-		USER = find_user(g.db, user_id=get_jwt_identity(), fav_list=1, view_list=1, search_list=1, newsfeed_list=1)
-
+		USER = find_user(g.db, user_id=get_jwt_identity(), fav_list=1, view_list=1, search_list=1)
 	elif type_num == 1:
 		USER = find_user(g.db, user_id=get_jwt_identity(), fav_list=1)
 	elif type_num == 2:
 		USER = find_user(g.db, user_id=get_jwt_identity(), view_list=1)
 	elif type_num == 3:
 		USER = find_user(g.db, user_id=get_jwt_identity(), search_list=1)
-	elif type_num == 4:
-		USER = find_user(g.db, user_id=get_jwt_identity(), newsfeed_list=1)
 
 	return jsonify(
-		result = 'success',
-		USER = dumps(USER))
+		result = "success",
+		user = dumps(USER))
 
 ###############################################
 ###############################################
