@@ -15,6 +15,7 @@ from db_management import *
 from global_func import *
 import jpype
 import tknizer
+from pprint import pprint
 ##########################################
 BP = Blueprint('analysis', __name__)
 ##########################################

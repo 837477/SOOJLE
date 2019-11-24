@@ -21,14 +21,27 @@ return_num = 300
 @BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
 @jwt_optional
 def get_newsfeed_of_topic(newsfeed_name):
-	#user_logging!
-	if get_jwt_identity():
-		insert_user_log(g.db, get_jwt_identity(), request.url)
-	else:
-		insert_user_log(g.db, request.remote_addr, request.url)
-
 	#요청한 뉴스피드에 대한 정보를 가져온다.
 	newsfeed_type = find_newsfeed_of_topic(g.db, newsfeed_name)
+
+	#user_logging!
+	if get_jwt_identity():
+		#USER를 불러온다.
+		USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
+		
+		#logging!
+		insert_log(g.db, get_jwt_identity(), request.url)
+
+		#접근한 뉴스피드 기록을 위한 obj 생성!
+		newsfeed_obj = {}
+		newsfeed_obj['newsfeed_name'] = newsfeed_type['newsfeed_name']
+		newsfeed_obj['tag'] = newsfeed_type['tag']
+
+		#접근한 뉴스피드 기록!
+		update_user_newsfeed_list_push(g.db, USER['_id'], newsfeed_obj)
+
+	else:
+		insert_log(g.db, request.remote_addr, request.url)
 
 	#info를 정규표현식으로 부르기위해 or연산자로 join
 	info = "|".join(newsfeed_type['info'])
@@ -45,9 +58,9 @@ def get_newsfeed_of_topic(newsfeed_name):
 def get_popularity_newsfeed():
 	#user_logging!
 	if get_jwt_identity():
-		insert_user_log(g.db, get_jwt_identity(), request.url)
+		insert_log(g.db, get_jwt_identity(), request.url)
 	else:
-		insert_user_log(g.db, request.remote_addr, request.url)
+		insert_log(g.db, request.remote_addr, request.url)
 
 	result = find_popularity_newsfeed(g.db, return_num)
 
@@ -65,7 +78,7 @@ def get_recommendation_newsfeed():
 
 	if get_jwt_identity():
 		#user_logging
-		insert_user_log(g.db, get_jwt_identity(), request.url)
+		insert_log(g.db, get_jwt_identity(), request.url)
 
 		#유저를 _id, topic리스트, tag리스트 만 가져온다.
 		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
@@ -75,7 +88,7 @@ def get_recommendation_newsfeed():
 		#캐싱된 가장 높은 좋아요 수를 가져온다.
 		Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
 		#캐싱된 가장 높은 조회수를 가져온다.
-		Maxviews = find_variable(g.db, 'highest_view')
+		Maxviews = find_variable(g.db, 'highest_view_cnt')
 
 		for POST in POST_LIST:
 			#TOS 작업
@@ -115,7 +128,7 @@ def get_recommendation_newsfeed():
 	
 	#Token이 안들어왔을 때
 	else:
-		insert_user_log(g.db, request.remote_addr, request.url)
+		insert_log(g.db, request.remote_addr, request.url)
 
 	return jsonify(
 		result = "success",

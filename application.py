@@ -41,7 +41,7 @@ def main_app(test_config = None):
 	#DB초기화
 	init_db()
 	#백그라운드 작업
-	#schedule_init()
+	schedule_init()
 	#페이지들
 	application.register_blueprint(main.BP)
 	application.register_blueprint(auth.BP)
@@ -49,9 +49,8 @@ def main_app(test_config = None):
 	application.register_blueprint(post.BP)
 	application.register_blueprint(search.BP)
 	application.register_blueprint(analysis.BP)
-	application.register_blueprint(admin.BP)
-
 	application.register_blueprint(simulation.BP)
+	application.register_blueprint(admin.BP)
 
 @application.before_request
 def before_request():

@@ -91,6 +91,7 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 	tag_sum = 1
 	fav_list = []
 	view_list = []
+	newsfeed_list = []
 	search_list = []
 
 	result = db['user'].insert(
@@ -105,6 +106,7 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 			'topic': topic,
 			'fav_list': fav_list,
 			'view_list': view_list,
+			'newsfeed_list': newsfeed_list,
 			'search_list': search_list
 		})
 
@@ -133,7 +135,7 @@ def check_user_fav_list(db, _id, post_obi):
 def update_user_fav_list_push(db, _id, fav_obj):
 	db['user'].update(
 		{
-			'_id': ObjectId(_id)
+			'_id': _id
 		},
 		{
 			'$push': 
@@ -166,7 +168,7 @@ def update_user_fav_list_pull(db, _id, post_obi):
 def update_user_view_list_push(db, _id, view_obj):
 	db['user'].update(
 		{
-			'_id': ObjectId(_id)
+			'_id': _id
 		},
 		{
 			'$push': 
@@ -192,6 +194,21 @@ def update_user_search_list_push(db, user_id, search_obj):
 	)
 	return "success"
 
+#유저 newsfeed_list에 요소 추가
+def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
+	db['user'].update(
+		{
+			'_id': _id
+		},
+		{
+			'$push': 
+			{
+				'newsfeed_list': newsfeed_obj
+			}
+		}
+	)
+	return "success"
+
 #######################################################
 #뉴스피드 관련############################################
 #토픽별 뉴스피드 타입 반환
@@ -206,6 +223,7 @@ def find_newsfeed_of_topic(db, newsfeed_name):
 	)
 	return result
 
+#토픽별 뉴스피드 타입에 따른 뉴시피드 게시글들 반환
 def find_newsfeed(db, info, tag, negative_tag, num):
 	result = db['test_posts6'].find(
 		{
@@ -227,7 +245,7 @@ def find_newsfeed(db, info, tag, negative_tag, num):
 		).sort([('date', -1)]).limit(num)
 	return result
 
-#인기 뉴스피드
+#인기 뉴스피드 반환
 def find_popularity_newsfeed(db, num):
 	result = db['test_posts6'].find(
 		{}, 
@@ -393,6 +411,40 @@ def update_post_view(db, post_obi):
 
 #######################################################
 #검색 관련###############################################
+#domain_title_regex 검색
+def find_domain_title_regex(db, search_str):
+	result = db['domain'].find(
+			{
+				'$or':
+				[
+					{'title': {'$regex':search_str}},
+					{'url': {'$regex':search_str}}
+				]
+			}, 
+			{
+				'_id': 0,
+				'title': 1,
+				'post': 1,
+				'url': 1
+			}
+		)
+	return result
+
+#domain_post_regex 검색
+def find_domain_post_regex(db, regex_str):
+	result = db['domain'].find(
+			{
+				'post': {'$regex':regex_str}
+			}, 
+			{
+				'_id': 0,
+				'title': 1,
+				'post': 1,
+				'url': 1
+			}
+		)
+	return result
+
 #post title regex 검색
 def find_title_regex(db, search_str, type_check):
 	return_dict = {
@@ -525,20 +577,6 @@ def find_title_regex(db, search_str, type_check):
 			return_dict
 		)
 	
-	return result
-
-#post post regex 검색
-def find_post_regex(db, regex_str):
-	result = db['test_posts6'].find(
-			{
-				'post': {'$regex':regex_str}
-			}, 
-			{
-				'title': 1,
-				'post': 1,
-				'url': 1
-			}
-		)
 	return result
 
 #가상 post ids용 반환
@@ -760,18 +798,6 @@ def find_token(db, token_list):
 	return result
 
 ###############################################
-#measurement################################### 
-def find_user_measurement(db, num):
-	mongo_num = num * -1
-	result = db['user'].find({}, {
-		'fav_list': {'$slice': mongo_num}, 
-		'view_list': {'$slice': mongo_num}, 
-		'search_list': {'$slice': mongo_num}
-		})
-
-	return result
-
-###############################################
 #logging####################################### 
 #search_logging에 search_obj 추가
 def insert_search_logging(db, user_id, split_list):
@@ -802,14 +828,56 @@ def find_search_logging(db):
 	return result
 
 #user_log에 기록!
-def insert_user_log(db, user_id, url):
-	db['user_log'].insert(
+def insert_log(db, user_id, url):
+	db['log'].insert(
 		{
 			'user_id': user_id,
 			'url': url,
 			'date': datetime.now()
 		}
 	)
+	return "success"
+
+###############################################
+#analysis######################################
+#search_realtime 가져오기!
+def find_search_all_realtime(db):
+	result = db['search_realtime'].find(
+		{},
+		{
+			'_id': 0
+		}
+	)
+	return result
+
+###############################################
+#background ################################### 
+
+#모든 유져를 불러온다. (관심도 측정용)
+def find_user_measurement(db, num):
+	mongo_num = num * -1
+	result = db['user'].find({}, {
+		'fav_list': {'$slice': mongo_num}, 
+		'view_list': {'$slice': mongo_num}, 
+		'search_list': {'$slice': mongo_num},
+		'newsfeed_list': {'$slice': mongo_num}
+		})
+
+	return result
+
+#USER의 관심도 갱신.
+def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector):
+	db['user'].update({'_id': _id}, 
+		{
+			'$set': 
+			{
+				'topic': topic, 
+				'tag': tag, 
+				'tag_sum': tag_sum,
+				'ft_vector': ft_vector
+			}
+		})
+
 	return "success"
 
 #search_realtime에 기록!
@@ -832,20 +900,52 @@ def find_search_realtime(db):
 	)
 	return result
 
-###############################################
-#admin######################################### 
+#제일 높은 좋아요 수 반환
+def find_highest_fav_cnt(db):
+	result = db['test_posts6'].find_one(
+		{},
+		{
+			'_id': 0,
+			'fav_cnt': 1
+		}
+	).sort([('fav_cnt', -1)])
+	
+	return result['fav_cnt']
 
-###############################################
-#analysis######################################
+#제일 높은 조회수 반환
+def find_highest_view_cnt(db):
+	result = db['test_posts6'].find_one(
+		{},
+		{
+			'_id': 0,
+			'view': 1
+		}
+	).sort([('view', -1)])
+	
+	return result['view']
 
-###############################################
-#variable###################################### 
 #정적 테이블 변수 불러오기
 def find_variable(db, key):
-	result = db['variable'].find_one({'key': key}, {'value':1})
+	result = db['variable'].find_one(
+		{
+			'key': key
+		}, 
+		{
+			'_id': 0,
+			'value':1
+		}
+	)
 	return result['value']
 
 #정적 테이블 변수 수정하기
 def update_variable(db, key, value):
-	db['variable'].update({'key': key}, {'$set': {'value': value }})
+	db['variable'].update(
+		{
+			'key': key
+		}, 
+		{
+			'$set': {'value': value }
+		}
+	)
 	return "success"	
+

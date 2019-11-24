@@ -22,8 +22,8 @@ def post_like(post_obi):
 	#잘못된 USER 정보(잘못된 token)
 	if USER is None: abort(400)
 
-	#user_logging
-	insert_user_log(g.db, get_jwt_identity(), request.url)
+	#logging
+	insert_log(g.db, get_jwt_identity(), request.url)
 
 	#이미 좋아요 한 글인지 확인용으로 불러온다.
 	check_fav = check_user_fav_list(g.db, USER['_id'], post_obi)
@@ -64,8 +64,8 @@ def post_unlike(post_obi):
 	#잘못된 USER 정보(잘못된 token)
 	if USER is None: abort(400)
 
-	#user_logging!
-	insert_user_log(g.db, get_jwt_identity(), request.url)
+	#logging!
+	insert_log(g.db, get_jwt_identity(), request.url)
 
 	#이미 좋아요 한 글인지 확인용으로 불러온다.
 	check_fav = check_user_fav_list(g.db, USER['_id'], post_obi)

@@ -15,6 +15,7 @@ from tzlocal import get_localzone
 from datetime import timedelta, datetime
 import json
 import re
+import csv
 #######################################################
 from db_management import *
 from db_info import *
@@ -31,18 +32,22 @@ db = db_client["soojle"]
 def schedule_init():
 	t_zone = get_localzone()
 	scheduler = BackgroundScheduler()
+	scheduler.start()
 
 	#특정 시간마다 실행
-	scheduler.add_job(measurement_run(100), 'cron', hour = 16, minute = 26, timezone = t_zone)
+	scheduler.add_job(measurement_run, 'cron', hour = 1, timezone = t_zone)
+
+	#매 달마다 실행
+	scheduler.add_job(create_word_cloud, trigger = "interval", days=30, timezone = t_zone)
 
 	#매 시간마다 실행
-	# weeks, days, hours, minutes, seconds
-	#scheduler.add_job(func = testtest, trigger = "interval", seconds = 10, timezone = t_zone)
-	
-	# start_date='2010-10-10 09:30', end_date='2014-06-15 11:00'
-	scheduler.start()
-	atexit.register(lambda: scheduler.shutdown())
+	scheduler.add_job(real_time_insert, trigger = "interval", minutes = 5, timezone = t_zone)
+	scheduler.add_job(update_posts_highest, trigger = "interval", hours = 1, timezone = t_zone)
 
+	# weeks, days, hours, minutes, seconds
+	# start_date='2010-10-10 09:30', end_date='2014-06-15 11:00'
+	
+	atexit.register(lambda: scheduler.shutdown())
 #######################################################
 #전역 함수###############################################
 #함수 시간 측정
@@ -54,12 +59,10 @@ def logging_time(original_fn):
         print("WorkingTime[{}]: {} sec".format(original_fn.__name__, end_time-start_time))
         return result
     return wrapper_fn
-
 #날짜 마이너스 연산
 def get_default_day(day):
 	date = datetime.now() - timedelta(days = day)
 	return date
-
 #######################################################
 #Background Func#######################################
 #실시간 검색어 함수 preprocess
@@ -117,15 +120,18 @@ def real_time_insert():
 	real_tiem_result = real_time_keywords(search_log_list)
 
 	insert_search_realtime(db, real_tiem_result)
-
+#######################################################
 #사용자 관심도 측정
-def measurement_run(num):
+def measurement_run():
+	num = 200
+
 	#모든 유저의 관심도 측정 지표를 다 가져온다.
 	USER_list = find_user_measurement(db, num)
 
 	for USER in USER_list:
 		fav_tag = []
 		view_tag = []
+		newsfeed_tag = []
 		fav_token = []
 		view_token = []
 
@@ -140,8 +146,7 @@ def measurement_run(num):
 		fav_doc = (fav_tag + fav_token) * 2
 
 		fav_tag *= 4
-		fav_topic *= 4
-		fav_topic /= num
+		fav_topic *= 40
 
 		#사용자가 접근을 수행한 게시물 ##############################
 		view_topic = np.zeros(LDA.NUM_TOPICS)
@@ -151,16 +156,15 @@ def measurement_run(num):
 			view_token += view['token']
 
 		#FAS 전용
-		view_doc = fav_tag + fav_token
+		view_doc = view_tag + view_token
 
 		view_tag *= 3
-		view_topic *= 3
-		view_topic /= num
+		view_topic *= 30
 
 		#사용자가 검색을 수행한 키워드 ##############################
 		search_keyword_list = USER['search_list'][num*2:]
 		search_topic = LDA.get_topics(search_keyword_list)
-		search_topic *= 3
+		search_topic *= 25
 
 		#FAS 전용
 		similarwords = []
@@ -173,45 +177,111 @@ def measurement_run(num):
 
 		search_doc = search_keyword_list + similarwords
 
-		############################################################################
+		#사용자가 접근한 뉴스피드 ################################
+		for newsfeed in USER['newsfeed_list']:
+			newsfeed_tag += newsfeed['tag']
+
+		newsfeed_topic = LDA.get_topics(newsfeed_tag)
+		newsfeed_topic *= 5
+
+		####################################################
 
 		#LDA Topic
-		topic_result = (fav_topic + view_topic + search_topic)/10
+		TOPIC_RESULT = (fav_topic + view_topic + search_topic + newsfeed_topic)/100
 		
 		#FASTTEXT
-		user_vector = FastText.get_doc_vector(fav_doc + view_doc + search_doc)
+		USER_VERCTOR = FastText.get_doc_vector(fav_doc + view_doc + search_doc)
 
 		#TAG
 		tag_dict = dict(Counter(fav_tag + view_tag))
 		tag_dict = sorted(tag_dict.items(), key=lambda x: x[1], reverse = True)
 		#빈도수 랭킹 상위 X위 까지 보관.
-		tag_result = {}
+		TAG_RESULT = {}
 
 		if len(tag_dict) >= 10:
 			for i in range(10):
-				tag_result[tag_dict[i][0]] = tag_dict[i][1]
+				TAG_RESULT[tag_dict[i][0]] = tag_dict[i][1]
 		else:
 			for i in range(len(tag_dict)):
-				tag_result[tag_dict[i][0]] = tag_dict[i][1]
+				TAG_RESULT[tag_dict[i][0]] = tag_dict[i][1]
 					
-		USER_TAG_SUM = sum(tag_result.values())
+		USER_TAG_SUM = sum(TAG_RESULT.values())
+
 		#1.5배 증가
 		USER_TAG_SUM *= 3
 		USER_TAG_SUM //= 2
 
-		############################################################################
+		#해당 USER 관심도 갱신!
+		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR.tolist())
+#######################################################
+#variable 가장 높은 좋아요/조회수 갱신
+def update_posts_highest():
+	#기존 캐싱돼있던 fav / view 카운트
+	old_fav = find_variable(db, 'highest_fav_cnt')
+	old_view = find_variable(db, 'highest_view_cnt')
 
-		db['user'].update({'_id': USER['_id']}, {'$set': {
-			'topic': list(topic_result), 
-			'tag': tag_result, 
-			'tag_sum': USER_TAG_SUM,
-			'ft_vector': user_vector.tolist()
-			}})
+	#새로운 fav / view 카운트
+	new_fav = find_highest_fav_cnt(db)
+	new_view = find_highest_view_cnt(db)
 
-#조회수 랭킹1위 수 갱신
-def update_posts_highest_view(db):
-	return "success"
+	#시스템 첫 시작시에, 추천 뉴스피드의 연산작업 때문에 highest 값들을 div 연산하는데 0으로 나눌 수 없기 때문에 첫 DB init 할 때에 1로 시작한다. 
 
-#좋아요 랭킹1위 수 갱신
-def update_posts_highest_fav_cnt(db):
-	return "success"
+	#만약, 첫 서비스 시작일 때 좋아요 / 조회수가 0이 최고높은 것으로 나오게 된다면 0으로 바뀌어버리기 때문에 아래와 같은 확인작업이 필요하다.
+
+	if old_fav < new_fav:
+		#제일 높은 좋아요 수 갱신!
+		update_variable(db, 'highest_fav_cnt', new_fav)
+
+	if old_view < new_view:
+		#제일 높은 조회수 갱신!
+		update_variable(db, 'highest_view_cnt', new_fav)
+#######################################################
+def create_word_cloud():
+	db_realtime = find_search_all_realtime(g.db)
+	db_realtime = list(db_realtime)
+	
+	db_posts = find_all_posts(g.db, title_token=1, token=1, tag=1)
+	db_posts = list(db_posts)
+
+	result = []
+
+	#실시간 검색어 전부 가져와서 검색어만 추출
+	for realtime in db_realtime:
+		for word in realtime['real_time']:
+			result.append(word[0])
+
+	#DB의 전체 POST들의 title_token 과 token만 전체 추출
+	for post in db_posts:
+		result += post['title_token']
+		result += post['token']
+		result += post['tag']
+
+	result = dict(Counter(result))
+	result = sorted(result.items(), key=lambda x: x[1], reverse = True)
+
+	file = open("./static/files/example.csv", 'w')
+	file.write("text,frequency\n")
+
+	necessary_str = ['SOOJLE', 'IML', '세종대']
+
+	#최 상단 필수 워드클라우드 작성!
+	for necessary in necessary_str:
+		data = "0%s,%d\n" %(necessary, 500)
+		file.write(data)
+	
+	frequency = 100
+	num = 500
+	cnt = 0
+
+	for object_ in result[:num]:
+		if cnt % (num/20) == 0:
+			frequency -= 5
+
+		data = "_%s,%d\n" %(object_[0], frequency)
+		file.write(data)
+		
+		cnt += 1
+
+	file.close()
+
+
