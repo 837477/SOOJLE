@@ -24,16 +24,26 @@ def init_db():
 	#현재 db에 있는 collection 이름을 리스트로 불러온다.
 	db_collections = db.list_collection_names()
 
-	if 'user' not in db_collections:
-		db.createCollection("user")
-	if 'posts' not in db_collections:
+	if not 'user' in db_collections:
+		db['user']
+
+	if not 'posts' in db_collections:
 		db['posts']
-	if 'newsfeed_of_topic' not in db_collections:
-		db['newsfeed_of_topic']
+
+	if not 'newsfeed_of_topic' in db_collections:
 		create_newsfeed_of_topic(db)
-	if 'variable' not in db_collections:
-		db['variable']
+
+	if not 'variable' in db_collections:
 		create_highest_fav_view(db)
+
+	if not 'search_realtime' in db_collections:
+		db['search_realtime']
+
+	if not 'search_logging' in db_collections:
+		db['search_logging']
+
+	if not 'log' in db_collections:
+		db['log']
 
 	if db_client is not None:
 		db_client.close()
@@ -91,3 +101,5 @@ def create_highest_fav_view(db):
 	)
 	return "success"
 
+#admin 계정 추가
+#나중에 만들어랑!
