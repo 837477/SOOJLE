@@ -827,7 +827,7 @@ def find_search_logging(db):
 
 	return result
 
-#user_log에 기록!
+#log에 기록!
 def insert_log(db, user_id, url):
 	db['log'].insert(
 		{
@@ -837,6 +837,52 @@ def insert_log(db, user_id, url):
 		}
 	)
 	return "success"
+
+#log에서 시간별로 가져온다.
+def find_date_log(db, date, limit_):
+	result = db['log'].find(
+		{
+			'date':
+			{
+				'$gte': date
+			}
+		},
+		{
+			'_id': 0
+		}
+	).sort([('date', -1)]).limit(limit_)
+
+	return result
+
+#log에서 회원별로 가져온다.
+def find_user_log(db, user_id, limit_):
+	result = db['log'].find(
+		{
+			'user_id': user_id
+		},
+		{
+			'_id': 0
+		}
+	).sort([('date', -1)]).limit(limit_)
+
+	return result
+
+#log에서 시간별 + 회원별로 가져온다.
+def find_user_date_log(db, user_id, date, limit_):
+	result = db['log'].find(
+		{
+			'$and':
+			[
+				{'date': {'$gte': date}},
+				{'user_id': user_id}
+			]
+		},
+		{
+			'_id': 0
+		}
+	).sort([('date', -1)]).limit(limit_)
+
+	return result
 
 ###############################################
 #analysis######################################

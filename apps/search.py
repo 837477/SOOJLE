@@ -73,6 +73,7 @@ def priority_search(num):
 	#regex와 aggregate로 뽑힌 포스트를 합친다.
 	aggregate_posts += title_regex
 
+	#검색 키워드와 문서간의 유사도 측정!
 	for post in aggregate_posts:
 		T1 = match_score(del_space_list, post['title_token'])
 		
@@ -105,6 +106,7 @@ def priority_search(num):
 @BP.route('/category_search/<int:type_check>/<int:num>', methods = ['POST'])
 @jwt_optional
 def category_search(type_check, num):
+	
 	#logging!
 	if get_jwt_identity():
 		insert_log(g.db, get_jwt_identity(), request.url)
@@ -198,6 +200,27 @@ def domain_search():
 		result = "success",
 		search_result = result)
 
+#입력된 str을 fasttext로 유사한 단어를 추출 해주는 API
+@BP.route('/get_similarity_words', methods = ['POST'])
+def simulation_fastext():
+	input_str = request.form['search']
+
+	tokenizer_list = tknizer.get_tk(input_str)
+	
+	result = {}
+	for word in tokenizer_list:
+		similarity_list = []
+		for sim_word in FastText.sim_words(word):
+			temp = {}
+			if sim_word[1] >= 0.6: 
+				temp[sim_word[0]] = sim_word[1]
+				similarity_list.append(temp)
+			else: break	
+		result[word] = similarity_list
+
+	return jsonify(
+		result = "success",
+		similarity_words = result)
 
 #search_logging 기록!
 def search_logging(db, user_id, original_str, split_list, tokenizer_list, similarity_list):

@@ -25,9 +25,6 @@ from tknizer import get_tk
 import LDA
 import FastText
 #######################################################
-db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
-db = db_client["soojle"]
-#######################################################
 # BackgroundScheduler Initialize
 def schedule_init():
 	t_zone = get_localzone()
@@ -114,15 +111,24 @@ def real_time_keywords(search_input):
 	return result
 #실시간 검색어 캐싱 함수
 def real_time_insert():
+	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+	db = db_client["soojle"]
+
 	search_log_list = find_search_logging(db)
 	search_log_list = list(search_log_list)
 
 	real_tiem_result = real_time_keywords(search_log_list)
 
 	insert_search_realtime(db, real_tiem_result)
+	
+	if db_client is not None:
+		db_client.close()
 #######################################################
 #사용자 관심도 측정
 def measurement_run():
+	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+	db = db_client["soojle"]
+
 	num = 200
 
 	#모든 유저의 관심도 측정 지표를 다 가져온다.
@@ -213,9 +219,15 @@ def measurement_run():
 
 		#해당 USER 관심도 갱신!
 		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR.tolist())
+
+	if db_client is not None:
+		db_client.close()
 #######################################################
 #variable 가장 높은 좋아요/조회수 갱신
 def update_posts_highest():
+	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+	db = db_client["soojle"]
+
 	#기존 캐싱돼있던 fav / view 카운트
 	old_fav = find_variable(db, 'highest_fav_cnt')
 	old_view = find_variable(db, 'highest_view_cnt')
@@ -235,8 +247,14 @@ def update_posts_highest():
 	if old_view < new_view:
 		#제일 높은 조회수 갱신!
 		update_variable(db, 'highest_view_cnt', new_fav)
+
+	if db_client is not None:
+		db_client.close()
 #######################################################
 def create_word_cloud():
+	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+	db = db_client["soojle"]
+
 	db_realtime = find_search_all_realtime(g.db)
 	db_realtime = list(db_realtime)
 	
@@ -284,4 +302,6 @@ def create_word_cloud():
 
 	file.close()
 
+	if db_client is not None:
+		db_client.close()
 

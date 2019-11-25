@@ -37,28 +37,6 @@ def simulation_tokenizer(input_str):
 		result = "success",
 		simulation = result)
 
-#입력된 str을 fasttext로 유사한 단어를 추출 해주는 API
-@BP.route('/simulation_fastext', methods = ['POST'])
-def simulation_fastext():
-	input_str = request.form['input_str']
-
-	tokenizer_list = tknizer.get_tk(input_str)
-	
-	result = {}
-	for word in tokenizer_list:
-		similarity_list = []
-		for sim_word in FastText.sim_words(word):
-			temp = {}
-			if sim_word[1] >= 0.5: 
-				temp[sim_word[0]] = sim_word[1]
-				similarity_list.append(temp)
-			else: break	
-		result[word] = similarity_list
-
-	return jsonify(
-		result = "success",
-		simulation = result)
-
 #simulation_priority_검색 API
 @BP.route('/simulation_priority_search/<int:num>', methods = ['POST'])
 def simulation_priority_search(num):

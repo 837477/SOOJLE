@@ -24,7 +24,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 	#요청한 뉴스피드에 대한 정보를 가져온다.
 	newsfeed_type = find_newsfeed_of_topic(g.db, newsfeed_name)
 
-	#user_logging!
+	#logging!
 	if get_jwt_identity():
 		#USER를 불러온다.
 		USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
@@ -56,7 +56,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 @BP.route('/get_popularity_newsfeed')
 @jwt_optional
 def get_popularity_newsfeed():
-	#user_logging!
+	#logging!
 	if get_jwt_identity():
 		insert_log(g.db, get_jwt_identity(), request.url)
 	else:
@@ -77,7 +77,7 @@ def get_recommendation_newsfeed():
 	POST_LIST = list(POST_LIST)
 
 	if get_jwt_identity():
-		#user_logging
+		#logging
 		insert_log(g.db, get_jwt_identity(), request.url)
 
 		#유저를 _id, topic리스트, tag리스트 만 가져온다.
