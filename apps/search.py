@@ -179,6 +179,11 @@ def domain_search():
 	#토크나이져 작업
 	tokenizer_list = tknizer.get_tk(search_str)
 
+	if not tokenizer_list:
+		return jsonify(
+			result = "success",
+			search_result = [])
+
 	#FastText를 이용한 유사단어 추출
 	ft_similarity_list = []
 	for word in tokenizer_list:
@@ -186,6 +191,7 @@ def domain_search():
 			if sim_word[1] >= 0.7: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
+
 
 	regex_list = tokenizer_list + ft_similarity_list
 	regex_str = "|".join(regex_list)

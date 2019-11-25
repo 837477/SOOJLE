@@ -943,31 +943,35 @@ def find_search_realtime(db):
 		{
 			'_id': 0
 		}
-	)
+	).sort([('date', -1)])
 	return result
 
 #제일 높은 좋아요 수 반환
 def find_highest_fav_cnt(db):
 	result = db['test_posts6'].find_one(
-		{},
+		{
+			'$query': {},
+			'$orderby': {'fav_cnt': -1}
+		},
 		{
 			'_id': 0,
 			'fav_cnt': 1
 		}
-	).sort([('fav_cnt', -1)])
-	
+	)
 	return result['fav_cnt']
 
 #제일 높은 조회수 반환
 def find_highest_view_cnt(db):
 	result = db['test_posts6'].find_one(
-		{},
+		{
+			'$query': {},
+			'$orderby': {'view': -1}
+		},
 		{
 			'_id': 0,
 			'view': 1
 		}
-	).sort([('view', -1)])
-	
+	)
 	return result['view']
 
 #정적 테이블 변수 불러오기
