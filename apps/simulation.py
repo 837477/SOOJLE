@@ -29,9 +29,10 @@ def simulation_split(input_str):
 		simulation = result)
 
 #입력된 str을 tokenizer 해주는 API
-@BP.route('/simulation_tokenizer/<string:input_str>')
-def simulation_tokenizer(input_str):
-	result = tknizer.get_tk(input_str)
+@BP.route('/simulation_tokenizer', methods = ['POST'])
+def simulation_tokenizer():
+	search_str = request.form['search']
+	result = tknizer.get_tk(search_str)
 	
 	return jsonify(
 		result = "success",
