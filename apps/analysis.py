@@ -59,7 +59,7 @@ def get_log_user(user_id, limit):
 	return jsonify(
 		result = "success",
 		log = result)
-
+	
 #log) 특정 user, 시간별 반환
 @BP.route('/get_log_user_date/<string:user_id>/<int:months>/<int:days>/<int:hours>/<int:limit>')
 def get_log_user_date(user_id, months, days, hours, limit):
