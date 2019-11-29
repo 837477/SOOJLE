@@ -146,8 +146,6 @@ def priority_search(num):
 def category_search(type_check, num):
 	TIME_LOG = {}
 
-	print("검색어 :", search_str)
-
 	#logging!
 	if get_jwt_identity():
 		insert_log(g.db, get_jwt_identity(), request.url)
@@ -155,6 +153,8 @@ def category_search(type_check, num):
 		insert_log(g.db, request.full_path, request.url)
 
 	search_str = request.form['search']
+
+	print("검색어 :", search_str)
 
 	#######################################################################################
 	TITLE_REGEX_time = time.time()
