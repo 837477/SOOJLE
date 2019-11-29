@@ -53,6 +53,7 @@ def priority_search(num):
 	TOKENIZER_time = time.time()
 	#토크나이져 작업
 	tokenizer_list = tknizer.get_tk(search_str)
+	TIME_LOG['tokenizer_list'] = tokenizer_list
 	TIME_LOG['TOKENIZER_time'] = time.time() - TOKENIZER_time
 
 	#######################################################################################
@@ -133,6 +134,7 @@ def priority_search(num):
 	print("Priority) IDS 정렬 순 최대 상위 10000개 호출 시간 :", TIME_LOG['AGGREGATE_time'], "( 총 반환 개수 :", TIME_LOG['AGGREGATE_time_len'], ")")
 	print("Priority)", TIME_LOG['AGGREGATE_time_len'], "개의 문서와 검색어 간의 유사도 측정 시간 : ", TIME_LOG['SIMILARITY_time'])
 	print("Priority)", TIME_LOG['AGGREGATE_time_len'], "개의 문서의 similarity정렬 시간 :", TIME_LOG['SORT_time'])
+	print("토크나이져 :",TIME_LOG['tokenizer_list'])
 	print("#######################################################################################################################")
 
 	#데이터로 들어온 상위 num개만 반환
