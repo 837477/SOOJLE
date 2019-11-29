@@ -152,7 +152,7 @@ def measurement_run():
 		fav_doc = (fav_tag + fav_token) * 2
 
 		fav_tag *= 4
-		fav_topic *= 40
+		fav_topic *= 8
 
 		#사용자가 접근을 수행한 게시물 ##############################
 		view_topic = np.zeros(LDA.NUM_TOPICS)
@@ -165,12 +165,12 @@ def measurement_run():
 		view_doc = view_tag + view_token
 
 		view_tag *= 3
-		view_topic *= 30
+		view_topic *= 6
 
 		#사용자가 검색을 수행한 키워드 ##############################
 		search_keyword_list = USER['search_list'][num*2:]
 		search_topic = LDA.get_topics(search_keyword_list)
-		search_topic *= 25
+		search_topic *= 5
 
 		#FAS 전용
 		similarwords = []
@@ -188,12 +188,12 @@ def measurement_run():
 			newsfeed_tag += newsfeed['tag']
 
 		newsfeed_topic = LDA.get_topics(newsfeed_tag)
-		newsfeed_topic *= 5
+		#newsfeed_topic *= 1
 
 		####################################################
 
 		#LDA Topic
-		TOPIC_RESULT = (fav_topic + view_topic + search_topic + newsfeed_topic)/100
+		TOPIC_RESULT = (fav_topic + view_topic + search_topic + newsfeed_topic)/20
 		
 		#FASTTEXT
 		USER_VERCTOR = FastText.get_doc_vector(fav_doc + view_doc + search_doc)
@@ -228,25 +228,12 @@ def update_posts_highest():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
-	#기존 캐싱돼있던 fav / view 카운트
-	old_fav = find_variable(db, 'highest_fav_cnt')
-	old_view = find_variable(db, 'highest_view_cnt')
-
 	#새로운 fav / view 카운트
 	new_fav = find_highest_fav_cnt(db)
 	new_view = find_highest_view_cnt(db)
 
-	#시스템 첫 시작시에, 추천 뉴스피드의 연산작업 때문에 highest 값들을 div 연산하는데 0으로 나눌 수 없기 때문에 첫 DB init 할 때에 1로 시작한다. 
-
-	#만약, 첫 서비스 시작일 때 좋아요 / 조회수가 0이 최고높은 것으로 나오게 된다면 0으로 바뀌어버리기 때문에 아래와 같은 확인작업이 필요하다.
-
-	if old_fav < new_fav:
-		#제일 높은 좋아요 수 갱신!
-		update_variable(db, 'highest_fav_cnt', new_fav)
-
-	if old_view < new_view:
-		#제일 높은 조회수 갱신!
-		update_variable(db, 'highest_view_cnt', new_fav)
+	update_variable(db, 'highest_fav_cnt', new_fav)
+	update_variable(db, 'highest_view_cnt', new_fav)
 
 	if db_client is not None:
 		db_client.close()

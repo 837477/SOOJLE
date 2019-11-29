@@ -62,7 +62,7 @@ def priority_search(num):
 
 	else:
 		#logging!
-		insert_log(g.db, request.remote_addr, request.url)
+		insert_log(g.db, request.full_path, request.url)
 		#DB search 로깅!
 		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
 
@@ -111,7 +111,7 @@ def category_search(type_check, num):
 	if get_jwt_identity():
 		insert_log(g.db, get_jwt_identity(), request.url)
 	else:
-		insert_log(g.db, request.remote_addr, request.url)
+		insert_log(g.db, request.full_path, request.url)
 
 	search_str = request.form['search']
 
@@ -205,28 +205,6 @@ def domain_search():
 	return jsonify(
 		result = "success",
 		search_result = result)
-
-#입력된 str을 fasttext로 유사한 단어를 추출 해주는 API
-@BP.route('/get_similarity_words', methods = ['POST'])
-def simulation_fastext():
-	input_str = request.form['search']
-
-	tokenizer_list = tknizer.get_tk(input_str)
-	
-	result = {}
-	for word in tokenizer_list:
-		similarity_list = []
-		for sim_word in FastText.sim_words(word):
-			temp = {}
-			if sim_word[1] >= 0.6: 
-				temp[sim_word[0]] = sim_word[1]
-				similarity_list.append(temp)
-			else: break	
-		result[word] = similarity_list
-
-	return jsonify(
-		result = "success",
-		similarity_words = result)
 
 #search_logging 기록!
 def search_logging(db, user_id, original_str, split_list, tokenizer_list, similarity_list):

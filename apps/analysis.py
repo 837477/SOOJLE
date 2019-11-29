@@ -24,15 +24,11 @@ BP = Blueprint('analysis', __name__)
 #실시간 검색서 순위 반환
 @BP.route('/get_search_realtime')
 def get_search_realtime():
-	search_realtime = find_search_realtime(g.db)
-
-	result = []
-	for i in range(10):
-		result.append(search_realtime['real_time'][i][0])
+	result = find_search_realtime(g.db)
 
 	return jsonify(
 		result = "success",
-		search_realtime = result)
+		search_realtime = result['real_time'][:10])
 
 #log) 시간대 반환 (date는 한개씩만 사용 가능, limit 설정!)
 @BP.route('/get_log_date/<int:months>/<int:days>/<int:hours>/<int:limit>')
@@ -84,3 +80,24 @@ def get_log_user_date(user_id, months, days, hours, limit):
 		result = "success",
 		log = result)
 
+#입력된 str을 fasttext로 유사한 단어를 추출 해주는 API
+@BP.route('/get_similarity_words', methods = ['POST'])
+def simulation_fastext():
+	input_str = request.form['search']
+
+	tokenizer_list = tknizer.get_tk(input_str)
+	
+	result = {}
+	for word in tokenizer_list:
+		similarity_list = []
+		for sim_word in FastText.sim_words(word):
+			temp = {}
+			if sim_word[1] >= 0.6: 
+				temp[sim_word[0]] = sim_word[1]
+				similarity_list.append(temp)
+			else: break	
+		result[word] = similarity_list
+
+	return jsonify(
+		result = "success",
+		similarity_words = result)

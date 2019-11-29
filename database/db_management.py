@@ -816,7 +816,7 @@ def find_search_logging(db):
 		{
 			'date':
 			{
-				'$gte': global_func.get_default_day(7)
+				'$gte': global_func.get_default_day(1)
 			}
 		},
 		{
@@ -848,7 +848,8 @@ def find_date_log(db, date, limit_):
 			}
 		},
 		{
-			'_id': 0
+			'_id': 0,
+			'user_id': 1
 		}
 	).sort([('date', -1)]).limit(limit_)
 
@@ -998,4 +999,38 @@ def update_variable(db, key, value):
 		}
 	)
 	return "success"	
+
+#좋아요/조회수 초기 셋팅용 더비 포스트 생성
+def insert_dummy_post(db):
+	topic_temp = numpy.ones(26)
+	topic = (topic_temp / topic_temp.sum()).tolist()
+	db['test_posts6'].insert(
+		{
+			'title' : "(o^_^)o 안녕하세요. SOOJLE 입니다.",
+			'date': get_default_day(10000),
+			'post': "안녕하세요. SOOJLE 입니다.",
+			'tag': [],
+			'img': 1,
+			'url': "",
+			'hashed': "",
+			'info': "SOOJLE",
+			'view': 1,
+			'fav_cnt': 1,
+			'title_token': [],
+			'token': [],
+			'login': 0,
+			'learn': 1,
+			'popularity': 0,
+			'fav_vector': (numpy.zeros(30)).tolist(),
+			'topic': topic
+		}
+	)
+	return "success"
+
+def check_dummy_post(db):
+	result = db['test_posts6'].find_one({'title': "(o^_^)o 안녕하세요. SOOJLE 입니다."})
+
+	return result
+
+
 

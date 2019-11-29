@@ -20,9 +20,7 @@ def sign_in_up():
 	user = find_user(g.db, user_id=USER_ID, user_pw=1)
 
 	if user is None:
-		result = refresh_sejong_portal(USER_ID, USER_PW)
-	else:
-		result = "success"
+		result, user = refresh_sejong_portal(USER_ID, USER_PW)
 
 	#위 refresh_sejong_portal()을 통과 못했다면 3개의 로그인 api를 통과하지 못한 것. (통과했다면 result 값이 success임)
 	if result == "not sejong":
@@ -31,8 +29,6 @@ def sign_in_up():
 	#세종대학교 내부 전산 오류
 	elif result == "api error":
 		return jsonify(result = "api error")
-	
-	user = find_user(g.db, user_id=USER_ID, user_pw=1)
 
 	if check_password_hash(user['user_pw'], USER_PW):
 		return jsonify(
@@ -77,6 +73,8 @@ def get_specific_userinfo(type_num=None):
 		USER = find_user(g.db, user_id=get_jwt_identity(), view_list=1)
 	elif type_num == 3:
 		USER = find_user(g.db, user_id=get_jwt_identity(), search_list=1)
+	else:
+		USER = find_user(g.db, user_id=get_jwt_identity(), newsfeed_list=1)
 
 	return jsonify(
 		result = "success",
@@ -85,24 +83,31 @@ def get_specific_userinfo(type_num=None):
 ###############################################
 ###############################################
 def refresh_sejong_portal(USER_ID, USER_PW):
+	user = {}
 	try:
 		sejong_api_result = dosejong_api(USER_ID, USER_PW)
 	except:
-		return "api error"
+		return "api error", user
 	if not sejong_api_result['result']:
 		try:
 			sejong_api_result = sjlms_api(USER_ID, USER_PW)
 		except:
-			return "api error"
+			return "api error", user
 		if not sejong_api_result['result']:
 			try:
 				sejong_api_result = uis_api(USER_ID, USER_PW)
 			except:
-				return "api error"
+				return "api error", user
 
 	if not sejong_api_result['result']:
-		return "not sejong"
+		return "not sejong", user
+
 	else:
+		user['user_id'] = USER_ID,
+		user['user_pw'] = generate_password_hash(USER_PW),
+		user['name'] = sejong_api_result['name'],
+		user['major'] = sejong_api_result['major']
+
 		insert_user(g.db,
 			USER_ID,
 			generate_password_hash(USER_PW),
@@ -110,4 +115,4 @@ def refresh_sejong_portal(USER_ID, USER_PW):
 			sejong_api_result['major']
 			)
 
-	return "success"
+	return "success", user

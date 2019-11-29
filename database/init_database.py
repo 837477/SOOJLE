@@ -29,6 +29,7 @@ def init_db():
 
 	if not 'posts' in db_collections:
 		db['posts']
+		create_dummy_post(db)
 
 	if not 'newsfeed_of_topic' in db_collections:
 		create_newsfeed_of_topic(db)
@@ -100,6 +101,13 @@ def create_highest_fav_view(db):
 		
 	)
 	return "success"
+
+##좋아요/조회수 초기 셋팅용 더비 포스트 생성!
+def create_dummy_post(db):
+	check_ = check_dummy_post(db)
+
+	if not 'title' in check_:
+		insert_dummy_post(db)
 
 #admin 계정 추가
 #나중에 만들어랑!
