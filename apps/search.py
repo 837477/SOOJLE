@@ -30,6 +30,8 @@ def match_score(token1, token2):
 def priority_search(num):
 	search_str = request.form['search']
 
+	print("검색어 :", search_str)
+
 	TIME_LOG = {}
 
 	#######################################################################################
@@ -143,6 +145,8 @@ def priority_search(num):
 @jwt_optional
 def category_search(type_check, num):
 	TIME_LOG = {}
+
+	print("검색어 :", search_str)
 
 	#logging!
 	if get_jwt_identity():
