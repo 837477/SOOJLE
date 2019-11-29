@@ -35,7 +35,7 @@ def priority_search(num):
 	#검색어로 시작되는 포스트들을 1차 regex 검색!
 	title_regex = find_title_regex(g.db, search_str, 0)
 	title_regex = list(title_regex)
-	print("Priority) Title regex 시간 :", time.time() - TITLE_REGEX_time, "(총 반환 개수 :", len(title_regex)+")")
+	print("Priority) Title regex 시간 :", time.time() - TITLE_REGEX_time, "(총 반환 개수 :", len(title_regex), ")")
 
 	######################################################################################
 	DEL_SPACE_time = time.time()
@@ -84,7 +84,7 @@ def priority_search(num):
 	#토크나이져 처리된 리스트를 대상으로 검색하고, aggregate로 ids처리하여 posts 추출
 	aggregate_posts = find_aggregate(g.db, tokenizer_list, 0)
 	aggregate_posts = list(aggregate_posts)
-	print("Priority) IDS 정렬 순 최대 상위 10000개 호출 시간 :", time.time() - AGGREGATE_time, "(총 반환 개수 :", len(aggregate_posts)+")")
+	print("Priority) IDS 정렬 순 최대 상위 10000개 호출 시간 :", time.time() - AGGREGATE_time, "(총 반환 개수 :", len(aggregate_posts), ")")
 
 	#regex와 aggregate로 뽑힌 포스트를 합친다.
 	aggregate_posts += title_regex
@@ -143,7 +143,7 @@ def category_search(type_check, num):
 	#검색어로 시작되는 포스트들을 1차 regex 검색!
 	title_regex = find_title_regex(g.db, search_str, type_check)
 	title_regex = list(title_regex)
-	print(type_check, "Category) Title regex 시간 :", time.time() - TITLE_REGEX_time, "총 반환 개수(", len(title_regex)+")")
+	print(type_check, "Category) Title regex 시간 :", time.time() - TITLE_REGEX_time, "총 반환 개수(", len(title_regex), ")")
 
 	######################################################################################
 	DEL_SPACE_time = time.time()
@@ -172,7 +172,7 @@ def category_search(type_check, num):
 	AGGREGATE_time = time.time()
 	aggregate_posts = find_aggregate(g.db, tokenizer_list, type_check)
 	aggregate_posts = list(aggregate_posts)
-	print(type_check, "Category)  IDS 정렬 순 최대 상위 50000개 호출 시간 :", time.time() - AGGREGATE_time, "(총 반환 개수 :", len(aggregate_posts)+")")
+	print(type_check, "Category)  IDS 정렬 순 최대 상위 50000개 호출 시간 :", time.time() - AGGREGATE_time, "(총 반환 개수 :", len(aggregate_posts), ")")
 
 	#regex와 aggregate로 뽑힌 포스트를 합친다.
 	aggregate_posts += title_regex
