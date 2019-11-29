@@ -230,8 +230,8 @@ def category_search(type_check, num):
 	print(type_check, "Category) Tokenizer 분류 시간 :", TIME_LOG['TOKENIZER_time'])
 	print(type_check, "Category) FastText 유사 단어 추출 시간 :", TIME_LOG['FASTTEXT_time'])
 	print(type_check, "Category) IDS 정렬 순 최대 상위 10000개 호출 시간 :", TIME_LOG['AGGREGATE_time'], "( 총 반환 개수 :", TIME_LOG['AGGREGATE_time_len'], ")")
-	print("Category)", TIME_LOG['AGGREGATE_time_len'], "개의 문서와 검색어 간의 유사도 측정 시간 : ", TIME_LOG['SIMILARITY_time'])
-	print("Category)", TIME_LOG['AGGREGATE_time_len'], "개의 문서의 similarity정렬 시간 :", TIME_LOG['SORT_time'])
+	print(type_check, "Category)", TIME_LOG['AGGREGATE_time_len'], "개의 문서와 검색어 간의 유사도 측정 시간 : ", TIME_LOG['SIMILARITY_time'])
+	print(type_check, "Category)", TIME_LOG['AGGREGATE_time_len'], "개의 문서의 similarity정렬 시간 :", TIME_LOG['SORT_time'])
 	print("#######################################################################################################################")
 
 	#데이터로 들어온 상위 num개만 반환
