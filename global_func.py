@@ -114,7 +114,7 @@ def real_time_insert():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
-	search_log_list = find_search_logging(db)
+	search_log_list = find_search_log(db)
 	search_log_list = list(search_log_list)
 
 	real_tiem_result = real_time_keywords(search_log_list)

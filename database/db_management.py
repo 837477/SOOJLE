@@ -869,9 +869,9 @@ def find_token(db, token_list):
 
 ###############################################
 #logging####################################### 
-#search_logging에 search_obj 추가
-def insert_search_logging(db, user_id, split_list):
-	db['search_logging'].insert(
+#search_log에 search_obj 추가
+def insert_search_log(db, user_id, split_list):
+	db['search_log'].insert(
 		{
 			'user_id': user_id,
 			'search_split': split_list,
@@ -880,9 +880,9 @@ def insert_search_logging(db, user_id, split_list):
 	)
 	return "success"
 
-#search_logging 가져온다.
-def find_search_logging(db):
-	result = db['search_logging'].find(
+#search_log 가져온다.
+def find_search_log(db):
+	result = db['search_log'].find(
 		{
 			'date':
 			{

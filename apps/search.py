@@ -58,13 +58,13 @@ def priority_search(num):
 		if USER is None: abort(400)
 
 		#DB search 로깅!
-		search_logging(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
+		search_log(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
 
 	else:
 		#logging!
 		insert_log(g.db, request.full_path, request.url)
 		#DB search 로깅!
-		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
+		search_log(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
 
 	#토크나이져 처리된 리스트를 대상으로 검색하고, aggregate로 ids처리하여 posts 추출
 	aggregate_posts = find_aggregate(g.db, tokenizer_list, 0)
@@ -241,13 +241,13 @@ def full_search(num):
 		if USER is None: abort(400)
 
 		#DB search 로깅!
-		search_logging(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
+		search_log(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
 
 	else:
 		#logging!
 		insert_log(g.db, request.full_path, request.url)
 		#DB search 로깅!
-		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
+		search_log(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
 
 	#토크나이져 처리된 리스트를 대상으로 검색하고, aggregate로 ids처리하여 posts 추출
 	aggregate_posts = find_full_aggregate(g.db, tokenizer_list, num)
@@ -303,4 +303,4 @@ def search_logging(db, user_id, original_str, split_list, tokenizer_list, simila
 		update_user_search_list_push(db, user_id, USER_search_obj)
 
 	#공용 searching 기록!
-	insert_search_logging(db, user_id, split_list)
+	insert_search_log(db, user_id, split_list)

@@ -40,8 +40,8 @@ def init_db():
 	if not 'search_realtime' in db_collections:
 		db['search_realtime']
 
-	if not 'search_logging' in db_collections:
-		db['search_logging']
+	if not 'search_log' in db_collections:
+		db['search_log']
 
 	if not 'log' in db_collections:
 		db['log']
