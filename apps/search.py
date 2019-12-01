@@ -146,7 +146,7 @@ def category_search(type_check, num):
 
 	for post in aggregate_posts:
 		#FAS 작업
-		split_vector = FastText.get_doc_vector(del_space_list).tolist()
+		split_vector = FastText.get_doc_vector(del_space_str).tolist()
 		FAS = FastText.vec_sim(split_vector, post['ft_vector'])
 
 		T1 = match_score(del_space_str, post['title_token'])
