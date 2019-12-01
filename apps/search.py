@@ -75,6 +75,10 @@ def priority_search(num):
 
 	#검색 키워드와 문서간의 유사도 측정!
 	for post in aggregate_posts:
+		#FAS 작업
+		split_vector = FastText.get_doc_vector(del_space_list).tolist()
+		FAS = FastText.vec_sim(split_vector, post['ft_vector'])
+
 		T1 = match_score(del_space_list, post['title_token'])
 		
 		if tokenizer_list:
@@ -85,7 +89,7 @@ def priority_search(num):
 			T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
 		else: T3 = 0
 
-		post['similarity'] = T1 + T2 + T3
+		post['similarity'] = T1 + T2 + T3 + FAS
 		post['_id'] = str(post['_id'])
 
 		#필요없는 반환 값 삭제
@@ -141,6 +145,10 @@ def category_search(type_check, num):
 	aggregate_posts += title_regex
 
 	for post in aggregate_posts:
+		#FAS 작업
+		split_vector = FastText.get_doc_vector(del_space_list).tolist()
+		FAS = FastText.vec_sim(split_vector, post['ft_vector'])
+
 		T1 = match_score(del_space_str, post['title_token'])
 
 		if tokenizer_list:
@@ -153,7 +161,7 @@ def category_search(type_check, num):
 		else:
 			T3 = 0
 
-		post['similarity'] = T1 + T2 + T3
+		post['similarity'] = T1 + T2 + T3 + FAS
 		post['_id'] = str(post['_id'])
 
 		#필요없는 반환 값 삭제

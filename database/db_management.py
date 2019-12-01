@@ -456,7 +456,8 @@ def find_title_regex(db, search_str, type_check):
 		'title_token': 1, 
 		'token': 1, 
 		'tag': 1, 
-		'popularity': 1
+		'popularity': 1,
+		'ft_vector': 1
 	}
 
 	#priority
@@ -597,7 +598,8 @@ def find_aggregate(db, tokenizer_list, type_check):
 			'title_token':1,
 			'token':1,
 			'tag':1,
-			'popularity':1
+			'popularity':1,
+			'ft_vector': 1
 		}
 	}
 	addFields = {
