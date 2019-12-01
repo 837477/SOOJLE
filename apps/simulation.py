@@ -162,15 +162,3 @@ def match_score(token1, token2):
 	MR = MC / len(token1)
 	return MC * (1 + MR + math.floor(MR))
 
-@BP.route('/testtesttest')
-def test12():
-	result = g.db['newsfeed_of_topic'].find_one(
-			{
-				'newsfeed_name': '진로&구인'
-			}, 
-			{
-				'_id': 1,
-				'info': 1
-			})
-	return jsonify(
-		result = result)

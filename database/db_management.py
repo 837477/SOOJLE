@@ -767,6 +767,76 @@ def find_aggregate(db, tokenizer_list, type_check):
 
 	return result
 
+#full search title regex 검색
+def find_full_title_regex(db, search_str, limit_):
+	#priority	
+	result = db['test_posts6'].find(
+		{
+			'title': {'$regex':search_str}
+		}, 
+		{
+			'title':1,
+			'date':1, 
+			'img':1, 
+			'url':1, 
+			'fav_cnt': 1, 
+			'title_token': 1, 
+			'token': 1, 
+			'tag': 1, 
+			'popularity': 1
+		}
+	).limit(limit_)
+	return result
+
+#full search post aggregate
+def find_full_aggregate(db, tokenizer_list, limit_):
+	now_time = datetime.now()
+	
+	result = db['test_posts6'].aggregate([
+		{
+			'$project':
+			{
+				'_id':1, 
+				'title':1,
+				'date':1,
+				'img': 1,
+				'url': 1,
+				'fav_cnt': 1,
+				'info': 1,
+				###############
+				'title_token':1,
+				'token':1,
+				'tag':1,
+				'popularity':1
+			}
+		},
+		{
+			'$match': 
+			{
+				'token': {'$in': tokenizer_list}
+			}
+		}, 
+		{
+			'$addFields':
+			{
+				'ids': 
+				{
+					'$divide':['$popularity', {'$subtract':[now_time, '$date']}]
+				}
+			}
+		},
+		{
+			'$sort': 
+			{
+				'ids': -1, 
+				'date': -1
+			}
+		}, 
+		{'$limit': limit_}
+	])
+
+	return result
+
 #title 토큰 검색
 def find_title_token(db, token_list):
 	result = db['test_posts6'].find(

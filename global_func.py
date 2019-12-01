@@ -239,13 +239,14 @@ def update_posts_highest():
 		db_client.close()
 #######################################################
 def create_word_cloud():
+	print("word_cloud")
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
-	db_realtime = find_search_all_realtime(g.db)
+	db_realtime = find_search_all_realtime(db)
 	db_realtime = list(db_realtime)
 	
-	db_posts = find_all_posts(g.db, title_token=1, token=1, tag=1)
+	db_posts = find_all_posts(db, title_token=1, token=1, tag=1)
 	db_posts = list(db_posts)
 
 	result = []

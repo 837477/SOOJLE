@@ -206,6 +206,88 @@ def domain_search():
 		result = "success",
 		search_result = result)
 
+#priority_검색
+@BP.route('/full_search/<int:num>', methods = ['POST'])
+@jwt_optional
+def full_search(num):
+	search_str = request.form['search']
+
+	#검색어로 시작되는 포스트들을 1차 regex 검색!
+	title_regex = find_full_title_regex(g.db, search_str, num)
+	title_regex = list(title_regex)
+
+	#공백 제거
+	del_space_list = search_str.split(' ')
+
+	#토크나이져 작업
+	tokenizer_list = tknizer.get_tk(search_str)
+
+	#FastText를 이용한 유사단어 추출
+	ft_similarity_list = []
+	for word in tokenizer_list:
+		for sim_word in FastText.sim_words(word):
+			if sim_word[1] >= 0.7: 
+				ft_similarity_list.append(sim_word[0])
+			else: break	
+
+	if get_jwt_identity():
+		#logging!
+		insert_log(g.db, get_jwt_identity(), request.url)
+
+		#USER 정보를 불러온다.
+		USER = find_user(g.db, user_id=get_jwt_identity())
+
+		#잘못된 USER 정보(잘못된 Token)일 때
+		if USER is None: abort(400)
+
+		#DB search 로깅!
+		search_logging(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
+
+	else:
+		#logging!
+		insert_log(g.db, request.full_path, request.url)
+		#DB search 로깅!
+		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
+
+	#토크나이져 처리된 리스트를 대상으로 검색하고, aggregate로 ids처리하여 posts 추출
+	aggregate_posts = find_full_aggregate(g.db, tokenizer_list, num)
+	aggregate_posts = list(aggregate_posts)
+
+	#regex와 aggregate로 뽑힌 포스트를 합친다.
+	aggregate_posts += title_regex
+
+	#검색 키워드와 문서간의 유사도 측정!
+	for post in aggregate_posts:
+		T1 = match_score(del_space_list, post['title_token'])
+		
+		if tokenizer_list:
+			T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
+		else: T2 =0
+
+		if ft_similarity_list:
+			T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
+		else: T3 = 0
+
+		post['similarity'] = T1 + T2 + T3
+		post['_id'] = str(post['_id'])
+
+		#필요없는 반환 값 삭제
+		del post['title_token']
+		del post['token']
+		del post['tag']
+		del post['popularity']
+
+	#구해진 similarity로 내림차순 정렬
+	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('similarity'), reverse=True)
+
+	print(len(aggregate_posts))
+
+	#데이터로 들어온 상위 num개만 반환
+	return jsonify(
+		result = "success",
+		search_result = aggregate_posts[:num])
+
+
 #search_logging 기록!
 def search_logging(db, user_id, original_str, split_list, tokenizer_list, similarity_list):
 	
