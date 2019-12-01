@@ -78,13 +78,13 @@ def priority_search(num):
 		if USER is None: abort(400)
 
 		#DB search 로깅!
-		search_log(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
+		search_logging(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
 
 	else:
 		#logging!
 		insert_log(g.db, request.full_path, request.url)
 		#DB search 로깅!
-		search_log(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
+		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
 
 	#######################################################################################
 	AGGREGATE_time = time.time()

@@ -241,13 +241,13 @@ def full_search(num):
 		if USER is None: abort(400)
 
 		#DB search 로깅!
-		search_log(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
+		search_logging(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
 
 	else:
 		#logging!
 		insert_log(g.db, request.full_path, request.url)
 		#DB search 로깅!
-		search_log(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
+		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
 
 	#토크나이져 처리된 리스트를 대상으로 검색하고, aggregate로 ids처리하여 posts 추출
 	aggregate_posts = find_full_aggregate(g.db, tokenizer_list, num)
