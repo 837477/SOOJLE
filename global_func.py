@@ -142,7 +142,7 @@ def measurement_run():
 		view_token = []
 
 		#사용자가 관심 기능을 수행한 게시물 ##########################
-		fav_topic = np.zeros(LDA.NUM_TOPICS)
+		fav_topic = (np.zeros(LDA.NUM_TOPICS))
 		for fav in USER['fav_list']:
 			fav_topic += fav['topic']
 			fav_tag += fav['tag']
@@ -153,9 +153,11 @@ def measurement_run():
 
 		fav_tag *= 4
 		fav_topic *= 8
+		if len(USER['fav_list']) != 0:
+			fav_topic /= len(USER['fav_list'])
 
 		#사용자가 접근을 수행한 게시물 ##############################
-		view_topic = np.zeros(LDA.NUM_TOPICS)
+		view_topic = (np.zeros(LDA.NUM_TOPICS))
 		for view in USER['view_list']:
 			view_topic += view['topic']
 			view_tag += view['tag']
@@ -166,6 +168,8 @@ def measurement_run():
 
 		view_tag *= 3
 		view_topic *= 6
+		if len(USER['view_list']) != 0:
+			view_topic /= len(USER['view_list'])
 
 		#사용자가 검색을 수행한 키워드 ##############################
 		search_keyword_list = USER['search_list'][num*2:]
@@ -195,8 +199,24 @@ def measurement_run():
 		#LDA Topic
 		TOPIC_RESULT = (fav_topic + view_topic + search_topic + newsfeed_topic)/20
 		
+		print("##################################")
+		print(USER['user_id'])
+		print(fav_topic)
+		print(view_topic)
+		print(search_topic)
+		print(newsfeed_topic)
+		print(TOPIC_RESULT)
+		print(np.sum(TOPIC_RESULT))
+		
+
 		#FASTTEXT
-		USER_VERCTOR = FastText.get_doc_vector(fav_doc + view_doc + search_doc)
+		FastText_doc = fav_doc + view_doc + search_doc
+
+		if FastText_doc:
+			USER_VERCTOR = FastText.get_doc_vector(fav_doc + view_doc + search_doc).tolist()
+		else:
+			USER_VERCTOR = ft_vector = (np.zeros(LDA.NUM_TOPICS)).tolist()
+			
 
 		#TAG
 		tag_dict = dict(Counter(fav_tag + view_tag))
@@ -218,7 +238,7 @@ def measurement_run():
 		USER_TAG_SUM //= 2
 
 		#해당 USER 관심도 갱신!
-		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR.tolist())
+		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR)
 
 	if db_client is not None:
 		db_client.close()
