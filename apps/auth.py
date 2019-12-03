@@ -21,6 +21,7 @@ def sign_in_up():
 
 	#SOOJLE DB에 해당 user가 없다면?
 	if user is None:
+		user = {}
 		try:
 			sejong_api_result = dosejong_api(USER_ID, USER_PW)
 		except:
