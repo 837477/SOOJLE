@@ -42,7 +42,6 @@ def main_app(test_config = None):
 	init_db()
 	#백그라운드 작업
 	schedule_init()
-	measurement_run()
 	#페이지들
 	application.register_blueprint(main.BP)
 	application.register_blueprint(auth.BP)
