@@ -38,6 +38,7 @@ application.config.update(
 jwt = JWTManager(application)
 
 def main_app(test_config = None):
+	measurement_run()
 	#DB초기화
 	init_db()
 	#백그라운드 작업

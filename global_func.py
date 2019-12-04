@@ -198,16 +198,6 @@ def measurement_run():
 
 		#LDA Topic
 		TOPIC_RESULT = (fav_topic + view_topic + search_topic + newsfeed_topic)/20
-		
-		print("##################################")
-		print(USER['user_id'])
-		print(fav_topic)
-		print(view_topic)
-		print(search_topic)
-		print(newsfeed_topic)
-		print(TOPIC_RESULT)
-		print(np.sum(TOPIC_RESULT))
-		
 
 		#FASTTEXT
 		FastText_doc = fav_doc + view_doc + search_doc
