@@ -1,7 +1,6 @@
 from flask import *
 from flask_jwt_extended import *
 from werkzeug import *
-##########################################
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from datetime import datetime
@@ -9,13 +8,18 @@ from datetime import datetime
 from db_management import *
 from global_func import *
 ##########################################
+from variable import *
+
+
+#BluePrint
 BP = Blueprint('post', __name__)
-##########################################
+
 
 #포스트 좋아요 (사용자가 관심기능 수행한 게시물 모듈 포함)
 @BP.route('/post_like/<string:post_obi>')
 @jwt_required
 def post_like(post_obi):	
+	
 	#USER 정보 불러오기
 	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
 	

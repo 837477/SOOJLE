@@ -6,11 +6,13 @@ import numpy
 from global_func import *
 import global_func
 #####################################
+from variable import *
+
 
 #######################################################
 #사용자 관련#############################################
 #전체 유저 목록 반환
-def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None):
+def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None: 
@@ -27,23 +29,25 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, t
 		show_dict['tag'] = 1
 	if tag_sum is not None:
 		show_dict['tag_sum'] = 1
+	if ft_vector is not None:
+		show_dict['ft_vector'] = 1
 	if fav_list is not None:
 		show_dict['fav_list'] = 1
 	if view_list is not None:
 		show_dict['view_list'] = 1
 	if search_list is not None:
 		show_dict['search_list'] = 1
-	if ft_vector is not None:
-		show_dict['ft_vector'] = 1
 	if newsfeed_list is not None:
 		show_dict['newsfeed_list'] = 1
+	if auto_login is not None:
+		show_dict['auto_login'] = 1
 
 	result = db['user'].find({}, show_dict)
 
 	return result
 
 #특정 유저, 특정 필드 목록 반환
-def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None):
+def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None:
@@ -62,16 +66,18 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_maj
 		show_dict['tag'] = 1
 	if tag_sum is not None:
 		show_dict['tag_sum'] = 1
+	if ft_vector is not None:
+		show_dict['ft_vector'] = 1
 	if fav_list is not None:
 		show_dict['fav_list'] = 1
 	if view_list is not None:
 		show_dict['view_list'] = 1
 	if search_list is not None:
 		show_dict['search_list'] = 1
-	if ft_vector is not None:
-		show_dict['ft_vector'] = 1
 	if newsfeed_list is not None:
 		show_dict['newsfeed_list'] = 1
+	if auto_login is not None:
+		show_dict['auto_login'] = 1
 
 	result = db['user'].find_one(
 		{
@@ -93,6 +99,7 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 	view_list = []
 	newsfeed_list = []
 	search_list = []
+	auto_login = 1
 
 	result = db['user'].insert(
 		{
@@ -107,7 +114,8 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 			'fav_list': fav_list,
 			'view_list': view_list,
 			'newsfeed_list': newsfeed_list,
-			'search_list': search_list
+			'search_list': search_list,
+			'auto_login': auto_login
 		})
 
 	return "success"
@@ -140,7 +148,11 @@ def update_user_fav_list_push(db, _id, fav_obj):
 		{
 			'$push': 
 			{
-				'fav_list': fav_obj
+				'fav_list': 
+				{
+					'$each': [fav_obj],
+					'$position': 0
+				}
 			}
 		}
 	)
@@ -173,7 +185,11 @@ def update_user_view_list_push(db, _id, view_obj):
 		{
 			'$push': 
 			{
-				'view_list': view_obj
+				'view_list':
+				{
+					'$each': [view_obj],
+					'$position': 0
+				}
 			}
 		}
 	)
@@ -188,7 +204,11 @@ def update_user_search_list_push(db, user_id, search_obj):
 		{
 			'$push': 
 			{
-				'search_list': search_obj
+				'search_list': 
+				{
+					'$each': [search_obj],
+					'$position': 0
+				}
 			}
 		}
 	)
@@ -203,10 +223,151 @@ def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
 		{
 			'$push': 
 			{
-				'newsfeed_list': newsfeed_obj
+				'newsfeed_list':
+				{
+					'$each': [newsfeed_obj],
+					'$position': 0
+				}
 			}
 		}
 	)
+	return "success"
+
+#유저 fav_list 갱신
+def refresh_user_fav_list(db, user_id, refresh_obj_list):
+	#fav_list 삭제
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$unset': {'fav_list': 1}
+		}
+	)
+
+	#새로운 fav_list 등록
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$push': 
+			{
+				'fav_list':
+				{
+					'$each': refresh_obj_list,
+					'$position': 0
+				}
+			}
+		}
+	)
+
+	return "success"
+
+#유저 view_list 갱신
+def refresh_user_view_list(db, user_id, refresh_obj_list):
+	#view_list 삭제
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$unset': {'view_list': 1}
+		}
+	)
+
+	#새로운 view_list 등록
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$push': 
+			{
+				'view_list':
+				{
+					'$each': refresh_obj_list,
+					'$position': 0
+				}
+			}
+		}
+	)
+
+	return "success"
+
+#유저 search_list 갱신
+def refresh_user_search_list(db, user_id, refresh_obj_list):
+	#search_list 삭제
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$unset': {'search_list': 1}
+		}
+	)
+
+	#새로운 view_list 등록
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$push': 
+			{
+				'search_list':
+				{
+					'$each': refresh_obj_list,
+					'$position': 0
+				}
+			}
+		}
+	)
+
+	return "success"
+
+#유저 newsfeed_list 갱신
+def refresh_user_newsfeed_list(db, user_id, refresh_obj_list):
+	#newsfeed_list 삭제
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$unset': {'newsfeed_list': 1}
+		}
+	)
+
+	#새로운 view_list 등록
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$push': 
+			{
+				'newsfeed_list':
+				{
+					'$each': refresh_obj_list,
+					'$position': 0
+				}
+			}
+		}
+	)
+
+	return "success"
+
+#유저 오토로그인 변경
+def update_user_auto_login(db, user_id, value):
+	db['user'].update(
+		{
+			'user_id': user_id
+		}, 
+		{
+			'$set': {'auto_login': value}
+		}
+	)
+
 	return "success"
 
 #######################################################
@@ -225,7 +386,7 @@ def find_newsfeed_of_topic(db, newsfeed_name):
 
 #토픽별 뉴스피드 타입에 따른 뉴시피드 게시글들 반환
 def find_newsfeed(db, info, tag, negative_tag, num):
-	result = db['test_posts6'].find(
+	result = db[SJ_DB_POST].find(
 		{
 			'$and':
 			[
@@ -247,7 +408,7 @@ def find_newsfeed(db, info, tag, negative_tag, num):
 
 #인기 뉴스피드 반환
 def find_popularity_newsfeed(db, num):
-	result = db['test_posts6'].find(
+	result = db[SJ_DB_POST].find(
 		{}, 
 		{
 			'_id': 1,
@@ -303,14 +464,14 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 
 	if limit_ is None:
 		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts6'].find(
+		result = db[SJ_DB_POST].find(
 			{}, 
 			show_dict
 		).sort([('date', -1)]).skip(skip_)
 
 	else:
 		#기본적으로 날짜순 정렬 (최신)
-		result = db['test_posts6'].find(
+		result = db[SJ_DB_POST].find(
 			{}, 
 			show_dict
 		).sort([('date', -1)]).skip(skip_).limit(limit_)
@@ -355,7 +516,7 @@ def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None
 	if popularity is not None:
 		show_dict['popularity'] = 1
 
-	result = db['test_posts6'].find_one(
+	result = db[SJ_DB_POST].find_one(
 		{
 			'_id': ObjectId(post_obi)
 		}, 
@@ -366,7 +527,7 @@ def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None
 
 #포스트 좋아요
 def update_post_like(db, post_obi):
-	db['test_posts6'].update(
+	db[SJ_DB_POST].update(
 		{
 			'_id': ObjectId(post_obi)
 		}, 
@@ -378,7 +539,7 @@ def update_post_like(db, post_obi):
 
 #포스트 좋아요 취소
 def update_post_unlike(db, post_obi):
-	db['test_posts6'].update_many(
+	db[SJ_DB_POST].update_many(
 		{
 			'_id': ObjectId(post_obi)
 		}, 
@@ -394,7 +555,7 @@ def update_post_unlike(db, post_obi):
 
 #포스트 조회수 올리기
 def update_post_view(db, post_obi):
-	db['test_posts6'].update_one(
+	db[SJ_DB_POST].update_one(
 		{
 			'_id': ObjectId(post_obi)
 		}, 
@@ -462,7 +623,7 @@ def find_title_regex(db, search_str, type_check):
 
 	#priority
 	if type_check == 0:
-		result = db['test_posts6'].find(
+		result = db[SJ_DB_POST].find(
 			{
 				'title': {'$regex':search_str}
 			}, 
@@ -482,7 +643,7 @@ def find_title_regex(db, search_str, type_check):
 		)
 		info = "|".join(search_type['info'])
 
-		result = db['test_posts6'].find(
+		result = db[SJ_DB_POST].find(
 			{
 				'$and':
 				[
@@ -512,7 +673,7 @@ def find_title_regex(db, search_str, type_check):
 		temp_list = search_type[0]['info'] + search_type[1]['info']
 		info = "|".join(temp_list)
 
-		result = db['test_posts6'].find(
+		result = db[SJ_DB_POST].find(
 			{
 				'$and':
 				[
@@ -553,7 +714,7 @@ def find_title_regex(db, search_str, type_check):
 
 		info = '^(?!(' + "|".join(info) + '|everytime_))'
 
-		result = db['test_posts6'].find(
+		result = db[SJ_DB_POST].find(
 			{
 				'$and':
 				[
@@ -566,7 +727,7 @@ def find_title_regex(db, search_str, type_check):
 
 	#커뮤니티
 	else:
-		result = db['test_posts6'].find(
+		result = db[SJ_DB_POST].find(
 			{
 				'$and':
 				[
@@ -622,7 +783,7 @@ def find_aggregate(db, tokenizer_list, type_check):
 
 	#priority
 	if type_check == 0:
-		result = db['test_posts6'].aggregate([
+		result = db[SJ_DB_POST].aggregate([
 			project, 
 			{
 				'$match': 
@@ -648,7 +809,7 @@ def find_aggregate(db, tokenizer_list, type_check):
 		)
 		info = "|".join(search_type['info'])
 
-		result = db['test_posts6'].aggregate([
+		result = db[SJ_DB_POST].aggregate([
 			project,
 			{
 				'$match': 
@@ -684,7 +845,7 @@ def find_aggregate(db, tokenizer_list, type_check):
 		temp_list = search_type[0]['info'] + search_type[1]['info']
 		info = "|".join(temp_list)
 
-		result = db['test_posts6'].aggregate([
+		result = db[SJ_DB_POST].aggregate([
 			project,
 			{
 				'$match': 
@@ -731,7 +892,7 @@ def find_aggregate(db, tokenizer_list, type_check):
 
 		info = '^(?!(' + "|".join(info) + '|everytime_))'
 
-		result = db['test_posts6'].aggregate([
+		result = db[SJ_DB_POST].aggregate([
 			project,
 			{
 				'$match': 
@@ -750,7 +911,7 @@ def find_aggregate(db, tokenizer_list, type_check):
 
 	#커뮤니티
 	else:
-		result = db['test_posts6'].aggregate([
+		result = db[SJ_DB_POST].aggregate([
 			project,
 			{
 				'$match': 
@@ -772,7 +933,7 @@ def find_aggregate(db, tokenizer_list, type_check):
 #full search title regex 검색
 def find_full_title_regex(db, search_str, limit_):
 	#priority	
-	result = db['test_posts6'].find(
+	result = db[SJ_DB_POST].find(
 		{
 			'title': {'$regex':search_str}
 		}, 
@@ -794,7 +955,7 @@ def find_full_title_regex(db, search_str, limit_):
 def find_full_aggregate(db, tokenizer_list, limit_):
 	now_time = datetime.now()
 	
-	result = db['test_posts6'].aggregate([
+	result = db[SJ_DB_POST].aggregate([
 		{
 			'$project':
 			{
@@ -841,7 +1002,7 @@ def find_full_aggregate(db, tokenizer_list, limit_):
 
 #title 토큰 검색
 def find_title_token(db, token_list):
-	result = db['test_posts6'].find(
+	result = db[SJ_DB_POST].find(
 		{
 			'title_token': {'$in': token_list}
 		}, 
@@ -856,7 +1017,7 @@ def find_title_token(db, token_list):
 
 #token 검색
 def find_token(db, token_list):
-	result = db['test_posts6'].find(
+	result = db[SJ_DB_POST].find(
 		{
 			'token': {'$in': token_list}
 		}, 
@@ -957,6 +1118,76 @@ def find_user_date_log(db, user_id, date, limit_):
 
 	return result
 
+#pushback 함수
+def insert_pushback(db, user_id, type_, back_obj_list):
+	#좋아요 타입
+	if type_ == 'fav':
+		for back_obj in back_obj_list:
+			db['pushback'].insert(
+				{
+					'user_id': user_id,
+					'type': 'fav',
+					'obj_id': back_obj['_id'],
+					'topic': back_obj['topic'],
+					'token': back_obj['token'],
+					'tag': back_obj['tag'],
+					'post_date': back_obj['post_date'],
+					'title': back_obj['title'],
+					'url': back_obj['url'],
+					'img': back_obj['img'],
+					'date': back_obj['date']
+				}
+			)
+	
+	#조회수 타입
+	elif type_ == 'view':
+		for back_obj in back_obj_list:
+			db['pushback'].insert(
+				{
+					'user_id': user_id,
+					'type': 'view',
+					'obj_id': back_obj['_id'],
+					'topic': back_obj['topic'],
+					'token': back_obj['token'],
+					'tag': back_obj['tag'],
+					'post_date': back_obj['post_date'],
+					'title': back_obj['title'],
+					'url': back_obj['url'],
+					'img': back_obj['img'],
+					'date': back_obj['date']
+				}
+			)
+	
+	#검색 타입
+	elif type_ == 'search':
+		for back_obj in back_obj_list:
+			db['pushback'].insert(
+				{
+					'user_id': user_id,
+					'type': 'search',
+					'original': back_obj['original'],
+					'search_split': back_obj['search_split'],
+					'tokenizer_split': back_obj['tokenizer_split'],
+					'similarity_split': back_obj['similarity_split'],
+					'date': back_obj['date']
+				}
+			)
+	
+	#뉴스피드 타입
+	else:
+		for back_obj in back_obj_list:
+			db['pushback'].insert(
+				{
+					'user_id': user_id,
+					'type': 'newsfeed',
+					'newsfeed_name': back_obj['newsfeed_name'],
+					'tag': back_obj['tag'],
+					'date': back_obj['date']
+				}
+			)
+		
+	return "success"
+
 ###############################################
 #analysis######################################
 #search_realtime 가져오기!
@@ -973,16 +1204,16 @@ def find_search_all_realtime(db):
 #background ################################### 
 
 #모든 유져를 불러온다. (관심도 측정용)
-def find_user_measurement(db, num):
-	mongo_num = num * -1
-	result = db['user'].find({}, {
-		'fav_list': {'$slice': mongo_num}, 
-		'view_list': {'$slice': mongo_num}, 
-		'search_list': {'$slice': mongo_num},
-		'newsfeed_list': {'$slice': mongo_num}
-		})
+# def find_user_measurement(db, num):
+# 	mongo_num = num * -1
+# 	result = db['user'].find({}, {
+# 		'fav_list': {'$slice': mongo_num}, 
+# 		'view_list': {'$slice': mongo_num}, 
+# 		'search_list': {'$slice': mongo_num},
+# 		'newsfeed_list': {'$slice': mongo_num}
+# 		})
 
-	return result
+# 	return result
 
 #USER의 관심도 갱신.
 def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector):
@@ -1021,7 +1252,7 @@ def find_search_realtime(db):
 
 #제일 높은 좋아요 수 반환
 def find_highest_fav_cnt(db):
-	result = db['test_posts6'].find_one(
+	result = db[SJ_DB_POST].find_one(
 		{
 			'$query': {},
 			'$orderby': {'fav_cnt': -1}
@@ -1035,7 +1266,7 @@ def find_highest_fav_cnt(db):
 
 #제일 높은 조회수 반환
 def find_highest_view_cnt(db):
-	result = db['test_posts6'].find_one(
+	result = db[SJ_DB_POST].find_one(
 		{
 			'$query': {},
 			'$orderby': {'view': -1}
@@ -1076,7 +1307,7 @@ def update_variable(db, key, value):
 def insert_dummy_post(db):
 	topic_temp = numpy.ones(26)
 	topic = (topic_temp / topic_temp.sum()).tolist()
-	db['test_posts6'].insert(
+	db[SJ_DB_POST].insert(
 		{
 			'title' : "(o^_^)o 안녕하세요. SOOJLE 입니다.",
 			'date': get_default_day(10000),
@@ -1100,7 +1331,7 @@ def insert_dummy_post(db):
 	return "success"
 
 def check_dummy_post(db):
-	result = db['test_posts6'].find_one({'title': "(o^_^)o 안녕하세요. SOOJLE 입니다."})
+	result = db[SJ_DB_POST].find_one({'title': "(o^_^)o 안녕하세요. SOOJLE 입니다."})
 
 	return result
 

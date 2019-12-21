@@ -1,21 +1,25 @@
 from flask import *
 from flask_jwt_extended import *
 from werkzeug import *
-##########################################
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from datetime import timedelta, datetime
 import operator
 import math
+import time
+import jpype
 ##########################################
 from db_management import *
 from global_func import *
-import jpype
 import tknizer
-import time
 ##########################################
+from variable import *
+
+
+#BluePrint
 BP = Blueprint('search', __name__)
-##########################################
+
+
 #JAVA 스레드 이동.
 jpype.attachThreadToJVM()
 
@@ -62,7 +66,7 @@ def priority_search(num):
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= 0.7: 
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 	TIME_LOG['FASTTEXT_time'] = time.time() - FASTTEXT_time
@@ -184,7 +188,7 @@ def category_search(type_check, num):
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= 0.7: 
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 	TIME_LOG['FASTTEXT_time'] = time.time() - FASTTEXT_time
@@ -263,7 +267,7 @@ def domain_search():
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= 0.7: 
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 

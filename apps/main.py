@@ -1,10 +1,13 @@
 from flask import *
+##########################################
 from db_management import *
 from global_func import *
+##########################################
 
+#Blueprint
 BP = Blueprint('main', __name__)
 
-#######################################################
+
 #페이지 URL#############################################
 @BP.route('/')
 @BP.route('/home')

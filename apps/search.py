@@ -1,23 +1,29 @@
 from flask import *
 from flask_jwt_extended import *
 from werkzeug import *
-##########################################
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from datetime import timedelta, datetime
 import operator
 import math
+import jpype
 ##########################################
 from db_management import *
 from global_func import *
-import jpype
 import tknizer
 ##########################################
+from variable import *
+
+
+#BluePrint
 BP = Blueprint('search', __name__)
-##########################################
+
+
+
 #JAVA 스레드 이동.
 jpype.attachThreadToJVM()
 
+#유사도 스코어 측정
 def match_score(token1, token2):
 	MC = len(set(token1) & set(token2))
 	MR = MC / len(token1)
@@ -43,7 +49,7 @@ def priority_search(num):
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= 0.7: 
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
@@ -78,6 +84,9 @@ def priority_search(num):
 		#FAS 작업
 		split_vector = FastText.get_doc_vector(del_space_list).tolist()
 		FAS = FastText.vec_sim(split_vector, post['ft_vector'])
+
+		if not 'title_token' in post:
+			print(post)
 
 		T1 = match_score(del_space_list, post['title_token'])
 		
@@ -133,7 +142,7 @@ def category_search(type_check, num):
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= 0.7: 
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
@@ -148,6 +157,9 @@ def category_search(type_check, num):
 		#FAS 작업
 		split_vector = FastText.get_doc_vector(del_space_str).tolist()
 		FAS = FastText.vec_sim(split_vector, post['ft_vector'])
+
+		if not 'title_token' in post:
+			print(post)
 
 		T1 = match_score(del_space_str, post['title_token'])
 
@@ -196,7 +208,7 @@ def domain_search():
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= 0.7: 
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
@@ -234,7 +246,7 @@ def full_search(num):
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= 0.7: 
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 

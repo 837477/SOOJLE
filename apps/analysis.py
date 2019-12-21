@@ -1,25 +1,23 @@
 from flask import *
 from flask_jwt_extended import *
 from werkzeug import *
-##########################################
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from datetime import timedelta, datetime
 from dateutil.relativedelta import relativedelta
-import operator
-import math
-from numpy import dot
-from numpy.linalg import norm
-import numpy
+from pprint import pprint
 ##########################################
 from db_management import *
 from global_func import *
 import jpype
 import tknizer
-from pprint import pprint
 ##########################################
+from variable import *
+
+
+#BluePrint
 BP = Blueprint('analysis', __name__)
-##########################################
+
 
 #실시간 검색서 순위 반환
 @BP.route('/get_search_realtime')
@@ -92,7 +90,7 @@ def simulation_fastext():
 		similarity_list = []
 		for sim_word in FastText.sim_words(word):
 			temp = {}
-			if sim_word[1] >= 0.6: 
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				temp[sim_word[0]] = sim_word[1]
 				similarity_list.append(temp)
 			else: break	

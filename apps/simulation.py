@@ -1,23 +1,26 @@
 from flask import *
 from flask_jwt_extended import *
 from werkzeug import *
-##########################################
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from datetime import timedelta, datetime
-import operator
-import math
 from numpy import dot
 from numpy.linalg import norm
 import numpy
+import operator
+import math
+import jpype
 ##########################################
 from db_management import *
 from global_func import *
-import jpype
 import tknizer
 ##########################################
+from variable import *
+
+
+#BluePrint
 BP = Blueprint('simulation', __name__)
-##########################################
+
 
 #입력된 str을 split 해주는 API
 @BP.route('/simulation_split/<string:input_str>')
@@ -53,7 +56,7 @@ def simulation_priority_search(num):
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= 0.7: 
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
@@ -105,7 +108,7 @@ def simulation_category_search(type_check, num):
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= 0.7: 
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 

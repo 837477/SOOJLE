@@ -1,7 +1,6 @@
 from flask import *
 from flask_jwt_extended import *
 from werkzeug import *
-#####################################
 from bson.json_util import dumps
 from datetime import datetime
 from numpy import dot
@@ -12,10 +11,11 @@ import operator
 from db_management import *
 from global_func import *
 #####################################
-BP = Blueprint('newsfeed', __name__)
-#####################################
+from variable import *
 
-return_num = 300
+#BluePrint
+BP = Blueprint('newsfeed', __name__)
+
 
 #토픽별 뉴스피드
 @BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
@@ -36,6 +36,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 		newsfeed_obj = {}
 		newsfeed_obj['newsfeed_name'] = newsfeed_type['newsfeed_name']
 		newsfeed_obj['tag'] = newsfeed_type['tag']
+		newsfeed_obj['date'] = datetime.now()
 
 		#접근한 뉴스피드 기록!
 		update_user_newsfeed_list_push(g.db, USER['_id'], newsfeed_obj)
@@ -46,7 +47,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 	#info를 정규표현식으로 부르기위해 or연산자로 join
 	info = "|".join(newsfeed_type['info'])
 
-	result = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], return_num)
+	result = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], SJ_RETURN_NUM)
 
 	return jsonify(
 		result = "success",
@@ -62,7 +63,7 @@ def get_popularity_newsfeed():
 	else:
 		insert_log(g.db, request.full_path, request.url)
 
-	result = find_popularity_newsfeed(g.db, return_num)
+	result = find_popularity_newsfeed(g.db, SJ_RETURN_NUM)
 
 	return jsonify(
 		result = "success",
@@ -116,11 +117,6 @@ def get_recommendation_newsfeed():
 			#최종 값 저장
 			result = TOS + TAS + FAS + RANDOM
 
-			del POST['topic']
-			del POST['ft_vector']
-			del POST['view']
-			del POST['tag']
-
 			POST['similarity'] = result
 
 		#similarity를 기준으로 내림차순 정렬.
@@ -132,4 +128,4 @@ def get_recommendation_newsfeed():
 
 	return jsonify(
 		result = "success",
-		newsfeed = dumps(POST_LIST[:return_num]))
+		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))

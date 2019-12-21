@@ -5,6 +5,7 @@ from flask import *
 from flask_jwt_extended import *
 from flask_cors import CORS
 ###########################################
+#837477 Path
 sys.path.insert(0,'./')
 sys.path.insert(0,'../')
 sys.path.insert(0,'../SJ_Auth')
@@ -14,6 +15,7 @@ sys.path.insert(0,'../../IML_Tokenizer/src/')
 sys.path.insert(0,'./database')
 sys.path.insert(0,'./apps')
 ###########################################
+#Ubuntu Path
 sys.path.insert(0,'/home/iml/')
 sys.path.insert(0,'/home/iml/SOOJLE/')
 sys.path.insert(0,'/home/iml/SOOJLE_Crawler/src/')
@@ -24,6 +26,7 @@ sys.path.insert(0,'/home/iml/IML_Tokenizer/src/')
 from global_func import *
 from init_database import *
 ###########################################
+
 #APPS
 import main, auth, newsfeed, post, search, admin, analysis, simulation, error
 
@@ -38,7 +41,6 @@ application.config.update(
 jwt = JWTManager(application)
 
 def main_app(test_config = None):
-	measurement_run()
 	#DB초기화
 	init_db()
 	#백그라운드 작업
@@ -52,6 +54,7 @@ def main_app(test_config = None):
 	application.register_blueprint(analysis.BP)
 	application.register_blueprint(simulation.BP)
 	application.register_blueprint(admin.BP)
+	application.register_blueprint(error.BP)
 
 @application.before_request
 def before_request():

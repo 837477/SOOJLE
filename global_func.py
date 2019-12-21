@@ -5,9 +5,8 @@ sys.path.insert(0,'../SJ_AI/src')
 sys.path.insert(0,'./database/')
 import atexit
 import time
-from pymongo import *
 import numpy as np
-import pandas as pd
+from pymongo import *
 from apscheduler.schedulers.background import BackgroundScheduler
 from collections import Counter
 from operator import itemgetter
@@ -16,15 +15,17 @@ from datetime import timedelta, datetime
 import json
 import re
 import csv
+import jpype
 #######################################################
 from db_management import *
 from db_info import *
-#######################################################
-import jpype
 from tknizer import get_tk
 import LDA
 import FastText
 #######################################################
+from variable import *
+
+
 # BackgroundScheduler Initialize
 def schedule_init():
 	t_zone = get_localzone()
@@ -129,10 +130,8 @@ def measurement_run():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
-	num = 200
-
 	#모든 유저의 관심도 측정 지표를 다 가져온다.
-	USER_list = find_user_measurement(db, num)
+	USER_list = find_all_user(db, _id=1, fav_list=1, view_list=1, search_list=1, newsfeed_list=1)
 
 	for USER in USER_list:
 		fav_tag = []
@@ -140,6 +139,7 @@ def measurement_run():
 		newsfeed_tag = []
 		fav_token = []
 		view_token = []
+		search_list = []
 
 		#사용자가 관심 기능을 수행한 게시물 ##########################
 		fav_topic = (np.zeros(LDA.NUM_TOPICS))
@@ -172,20 +172,22 @@ def measurement_run():
 			view_topic /= len(USER['view_list'])
 
 		#사용자가 검색을 수행한 키워드 ##############################
-		search_keyword_list = USER['search_list'][num*2:]
-		search_topic = LDA.get_topics(search_keyword_list)
+		for search_obj in USER['search_list']:
+			search_list += search_obj['tokenizer_split']
+		
+		search_topic = LDA.get_topics(search_list)
 		search_topic *= 5
 
 		#FAS 전용
 		similarwords = []
 
-		for search_keyword in search_keyword_list:
+		for search_keyword in search_list:
 			for keyword in FastText.sim_words(search_keyword):
-				if keyword[1] >= 0.7: 
+				if keyword[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 					similarwords.append(keyword[0])
 				else: break
 
-		search_doc = search_keyword_list + similarwords
+		search_doc = search_list + similarwords
 
 		#사용자가 접근한 뉴스피드 ################################
 		for newsfeed in USER['newsfeed_list']:
@@ -227,11 +229,96 @@ def measurement_run():
 		USER_TAG_SUM *= 3
 		USER_TAG_SUM //= 2
 
+		if USER_TAG_SUM == 0:
+			USER_TAG_SUM = 1
+
 		#해당 USER 관심도 갱신!
 		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR)
 
 	if db_client is not None:
 		db_client.close()
+
+#######################################################
+def user_log_pushback():
+	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+	db = db_client["soojle"]
+
+	# 'fav_list': {'$slice': mongo_num}, 
+	# 	'view_list': {'$slice': mongo_num}, 
+	# 	'search_list': {'$slice': mongo_num},
+	# 	'newsfeed_list': {'$slice': mongo_num}
+
+	#모든 유저의 관심도 측정 지표를 다 가져온다.
+	USER_list = find_all_user(db, user_id=1, fav_list=1, view_list=1, search_list=1, newsfeed_list=1)
+	USER_list = list(USER_list)
+
+	for USER in USER_list:
+		#fav
+		if len(USER['fav_list']) > SJ_USER_LOG_LIMIT:
+			refresh_obj = []
+			back_obj_list = []
+			cnt = 0
+			for fav in USER['fav_list']:
+				if cnt < SJ_USER_LOG_LIMIT:
+					refresh_obj.append(fav)
+				else:
+					back_obj_list.append(fav)
+				cnt += 1
+			#400개로 맞춤 갱신!
+			refresh_user_fav_list(db, USER['user_id'], refresh_obj)
+			#pushback 으로 이전!
+			insert_pushback(db, USER['user_id'], 'fav', back_obj_list)
+
+		#view
+		if len(USER['view_list']) > SJ_USER_LOG_LIMIT:
+			refresh_obj = []
+			back_obj_list = []
+			cnt = 0
+			for view in USER['view_list']:
+				if cnt < SJ_USER_LOG_LIMIT:
+					refresh_obj.append(view)
+				else:
+					back_obj_list.append(view)
+				cnt += 1
+			#400개로 맞춤 갱신!
+			refresh_user_view_list(db, USER['user_id'], refresh_obj)
+			#pushback 으로 이전!
+			insert_pushback(db, USER['user_id'], 'view', back_obj_list)
+
+		#search
+		if len(USER['search_list']) > SJ_USER_LOG_LIMIT:
+			refresh_obj = []
+			back_obj_list = []
+			cnt = 0
+			for search in USER['search_list']:
+				if cnt < SJ_USER_LOG_LIMIT:
+					refresh_obj.append(search)
+				else:
+					back_obj_list.append(search)
+				cnt += 1
+			#400개로 맞춤 갱신!
+			refresh_user_search_list(db, USER['user_id'], refresh_obj)
+			#pushback 으로 이전!
+			insert_pushback(db, USER['user_id'], 'search', back_obj_list)
+
+		#newsfeed
+		if len(USER['newsfeed_list']) > SJ_USER_LOG_LIMIT:
+			refresh_obj = []
+			back_obj_list = []
+			cnt = 0
+			for newsfeed in USER['newsfeed_list']:
+				if cnt < SJ_USER_LOG_LIMIT:
+					refresh_obj.append(newsfeed)
+				else:
+					back_obj_list.append(newsfeed)
+				cnt += 1
+			#400개로 맞춤 갱신!
+			refresh_user_newsfeed_list(db, USER['user_id'], refresh_obj)
+			#pushback 으로 이전!
+			insert_pushback(db, USER['user_id'], 'newsfeed', back_obj_list)
+
+
+
 #######################################################
 #variable 가장 높은 좋아요/조회수 갱신
 def update_posts_highest():
@@ -247,6 +334,7 @@ def update_posts_highest():
 
 	if db_client is not None:
 		db_client.close()
+
 #######################################################
 def create_word_cloud():
 	print("word_cloud")

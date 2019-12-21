@@ -5,6 +5,10 @@ BP = Blueprint('error', __name__)
 def bad_requests(error):
 		return jsonify(result = "bad request"), 400
 
+@BP.app_errorhandler(401)
+def bad_requests(error):
+		return jsonify(result = "bad token"), 401
+
 @BP.app_errorhandler(403)
 def admin_only(error):
 		return jsonify(result = "admin only"), 403
@@ -28,3 +32,7 @@ def bad_requests(error):
 @BP.app_errorhandler(500)
 def server_error(error):
 		return jsonify(result = "fail"), 500
+
+@BP.app_errorhandler(502)
+def server_error(error):
+		return jsonify(result = "bad token"), 502

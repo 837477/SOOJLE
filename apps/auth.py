@@ -1,16 +1,18 @@
 from flask import *
 from werkzeug.security import *
 from flask_jwt_extended import *
-import operator
+from pprint import pprint
 ###########################################
 from db_management import *
 from sj_auth import *
-from pprint import pprint
 ###########################################
-BP = Blueprint('auth', __name__)
-###########################################
+from variable import *
 
-###########################################
+
+#BluePrint
+BP = Blueprint('auth', __name__)
+
+
 #로그인 및 회원가입(토큰발행) (OK)
 @BP.route('/sign_in_up', methods=['POST'])
 def sign_in_up():
@@ -66,18 +68,33 @@ def sign_in_up():
 @BP.route('/get_userinfo')
 @jwt_required
 def get_user_info():
-	user = find_user(g.db, user_id=get_jwt_identity(), user_name=1, user_major=1, fav_list=1)
+	user = find_user(g.db, user_id=get_jwt_identity(), auto_login=1, user_name=1, user_major=1, fav_list=1)
 
-	if user is None:
-		return jsonify("not found")
+	if user is None: abort(400)
 
 	return jsonify(
 		result = "success",
 		user_id = user['user_id'],
 		user_name = user['user_name'],
 		user_major = user['user_major'],
-		user_fav_list = user['fav_list']
+		user_fav_list = user['fav_list'],
+		auto_login = user['auto_login']
 		)
+
+@BP.route('/update_auto_login/<int:auto_login>')
+@jwt_required
+def update_auto_login(auto_login):
+	user = find_user(g.db, user_id=get_jwt_identity())
+
+	if user is None: abort(400)
+
+	if auto_login > 1 and auto_login < 0: abort(400)
+
+	result = update_user_auto_login(g.db, user['user_id'], auto_login)
+
+	return jsonify(
+		result = result
+	)
 
 #회원정보 특정 필드 반환
 @BP.route('/get_specific_userinfo/<int:type_num>')
