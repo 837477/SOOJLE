@@ -7,7 +7,7 @@ SJ_RETURN_NUM = 300
 #Priority Search limit number
 SJ_PS_LIMIT = 10000
 #Category Search limit number
-SJ_CS_LIMIT = 50000
+SJ_CS_LIMIT = 30000
 #Recommendation limit
 SJ_RECOMMENDATION_LIMIT = 15000
 #Log user limit number

@@ -898,7 +898,7 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 			if i[-1] == '$':
 				i = i[:-1]
 
-		info = '^(?!(' + "|".join(info) + '|everytime_))'
+		info = '^((?!' + "|".join(info) + '|everytime_).)*$'
 
 		result = db[SJ_DB_POST].aggregate([
 			project,

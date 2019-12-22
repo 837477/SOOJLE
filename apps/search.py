@@ -128,10 +128,6 @@ def category_search(type_check, num):
 
 	search_str = request.form['search']
 
-	#검색어로 시작되는 포스트들을 1차 regex 검색!
-	title_regex = find_title_regex(g.db, search_str, type_check)
-	title_regex = list(title_regex)
-
 	#공백 제거
 	del_space_str = search_str.split(' ')
 
@@ -150,16 +146,10 @@ def category_search(type_check, num):
 
 	aggregate_posts = list(aggregate_posts)
 
-	#regex와 aggregate로 뽑힌 포스트를 합친다.
-	aggregate_posts += title_regex
-
 	for post in aggregate_posts:
 		#FAS 작업
 		split_vector = FastText.get_doc_vector(del_space_str).tolist()
 		FAS = FastText.vec_sim(split_vector, post['ft_vector'])
-
-		if not 'title_token' in post:
-			print(post)
 
 		T1 = match_score(del_space_str, post['title_token'])
 
