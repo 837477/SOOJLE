@@ -1,5 +1,5 @@
 #DB_POST Collection name
-SJ_DB_POST = "test_posts6"
+SJ_DB_POST = "posts"
 #FASTTEXT Similarity percent
 SJ_FASTTEXT_SIM_PERCENT = 0.7
 #ALL post return number
