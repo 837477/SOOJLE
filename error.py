@@ -32,7 +32,3 @@ def bad_requests(error):
 @BP.app_errorhandler(500)
 def server_error(error):
 		return jsonify(result = "fail"), 500
-
-@BP.app_errorhandler(502)
-def server_error(error):
-		return jsonify(result = "bad token"), 502

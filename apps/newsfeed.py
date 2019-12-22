@@ -73,7 +73,7 @@ def get_popularity_newsfeed():
 @BP.route('/get_recommendation_newsfeed')
 @jwt_optional
 def get_recommendation_newsfeed():
-	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, url=1, img=1, date=1, limit_=15000)
+	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, url=1, img=1, date=1, limit_=SJ_RECOMMENDATION_LIMIT)
 
 	POST_LIST = list(POST_LIST)
 
@@ -84,6 +84,7 @@ def get_recommendation_newsfeed():
 		#유저를 _id, topic리스트, tag리스트 만 가져온다.
 		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
 
+		#유효한 토큰이 아닐 때 
 		if USER is None: abort(400)
 
 		#캐싱된 가장 높은 좋아요 수를 가져온다.

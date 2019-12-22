@@ -110,6 +110,7 @@ def real_time_keywords(search_input):
 	result = sorted(temp, key = lambda x: len(x[0]))   
 	result = sorted(result, key = itemgetter(1), reverse = True)
 	return result
+
 #실시간 검색어 캐싱 함수
 def real_time_insert():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
@@ -124,7 +125,7 @@ def real_time_insert():
 	
 	if db_client is not None:
 		db_client.close()
-#######################################################
+
 #사용자 관심도 측정
 def measurement_run():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
@@ -207,12 +208,12 @@ def measurement_run():
 		if FastText_doc:
 			USER_VERCTOR = FastText.get_doc_vector(fav_doc + view_doc + search_doc).tolist()
 		else:
-			USER_VERCTOR = ft_vector = (np.zeros(LDA.NUM_TOPICS)).tolist()
+			USER_VERCTOR = ft_vector = (np.zeros(FastText.VEC_SIZE)).tolist()
 			
-
 		#TAG
 		tag_dict = dict(Counter(fav_tag + view_tag))
 		tag_dict = sorted(tag_dict.items(), key=lambda x: x[1], reverse = True)
+		
 		#빈도수 랭킹 상위 X위 까지 보관.
 		TAG_RESULT = {}
 
@@ -229,6 +230,7 @@ def measurement_run():
 		USER_TAG_SUM *= 3
 		USER_TAG_SUM //= 2
 
+		#만약 TAG_SUM 이 0이면 1로 설정.
 		if USER_TAG_SUM == 0:
 			USER_TAG_SUM = 1
 
@@ -238,7 +240,7 @@ def measurement_run():
 	if db_client is not None:
 		db_client.close()
 
-#######################################################
+#유저 로그 푸시백
 def user_log_pushback():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
@@ -317,9 +319,6 @@ def user_log_pushback():
 			#pushback 으로 이전!
 			insert_pushback(db, USER['user_id'], 'newsfeed', back_obj_list)
 
-
-
-#######################################################
 #variable 가장 높은 좋아요/조회수 갱신
 def update_posts_highest():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
@@ -335,7 +334,7 @@ def update_posts_highest():
 	if db_client is not None:
 		db_client.close()
 
-#######################################################
+#워드클라우드 생성
 def create_word_cloud():
 	print("word_cloud")
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))

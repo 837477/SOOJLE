@@ -287,7 +287,6 @@ def domain_search():
 
 #search_log 기록!
 def search_logging(db, user_id, original_str, split_list, tokenizer_list, similarity_list):
-	
 	if user_id:
 		USER_search_obj = {}
 		USER_search_obj['original'] = original_str

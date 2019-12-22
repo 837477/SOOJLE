@@ -73,7 +73,7 @@ def priority_search(num):
 		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
 
 	#토크나이져 처리된 리스트를 대상으로 검색하고, aggregate로 ids처리하여 posts 추출
-	aggregate_posts = find_aggregate(g.db, tokenizer_list, 0)
+	aggregate_posts = find_aggregate(g.db, tokenizer_list, 0, SJ_PS_LIMIT)
 	aggregate_posts = list(aggregate_posts)
 
 	#regex와 aggregate로 뽑힌 포스트를 합친다.
@@ -146,7 +146,7 @@ def category_search(type_check, num):
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
-	aggregate_posts = find_aggregate(g.db, tokenizer_list, type_check)
+	aggregate_posts = find_aggregate(g.db, tokenizer_list, type_check, SJ_CS_LIMIT)
 
 	aggregate_posts = list(aggregate_posts)
 
@@ -226,7 +226,7 @@ def domain_search():
 		result = "success",
 		search_result = result)
 
-#priority_검색
+#Full_search
 @BP.route('/full_search/<int:num>', methods = ['POST'])
 @jwt_optional
 def full_search(num):
@@ -306,7 +306,6 @@ def full_search(num):
 	return jsonify(
 		result = "success",
 		search_result = aggregate_posts[:num])
-
 
 #search_logging 기록!
 def search_logging(db, user_id, original_str, split_list, tokenizer_list, similarity_list):

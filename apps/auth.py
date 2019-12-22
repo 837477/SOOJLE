@@ -81,6 +81,7 @@ def get_user_info():
 		auto_login = user['auto_login']
 		)
 
+#자동로그인 유무 변경
 @BP.route('/update_auto_login/<int:auto_login>')
 @jwt_required
 def update_auto_login(auto_login):

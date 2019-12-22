@@ -8,8 +8,6 @@ import global_func
 #####################################
 from variable import *
 
-
-#######################################################
 #사용자 관련#############################################
 #전체 유저 목록 반환
 def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None):
@@ -120,6 +118,16 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 
 	return "success"
 
+#유저 삭제
+def remove_user(db, user_id):
+	db['user'].remove(
+		{
+			'user_id': user_id
+		}
+	)
+
+	return "success"
+
 #유저 fav_list 중복 체크용
 def check_user_fav_list(db, _id, post_obi):
 	result = db['user'].find_one(
@@ -138,7 +146,6 @@ def check_user_fav_list(db, _id, post_obi):
 	)
 
 	return result
-
 #유저 fav_list에 요소 추가
 def update_user_fav_list_push(db, _id, fav_obj):
 	db['user'].update(
@@ -157,7 +164,6 @@ def update_user_fav_list_push(db, _id, fav_obj):
 		}
 	)
 	return "success"
-
 #유저 fav_list에 요소 삭제 (좋아요 취소한 경우)
 def update_user_fav_list_pull(db, _id, post_obi):
 	db['user'].update(
@@ -175,64 +181,6 @@ def update_user_fav_list_pull(db, _id, post_obi):
 		}
 	)
 	return "success"
-
-#유저 view_list에 요소 추가
-def update_user_view_list_push(db, _id, view_obj):
-	db['user'].update(
-		{
-			'_id': _id
-		},
-		{
-			'$push': 
-			{
-				'view_list':
-				{
-					'$each': [view_obj],
-					'$position': 0
-				}
-			}
-		}
-	)
-	return "success"
-
-#유저 search_list에 요소 추가
-def update_user_search_list_push(db, user_id, search_obj):
-	db['user'].update(
-		{
-			'user_id': user_id
-		},
-		{
-			'$push': 
-			{
-				'search_list': 
-				{
-					'$each': [search_obj],
-					'$position': 0
-				}
-			}
-		}
-	)
-	return "success"
-
-#유저 newsfeed_list에 요소 추가
-def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
-	db['user'].update(
-		{
-			'_id': _id
-		},
-		{
-			'$push': 
-			{
-				'newsfeed_list':
-				{
-					'$each': [newsfeed_obj],
-					'$position': 0
-				}
-			}
-		}
-	)
-	return "success"
-
 #유저 fav_list 갱신
 def refresh_user_fav_list(db, user_id, refresh_obj_list):
 	#fav_list 삭제
@@ -264,6 +212,24 @@ def refresh_user_fav_list(db, user_id, refresh_obj_list):
 
 	return "success"
 
+#유저 view_list에 요소 추가
+def update_user_view_list_push(db, _id, view_obj):
+	db['user'].update(
+		{
+			'_id': _id
+		},
+		{
+			'$push': 
+			{
+				'view_list':
+				{
+					'$each': [view_obj],
+					'$position': 0
+				}
+			}
+		}
+	)
+	return "success"
 #유저 view_list 갱신
 def refresh_user_view_list(db, user_id, refresh_obj_list):
 	#view_list 삭제
@@ -295,6 +261,24 @@ def refresh_user_view_list(db, user_id, refresh_obj_list):
 
 	return "success"
 
+#유저 search_list에 요소 추가
+def update_user_search_list_push(db, user_id, search_obj):
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$push': 
+			{
+				'search_list': 
+				{
+					'$each': [search_obj],
+					'$position': 0
+				}
+			}
+		}
+	)
+	return "success"
 #유저 search_list 갱신
 def refresh_user_search_list(db, user_id, refresh_obj_list):
 	#search_list 삭제
@@ -326,6 +310,24 @@ def refresh_user_search_list(db, user_id, refresh_obj_list):
 
 	return "success"
 
+#유저 newsfeed_list에 요소 추가
+def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
+	db['user'].update(
+		{
+			'_id': _id
+		},
+		{
+			'$push': 
+			{
+				'newsfeed_list':
+				{
+					'$each': [newsfeed_obj],
+					'$position': 0
+				}
+			}
+		}
+	)
+	return "success"
 #유저 newsfeed_list 갱신
 def refresh_user_newsfeed_list(db, user_id, refresh_obj_list):
 	#newsfeed_list 삭제
@@ -370,7 +372,6 @@ def update_user_auto_login(db, user_id, value):
 
 	return "success"
 
-#######################################################
 #뉴스피드 관련############################################
 #토픽별 뉴스피드 타입 반환
 def find_newsfeed_of_topic(db, newsfeed_name):
@@ -422,7 +423,6 @@ def find_popularity_newsfeed(db, num):
 		).sort([('date', -1)]).limit(num).sort([('popularity', -1)])
 	return result
 
-#######################################################
 #포스트 관련#############################################
 #포스트 전체 가져오기
 def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None, skip_=0, limit_=None):
@@ -525,6 +525,15 @@ def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None
 
 	return result
 
+def remove_post(db, post_obi):
+	db[SJ_DB_POST].remove(
+		{
+			'_id': ObjectId(post_obi)
+		}
+	)
+
+	return "success"
+
 #포스트 좋아요
 def update_post_like(db, post_obi):
 	db[SJ_DB_POST].update(
@@ -570,7 +579,6 @@ def update_post_view(db, post_obi):
 
 	return "success"
 
-#######################################################
 #검색 관련###############################################
 #domain_title_regex 검색
 def find_domain_title_regex(db, search_str):
@@ -742,7 +750,7 @@ def find_title_regex(db, search_str, type_check):
 	return result
 
 #가상 post ids용 반환
-def find_aggregate(db, tokenizer_list, type_check):
+def find_aggregate(db, tokenizer_list, type_check, limit_):
 	now_time = datetime.now()
 
 	project = {
@@ -779,7 +787,7 @@ def find_aggregate(db, tokenizer_list, type_check):
 			'date': -1
 		}
 	}
-	limit = {'$limit': 50000}
+	limit = {'$limit': limit_}
 
 	#priority
 	if type_check == 0:
@@ -793,7 +801,7 @@ def find_aggregate(db, tokenizer_list, type_check):
 			}, 
 			addFields, 
 			sort, 
-			{'$limit': 10000}
+			limit
 		])
 
 	#진로&구인
@@ -1030,7 +1038,6 @@ def find_token(db, token_list):
 	)
 	return result
 
-###############################################
 #logging####################################### 
 #search_log에 search_obj 추가
 def insert_search_log(db, user_id, split_list):
@@ -1188,7 +1195,6 @@ def insert_pushback(db, user_id, type_, back_obj_list):
 		
 	return "success"
 
-###############################################
 #analysis######################################
 #search_realtime 가져오기!
 def find_search_all_realtime(db):
@@ -1200,9 +1206,7 @@ def find_search_all_realtime(db):
 	)
 	return result
 
-###############################################
 #background ################################### 
-
 #모든 유져를 불러온다. (관심도 측정용)
 # def find_user_measurement(db, num):
 # 	mongo_num = num * -1
@@ -1334,6 +1338,3 @@ def check_dummy_post(db):
 	result = db[SJ_DB_POST].find_one({'title': "(o^_^)o 안녕하세요. SOOJLE 입니다."})
 
 	return result
-
-
-

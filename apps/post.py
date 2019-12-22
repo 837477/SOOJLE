@@ -38,6 +38,10 @@ def post_like(post_obi):
 	#해당 POST를 불러온다.
 	POST = find_post(g.db, post_obi, _id=1, topic=1, token=1, tag=1, fav_cnt=1, view=1, date=1, title=1, url=1, img=1)
 
+	#해당 POST가 없으면?!
+	if POST is None:
+		return jsonify(result = "post is deleted")
+
 	#해당 POST 좋아요 처리.
 	update_post_like(g.db, POST['_id'])
 
@@ -76,6 +80,12 @@ def post_unlike(post_obi):
 	#좋아요를 한 글인지 확인한다.
 	if not 'fav_list' in check_fav:
 		return jsonify(result = "none like")
+
+	#해당 POST를 불러온다.
+	POST = find_post(g.db, post_obi, _id=1)
+	#해당 POST가 없으면?!
+	if POST is None:
+		return jsonify(result = "post is deleted")
 
 	#해당 POST 좋아요 취소 처리.
 	update_post_unlike(g.db, post_obi)
