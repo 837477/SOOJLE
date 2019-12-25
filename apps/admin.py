@@ -4,10 +4,12 @@ from werkzeug import *
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 import jpype
+import hashlib
 ##########################################
 from db_management import *
 from global_func import *
 from tknizer import get_tk
+import LDA
 ##########################################
 from variable import *
 
@@ -15,6 +17,8 @@ from variable import *
 #BluePrint
 BP = Blueprint('admin', __name__)
 
+#md5 해쉬
+enc = hashlib.md5()
 
 #회원 삭제
 @BP.route('/remove_user/<string:user_id>')
@@ -37,6 +41,71 @@ def remove_user(user_id):
 
 	return jsonify(result = result)
 
+#게시글 입력
+@BP.route('/insert_post', methods=['POST'])
+@jwt_required
+def insert_post():
+	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
+
+	#Admin 확인
+	if admin is None or admin['major'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	title = request.form['title']
+	post = request.form['post']
+	tag = request.form['tag']
+	img = request.form['img']
+	url = request.form['url']
+	info = request.form['info']
+
+	hashed = hashlib.md5((title + post).encode('utf-8')).hexdigest()
+	url_hashed = hashlib.md5(url.encode('utf-8')).hexdigest()
+	token = tknizer.get_tk(title + post).lower()
+	view = 0
+	fav_cnt = 0
+	title_token = title.split(' ')
+	login = 0
+	learn = 0
+	popularity = 0
+	topic = LDA.get_topics((tag + token))
+	ft_vector = FastText.get_doc_vector((tag + token)).tolist()
+
+	result = insert_post(g.db, title, post, tag, img, url, info, hashed, url_hashed, token, view, fav_cnt, title_token, login, learn, popularity, topic, ft_vector)
+
+	return jsonify(
+		result = result
+	)
+
+#게시글 수정
+@BP.route('/update_post/<string:post_obi>', methods=['POST'])
+@jwt_required
+def update_post(post_obi):
+	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
+
+	#Admin 확인
+	if admin is None or admin['major'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	title = request.form['title']
+	post = request.form['post']
+	tag = request.form['tag']
+	img = request.form['img']
+	url = request.form['url']
+	info = request.form['info']
+
+	hashed = hashlib.md5((title + post).encode('utf-8')).hexdigest()
+	url_hashed = hashlib.md5(url.encode('utf-8')).hexdigest()
+	token = tknizer.get_tk(title + post).lower()
+	title_token = title.split(' ')
+	topic = LDA.get_topics((tag + token))
+	ft_vector = FastText.get_doc_vector((tag + token)).tolist()
+
+	result = update_post(g.db, post_obi, title, post, tag, img, url, info, hashed, url_hashed, token, title_token, topic, ft_vector)
+
+	return jsonify(
+		result = result
+	)
+
 #게시글 삭제
 @BP.route('/remove_post/<string:post_obi>')
 @jwt_required
@@ -57,16 +126,67 @@ def remove_post(post_obi):
 
 	return jsonify(result = result)
 
-
-#게시글 수정 (보류)
-@BP.route('/update_post', methods=['POST'])
+#공지사항 입력
+@BP.route('/insert_notice', methods=['POST'])
 @jwt_required
-def update_post():
+def insert_notice():
 	new_title = request.form['title']
 	new_post = request.form['post']
-	
+	new_url = request.form['url']
 
-#게시글 입력 (보류)
+	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
+
+	#Admin 확인
+	if admin is None or admin['major'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	result = insert_notice(g.db, title, post, rul)
+
+	return jsonify(
+		result = result
+	)
+
+#공지사항 수정
+@BP.route('/update_notice/<string:notice_obi>', methods=['POST'])
+@jwt_required
+def update_notice(notice_obi):
+	new_title = request.form['title']
+	new_post = request.form['post']
+	new_url = request.form['url']
+	
+	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
+
+	#Admin 확인
+	if admin is None or admin['major'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	result = update_notice(g.db, notice_obi, title, post, url)
+
+	return jsonify(
+		reuslt = result
+	)
+
+#공지사항 삭제
+@BP.route('/remove_notice/<string:notice_obi>', methods=['POST'])
+@jwt_required
+def remove_notice(notice_obi):
+	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
+
+	#Admin 확인
+	if admin is None or admin['major'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	notice = find_notice(g.db, notice_obi)
+
+	if notice is None:
+		return jsonify(result = "Not found")
+
+	result = remove_notice(g.db, notice_obi)
+
+	return jsonify(
+		result = result
+	)
+
 
 
 #admin 생성

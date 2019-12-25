@@ -373,6 +373,17 @@ def update_user_auto_login(db, user_id, value):
 	return "success"
 
 #뉴스피드 관련############################################
+#토픽별 뉴스피드 타입 전체 반환
+def find_all_newsfeed_of_topic(db):
+	result = db['newsfeed_of_topic'].find(
+		{
+		}, 
+		{
+			'_id': 0
+		}
+	)
+	return result
+
 #토픽별 뉴스피드 타입 반환
 def find_newsfeed_of_topic(db, newsfeed_name):
 	result = db['newsfeed_of_topic'].find_one(
@@ -383,6 +394,20 @@ def find_newsfeed_of_topic(db, newsfeed_name):
 			'_id': 0
 		}
 	)
+	return result
+
+#토빅별 뉴스피드 타입 여러개 반환
+def find_newsfeed_of_topics(db, newsfeed_list):
+	result = db['newsfeed_of_topic'].find(
+			{
+				'$or': newsfeed_list
+				
+			}, 
+			{
+				'_id': 0,
+				'info': 1
+			}
+		)
 	return result
 
 #토픽별 뉴스피드 타입에 따른 뉴시피드 게시글들 반환
@@ -402,7 +427,10 @@ def find_newsfeed(db, info, tag, negative_tag, num):
 			'date': 1,
 			'img': 1,
 			'fav_cnt': 1,
-			'url': 1
+			'url': 1,
+			'title_token': 1,
+			'info': 1,
+			'tag': 1
 		}
 		).sort([('date', -1)]).limit(num)
 	return result
@@ -1206,6 +1234,122 @@ def find_search_all_realtime(db):
 	)
 	return result
 
+#admin#########################################
+#공지사항 추가
+def insert_notice(db, title, post, url):
+	db['notice'].insert(
+		{
+			'title': title,
+			'post': post,
+			'url': url,
+			'view': 0,
+			'date': datetime.now(),
+			'activation': 1
+		}		
+	)
+
+	return "success"
+
+#공지사항 수정
+def update_notice(db, notice_obi, title, post, url):
+	db['notice'].update(
+		{
+			'_id': ObjectId(notice_obi)
+		},
+		{
+			'$set':
+			{
+				'title': title,
+				'post': post,
+				'url': url,
+				'date': datetime.now()
+			}	
+		}
+		
+	)
+
+	return "success"
+
+#공지사항 삭제
+def remove_notice(db, notice_obi):
+	db['notice'].remove(
+		{
+			'_id': ObjectId(notice_obi)
+		}
+	)
+
+	return "success"
+
+#공지사항 전체 반환
+def find_all_notice(db):
+	result = db['notice'].find().sort([('date', -1)])
+
+	return result
+
+#공지사항 단일 반환
+def find_notice(db, notice_obi):
+	result = db['notice'].find_one(
+		{
+			'_id': ObjectId(notice_obi)
+		}
+	)
+
+	return result
+
+#게시글 추가
+def insert_post(db, title, post, tag, img, url, info, hashed, url_hashed, token, view, fav_cnt, title_token, login, learn, popularity, topic, ft_vector):
+	db['posts'].insert(
+		{
+			'title': title,
+			'post': post,
+			'tag': tag,
+			'img': img,
+			'url': url,
+			'info': info,
+			'hashed': hashed,
+			'url_hashed': url_hashed,
+			'token': token,
+			'view': view,
+			'fav_cnt': fav_cnt,
+			'title_token': title_token,
+			'login': login,
+			'learn': learn,
+			'popularity': popularity,
+			'topic': topic,
+			'ft_vector': ft_vector,
+			'date': datetime.now()
+		}
+	)
+
+	return "success"
+
+#게시글 수정
+def update_post(db, post_obi, title, post, tag, img, url, info, hashed, url_hashed, token, title_token, topic, ft_vector):
+	db['posts'].update(
+		{
+			'_id': ObjectId(post_obi)
+		},
+		{
+			'$set':
+			{
+				'title': title,
+				'post': post,
+				'tag': tag,
+				'img': img,
+				'url': url,
+				'info': info,
+				'hashed': hashed,
+				'url_hashed': url_hashed,
+				'token': token,
+				'title_token': title_token,
+				'topic': topic,
+				'ft_vector': ft_vector
+			}
+		}
+	)
+
+	return "success"
+
 #background ################################### 
 #모든 유져를 불러온다. (관심도 측정용)
 # def find_user_measurement(db, num):
@@ -1246,12 +1390,14 @@ def insert_search_realtime(db, real_time_list):
 
 #search_realtime 가져오기!
 def find_search_realtime(db):
-	result = db['search_realtime'].find_one(
+	result = db['search_realtime'].find(
 		{},
 		{
-			'_id': 0
+			'_id': 0,
+			'real_time': 1,
+			'date': 1
 		}
-	).sort([('date', -1)])
+	).sort([('date', -1)]).limit(1)
 	return result
 
 #제일 높은 좋아요 수 반환

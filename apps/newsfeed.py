@@ -73,9 +73,11 @@ def get_popularity_newsfeed():
 @BP.route('/get_recommendation_newsfeed')
 @jwt_optional
 def get_recommendation_newsfeed():
-	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, url=1, img=1, date=1, limit_=SJ_RECOMMENDATION_LIMIT)
+	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, info=1, title_token=1, url=1, img=1, date=1, limit_=SJ_RECOMMENDATION_LIMIT)
 
 	POST_LIST = list(POST_LIST)
+	
+	now_date = datetime.now()
 
 	if get_jwt_identity():
 		#logging
@@ -108,25 +110,87 @@ def get_recommendation_newsfeed():
 			FAS = FastText.vec_sim(USER['ft_vector'], POST['ft_vector'])
 
 			#IS 작업
-			IS = (((POST['fav_cnt']/Maxfav_cnt)*3) + ((POST['view']/Maxviews)))
-			IS /= 4
-
+			IS = (((POST['fav_cnt']/Maxfav_cnt)*SJ_IS_FAV_WEIGHT) + ((POST['view']/Maxviews)*SJ_IS_VIEW_WEIGHT))
+			
 			#RANDOM 작업
 			RANDOM = numpy.random.random()
-			RANDOM *= 2
+
+			#가중치 작업
+			TOS *= SJ_TOS_WEIGHT
+			TAS *= SJ_TAS_WEIGHT
+			FAS *= SJ_FAS_WEIGHT
+			IS *= SJ_IS_WEIGHT
+			RANDOM *= SJ_RANDOM_WEIGHT
+			TREND = trendscore(POST, now_date)
 
 			#최종 값 저장
-			result = TOS + TAS + FAS + RANDOM
+			result = TOS + TAS + FAS + RANDOM + TREND
 
 			POST['similarity'] = result
 
-		#similarity를 기준으로 내림차순 정렬.
-		POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
-	
-	#Token이 안들어왔을 때
+	#비회원일 때! (no token)
 	else:
 		insert_log(g.db, request.full_path, request.url)
 
+		#비로그인일 때 추천뉴스피드 호출!
+		POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)		
+
+	#similarity를 기준으로 내림차순 정렬.
+	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
+		
 	return jsonify(
 		result = "success",
 		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))
+
+#비회원 추천 뉴스피드
+def get_recommendation_newsfeed_2(db, now_date):
+	#요청한 뉴스피드에 대한 정보를 가져온다.
+	newsfeed_type = find_all_newsfeed_of_topic(db)
+	newsfeed_type = list(newsfeed_type)
+
+	POST_LIST = []
+
+	for newsfeed in newsfeed_type:
+		if newsfeed['newsfeed_name'] != '장터':
+			#info를 정규표현식으로 부르기위해 or연산자로 join
+			info = "|".join(newsfeed['info'])
+
+			result = find_newsfeed(g.db, info, newsfeed['tag'], newsfeed['negative_tag'], SJ_NO_TOKEN_RECOMMENDATION_LIMIT)
+
+			POST_LIST += list(result)
+
+	for POST in POST_LIST:
+		RANDOM = numpy.random.random()
+		RANDOM *= SJ_RANDOM_WEIGHT
+		TREND = trendscore(POST, now_date)
+
+		result = RANDOM + TREND
+
+		POST['similarity'] = result
+	
+	return POST_LIST
+
+#트렌드 스코어 계산
+def trendscore(POST, now_date):
+	year = now_date.year
+
+	#Course Manual (수강편람 기간)
+	CM_term_1 = (datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))
+	CM_term_2 = (datetime(year, 8, 1) < now_date) and (now_date < datetime(year, 8, 14))
+
+	#Seasonal Semester (계절학기 기간)
+	SS_term_1 = (datetime(year, 11, 25) < now_date) and (now_date < datetime(year, 12, 5))
+	SS_term_2 = (datetime(year, 5, 25) < now_date) and (now_date < datetime(year, 6, 5))
+
+	#수강편람 except
+	if POST['info'] == 'main_student' and ('수강편람' in POST['tag']) and (CM_term_1 or CM_term_2):
+		return 10 
+
+	#계절학기 except
+	elif POST['info'] == 'main_student' and ('계절학기' in POST['title_token']) and (SS_term_1 or SS_term_2):
+		return 4
+
+	else: 
+		return 0
+
+	

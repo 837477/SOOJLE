@@ -23,10 +23,11 @@ BP = Blueprint('analysis', __name__)
 @BP.route('/get_search_realtime')
 def get_search_realtime():
 	result = find_search_realtime(g.db)
+	result = result[0]
 
 	return jsonify(
 		result = "success",
-		search_realtime = result['real_time'][:10])
+		search_realtime = result['real_time'][:SJ_REALTIME_RETURN_LIMIT])
 
 #log) 시간대 반환 (date는 한개씩만 사용 가능, limit 설정!)
 @BP.route('/get_log_date/<int:months>/<int:days>/<int:hours>/<int:limit>')
