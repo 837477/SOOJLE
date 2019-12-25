@@ -32,15 +32,15 @@ def schedule_init():
 	scheduler = BackgroundScheduler()
 	scheduler.start()
 
-	#특정 시간마다 실행
-	scheduler.add_job(measurement_run, 'cron', hour = SJ_MEASUREMENT_TIME, timezone = t_zone)
-
 	#매 달마다 실행
 	scheduler.add_job(create_word_cloud, trigger = "interval", days=SJ_CREATE_WORDCLOUD_TIME, timezone = t_zone)
 
+	scheduler.add_job(update_posts_highest, trigger = "interval", days=SJ_UPDATE_HIGHEST_FAV_VIEW_TIME, timezone = t_zone)
+
 	#매 시간마다 실행
 	scheduler.add_job(real_time_insert, trigger = "interval", minutes = SJ_REALTIME_TIME, timezone = t_zone)
-	scheduler.add_job(update_posts_highest, trigger = "interval", hours = SJ_UPDATE_HIGHEST_FAV_VIEW_TIME, timezone = t_zone)
+
+	scheduler.add_job(measurement_run, trigger = "interval", minutes = SJ_MEASUREMENT_TIME, timezone = t_zone)
 
 	# weeks, days, hours, minutes, seconds
 	# start_date='2010-10-10 09:30', end_date='2014-06-15 11:00'
@@ -133,8 +133,13 @@ def measurement_run():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
+	renewal_time = find_variable(db, 'renewal')
+
+	USER_list = find_user_renewal(db, renewal_time)
+	USER_list = list(USER_list)
+
 	#모든 유저의 관심도 측정 지표를 다 가져온다.
-	USER_list = find_all_user(db, _id=1, fav_list=1, view_list=1, search_list=1, newsfeed_list=1)
+	# USER_list = find_all_user(db, _id=1, fav_list=1, view_list=1, search_list=1, newsfeed_list=1)
 
 	for USER in USER_list:
 		fav_tag = []
@@ -238,6 +243,8 @@ def measurement_run():
 
 		#해당 USER 관심도 갱신!
 		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR)
+
+	update_variable(db, 'renewal', datetime.now())
 
 	if db_client is not None:
 		db_client.close()

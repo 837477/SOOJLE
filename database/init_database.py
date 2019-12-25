@@ -1,5 +1,6 @@
 from pymongo import *
 from flask import g
+from datetime import datetime, timedelta
 from db_info import *
 
 
@@ -37,6 +38,7 @@ def init_db():
 
 	if not 'variable' in db_collections:
 		create_highest_fav_view(db)
+		create_renewal(db)
 
 	if not 'search_realtime' in db_collections:
 		db['search_realtime']
@@ -110,5 +112,13 @@ def create_dummy_post(db):
 	if not 'title' in check_:
 		insert_dummy_post(db)
 
-#admin 계정 추가
-#나중에 만들어랑!
+#정적 테이블 renewal 초기화
+def create_renewal(db):
+	db['variable'].insert(
+		{
+			'key': 'renewal',
+			'value': datetime.now()
+		}
+	)
+
+	return "success"

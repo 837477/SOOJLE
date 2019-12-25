@@ -1,10 +1,10 @@
-#Measurement_run Time (hour)
-SJ_MEASUREMENT_TIME = 1
+#Measurement_run Time (minutes)
+SJ_MEASUREMENT_TIME = 30
 #Create_Wordcloud_run TIME (days)
 SJ_CREATE_WORDCLOUD_TIME = 30
 #Realtime_run Time (minutes)
 SJ_REALTIME_TIME = 5
-#Update_highest_fav_view (hours)
+#Update_highest_fav_view (day)
 SJ_UPDATE_HIGHEST_FAV_VIEW_TIME = 1
 
 #DB_POST Collection name (현재 포스트 디비 이름)

@@ -66,6 +66,9 @@ def priority_search(num):
 		#DB search 로깅!
 		search_logging(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
 
+		#해당 유저의 갱신시간 갱신
+		update_user_renewal(db, USER['user_id'])
+
 	else:
 		#logging!
 		insert_log(g.db, request.full_path, request.url)

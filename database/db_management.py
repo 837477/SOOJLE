@@ -85,6 +85,24 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_maj
 
 	return result
 
+#유저 갱신시간별 반환 (관심도 측정용)
+def find_user_renewal(db, renewal_time):
+	result = db['user'].find(
+		{	
+			'renewal':
+			{
+				'$gt': renewal_time
+			}
+		}, 
+		{
+			'fav_list': 1,
+			'view_list': 1,
+			'search_list': 1,
+			'newsfeed_list': 1
+		}
+	)
+	return result
+
 #유저 생성
 def insert_user(db, user_id, user_pw, user_name, user_major):
 	topic_temp = numpy.ones(26)
@@ -98,6 +116,7 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 	newsfeed_list = []
 	search_list = []
 	auto_login = 1
+	renewal = datetime.now()
 
 	result = db['user'].insert(
 		{
@@ -113,7 +132,8 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 			'view_list': view_list,
 			'newsfeed_list': newsfeed_list,
 			'search_list': search_list,
-			'auto_login': auto_login
+			'auto_login': auto_login,
+			'renewal': renewal
 		})
 
 	return "success"
@@ -126,6 +146,21 @@ def remove_user(db, user_id):
 		}
 	)
 
+	return "success"
+
+#유저 갱신 시간 갱신
+def update_user_renewal(db, user_id):
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$set':
+			{
+				'renewal': datetime.now()
+			}
+		}
+	)
 	return "success"
 
 #유저 fav_list 중복 체크용
