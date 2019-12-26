@@ -27,7 +27,8 @@ SJ_USER_LOG_LIMIT = 300
 SJ_ADMIN = "SJ_SUPER_ADMIN_837477_IML_NB"
 #Realtime Return Limit (실시간 검색어 반환 최대 제한)
 SJ_REALTIME_RETURN_LIMIT = 10
-
+#Domain search similarity percent
+SJ_DOMAIN_SIM_PERCENT = 0.8
 
 #Recommendation Weight
 SJ_TOS_WEIGHT = 1

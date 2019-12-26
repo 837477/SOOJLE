@@ -125,7 +125,7 @@ def post_view(post_obi):
 		#유저 view_list에 추가.
 		result = update_user_view_list_push(g.db, USER['_id'], view_obj)
 		#해당 유저의 갱신시간 갱신
-		update_user_renewal(db, USER['user_id'])
+		update_user_renewal(g.db, USER['user_id'])
 
 	return jsonify(result = result)
 

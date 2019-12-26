@@ -677,6 +677,16 @@ def find_domain_post_regex(db, regex_str):
 		)
 	return result
 
+#domain 다 불러오기
+def find_all_domain(db):
+	result = db['domain'].find(
+		{},
+		{
+			'_id': 0
+		}
+	)
+	return result
+
 #post title regex 검색
 def find_title_regex(db, search_str, type_check):
 	return_dict = {
@@ -689,7 +699,8 @@ def find_title_regex(db, search_str, type_check):
 		'token': 1, 
 		'tag': 1, 
 		'popularity': 1,
-		'ft_vector': 1
+		'ft_vector': 1,
+		'info':1
 	}
 
 	#priority
