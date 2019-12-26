@@ -60,7 +60,7 @@ def post_like(post_obi):
 	#USER의 fav_list에 추가.
 	result = update_user_fav_list_push(g.db, USER['_id'], fav_obj)
 	#해당 유저의 갱신시간 갱신
-	update_user_renewal(db, USER['user_id'])
+	update_user_renewal(g.db, USER['user_id'])
 
 	return jsonify(result = result)
 
@@ -95,7 +95,7 @@ def post_unlike(post_obi):
 	#USER의 fav_list에서 삭제.
 	result = update_user_fav_list_pull(g.db, USER['_id'], post_obi)
 	#해당 유저의 갱신시간 갱신
-	update_user_renewal(db, USER['user_id'])
+	update_user_renewal(g.db, USER['user_id'])
 
 	return jsonify(result = result)
 
