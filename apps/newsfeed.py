@@ -49,7 +49,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 
 	result = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], SJ_RETURN_NUM)
 	#해당 유저의 갱신시간 갱신
-	update_user_renewal(db, USER['user_id'])
+	update_user_renewal(g.db, USER['user_id'])
 	
 	return jsonify(
 		result = "success",
