@@ -170,7 +170,7 @@ def measurement_run():
 		view_doc = view_tag + view_token
 
 		#사용자가 검색을 수행한 키워드 ##############################
-		for search_obj in USER['search_list']:
+		for search_obj in USER['search_list'][:100]:
 			search_list += search_obj['tokenizer_split']
 		
 		search_topic = LDA.get_topics(search_list)

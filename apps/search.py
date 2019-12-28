@@ -19,7 +19,6 @@ from variable import *
 BP = Blueprint('search', __name__)
 
 
-
 #JAVA 스레드 이동.
 jpype.attachThreadToJVM()
 

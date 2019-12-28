@@ -27,7 +27,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 	#logging!
 	if get_jwt_identity():
 		#USER를 불러온다.
-		USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
+		USER = find_user(g.db, _id=1, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
 		
 		#logging!
 		insert_log(g.db, get_jwt_identity(), request.url)
@@ -41,6 +41,51 @@ def get_newsfeed_of_topic(newsfeed_name):
 		#접근한 뉴스피드 기록!
 		update_user_newsfeed_list_push(g.db, USER['_id'], newsfeed_obj)
 
+		#해당 유저의 갱신시간 갱신
+		update_user_renewal(g.db, USER['user_id'])
+
+		#info를 정규표현식으로 부르기위해 or연산자로 join
+		info = "|".join(newsfeed_type['info'])
+
+		#공모전&행사 뉴스피드는 사용자 관심도도 측정하여 따로 반환
+		if newsfeed_name == '공모전&행사':
+			POST_LIST = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], SJ_RETURN_NUM)
+
+			POST_LIST = list(POST_LIST)
+
+			for POST in POST_LIST:
+				#TOS 작업
+				TOS = dot(USER['topic'], POST['topic'])/(norm(USER['topic'])*norm(POST['topic']))
+
+				#TAS 작업
+				USER_TAG = USER['tag'].keys()
+				TAG = USER_TAG & set(POST['tag'])
+				inter_sum = 0
+				for i in TAG:
+					inter_sum += USER['tag'][i]
+				TAS = inter_sum / USER['tag_sum']
+				
+				#FAS 작업
+				FAS = FastText.vec_sim(USER['ft_vector'], POST['ft_vector'])
+
+				#RANDOM 작업
+				RANDOM = numpy.random.random()
+
+				#가중치 작업
+				TOS *= SJ_TOS_WEIGHT
+				TAS *= SJ_TAS_WEIGHT
+				FAS *= SJ_FAS_WEIGHT
+				RANDOM *= SJ_RANDOM_WEIGHT
+
+				POST['similarity'] = TOS + TAS + FAS + RANDOM
+
+			#similarity를 기준으로 내림차순 정렬.
+			POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
+
+			return jsonify(
+				result = "success",
+				newsfeed = dumps(POST_LIST))
+
 	else:
 		insert_log(g.db, request.full_path, request.url)
 
@@ -48,9 +93,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 	info = "|".join(newsfeed_type['info'])
 
 	result = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], SJ_RETURN_NUM)
-	#해당 유저의 갱신시간 갱신
-	update_user_renewal(g.db, USER['user_id'])
-	
+
 	return jsonify(
 		result = "success",
 		newsfeed = dumps(result))
@@ -95,7 +138,7 @@ def get_recommendation_newsfeed():
 		Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
 		#캐싱된 가장 높은 조회수를 가져온다.
 		Maxviews = find_variable(g.db, 'highest_view_cnt')
-
+		
 		for POST in POST_LIST:
 			#TOS 작업
 			TOS = dot(USER['topic'], POST['topic'])/(norm(USER['topic'])*norm(POST['topic']))
@@ -139,7 +182,7 @@ def get_recommendation_newsfeed():
 
 	#similarity를 기준으로 내림차순 정렬.
 	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
-		
+
 	return jsonify(
 		result = "success",
 		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))
