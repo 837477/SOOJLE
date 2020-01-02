@@ -30,7 +30,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 		USER = find_user(g.db, _id=1, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
 		
 		#logging!
-		insert_log(g.db, get_jwt_identity(), request.url)
+		insert_log(g.db, get_jwt_identity(), request.path)
 
 		#접근한 뉴스피드 기록을 위한 obj 생성!
 		newsfeed_obj = {}
@@ -87,7 +87,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 				newsfeed = dumps(POST_LIST))
 
 	else:
-		insert_log(g.db, request.full_path, request.url)
+		insert_log(g.db, request.remote_addr, request.path)
 
 	#info를 정규표현식으로 부르기위해 or연산자로 join
 	info = "|".join(newsfeed_type['info'])
@@ -104,9 +104,10 @@ def get_newsfeed_of_topic(newsfeed_name):
 def get_popularity_newsfeed():
 	#logging!
 	if get_jwt_identity():
-		insert_log(g.db, get_jwt_identity(), request.url)
+		insert_log(g.db, get_jwt_identity(), request.path)
 	else:
-		insert_log(g.db, request.full_path, request.url)
+		insert_log(g.db, request.remote_addr, request.path)
+		#request.remote_addr
 
 	result = find_popularity_newsfeed(g.db, SJ_RETURN_NUM)
 
@@ -127,7 +128,7 @@ def get_recommendation_newsfeed():
 	#회원일 때!
 	if get_jwt_identity():
 		#logging
-		insert_log(g.db, get_jwt_identity(), request.url)
+		insert_log(g.db, get_jwt_identity(), request.path)
 
 		#유저를 _id, topic리스트, tag리스트 만 가져온다.
 		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
@@ -182,7 +183,7 @@ def get_recommendation_newsfeed():
 
 	#비회원일 때! (no token)
 	else:
-		insert_log(g.db, request.full_path, request.url)
+		insert_log(g.db, request.remote_addr, request.path)
 
 		#비로그인일 때 추천뉴스피드 호출!
 		POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)		

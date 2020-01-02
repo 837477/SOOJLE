@@ -73,7 +73,7 @@ def priority_search(num):
 
 	if get_jwt_identity():
 		#logging!
-		insert_log(g.db, get_jwt_identity(), request.url)
+		insert_log(g.db, get_jwt_identity(), request.path)
 
 		#USER 정보를 불러온다.
 		USER = find_user(g.db, user_id=get_jwt_identity())
@@ -86,7 +86,7 @@ def priority_search(num):
 
 	else:
 		#logging!
-		insert_log(g.db, request.full_path, request.url)
+		insert_log(g.db, request.remote_addr, request.path)
 		#DB search 로깅!
 		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
 
@@ -154,9 +154,9 @@ def category_search(type_check, num):
 
 	#logging!
 	if get_jwt_identity():
-		insert_log(g.db, get_jwt_identity(), request.url)
+		insert_log(g.db, get_jwt_identity(), request.path)
 	else:
-		insert_log(g.db, request.full_path, request.url)
+		insert_log(g.db, request.remote_addr, request.path)
 
 	search_str = request.form['search']
 

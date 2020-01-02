@@ -107,13 +107,23 @@ def simulation_fastext():
 def access_external_site(site_name):
 	#logging!
 	if get_jwt_identity():
-		result = insert_log(g.db, get_jwt_identity(), request.url, site_name)
+		result = insert_log(g.db, get_jwt_identity(), request.path, site_name)
 	else:
-		result = insert_log(g.db, request.full_path, request.url, site_name)
+		result = insert_log(g.db, request.remote_addr, request.path, site_name)
 
 	return jsonify(result = result)
 
 # #명예의 전당: 외부사이트
 # @BP.route('/get_max_external_site')
 # def get_max_external_site():
+
+
+#명예의 전당: 학번 업데이트
+@BP.route('/testtest')
+def testtest():
+	result = aggregate_groupby_log_student_num(g.db)
+	result = list(result)
+
+
+	print(result[0])
 	

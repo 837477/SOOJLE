@@ -1327,7 +1327,25 @@ def find_search_all_realtime(db):
 	)
 	return result
 
+#log 학번 group by 가져오기!
+def aggregate_groupby_log_student_num(db):
+	result = db['log'].aggregate([
+		{
+			"$group":
+			{
+				'_id': "$student_num",
+				'count': {'$sum': 1}
+			}
+		},
+		{
+			'$sort': 
+			{
+				'count': -1
+			}
+		}
+	])
 
+	return result
 
 #admin#########################################
 #공지사항 추가

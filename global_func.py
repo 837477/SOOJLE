@@ -399,3 +399,10 @@ def create_word_cloud():
 	if db_client is not None:
 		db_client.close()
 
+#가장 많이 접속한 학번 정적 테이블에 갱신! (명예의전당 용)
+def update_max_access_student_num():
+	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+	db = db_client["soojle"]
+
+	#group by로 가장 많이 접속한 학번 
+	max_access_student_num = aggregate_groupby_log_student_num(db)
