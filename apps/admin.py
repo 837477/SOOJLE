@@ -21,9 +21,9 @@ BP = Blueprint('admin', __name__)
 enc = hashlib.md5()
 
 #회원 삭제
-@BP.route('/remove_user/<string:user_id>')
+@BP.route('/admin_remove_user/<string:user_id>')
 @jwt_required
-def remove_user(user_id):
+def admin_remove_user(user_id):
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
@@ -189,11 +189,11 @@ def remove_notice(notice_obi):
 
 
 
-#admin 생성
+# #admin 생성
 # @BP.route('/create_admin')
 # def create_admin():
-# 	USER_ID = ""
-# 	USER_PW = ""
+# 	USER_ID = "test5"
+# 	USER_PW = "test5"
 
 # 	#SOOJLE DB에 추가.
 # 	insert_user(g.db,

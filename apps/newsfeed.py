@@ -124,6 +124,7 @@ def get_recommendation_newsfeed():
 	
 	now_date = datetime.now()
 
+	#회원일 때!
 	if get_jwt_identity():
 		#logging
 		insert_log(g.db, get_jwt_identity(), request.url)
@@ -134,44 +135,50 @@ def get_recommendation_newsfeed():
 		#유효한 토큰이 아닐 때 
 		if USER is None: abort(400)
 
-		#캐싱된 가장 높은 좋아요 수를 가져온다.
-		Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
-		#캐싱된 가장 높은 조회수를 가져온다.
-		Maxviews = find_variable(g.db, 'highest_view_cnt')
-		
-		for POST in POST_LIST:
-			#TOS 작업
-			TOS = dot(USER['topic'], POST['topic'])/(norm(USER['topic'])*norm(POST['topic']))
-
-			#TAS 작업
-			USER_TAG = USER['tag'].keys()
-			TAG = USER_TAG & set(POST['tag'])
-			inter_sum = 0
-			for i in TAG:
-				inter_sum += USER['tag'][i]
-			TAS = inter_sum / USER['tag_sum']
+		#회원 관심도가 cold 상태일 때!
+		if USER['tag_sum'] == 1:
+			#비로그인일 때 추천뉴스피드 호출!
+			POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)	
+		#관심도가 cold가 아닐 때!
+		else:
+			#캐싱된 가장 높은 좋아요 수를 가져온다.
+			Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
+			#캐싱된 가장 높은 조회수를 가져온다.
+			Maxviews = find_variable(g.db, 'highest_view_cnt')
 			
-			#FAS 작업
-			FAS = FastText.vec_sim(USER['ft_vector'], POST['ft_vector'])
+			for POST in POST_LIST:
+				#TOS 작업
+				TOS = dot(USER['topic'], POST['topic'])/(norm(USER['topic'])*norm(POST['topic']))
 
-			#IS 작업
-			IS = (((POST['fav_cnt']/Maxfav_cnt)*SJ_IS_FAV_WEIGHT) + ((POST['view']/Maxviews)*SJ_IS_VIEW_WEIGHT))
-			
-			#RANDOM 작업
-			RANDOM = numpy.random.random()
+				#TAS 작업
+				USER_TAG = USER['tag'].keys()
+				TAG = USER_TAG & set(POST['tag'])
+				inter_sum = 0
+				for i in TAG:
+					inter_sum += USER['tag'][i]
+				TAS = inter_sum / USER['tag_sum']
+				
+				#FAS 작업
+				FAS = FastText.vec_sim(USER['ft_vector'], POST['ft_vector'])
 
-			#가중치 작업
-			TOS *= SJ_TOS_WEIGHT
-			TAS *= SJ_TAS_WEIGHT
-			FAS *= SJ_FAS_WEIGHT
-			IS *= SJ_IS_WEIGHT
-			RANDOM *= SJ_RANDOM_WEIGHT
-			TREND = trendscore(POST, now_date)
+				#IS 작업
+				IS = (((POST['fav_cnt']/Maxfav_cnt)*SJ_IS_FAV_WEIGHT) + ((POST['view']/Maxviews)*SJ_IS_VIEW_WEIGHT))
+				
+				#RANDOM 작업
+				RANDOM = numpy.random.random()
 
-			#최종 값 저장
-			result = TOS + TAS + FAS + RANDOM + TREND
+				#가중치 작업
+				TOS *= SJ_TOS_WEIGHT
+				TAS *= SJ_TAS_WEIGHT
+				FAS *= SJ_FAS_WEIGHT
+				IS *= SJ_IS_WEIGHT
+				RANDOM *= SJ_RANDOM_WEIGHT
+				TREND = trendscore(POST, now_date)
 
-			POST['similarity'] = result
+				#최종 값 저장
+				result = TOS + TAS + FAS + RANDOM + TREND
+
+				POST['similarity'] = result
 
 	#비회원일 때! (no token)
 	else:

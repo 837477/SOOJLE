@@ -51,8 +51,7 @@ def sign_in_up():
 			sejong_api_result['major']
 			)
 
-		user['user_id'] = USER_ID,
-		user['user_pw'] = generate_password_hash(USER_PW),
+	user = find_user(g.db, user_id=USER_ID, user_pw=1)
 
 	if check_password_hash(user['user_pw'], USER_PW):
 		return jsonify(
@@ -119,3 +118,32 @@ def get_specific_userinfo(type_num=None):
 	return jsonify(
 		result = "success",
 		user = dumps(USER))
+
+#회원탈퇴
+@BP.route('/remove_mine')
+@jwt_required
+def remove_mine():
+	#삭제 대상 획원 유무 확인
+	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
+
+	if USER is None:
+		return jsonify(result = "Not found")
+
+	#회원 삭제!
+	result = remove_user(g.db, USER['user_id'])
+
+	return jsonify(result = result)
+
+#회원 관심도 초기화
+@BP.route('/reset_user_measurement')
+@jwt_required
+def reset_user_measurement(user_id):
+	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
+
+	if USER is None:
+		return jsonify(result = "Not found")
+
+	#회원 삭제!
+	result = reset_user_measurement(g.db, USER['user_id'])
+
+	return jsonify(result = result)

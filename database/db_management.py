@@ -138,6 +138,42 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 
 	return "success"
 
+#유저 관심도 초기화
+def reset_user_measurement(db, user_id):
+	topic_temp = numpy.ones(26)
+	topic = (topic_temp / topic_temp.sum()).tolist()
+
+	ft_vector = (numpy.zeros(30)).tolist()
+	tag = {}
+	tag_sum = 1
+	fav_list = []
+	view_list = []
+	newsfeed_list = []
+	search_list = []
+	renewal = datetime.now()
+
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$set':
+			{
+				'ft_vector': ft_vector,
+				'tag': tag,
+				'tag_sum': tag_sum,
+				'topic': topic,
+				'fav_list': fav_list,
+				'view_list': view_list,
+				'newsfeed_list': newsfeed_list,
+				'search_list': search_list,
+				'renewal': renewal
+			}
+		}
+	)
+
+	return "success"
+
 #유저 삭제
 def remove_user(db, user_id):
 	db['user'].remove(
@@ -500,6 +536,8 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 		show_dict['title'] = 1
 	if date is not None:
 		show_dict['date'] = 1
+	if end_date is not None:
+		show_dict['end_date'] = 1
 	if post is not None:
 		show_dict['post'] = 1
 	if tag is not None:
@@ -544,7 +582,7 @@ def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img
 	return result
 
 #특정 포스트 가져오기 (가져오고 싶은 필드만 1로 지정하여 보내주면 됨)
-def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None):
+def find_post(db, post_obi, _id=None, title=None, date=None, end_date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None):
 
 	show_dict = {'_id': 0}
 
@@ -554,6 +592,8 @@ def find_post(db, post_obi, _id=None, title=None, date=None, post=None, tag=None
 		show_dict['title'] = 1
 	if date is not None:
 		show_dict['date'] = 1
+	if end_date is not None:
+		show_dict['end_date'] = 1
 	if post is not None:
 		show_dict['post'] = 1
 	if tag is not None:

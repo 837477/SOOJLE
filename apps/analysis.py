@@ -100,3 +100,4 @@ def simulation_fastext():
 	return jsonify(
 		result = "success",
 		similarity_words = result)
+

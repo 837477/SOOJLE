@@ -12,7 +12,6 @@ def get_db():
     if 'db' not in g:
         g.db = g.db_client["soojle"]
         
-
 def close_db():
     db_client = g.pop('db_client', None)
     if db_client is not None:
