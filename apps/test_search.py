@@ -73,7 +73,7 @@ def priority_search(num):
 
 	if get_jwt_identity():
 		#logging!
-		insert_log(g.db, get_jwt_identity(), request.path)
+		insert_log(g.db, student_num = True, get_jwt_identity(), request.path)
 
 		#USER 정보를 불러온다.
 		USER = find_user(g.db, user_id=get_jwt_identity())
@@ -154,7 +154,7 @@ def category_search(type_check, num):
 
 	#logging!
 	if get_jwt_identity():
-		insert_log(g.db, get_jwt_identity(), request.path)
+		insert_log(g.db, student_num = True, get_jwt_identity(), request.path)
 	else:
 		insert_log(g.db, request.remote_addr, request.path)
 

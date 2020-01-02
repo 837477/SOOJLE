@@ -1184,12 +1184,14 @@ def find_search_log(db):
 	return result
 
 #log에 기록!
-def insert_log(db, user_id, url, external=None):
+def insert_log(db, student_num = None, user_id, url, external=None):
 	log_obj = {}
-	log_obj['student_num'] = user_id[:2]
 	log_obj['user_id'] = user_id
 	log_obj['url'] = url
 	log_obj['date'] = datetime.now()
+
+	if student_num:
+		log_obj['student_num'] = user_id[:2]
 
 	if external:
 		log_obj['external'] = external
@@ -1327,7 +1329,7 @@ def find_search_all_realtime(db):
 	)
 	return result
 
-#log 학번 group by 가져오기!
+#log 학번 group by count 가져오기!
 def aggregate_groupby_log_student_num(db):
 	result = db['log'].aggregate([
 		{
