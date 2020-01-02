@@ -107,9 +107,9 @@ def simulation_fastext():
 def access_external_site(site_name):
 	#logging!
 	if get_jwt_identity():
-		result = insert_log(g.db, get_jwt_identity(), request.path, student_num = True, site_name)
+		result = insert_log(g.db, get_jwt_identity(), request.path, student_num = True, external = site_name)
 	else:
-		result = insert_log(g.db, request.remote_addr, request.path, site_name)
+		result = insert_log(g.db, request.remote_addr, request.path, external = site_name)
 
 	return jsonify(result = result)
 
