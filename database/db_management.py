@@ -1184,7 +1184,7 @@ def find_search_log(db):
 	return result
 
 #log에 기록!
-def insert_log(db, student_num = None, user_id, url, external=None):
+def insert_log(db, user_id, url, student_num = None, external=None):
 	log_obj = {}
 	log_obj['user_id'] = user_id
 	log_obj['url'] = url
