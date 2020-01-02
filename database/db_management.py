@@ -526,7 +526,7 @@ def find_popularity_newsfeed(db, num):
 
 #포스트 관련#############################################
 #포스트 전체 가져오기
-def find_all_posts(db, _id=None, title=None, date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None, skip_=0, limit_=None):
+def find_all_posts(db, _id=None, title=None, date=None, end_date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None, skip_=0, limit_=None):
 
 	show_dict = {'_id': 0}
 
