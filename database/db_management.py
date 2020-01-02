@@ -909,14 +909,14 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 	if type_check == 0:
 		result = db[SJ_DB_POST].aggregate([
 			project, 
+			addFields, 
+			sort, 
 			{
 				'$match': 
 				{
 					'token': {'$in': tokenizer_list}
 				}
 			}, 
-			addFields, 
-			sort, 
 			limit
 		])
 
@@ -935,6 +935,8 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 
 		result = db[SJ_DB_POST].aggregate([
 			project,
+			addFields,
+			sort,
 			{
 				'$match': 
 				{
@@ -945,8 +947,6 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 					]
 				}
 			},
-			addFields,
-			sort,
 			limit
 		])
 
@@ -971,6 +971,8 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 
 		result = db[SJ_DB_POST].aggregate([
 			project,
+			addFields,
+			sort,
 			{
 				'$match': 
 				{
@@ -981,8 +983,6 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 					]
 				}
 			},
-			addFields,
-			sort,
 			limit
 		])
 
@@ -1018,6 +1018,8 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 
 		result = db[SJ_DB_POST].aggregate([
 			project,
+			addFields,
+			sort,
 			{
 				'$match': 
 				{
@@ -1028,8 +1030,6 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 					]
 				}
 			},
-			addFields,
-			sort,
 			limit
 		])
 
@@ -1037,6 +1037,8 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 	else:
 		result = db[SJ_DB_POST].aggregate([
 			project,
+			addFields,
+			sort,
 			{
 				'$match': 
 				{
@@ -1047,8 +1049,6 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 					]
 				}
 			},
-			addFields,
-			sort,
 			limit
 		])
 
