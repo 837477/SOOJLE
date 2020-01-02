@@ -101,3 +101,19 @@ def simulation_fastext():
 		result = "success",
 		similarity_words = result)
 
+#외부사이트 접속했다는 것을 알려주기위한 API
+@BP.route('/access_external_site/<string:site_name>')
+@jwt_optional
+def access_external_site(site_name):
+	#logging!
+	if get_jwt_identity():
+		result = insert_log(g.db, get_jwt_identity(), request.url, site_name)
+	else:
+		result = insert_log(g.db, request.full_path, request.url, site_name)
+
+	return jsonify(result = result)
+
+# #명예의 전당: 외부사이트
+# @BP.route('/get_max_external_site')
+# def get_max_external_site():
+	

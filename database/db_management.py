@@ -1184,13 +1184,18 @@ def find_search_log(db):
 	return result
 
 #log에 기록!
-def insert_log(db, user_id, url):
+def insert_log(db, user_id, url, external=None):
+	log_obj = {}
+	log_obj['student_num'] = user_id[:2]
+	log_obj['user_id'] = user_id
+	log_obj['url'] = url
+	log_obj['date'] = datetime.now()
+
+	if external:
+		log_obj['external'] = external
+
 	db['log'].insert(
-		{
-			'user_id': user_id,
-			'url': url,
-			'date': datetime.now()
-		}
+		log_obj
 	)
 	return "success"
 
@@ -1321,6 +1326,8 @@ def find_search_all_realtime(db):
 		}
 	)
 	return result
+
+
 
 #admin#########################################
 #공지사항 추가
