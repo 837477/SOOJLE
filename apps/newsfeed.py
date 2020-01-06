@@ -29,7 +29,10 @@ def get_newsfeed_of_topic(newsfeed_name):
 		#USER를 불러온다.
 		USER = find_user(g.db, _id=1, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
 		
-		#logging!
+		#유효한 토큰이 아닐 때 
+		if USER is None: abort(400)
+
+		#logging! (메인 로그)
 		insert_log(g.db, get_jwt_identity(), request.path, student_num = True)
 
 		#접근한 뉴스피드 기록을 위한 obj 생성!
@@ -86,8 +89,10 @@ def get_newsfeed_of_topic(newsfeed_name):
 				result = "success",
 				newsfeed = dumps(POST_LIST))
 
+	#비로그인!
 	else:
-		insert_log(g.db, request.remote_addr, request.path)
+		#logging! (메인 로그)
+		insert_log(g.db, request.remote_addr, request.path, student_num=None)
 
 	#info를 정규표현식으로 부르기위해 or연산자로 join
 	info = "|".join(newsfeed_type['info'])
@@ -102,12 +107,21 @@ def get_newsfeed_of_topic(newsfeed_name):
 @BP.route('/get_popularity_newsfeed')
 @jwt_optional
 def get_popularity_newsfeed():
-	#logging!
+	#logging! (메인 로그)
 	if get_jwt_identity():
-		insert_log(g.db, get_jwt_identity(), request.path, student_num = True)
+		#유저 확인
+		USER = find_user(g.db, user_id=get_jwt_identity())
+
+		#유효한 토큰이 아닐 때 
+		if USER is None: abort(400)
+
+		#logging (메인 로그)
+		insert_log(g.db, USER['user_id'], request.path, student_num = True)
+		#방문자 로그 기록!
+		insert_today_visitor(g.db, USER['user_id'], student_num=True)
+
 	else:
 		insert_log(g.db, request.remote_addr, request.path)
-		#request.remote_addr
 
 	result = find_popularity_newsfeed(g.db, SJ_RETURN_NUM)
 
@@ -127,14 +141,16 @@ def get_recommendation_newsfeed():
 
 	#회원일 때!
 	if get_jwt_identity():
-		#logging
-		insert_log(g.db, get_jwt_identity(), request.path, student_num = True)
-
 		#유저를 _id, topic리스트, tag리스트 만 가져온다.
 		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
 
 		#유효한 토큰이 아닐 때 
 		if USER is None: abort(400)
+
+		#logging (메인 로그)
+		insert_log(g.db, USER['user_id'], request.path, student_num = True)
+		#방문자 로그 기록!
+		insert_today_visitor(g.db, USER['user_id'], student_num=True)
 
 		#회원 관심도가 cold 상태일 때!
 		if USER['tag_sum'] == 1:
@@ -183,7 +199,10 @@ def get_recommendation_newsfeed():
 
 	#비회원일 때! (no token)
 	else:
-		insert_log(g.db, request.remote_addr, request.path)
+		#logging (메인 로그)
+		insert_log(g.db, request.remote_addr, request.path, student_num=None)
+		#방문자 로그 기록!
+		insert_today_visitor(g.db, request.remote_addr, student_num=None)
 
 		#비로그인일 때 추천뉴스피드 호출!
 		POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)		

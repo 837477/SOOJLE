@@ -36,8 +36,7 @@ def init_db():
 		create_newsfeed_of_topic(db)
 
 	if not 'variable' in db_collections:
-		create_highest_fav_view(db)
-		create_renewal(db)
+		create_variable(db)
 
 	if not 'search_realtime' in db_collections:
 		db['search_realtime']
@@ -86,9 +85,9 @@ def create_newsfeed_of_topic(db):
 			'tag': ['학식', '고민&상담', '종교', '여행', '커뮤니티', '분실물', '연애', '세종냥이', '홍보', '세종대역'],
 			'negative_tag': []}
 		])
-		
-#정적 테이블의 highest_ fav / view 생성!
-def create_highest_fav_view(db):
+
+#정적 테이블 컬럼 생성!
+def create_variable(db):
 	db['variable'].insert(
 		[
 			{
@@ -99,10 +98,49 @@ def create_highest_fav_view(db):
 				'key': 'highest_view_cnt',
 				'value': 1
 			},
+			{
+				'key': 'ernewal',
+				'value': datetime.now()
+			},
+			{
+				'key': 'total_visitor',
+				'value': 0
+			},
+			{
+				'key': 'highest_visitor',
+				'value': 0
+			},
+			{
+				'key': 'today_time_visitor',
+				'value': []
+			},
+			{
+				'key': 'day_avg_visitor',
+				'value': 0
+			},
+			{
+				'key': 'service_period',
+				'value': 0
+			},
+			{
+				'key': 'total_view',
+				'value': 0
+			},
+			{
+				'key': 'total_fav',
+				'value': 0
+			},
+			{
+				'key': 'today_view',
+				'value': 0
+			},
+			{
+				'key': 'today_fav',
+				'value': 0
+			}
 		]
-		
 	)
-	return "success"
+
 
 ##좋아요/조회수 초기 셋팅용 더비 포스트 생성!
 def create_dummy_post(db):
@@ -110,14 +148,3 @@ def create_dummy_post(db):
 
 	if not 'title' in check_:
 		insert_dummy_post(db)
-
-#정적 테이블 renewal 초기화
-def create_renewal(db):
-	db['variable'].insert(
-		{
-			'key': 'renewal',
-			'value': datetime.now()
-		}
-	)
-
-	return "success"

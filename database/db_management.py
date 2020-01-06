@@ -1184,7 +1184,7 @@ def find_search_log(db):
 	return result
 
 #log에 기록!
-def insert_log(db, user_id, url, student_num = None, external=None):
+def insert_log(db, user_id, url, student_num = None):
 	log_obj = {}
 	log_obj['user_id'] = user_id
 	log_obj['url'] = url
@@ -1192,10 +1192,7 @@ def insert_log(db, user_id, url, student_num = None, external=None):
 
 	if student_num:
 		log_obj['student_num'] = user_id[:2]
-
-	if external:
-		log_obj['external'] = external
-
+		
 	db['log'].insert(
 		log_obj
 	)
@@ -1349,6 +1346,94 @@ def aggregate_groupby_log_student_num(db):
 
 	return result
 
+#today_vistior 입력! (중복체크까지 여기서 함)
+def insert_today_visitor(db, user_id, student_num=None):
+	check = db['today_visitor'].find_one(
+		{
+			'user_id': user_id
+		}
+	)
+
+	#방문 안한 유저라면?
+	if check is None:
+		visitor_obj = {}
+		visitor_obj['user_id'] = user_id
+		visitor_obj['date'] = datetime.now()
+
+		#학번이 있는 경우(로그인일 경우!)
+		if student_num:
+			visitor_obj['student_num'] = user_id[:2]
+
+		db['today_visitor'].insert(
+			visitor_obj
+		)
+
+#today_visitor_count 반환!
+def find_today_visitor_count(db):
+	result = db['today_visitor'].find().count()
+
+	return result
+
+#today_visitrot_studnet_num group by(학번별 방문자 수) 반환!
+def find_today_visitor_student_num(db):
+	result = db['today_visitor'].aggregate([
+		{
+			"$group":
+			{
+				'_id': "$student_num",
+				'count': {'$sum': 1}
+			}
+		},
+		{
+			'$sort': 
+			{
+				'count': -1
+			}
+		}
+	])
+
+	return result
+
+#today (현재시간 ~ 특정 시간) 방문자 수 가져오기!
+def find_today_time_visitor(db, time):
+	result = db['today_visitor'].find(
+		{
+			'date':
+			{
+				'$gt': time
+			}
+		}
+	).count()
+	return result
+
+#today 매 시간별 방문자 수 기록!
+def push_today_time_visitor(db, visitor_count):
+	db['variable'].update(
+		{
+			'key': 'today_time_visitor'
+		},
+		{
+			'$push':
+			{
+				'value': visitor_count
+			}
+		}
+	)
+	return "success"
+
+#today visitor 콜렉션 데이터 전체 삭제! (데이터 비우기)
+def remove_today_visitor(db):
+	db['today_visitor'].remove({})
+
+	return "success"
+
+#매일 갱신되는 통계 테이블에 추가!
+def insert_everyday_analysis(db, analysis_obj):
+	db['everyday_analysis'].insert(
+		analysis_obj
+	)
+	return "success"
+
 #admin#########################################
 #공지사항 추가
 def insert_notice(db, title, post, url):
@@ -1465,18 +1550,7 @@ def update_post(db, post_obi, title, post, tag, img, url, info, hashed, url_hash
 
 	return "success"
 
-#background ################################### 
-#모든 유져를 불러온다. (관심도 측정용)
-# def find_user_measurement(db, num):
-# 	mongo_num = num * -1
-# 	result = db['user'].find({}, {
-# 		'fav_list': {'$slice': mongo_num}, 
-# 		'view_list': {'$slice': mongo_num}, 
-# 		'search_list': {'$slice': mongo_num},
-# 		'newsfeed_list': {'$slice': mongo_num}
-# 		})
-
-# 	return result
+##########################################################
 
 #USER의 관심도 갱신.
 def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector):
@@ -1556,7 +1630,7 @@ def find_variable(db, key):
 	)
 	return result['value']
 
-#정적 테이블 변수 수정하기
+#정적 테이블 변수 수정하기(값 변경)
 def update_variable(db, key, value):
 	db['variable'].update(
 		{
@@ -1567,6 +1641,18 @@ def update_variable(db, key, value):
 		}
 	)
 	return "success"	
+
+#정적 테이블 변수 수정하기(값 증가, 감소) _ 정수 자료형만 가능!
+def update_variable_inc(db, key, increase):
+	db['varibale'].update(
+		{
+			'key': key
+		}, 
+		{
+			'$inc': {'value': increase}
+		}
+	)
+	return "success"
 
 #좋아요/조회수 초기 셋팅용 더비 포스트 생성
 def insert_dummy_post(db):

@@ -19,21 +19,22 @@ BP = Blueprint('post', __name__)
 @BP.route('/post_like/<string:post_obi>')
 @jwt_required
 def post_like(post_obi):	
-	
 	#USER 정보 불러오기
 	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
 	
 	#잘못된 USER 정보(잘못된 token)
 	if USER is None: abort(400)
 
-	#logging
-	insert_log(g.db, get_jwt_identity(), request.path, student_num = True)
-
 	#이미 좋아요 한 글인지 확인용으로 불러온다.
 	check_fav = check_user_fav_list(g.db, USER['_id'], post_obi)
 	#좋아요 중복 확인
 	if 'fav_list' in check_fav:
 		return jsonify(result = "already like")
+
+	#logging (메인 로깅)
+	insert_log(g.db, USER['user_id'], request.path, student_num = True)
+	#오늘 좋아요한 게시글 로깅!
+	update_variable(db, 'today_fav', 1)
 
 	#해당 POST를 불러온다.
 	POST = find_post(g.db, post_obi, _id=1, topic=1, token=1, tag=1, fav_cnt=1, view=1, date=1, title=1, url=1, img=1)
@@ -74,14 +75,16 @@ def post_unlike(post_obi):
 	#잘못된 USER 정보(잘못된 token)
 	if USER is None: abort(400)
 
-	#logging!
-	insert_log(g.db, get_jwt_identity(), request.path, student_num = True)
-
 	#이미 좋아요 한 글인지 확인용으로 불러온다.
 	check_fav = check_user_fav_list(g.db, USER['_id'], post_obi)
 	#좋아요를 한 글인지 확인한다.
 	if not 'fav_list' in check_fav:
 		return jsonify(result = "none like")
+
+	#logging! (메인 로깅)
+	insert_log(g.db, USER['user_id'], request.path, student_num = True)
+	#오늘 좋아요한 게시글 로깅 다시 -1!
+	update_variable(db, 'today_fav', -1)
 
 	#해당 POST를 불러온다.
 	POST = find_post(g.db, post_obi, _id=1)
@@ -108,7 +111,16 @@ def post_view(post_obi):
 	result = update_post_view(g.db, post_obi)
 
 	if get_jwt_identity():
+		#USER 정보 불러오기
 		USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
+		
+		#잘못된 USER 정보(잘못된 token)
+		if USER is None: abort(400)
+
+		#logging (메인 로깅)
+		insert_log(g.db, USER['user_id'], request.path, student_num = True)
+		#오늘 조회한 게시글 로깅!
+		update_variable(db, 'today_fav', 1)
 
 		#유저에 들어갈 좋아요 누른 post 인코딩
 		view_obj = {}
@@ -126,6 +138,13 @@ def post_view(post_obi):
 		result = update_user_view_list_push(g.db, USER['_id'], view_obj)
 		#해당 유저의 갱신시간 갱신
 		update_user_renewal(g.db, USER['user_id'])
+
+	#비 로그인
+	else:
+		#logging (메인 로깅)
+		insert_log(g.db, USER['user_id'], request.remote_addr, student_num = None)
+		#오늘 조회한 게시글 로깅!
+		update_variable(db, 'today_fav', 1)
 
 	return jsonify(result = result)
 

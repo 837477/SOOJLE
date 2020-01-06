@@ -53,14 +53,14 @@ def priority_search(num):
 			else: break	
 
 	if get_jwt_identity():
-		#logging!
-		insert_log(g.db, get_jwt_identity(), request.path, student_num = True)
-
 		#USER 정보를 불러온다.
 		USER = find_user(g.db, user_id=get_jwt_identity())
 
 		#잘못된 USER 정보(잘못된 Token)일 때
 		if USER is None: abort(400)
+
+		#logging! (메인 로깅)
+		insert_log(g.db, USER['user_id'], request.path, student_num = True)
 
 		#DB search 로깅!
 		search_logging(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
@@ -69,8 +69,9 @@ def priority_search(num):
 		update_user_renewal(g.db, USER['user_id'])
 
 	else:
-		#logging!
-		insert_log(g.db, request.remote_addr, request.path)
+		#logging! (메인 로깅)
+		insert_log(g.db, request.remote_addr, request.path, student_num = None)
+
 		#DB search 로깅!
 		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
 
@@ -128,13 +129,6 @@ def priority_search(num):
 @BP.route('/category_search/<int:type_check>/<int:num>', methods = ['POST'])
 @jwt_optional
 def category_search(type_check, num):
-	
-	#logging!
-	if get_jwt_identity():
-		insert_log(g.db, get_jwt_identity(), request.path, student_num = True)
-	else:
-		insert_log(g.db, request.remote_addr, request.path)
-
 	search_str = request.form['search']
 
 	#공백 제거

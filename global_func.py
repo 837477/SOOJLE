@@ -399,10 +399,101 @@ def create_word_cloud():
 	if db_client is not None:
 		db_client.close()
 
-#가장 많이 접속한 학번 정적 테이블에 갱신! (명예의전당 용)
-def update_max_access_student_num():
+#하루 통계 작업 (하루마다!)
+def visitor_analysis_work():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
-	#group by로 가장 많이 접속한 학번 
-	max_access_student_num = aggregate_groupby_log_student_num(db)
+	#오늘 통계 객체화
+	##############################################################################
+	today_analysis = {}
+	#오늘 방문자 수 가져오기
+	today_analysis['today_visitor'] = find_today_visitor_count(db)
+	#오늘 시간대별 방문자 수
+	today_analysis['today_time_visitor'] = find_variable(db, 'today_time_visitor')
+	#오늘 조회된 게시글
+	today_analysis['today_view'] = find_variable(db, 'today_view')
+	#오늘 좋아요된 게시글
+	today_analysis['today_fav'] = find_variable(db, 'today_fav')
+	#오늘 학번별 방문자 수
+	today_analysis['today_student_visitor'] = []
+	today_student_visitor = find_today_visitor_student_num(db)
+	for student in today_student_visitor:
+		temp = {}
+
+		if student['_id'] == None:
+			student['_id'] = 'guest'
+
+		temp['student_num'] = student['_id']
+		temp['count'] = student['count']
+
+		today_analysis['today_student_visitor'].append(temp)
+
+
+	today_year = datetime.today().year
+	today_month = datetime.today().month
+	today_day = datetime.today().day
+
+	#오늘 날짜 기입!
+	today_analysis['date'] = datetime(today_year, today_month, today_day)
+	
+	#매일 기록되는 통계 테이블에 기록!
+	insert_everyday_analysis(db, today_analysis)
+	##############################################################################
+
+	#매일마다 갱신 시켜야하는 정적 변수들!
+	##############################################################################
+	#서비스 기간 하루 증가!
+	update_variable_inc(db, 'service_period', 1)
+
+	#총 방문자수 증가! (오늘 방문자 수를 더해준다.)
+	update_variable_inc(db, 'total_visitor', today_analysis['today_visitor'])
+
+	#최고 방문자 수 갱신!
+	highest_visitor = find_variable(db, 'highest_visitor')
+	if highest_visitor < today_analysis['today_visitor']:
+		update_variable(db, 'highest_visitor', today_analysis['today_visitor'])
+
+	#하루 평균 방문자 수 갱신!
+	total_visitor = find_variable(db, 'total_visitor')
+	service_period = find_variable(db, 'service_period')
+	day_avg = total_visitor // service_period
+	update_variable(db, 'day_avg_visitor', day_avg)
+
+	#총 조회한 게시글 수 갱신!
+	update_variable_inc(db, 'total_view', today_analysis['today_view'])
+
+	#총 좋아요한 게시글 수 갱신!
+	update_variable_inc(db, 'total_fav', today_analysis['today_fav'])
+	##############################################################################
+
+	#매일마다 초기화 해줘야하는 정적 변수들!
+	##############################################################################
+	#오늘 조회한 게시글 0으로 초기화
+	update_variable(db, 'today_view', 0)
+
+	#오늘 좋아요한 게시글 0으로 초기화
+	update_variable(db, 'today_fav', 0)
+
+	#today_visitor 콜렉션 비우기!
+	remove_today_visitor(db)
+	##############################################################################
+	if db_client is not None:
+		db_client.close()
+
+#매 시간별 방문자 수 기록! 
+def time_visitor_analysis_work():
+	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
+	db = db_client["soojle"]
+
+	#한시간 전 시간 가져오기
+	time = datetime.now() - timedelta(hours = 1)
+
+	#(현재시간-1시간) ~ 현재시간 의 방문자 수 가져오기
+	visitor_cnt = find_today_time_visitor(db, time)
+
+	#시간별 방문자 수 기록!
+	push_today_time_visitor(db, visitor_cnt)
+
+	if db_client is not None:
+		db_client.close()

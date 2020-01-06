@@ -6,6 +6,8 @@ SJ_CREATE_WORDCLOUD_TIME = 30
 SJ_REALTIME_TIME = 5
 #Update_highest_fav_view (day)
 SJ_UPDATE_HIGHEST_FAV_VIEW_TIME = 1
+#Update_today_time_visitor (hour)
+SJ_TIME_VISITOR_ANALYSIS_WORK_TIME = 1
 
 #DB_POST Collection name (현재 포스트 디비 이름)
 SJ_DB_POST = "posts"

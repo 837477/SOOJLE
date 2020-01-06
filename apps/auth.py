@@ -84,13 +84,16 @@ def get_user_info():
 @BP.route('/update_auto_login/<int:auto_login>')
 @jwt_required
 def update_auto_login(auto_login):
-	user = find_user(g.db, user_id=get_jwt_identity())
+	USER = find_user(g.db, user_id=get_jwt_identity())
 
-	if user is None: abort(400)
+	if USER is None: abort(400)
+
+	#메인로그 기록!
+	insert_log(g.db, USER['user_id'], request.path, student_num = True)
 
 	if auto_login > 1 and auto_login < 0: abort(400)
 
-	result = update_user_auto_login(g.db, user['user_id'], auto_login)
+	result = update_user_auto_login(g.db, USER['user_id'], auto_login)
 
 	return jsonify(
 		result = result
@@ -140,8 +143,10 @@ def remove_mine():
 def reset_user_measurement(user_id):
 	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
 
-	if USER is None:
-		return jsonify(result = "Not found")
+	if USER is None: abort(400)
+
+	#메인로그 기록!
+	insert_log(g.db, USER['user_id'], request.path, student_num = True)
 
 	#회원 삭제!
 	result = reset_user_measurement(g.db, USER['user_id'])
