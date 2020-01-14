@@ -465,6 +465,14 @@ def visitor_analysis_work():
 
 	#총 좋아요한 게시글 수 갱신!
 	update_variable_inc(db, 'total_fav', today_analysis['today_fav'])
+
+	#총 검색 횟수 갱신!
+	total_search_cnt = find_search_count(db)
+	update_variable(db, 'total_search_cnt', total_search_cnt)
+
+	#총 게시글 수 갱신!
+	total_posts_cnt = find_posts_count(db)
+	update_variable(db, 'total_posts_cnt', total_posts_cnt)
 	##############################################################################
 
 	#매일마다 초기화 해줘야하는 정적 변수들!

@@ -120,12 +120,39 @@ def access_external_site(site_name):
 
 	return jsonify(result = result)
 
-#오늘 방문자 수 반환
-@BP.route('/get_today_visitor_count')
-def get_today_visitor_count():
-	result = find_today_visitor_count(g.db)
+#통계 반환
+@BP.route('/get_analysis')
+def get_analysis():
+	result = {}
+
+	#총 검색 갯수
+	result['search_count'] = find_variable(g.db, 'total_search_cnt')
+	
+	#소통은 무엇?
+	#################
+	
+	#총 DB posts 갯수
+	result['posts_count'] = find_variable(g.db, 'total_posts_cnt')
+	
+	#오늘 방문자 수
+	result['today_visitor'] = find_today_visitor_count(g.db)
+
+	#총 방문자 수
+	result['total_visitor'] = find_variable(g.db, 'total_visitor')
+
+	#하루 평균 방문자 수
+	result['day_avg_visitor'] = find_variable(g.db, 'day_avg_visitor')
+
+	#하루 최고 방문자 수
+	result['highest_day_visitor'] = find_variable(g.db, 'highest_visitor')
+
+	#전체 게시글 조회수
+	result['total_view'] = find_variable(g.db, 'total_view')
+
+	#전체 게시글 좋아요 수
+	result['total_fav'] = find_variable(g.db, 'total_fav')
 
 	return jsonify(
 		result = "success",
-		today_visitor = result
+		analysis = result
 	)

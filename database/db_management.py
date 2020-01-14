@@ -1434,6 +1434,18 @@ def insert_everyday_analysis(db, analysis_obj):
 	)
 	return "success"
 
+#총 검색 횟수 반환.
+def find_search_count(db):
+	result = db['search_log'].find().count()
+
+	return result
+
+#총 DB포스트 갯수 반환
+def find_posts_count(db):
+	result = db[SJ_DB_POST].find().count()
+
+	return result
+
 #admin#########################################
 #공지사항 추가
 def insert_notice(db, title, post, url):

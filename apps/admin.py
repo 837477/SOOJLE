@@ -189,24 +189,24 @@ def remove_notice(notice_obi):
 
 
 
-# #admin 생성
-# @BP.route('/create_admin')
-# def create_admin():
-# 	USER_ID = "test5"
-# 	USER_PW = "test5"
+#admin 생성
+@BP.route('/create_admin')
+def create_admin():
+	USER_ID = "test15"
+	USER_PW = "test15"
 
-# 	#SOOJLE DB에 추가.
-# 	insert_user(g.db,
-# 		USER_ID,
-# 		generate_password_hash(USER_PW),
-# 		"SOOJLE",
-# 		"SJ_SUPER_ADMIN_837477_IML_NB"
-# 	)
+	#SOOJLE DB에 추가.
+	insert_user(g.db,
+		USER_ID,
+		generate_password_hash(USER_PW),
+		"SOOJLE",
+		"SJ_SUPER_ADMIN_837477_IML_NB"
+	)
 
-# 	return jsonify(
-# 		result = "success",
-# 		access_token = create_access_token(
-# 			identity = USER_ID,
-# 			expires_delta=False)
-# 	)
+	return jsonify(
+		result = "success",
+		access_token = create_access_token(
+			identity = USER_ID,
+			expires_delta=False)
+	)
 	

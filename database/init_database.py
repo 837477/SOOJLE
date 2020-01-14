@@ -99,7 +99,7 @@ def create_variable(db):
 				'value': 1
 			},
 			{
-				'key': 'ernewal',
+				'key': 'renewal',
 				'value': datetime.now()
 			},
 			{
@@ -120,7 +120,7 @@ def create_variable(db):
 			},
 			{
 				'key': 'service_period',
-				'value': 0
+				'value': 1
 			},
 			{
 				'key': 'total_view',
@@ -136,6 +136,14 @@ def create_variable(db):
 			},
 			{
 				'key': 'today_fav',
+				'value': 0
+			},
+			{
+				'key': 'total_posts_cnt',
+				'value': 0
+			},
+			{
+				'key': 'total_search_cnt',
 				'value': 0
 			}
 		]
