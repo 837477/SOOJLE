@@ -1368,6 +1368,13 @@ def insert_today_visitor(db, user_id, student_num=None):
 			visitor_obj
 		)
 
+		#총 방문자 수 +1
+		update_variable_inc(db, 'total_visitor', 1)
+
+
+
+
+
 #today_visitor_count 반환!
 def find_today_visitor_count(db):
 	result = db['today_visitor'].find().count()
@@ -1656,7 +1663,7 @@ def update_variable(db, key, value):
 
 #정적 테이블 변수 수정하기(값 증가, 감소) _ 정수 자료형만 가능!
 def update_variable_inc(db, key, increase):
-	db['varibale'].update(
+	db['variable'].update(
 		{
 			'key': key
 		}, 
