@@ -653,7 +653,7 @@ def update_post_like(db, post_obi):
 
 #포스트 좋아요 취소
 def update_post_unlike(db, post_obi):
-	db[SJ_DB_POST].update_many(
+	db[SJ_DB_POST].update(
 		{
 			'_id': ObjectId(post_obi)
 		}, 
@@ -669,7 +669,7 @@ def update_post_unlike(db, post_obi):
 
 #포스트 조회수 올리기
 def update_post_view(db, post_obi):
-	db[SJ_DB_POST].update_one(
+	db[SJ_DB_POST].update(
 		{
 			'_id': ObjectId(post_obi)
 		}, 

@@ -34,7 +34,7 @@ def post_like(post_obi):
 	#logging (메인 로깅)
 	insert_log(g.db, USER['user_id'], request.path, student_num = True)
 	#오늘 좋아요한 게시글 로깅!
-	update_variable(db, 'today_fav', 1)
+	update_variable_inc(g.db, 'today_fav', 1)
 
 	#해당 POST를 불러온다.
 	POST = find_post(g.db, post_obi, _id=1, topic=1, token=1, tag=1, fav_cnt=1, view=1, date=1, title=1, url=1, img=1)
@@ -84,7 +84,7 @@ def post_unlike(post_obi):
 	#logging! (메인 로깅)
 	insert_log(g.db, USER['user_id'], request.path, student_num = True)
 	#오늘 좋아요한 게시글 로깅 다시 -1!
-	update_variable(db, 'today_fav', -1)
+	update_variable_inc(g.db, 'today_fav', -1)
 
 	#해당 POST를 불러온다.
 	POST = find_post(g.db, post_obi, _id=1)
@@ -119,8 +119,6 @@ def post_view(post_obi):
 
 		#logging (메인 로깅)
 		insert_log(g.db, USER['user_id'], request.path, student_num = True)
-		#오늘 조회한 게시글 로깅!
-		update_variable(db, 'today_fav', 1)
 
 		#유저에 들어갈 좋아요 누른 post 인코딩
 		view_obj = {}
@@ -143,8 +141,9 @@ def post_view(post_obi):
 	else:
 		#logging (메인 로깅)
 		insert_log(g.db, USER['user_id'], request.remote_addr, student_num = None)
-		#오늘 조회한 게시글 로깅!
-		update_variable(db, 'today_fav', 1)
+
+	#오늘 조회한 게시글 로깅!
+	update_variable_inc(g.db, 'today_view', 1)
 
 	return jsonify(result = result)
 
