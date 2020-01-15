@@ -2,13 +2,15 @@ from bson.objectid import ObjectId
 from bson.json_util import loads, dumps
 from datetime import datetime, timedelta
 import numpy
-#####################################
+######################################################
 from global_func import *
 import global_func
-#####################################
+######################################################
 from variable import *
 
 #사용자 관련#############################################
+######################################################
+
 #전체 유저 목록 반환
 def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None):
 	
@@ -444,6 +446,8 @@ def update_user_auto_login(db, user_id, value):
 	return "success"
 
 #뉴스피드 관련############################################
+######################################################
+
 #토픽별 뉴스피드 타입 전체 반환
 def find_all_newsfeed_of_topic(db):
 	result = db['newsfeed_of_topic'].find(
@@ -525,6 +529,8 @@ def find_popularity_newsfeed(db, num):
 	return result
 
 #포스트 관련#############################################
+######################################################
+
 #포스트 전체 가져오기
 def find_all_posts(db, _id=None, title=None, date=None, end_date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None, skip_=0, limit_=None):
 
@@ -630,6 +636,7 @@ def find_post(db, post_obi, _id=None, title=None, date=None, end_date=None, post
 
 	return result
 
+#포스트 삭제
 def remove_post(db, post_obi):
 	db[SJ_DB_POST].remove(
 		{
@@ -685,6 +692,8 @@ def update_post_view(db, post_obi):
 	return "success"
 
 #검색 관련###############################################
+#######################################################
+
 #domain_title_regex 검색
 def find_domain_title_regex(db, search_str):
 	result = db['domain'].find(
@@ -1154,7 +1163,9 @@ def find_token(db, token_list):
 	)
 	return result
 
-#logging####################################### 
+#logging############################################## 
+######################################################
+
 #search_log에 search_obj 추가
 def insert_search_log(db, user_id, split_list):
 	db['search_log'].insert(
@@ -1245,7 +1256,7 @@ def find_user_date_log(db, user_id, date, limit_):
 
 	return result
 
-#pushback 함수
+#pushback 함수 (user document 16Mb 초과 방지)
 def insert_pushback(db, user_id, type_, back_obj_list):
 	#좋아요 타입
 	if type_ == 'fav':
@@ -1315,7 +1326,9 @@ def insert_pushback(db, user_id, type_, back_obj_list):
 		
 	return "success"
 
-#analysis######################################
+#analysis#############################################
+######################################################
+
 #search_realtime 가져오기!
 def find_search_all_realtime(db):
 	result = db['search_realtime'].find(
@@ -1370,10 +1383,6 @@ def insert_today_visitor(db, user_id, student_num=None):
 
 		#총 방문자 수 +1
 		update_variable_inc(db, 'total_visitor', 1)
-
-
-
-
 
 #today_visitor_count 반환!
 def find_today_visitor_count(db):
@@ -1443,17 +1452,25 @@ def insert_everyday_analysis(db, analysis_obj):
 
 #총 검색 횟수 반환.
 def find_search_count(db):
-	result = db['search_log'].find().count()
+	result = db['search_log'].find({'_id':1}).count()
 
 	return result
 
 #총 DB포스트 갯수 반환
 def find_posts_count(db):
-	result = db[SJ_DB_POST].find().count()
+	result = db[SJ_DB_POST].find({'_id':1}).count()
 
 	return result
 
-#admin#########################################
+#총 API로그 갯수 반환
+def find_log_count(db):
+	result = db['log'].find({'_id':1}).count()
+
+	return result
+
+#admin################################################
+######################################################
+
 #공지사항 추가
 def insert_notice(db, title, post, url):
 	db['notice'].insert(
@@ -1569,7 +1586,8 @@ def update_post(db, post_obi, title, post, tag, img, url, info, hashed, url_hash
 
 	return "success"
 
-##########################################################
+#Background###########################################
+######################################################
 
 #USER의 관심도 갱신.
 def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector):
@@ -1700,6 +1718,7 @@ def insert_dummy_post(db):
 	)
 	return "success"
 
+#더미 포스트 체크(있는지)
 def check_dummy_post(db):
 	result = db[SJ_DB_POST].find_one({'title': "(o^_^)o 안녕하세요. SOOJLE 입니다."})
 

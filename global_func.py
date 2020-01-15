@@ -43,20 +43,16 @@ def schedule_init():
 
 	scheduler.add_job(measurement_run, trigger = "interval", minutes = SJ_MEASUREMENT_TIME, timezone = t_zone)
 
-	# weeks, days, hours, minutes, seconds
-	# start_date='2010-10-10 09:30', end_date='2014-06-15 11:00'
-
-
-	#schedule 모듈 함수###################################
-	
-	#매 시간 방문자 수 기록 함수
-	#매 시간마다 실행
-	schedule.every().hour.do(time_visitor_analysis_work)
+	#매 시간별 방문자 통계
+	scheduler.add_job(time_visitor_analysis_work, trigger = "interval", hours = SJ_TIME_VISITOR_ANALYSIS_WORK_TIME, timezone = t_zone)
 
 	#하루 통계 집계 함수
 	#매일 11시 55분에 실행
-	schedule.every().day.at(SJ_EVERYDAY_ANALYSIS_TIME).do(visitor_analysis_work)
-	
+	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="23", minute="55")
+
+	# weeks, days, hours, minutes, seconds
+	# start_date='2010-10-10 09:30', end_date='2014-06-15 11:00'
+
 	atexit.register(lambda: scheduler.shutdown())
 #######################################################
 #전역 함수###############################################
@@ -485,6 +481,11 @@ def visitor_analysis_work():
 	#총 게시글 수 갱신!
 	total_posts_cnt = find_posts_count(db)
 	update_variable(db, 'total_posts_cnt', total_posts_cnt)
+
+	#총 소통 횟수 갱신!
+	API_log_cnt = find_log_count(db)
+	communication_avg = API_log_cnt // service_period
+	update_variable(db, 'communication_avg', communication_avg)
 	################################################################
 
 	#매일마다 초기화 해줘야하는 정적 변수들!

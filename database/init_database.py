@@ -145,6 +145,10 @@ def create_variable(db):
 			{
 				'key': 'total_search_cnt',
 				'value': 0
+			},
+			{
+				'key': 'communication_avg',
+				'value': 0
 			}
 		]
 	)

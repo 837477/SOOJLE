@@ -128,8 +128,8 @@ def get_analysis():
 	#총 검색 갯수
 	result['search_count'] = find_variable(g.db, 'total_search_cnt')
 	
-	#소통은 무엇?
-	#################
+	#소통 수 반환 (하루 평균 기준)
+	result['communication_avg'] = find_variable(g.db, 'communication_avg')
 	
 	#총 DB posts 갯수
 	result['posts_count'] = find_variable(g.db, 'total_posts_cnt')
@@ -156,3 +156,8 @@ def get_analysis():
 		result = "success",
 		analysis = result
 	)
+
+#매 시간별 방문자 수 반환(그래프용)
+@BP.route('/get_time_visitor/<int:days>')
+def get_time_visitor(days):
+	print("test")
