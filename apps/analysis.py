@@ -188,15 +188,15 @@ def get_everyday_analysis_specific_days(year, month, day):
 def insert_device(device):
 
 	if device == 'device_pc' or  device == 'device_tablet' or device == 'device_mobile':
-		update_variable_inc(g.db, device, 1)
-		
+		result = update_variable_inc(g.db, device, 1)
+
 	else:
 		return jsonify(result = "wrong device")
 
 	
 
 	return jsonify(
-		result = "success"
+		result = result
 	)
 
 #무슨 디바이스로 접속했는지 기록용 API
