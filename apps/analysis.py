@@ -120,7 +120,7 @@ def access_external_site(site_name):
 
 	return jsonify(result = result)
 
-#통계 반환
+#통계 통합형 반환
 @BP.route('/get_analysis')
 def get_analysis():
 	result = {}
@@ -157,7 +157,28 @@ def get_analysis():
 		analysis = result
 	)
 
-#매 시간별 방문자 수 반환(그래프용)
-@BP.route('/get_time_visitor/<int:days>')
-def get_time_visitor(days):
-	print("test")
+#매일 기록되는 통계 반환 API (몇일 전 버전)
+@BP.route('/get_everyday_analysis_days_ago/<int:days>')
+def get_everyday_analysis_days_ago(days):
+	date = get_default_day(days)
+
+	result = find_everyday_analysis_days(g.db, date)
+	result = list(result)
+
+	return jsonify(
+		result = "success",
+		analysis = result
+	)
+
+#매일 기록되는 통계 반환 API (특정 날짜)
+@BP.route('/get_everyday_analysis_specific_days/<int:year>/<int:month>/<int:day>')
+def get_everyday_analysis_specific_days(year, month, day):
+	date = datetime.date(year, month, day)
+
+	result = find_everyday_analysis_specific_day(g.db, date)
+	result = list(result)
+
+	return jsonify(
+		result = "success",
+		analysis = result
+	)

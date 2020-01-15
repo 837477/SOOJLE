@@ -1420,6 +1420,7 @@ def find_today_time_visitor(db, time):
 			}
 		}
 	).count()
+	
 	return result
 
 #today 매 시간별 방문자 수 기록!
@@ -1435,6 +1436,7 @@ def push_today_time_visitor(db, hour_visitor_obj):
 			}
 		}
 	)
+	
 	return "success"
 
 #today visitor 콜렉션 데이터 전체 삭제! (데이터 비우기)
@@ -1449,6 +1451,29 @@ def insert_everyday_analysis(db, analysis_obj):
 		analysis_obj
 	)
 	return "success"
+
+#매일 통계에서 특정 날짜 이후 통계 반환
+def find_everyday_analysis_days(db, date):
+	result = db['everyday_analysis'].find(
+		{
+			'date': 
+			{
+				'$gte': date
+			}
+		}
+	)
+
+	return result
+
+#매일 통계에서 특정 날짜 통계 반환
+def find_everyday_analysis_specific_day(db, date):
+	result = db['everyday_analysis'].find_one(
+		{
+			'date': date
+		}
+	)
+
+	return result
 
 #총 검색 횟수 반환.
 def find_search_count(db):

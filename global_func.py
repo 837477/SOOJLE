@@ -43,12 +43,12 @@ def schedule_init():
 
 	scheduler.add_job(measurement_run, trigger = "interval", minutes = SJ_MEASUREMENT_TIME, timezone = t_zone)
 
-	#매 시간별 방문자 통계
 	scheduler.add_job(time_visitor_analysis_work, trigger = "interval", hours = SJ_TIME_VISITOR_ANALYSIS_WORK_TIME, timezone = t_zone)
 
-	#하루 통계 집계 함수
-	#매일 11시 55분에 실행
-	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="23", minute="55")
+	#특정 시간에 실행
+	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="23", minute="55", timezone = t_zone)
+
+	scheduler.add_job(time_visitor_analysis_work, trigger = 'cron', minute="1", timezone = t_zone)
 
 	# weeks, days, hours, minutes, seconds
 	# start_date='2010-10-10 09:30', end_date='2014-06-15 11:00'
@@ -346,7 +346,7 @@ def update_posts_highest():
 	new_view = find_highest_view_cnt(db)
 
 	update_variable(db, 'highest_fav_cnt', new_fav)
-	update_variable(db, 'highest_view_cnt', new_fav)
+	update_variable(db, 'highest_view_cnt', new_view)
 
 	if db_client is not None:
 		db_client.close()
