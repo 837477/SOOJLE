@@ -187,7 +187,31 @@ def remove_notice(notice_obi):
 		result = result
 	)
 
+@BP.route('/send_feedback', methods=['POST'])
+@jwt_required
+def send_feedback():
+	user = find_user(g.db, user_id=get_jwt_identity())
+	if user is None: abort(400)
 
+	FEEDBACK_TYPE = request.form['type']
+	FEEDBACK_POST = request.form['post']
+	FEEDBACK_TIME = datetime.now()
+	FEEDBACK_AUTHOR = user['user_id']
+
+	feedback_data = {
+    	'type': FEEDBACK_TYPE,
+    	'time': FEEDBACK_TIME,
+    	'post': FEEDBACK_POST,
+    	'author': FEEDBACK_AUTHOR
+	}
+
+	result = insert_user_feedback(g.db, feedback_data)
+
+	if result == "success":
+		return jsonify(result = "success")
+	else:
+		return jsonify(result = "fail")
+	
 
 #admin 생성
 @BP.route('/create_admin')

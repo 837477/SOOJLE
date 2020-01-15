@@ -1617,6 +1617,13 @@ def update_post(db, post_obi, title, post, tag, img, url, info, hashed, url_hash
 
 	return "success"
 
+#피드백 입력
+def insert_user_feedback(db, feedback):
+	db['feedback'].insert(
+    	feedback
+   	)
+	return "success"
+
 #Background###########################################
 ######################################################
 

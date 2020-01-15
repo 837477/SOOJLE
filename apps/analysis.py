@@ -187,13 +187,11 @@ def get_everyday_analysis_specific_days(year, month, day):
 @BP.route('/insert_device/<string:device>')
 def insert_device(device):
 
-	if device == 'device_pc' or  device == 'device_tablet' or device == 'device_mobile':
+	if device == 'device_pc' or device == 'device_tablet' or device == 'device_mobile':
 		result = update_variable_inc(g.db, device, 1)
 
 	else:
 		return jsonify(result = "wrong device")
-
-	
 
 	return jsonify(
 		result = result
