@@ -16,6 +16,7 @@ import json
 import re
 import csv
 import jpype
+import schedule
 #######################################################
 from db_management import *
 from db_info import *
@@ -44,6 +45,17 @@ def schedule_init():
 
 	# weeks, days, hours, minutes, seconds
 	# start_date='2010-10-10 09:30', end_date='2014-06-15 11:00'
+
+
+	#schedule 모듈 함수###################################
+	
+	#매 시간 방문자 수 기록 함수
+	#매 시간마다 실행
+	schedule.every().hour.do(time_visitor_analysis_work)
+
+	#하루 통계 집계 함수
+	#매일 11시 55분에 실행
+	schedule.every().day.at(SJ_EVERYDAY_ANALYSIS_TIME).do(visitor_analysis_work)
 	
 	atexit.register(lambda: scheduler.shutdown())
 #######################################################
@@ -439,10 +451,10 @@ def visitor_analysis_work():
 	
 	#매일 기록되는 통계 테이블에 기록!
 	insert_everyday_analysis(db, today_analysis)
-	##############################################################################
+	################################################################
 
 	#매일마다 갱신 시켜야하는 정적 변수들!
-	##############################################################################
+	################################################################
 	#서비스 기간 하루 증가!
 	update_variable_inc(db, 'service_period', 1)
 
@@ -473,10 +485,10 @@ def visitor_analysis_work():
 	#총 게시글 수 갱신!
 	total_posts_cnt = find_posts_count(db)
 	update_variable(db, 'total_posts_cnt', total_posts_cnt)
-	##############################################################################
+	################################################################
 
 	#매일마다 초기화 해줘야하는 정적 변수들!
-	##############################################################################
+	################################################################
 	#오늘 조회한 게시글 0으로 초기화
 	update_variable(db, 'today_view', 0)
 
@@ -485,7 +497,7 @@ def visitor_analysis_work():
 
 	#today_visitor 콜렉션 비우기!
 	remove_today_visitor(db)
-	##############################################################################
+	################################################################
 	if db_client is not None:
 		db_client.close()
 
@@ -500,8 +512,13 @@ def time_visitor_analysis_work():
 	#(현재시간-1시간) ~ 현재시간 의 방문자 수 가져오기
 	visitor_cnt = find_today_time_visitor(db, time)
 
+	#시간별 방문자 오브젝트 생성!
+	hour_visitor_obj = {}
+	hour_visitor_obj['time'] = datetime.now().hour
+	hour_visitor_obj['visitor'] = visitor_cnt
+
 	#시간별 방문자 수 기록!
-	push_today_time_visitor(db, visitor_cnt)
+	push_today_time_visitor(db, hour_visitor_obj)
 
 	if db_client is not None:
 		db_client.close()

@@ -1414,7 +1414,7 @@ def find_today_time_visitor(db, time):
 	return result
 
 #today 매 시간별 방문자 수 기록!
-def push_today_time_visitor(db, visitor_count):
+def push_today_time_visitor(db, hour_visitor_obj):
 	db['variable'].update(
 		{
 			'key': 'today_time_visitor'
@@ -1422,7 +1422,7 @@ def push_today_time_visitor(db, visitor_count):
 		{
 			'$push':
 			{
-				'value': visitor_count
+				'value': hour_visitor_obj
 			}
 		}
 	)

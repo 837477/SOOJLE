@@ -8,6 +8,8 @@ SJ_REALTIME_TIME = 5
 SJ_UPDATE_HIGHEST_FAV_VIEW_TIME = 1
 #Update_today_time_visitor (hour)
 SJ_TIME_VISITOR_ANALYSIS_WORK_TIME = 1
+#Everyday analysis run
+SJ_EVERYDAY_ANALYSIS_TIME = "23:55"
 
 #DB_POST Collection name (현재 포스트 디비 이름)
 SJ_DB_POST = "posts"
