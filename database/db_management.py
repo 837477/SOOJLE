@@ -1436,7 +1436,7 @@ def push_today_time_visitor(db, hour_visitor_obj):
 			}
 		}
 	)
-	
+
 	return "success"
 
 #today visitor 콜렉션 데이터 전체 삭제! (데이터 비우기)
@@ -1460,6 +1460,9 @@ def find_everyday_analysis_days(db, date):
 			{
 				'$gte': date
 			}
+		},
+		{
+			'_id': 0
 		}
 	)
 
@@ -1470,6 +1473,9 @@ def find_everyday_analysis_specific_day(db, date):
 	result = db['everyday_analysis'].find_one(
 		{
 			'date': date
+		},
+		{
+			'_id': 0
 		}
 	)
 
