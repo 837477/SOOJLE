@@ -56,6 +56,7 @@ def schedule_init():
 	atexit.register(lambda: scheduler.shutdown())
 #######################################################
 #전역 함수###############################################
+
 #함수 시간 측정
 def logging_time(original_fn):
     def wrapper_fn(*args, **kwargs):
@@ -70,8 +71,10 @@ def logging_time(original_fn):
 def get_default_day(day):
 	date = datetime.now() - timedelta(days = day)
 	return date
+
 #######################################################
 #Background Func#######################################
+
 #실시간 검색어 함수 preprocess
 def preprocess(doc):
 	emoji_pattern = re.compile("["

@@ -182,3 +182,31 @@ def get_everyday_analysis_specific_days(year, month, day):
 		result = "success",
 		analysis = result
 	)
+
+#무슨 디바이스로 접속했는지 기록용 API
+@BP.route('/insert_device/<string:device>')
+def insert_device(device):
+
+	if device != 'device_pc' or  device != 'device_tablet' or device != 'device_mobile':
+		return jsonify(result = "wrong device")
+
+	update_variable_inc(g.db, device, 1)
+
+	return jsonify(
+		result = "success"
+	)
+
+#무슨 디바이스로 접속했는지 기록용 API
+@BP.route('/get_device')
+def get_device():
+	PC = find_variable(g.db, 'device_pc')
+	TABLET = find_variable(g.db, 'device_tablet')
+	MOBILE = find_variable(g.db, 'device_mobile')
+
+	return jsonify(
+		result = "success",
+		pc = PC,
+		tablet = TABLET,
+		mobile = MOBILE
+	)
+

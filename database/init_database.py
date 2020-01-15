@@ -149,6 +149,18 @@ def create_variable(db):
 			{
 				'key': 'communication_avg',
 				'value': 0
+			},
+			{
+				'key': 'device_pc',
+				'value': 0
+			},
+			{
+				'key': 'device_tablet',
+				'value': 0
+			},
+			{
+				'key': 'device_mobile',
+				'value': 0
 			}
 		]
 	)
