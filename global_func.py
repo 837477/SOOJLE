@@ -46,9 +46,9 @@ def schedule_init():
 	scheduler.add_job(time_visitor_analysis_work, trigger = "interval", hours = SJ_TIME_VISITOR_ANALYSIS_WORK_TIME, timezone = t_zone)
 
 	#특정 시간에 실행
-	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="23", minute="55", timezone = t_zone)
+	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="0", minute="1", timezone = t_zone)
 
-	scheduler.add_job(time_visitor_analysis_work, trigger = 'cron', minute="1", timezone = t_zone)
+	scheduler.add_job(time_visitor_analysis_work, trigger = 'cron', minute="59", timezone = t_zone)
 
 	# weeks, days, hours, minutes, seconds
 	# start_date='2010-10-10 09:30', end_date='2014-06-15 11:00'
@@ -511,14 +511,18 @@ def time_visitor_analysis_work():
 	db = db_client["soojle"]
 
 	#한시간 전 시간 가져오기
-	time = datetime.now() - timedelta(hours = 1)
+	time = datetime.now() - timedelta(minutes = 59)
 
 	#(현재시간-1시간) ~ 현재시간 의 방문자 수 가져오기
 	visitor_cnt = find_today_time_visitor(db, time)
 
 	#시간별 방문자 오브젝트 생성!
 	hour_visitor_obj = {}
-	hour_visitor_obj['time'] = datetime.now().hour
+	if datetime.now().hour == 0:
+		hour_visitor_obj['time'] = 24
+	else:	
+		hour_visitor_obj['time'] = datetime.now().hour
+	
 	hour_visitor_obj['visitor'] = visitor_cnt
 
 	#시간별 방문자 수 기록!
