@@ -140,7 +140,7 @@ def post_view(post_obi):
 	#비 로그인
 	else:
 		#logging (메인 로깅)
-		insert_log(g.db, USER['user_id'], request.remote_addr, student_num = None)
+		insert_log(g.db, request.remote_addr, request.path, student_num = None)
 
 	#오늘 조회한 게시글 로깅!
 	update_variable_inc(g.db, 'today_view', 1)
