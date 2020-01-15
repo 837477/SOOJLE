@@ -1749,7 +1749,7 @@ def insert_dummy_post(db):
 	)
 	return "success"
 
-#더미 포스트 체크(있는지)
+#더미 포스트 체크(있는지 확인용)
 def check_dummy_post(db):
 	result = db[SJ_DB_POST].find_one({'title': "(o^_^)o 안녕하세요. SOOJLE 입니다."})
 
