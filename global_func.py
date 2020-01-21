@@ -432,7 +432,7 @@ def visitor_analysis_work():
 	for student in today_student_visitor:
 		temp = {}
 
-		if student['_id'] == None:
+		if student['_id'] == None or student['_id'] == 'te':
 			student['_id'] = 'guest'
 
 		temp['student_num'] = student['_id']
