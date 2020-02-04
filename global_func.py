@@ -429,6 +429,7 @@ def visitor_analysis_work():
 	#오늘 학번별 방문자 수
 	today_analysis['today_student_visitor'] = []
 	today_student_visitor = find_today_visitor_student_num(db)
+
 	for student in today_student_visitor:
 		temp = {}
 
@@ -439,7 +440,6 @@ def visitor_analysis_work():
 		temp['count'] = student['count']
 
 		today_analysis['today_student_visitor'].append(temp)
-
 
 	today_year = datetime.today().year
 	today_month = datetime.today().month
@@ -501,6 +501,10 @@ def visitor_analysis_work():
 
 	#today_visitor 콜렉션 비우기!
 	remove_today_visitor(db)
+
+	#today_time_visitor 빈 리스트로 초기화
+	today_time_visitor_empty = []
+	update_variable(db, 'today_time_visitor', today_time_visitor_empty)
 	################################################################
 	if db_client is not None:
 		db_client.close()

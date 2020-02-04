@@ -19,6 +19,8 @@ SJ_RETURN_NUM = 300
 SJ_PS_LIMIT = 10000
 #Category Search limit number (카테고리 서치 DB호출 최대 제한)
 SJ_CS_LIMIT = 20000
+#Newsfeed of Topic limit(토픽별 뉴스피드 DB호출 최대 제한)
+SJ_NEWSFEED_TOPIC_LIMIT = 5000
 #Recommendation limit (추천뉴스피드 DB호출 최대 제한)
 SJ_RECOMMENDATION_LIMIT = 30000
 #No Token User Recommendation limit (비로그인 추천뉴스피드 DB호출 최대 제한)

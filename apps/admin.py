@@ -187,6 +187,7 @@ def remove_notice(notice_obi):
 		result = result
 	)
 
+#피드백 전송
 @BP.route('/send_feedback', methods=['POST'])
 @jwt_required
 def send_feedback():
@@ -211,8 +212,8 @@ def send_feedback():
 		return jsonify(result = "success")
 	else:
 		return jsonify(result = "fail")
-	
 
+'''	
 #admin 생성
 @BP.route('/create_admin')
 def create_admin():
@@ -233,4 +234,4 @@ def create_admin():
 			identity = USER_ID,
 			expires_delta=False)
 	)
-	
+'''

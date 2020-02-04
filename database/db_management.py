@@ -507,7 +507,8 @@ def find_newsfeed(db, info, tag, negative_tag, num):
 			'info': 1,
 			'tag': 1,
 			'topic': 1,
-			'ft_vector': 1
+			'ft_vector': 1,
+			'end_date': 1
 		}
 		).sort([('date', -1)]).limit(num)
 	return result

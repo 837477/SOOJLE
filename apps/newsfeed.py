@@ -24,12 +24,29 @@ def get_newsfeed_of_topic(newsfeed_name):
 	#요청한 뉴스피드에 대한 정보를 가져온다.
 	newsfeed_type = find_newsfeed_of_topic(g.db, newsfeed_name)
 
-	#logging!
+	#info를 정규표현식으로 부르기위해 or연산자로 join
+	info = "|".join(newsfeed_type['info'])
+
+	#해당 토픽 뉴스피드에 관련된 게시글들을 불러온다.
+	POST_LIST = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], SJ_NEWSFEED_TOPIC_LIMIT)
+	POST_LIST = list(POST_LIST)
+
+	#end_date처리 작업을 위한 현재시간 변수 선언
+	now_date = datetime.now()
+
+	#end_date 처리!
+	for POST in POST_LIST:
+		#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+		if POST['end_date'] and now_date > POST['end_date']:
+			#해당 포스트 삭제.
+			POST_LIST.remove(POST)
+
+	#로그인시!
 	if get_jwt_identity():
 		#USER를 불러온다.
 		USER = find_user(g.db, _id=1, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
 		
-		#유효한 토큰이 아닐 때 
+		#유효한 토큰인지 확인.
 		if USER is None: abort(400)
 
 		#logging! (메인 로그)
@@ -47,15 +64,8 @@ def get_newsfeed_of_topic(newsfeed_name):
 		#해당 유저의 갱신시간 갱신
 		update_user_renewal(g.db, USER['user_id'])
 
-		#info를 정규표현식으로 부르기위해 or연산자로 join
-		info = "|".join(newsfeed_type['info'])
-
 		#공모전&행사 뉴스피드는 사용자 관심도도 측정하여 따로 반환
 		if newsfeed_name == '공모전&행사':
-			POST_LIST = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], SJ_RETURN_NUM)
-
-			POST_LIST = list(POST_LIST)
-
 			for POST in POST_LIST:
 				#TOS 작업
 				TOS = dot(USER['topic'], POST['topic'])/(norm(USER['topic'])*norm(POST['topic']))
@@ -85,23 +95,16 @@ def get_newsfeed_of_topic(newsfeed_name):
 			#similarity를 기준으로 내림차순 정렬.
 			POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
 
-			return jsonify(
-				result = "success",
-				newsfeed = dumps(POST_LIST))
-
 	#비로그인!
 	else:
 		#logging! (메인 로그)
 		insert_log(g.db, request.remote_addr, request.path, student_num=None)
 
-	#info를 정규표현식으로 부르기위해 or연산자로 join
-	info = "|".join(newsfeed_type['info'])
-
-	result = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], SJ_RETURN_NUM)
+	
 
 	return jsonify(
 		result = "success",
-		newsfeed = dumps(result))
+		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))
 
 #인기 뉴스피드
 @BP.route('/get_popularity_newsfeed')
@@ -133,29 +136,32 @@ def get_popularity_newsfeed():
 @BP.route('/get_recommendation_newsfeed')
 @jwt_optional
 def get_recommendation_newsfeed():
+	#게시글들을 불러온다.
 	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, info=1, title_token=1, url=1, img=1, date=1, limit_=SJ_RECOMMENDATION_LIMIT)
-
 	POST_LIST = list(POST_LIST)
 	
+	#현재 시간 변수 선언
 	now_date = datetime.now()
 
 	#회원일 때!
 	if get_jwt_identity():
-		#유저를 _id, topic리스트, tag리스트 만 가져온다.
+		#유저 정보 불러오기.
 		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
 
-		#유효한 토큰이 아닐 때 
+		#유효한 토큰인지 확인.
 		if USER is None: abort(400)
 
 		#logging (메인 로그)
 		insert_log(g.db, USER['user_id'], request.path, student_num = True)
+		
 		#방문자 로그 기록!
 		insert_today_visitor(g.db, USER['user_id'], student_num=True)
 
-		#회원 관심도가 cold 상태일 때!
+		#회원 관심도가 cold 상태일 때! (즉, 관심도 측정이 안된 회원)
 		if USER['tag_sum'] == 1:
-			#비로그인일 때 추천뉴스피드 호출!
+			#비로그인 전용 추천뉴스피드 호출!
 			POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)	
+		
 		#관심도가 cold가 아닐 때!
 		else:
 			#캐싱된 가장 높은 좋아요 수를 가져온다.
@@ -164,6 +170,16 @@ def get_recommendation_newsfeed():
 			Maxviews = find_variable(g.db, 'highest_view_cnt')
 			
 			for POST in POST_LIST:
+				#end_date 처리!
+				#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+				if ('end_date' in POST) and (now_date > POST['end_date']):
+					#해당 포스트 삭제.
+					#POST_LIST.remove(POST)
+
+					#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
+					POST['similarity'] = 0
+					continue
+
 				#TOS 작업
 				TOS = dot(USER['topic'], POST['topic'])/(norm(USER['topic'])*norm(POST['topic']))
 
@@ -201,10 +217,11 @@ def get_recommendation_newsfeed():
 	else:
 		#logging (메인 로그)
 		insert_log(g.db, request.remote_addr, request.path, student_num=None)
+		
 		#방문자 로그 기록!
 		insert_today_visitor(g.db, request.remote_addr, student_num=None)
 
-		#비로그인일 때 추천뉴스피드 호출!
+		#비로그인 전용 추천뉴스피드 호출!
 		POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)		
 
 	#similarity를 기준으로 내림차순 정렬.
@@ -214,7 +231,7 @@ def get_recommendation_newsfeed():
 		result = "success",
 		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))
 
-#비회원 추천 뉴스피드
+#비회원 전용 추천 뉴스피드
 def get_recommendation_newsfeed_2(db, now_date):
 	#요청한 뉴스피드에 대한 정보를 가져온다.
 	newsfeed_type = find_all_newsfeed_of_topic(db)
@@ -232,6 +249,16 @@ def get_recommendation_newsfeed_2(db, now_date):
 			POST_LIST += list(result)
 
 	for POST in POST_LIST:
+		#end_date 처리!
+		#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+		if ('end_date' in POST) and (now_date > POST['end_date']):
+			#해당 포스트 삭제.
+			#POST_LIST.remove(POST)
+			
+			#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
+			POST['similarity'] = 0
+			continue
+
 		RANDOM = numpy.random.random()
 		RANDOM *= SJ_RANDOM_WEIGHT
 		TREND = trendscore(POST, now_date)
@@ -239,7 +266,8 @@ def get_recommendation_newsfeed_2(db, now_date):
 		result = RANDOM + TREND
 
 		POST['similarity'] = result
-	
+		
+	print(len(POST_LIST))
 	return POST_LIST
 
 #트렌드 스코어 계산
