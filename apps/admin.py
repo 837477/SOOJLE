@@ -213,6 +213,76 @@ def send_feedback():
 	else:
 		return jsonify(result = "fail")
 
+#블랙리스트 등록
+@BP.route('/push_blacklist/<string:user_id>')
+@jwt_required
+def push_blacklist(user_id):
+	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
+
+	#Admin 확인
+	if admin is None or admin['major'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	#블랙리스트 타겟 회원 존재여부 판단.
+	target_user = find_user(g.db, _id=1, user_id=user_id)
+
+	if target_user is None:
+		return jsonify(result = "Not found")
+
+	result = insert_blacklist(g.db, user_id)
+
+	return jsonify(
+		result = result
+	)
+
+#블랙리스트 전체 반환
+@BP.route('/get_blacklist')
+@jwt_required
+def get_blacklist():
+	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
+
+	#Admin 확인
+	if admin is None or admin['major'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	result = find_blacklist(g.db)
+
+	return jsonify(
+		result = result
+	)
+
+#블랙리스트 개별 반환
+@BP.route('/get_blacklist_one/<string:user_id>')
+@jwt_required
+def get_blacklist_one(user_id):
+	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
+
+	#Admin 확인
+	if admin is None or admin['major'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	result = find_blacklist_one(g.db, user_id)
+	
+	return jsonify(
+		result = result
+	)
+
+#블랙리스트 해제
+@BP.route('/pop_blacklist/<string:user_id>')
+@jwt_required
+def pop_blacklist(user_id):
+	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
+
+	#Admin 확인
+	if admin is None or admin['major'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	result = remove_blacklist(g.db, user_id)
+
+	return jsonify(
+		result = result
+	)
+
 '''	
 #admin 생성
 @BP.route('/create_admin')

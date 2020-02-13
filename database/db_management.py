@@ -1484,7 +1484,7 @@ def find_everyday_analysis_specific_day(db, date):
 
 #총 검색 횟수 반환.
 def find_search_count(db):
-	result = db['search_log'].find({'_id':1}).count()
+	result = db['search_log'].find().count()
 
 	return result
 
@@ -1625,6 +1625,43 @@ def insert_user_feedback(db, feedback):
    	)
 	return "success"
 
+#블랙리스트 등록
+def insert_blacklist(db, user_id):
+	db['blacklist'].insert(
+		{
+			'user_id': user_id
+			'black_date': datetime.now()
+		}
+	)
+
+	return "success"
+
+#블랙리스트 전체 반환
+def find_blacklist(db):
+	result = db['blacklist'].find()
+
+	return result
+
+#블랙리스트 개별 검색
+def find_blacklist_one(db, user_id):
+	result = db['blacklist'].find_one(
+		{
+			'user_id': user_id
+		}
+	)
+
+	return result
+
+#블랙리스트 해제
+def remove_blacklist(db, user_id):
+	db['blacklist'].remove(
+		{
+			'user_id': user_id
+		}
+	)
+
+	return "success"
+	
 #Background###########################################
 ######################################################
 
