@@ -1490,13 +1490,13 @@ def find_search_count(db):
 
 #총 DB포스트 갯수 반환
 def find_posts_count(db):
-	result = db[SJ_DB_POST].find({'_id':1}).count()
+	result = db[SJ_DB_POST].find().count()
 
 	return result
 
 #총 API로그 갯수 반환
 def find_log_count(db):
-	result = db['log'].find({'_id':1}).count()
+	result = db['log'].find().count()
 
 	return result
 
