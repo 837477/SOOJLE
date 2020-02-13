@@ -1629,7 +1629,7 @@ def insert_user_feedback(db, feedback):
 def insert_blacklist(db, user_id):
 	db['blacklist'].insert(
 		{
-			'user_id': user_id
+			'user_id': user_id,
 			'black_date': datetime.now()
 		}
 	)
