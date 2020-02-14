@@ -1643,7 +1643,12 @@ def insert_blacklist(db, user_id):
 
 #블랙리스트 전체 반환
 def find_blacklist(db):
-	result = db['blacklist'].find()
+	result = db['blacklist'].find(
+		{},
+		{
+			'_id': 0
+		}
+	)
 
 	return result
 
