@@ -27,7 +27,7 @@ def admin_remove_user(user_id):
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	#삭제 대상 획원 유무 확인
@@ -48,7 +48,7 @@ def insert_post():
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	title = request.form['title']
@@ -83,7 +83,7 @@ def update_post(post_obi):
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	title = request.form['title']
@@ -113,7 +113,7 @@ def remove_post(post_obi):
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	target_post = find_post(g.db, post_obi=post_obi)
@@ -137,7 +137,7 @@ def insert_notice():
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	result = insert_notice(g.db, title, post, rul)
@@ -157,7 +157,7 @@ def update_notice(notice_obi):
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	result = update_notice(g.db, notice_obi, title, post, url)
@@ -173,7 +173,7 @@ def remove_notice(notice_obi):
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	notice = find_notice(g.db, notice_obi)
@@ -220,7 +220,7 @@ def push_blacklist(user_id):
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	#블랙리스트 타겟 회원 존재여부 판단.
@@ -242,7 +242,7 @@ def get_blacklist():
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	result = find_blacklist(g.db)
@@ -259,7 +259,7 @@ def get_blacklist_one(user_id):
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	result = find_blacklist_one(g.db, user_id)
@@ -276,7 +276,7 @@ def pop_blacklist(user_id):
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
 	result = remove_blacklist(g.db, user_id)
@@ -292,7 +292,7 @@ def check_admin():
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
-	if admin is None or admin['major'] != SJ_ADMIN:
+	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 	
 	return jsonify(result = "success")
