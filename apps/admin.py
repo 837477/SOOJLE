@@ -246,6 +246,7 @@ def get_blacklist():
 		return jsonify(result = "Not admin")
 
 	result = find_blacklist(g.db)
+	result = list(result)
 
 	return jsonify(
 		result = "success",
