@@ -51,13 +51,12 @@ def sign_in_up():
 			sejong_api_result['major']
 			)
 
+	#블랙리스트 회원인지 확인.
 	if find_blacklist_one(g.db, USER_ID):
-		user = find_user(g.db, user_id=USER_ID, user_pw=1)
-	else:
-		return jsonify(
-			result = "blacklist user"
-		)
-
+		return jsonify(result = "blacklist user")
+		
+	user = find_user(g.db, user_id=USER_ID, user_pw=1)
+	
 	if check_password_hash(user['user_pw'], USER_PW):
 		return jsonify(
 			result = "success",

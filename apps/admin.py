@@ -229,6 +229,9 @@ def push_blacklist(user_id):
 	if target_user is None:
 		return jsonify(result = "Not found")
 
+	elif find_blacklist_one(g.db, user_id):
+		return jsonify(result = "already blacklist")
+
 	result = insert_blacklist(g.db, user_id)
 
 	return jsonify(
@@ -280,6 +283,9 @@ def pop_blacklist(user_id):
 	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
+	if find_blacklist_one(g.db, user_id) is None:
+		return jsonify(result = "Not found")
+		
 	result = remove_blacklist(g.db, user_id)
 
 	return jsonify(
