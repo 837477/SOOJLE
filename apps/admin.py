@@ -248,7 +248,8 @@ def get_blacklist():
 	result = find_blacklist(g.db)
 
 	return jsonify(
-		result = result
+		result = "success",
+		blacklist = result
 	)
 
 #블랙리스트 개별 반환
@@ -264,7 +265,8 @@ def get_blacklist_one(user_id):
 	result = find_blacklist_one(g.db, user_id)
 	
 	return jsonify(
-		result = result
+		result = "success",
+		blacklist = result
 	)
 
 #블랙리스트 해제
