@@ -26,6 +26,9 @@ import FastText
 #######################################################
 from variable import *
 
+#욕 필터 셋
+bad_language = {'페미', '냄져', '한남', '자댕이', '조팔', '씨발', '섹스', '개년', '개새끼', '씹', '셋스', '느개비', '좆', '노무현', "느개비", '느금마', '니애미', '빠구리', '시발년' ,'시발새끼', '느그앰', '느그미', '노무혐', '빠9리', '시발롬', '시발련', '창년', '보빨러', '사까시', '걸레년', '걸레련', '보빨', '4카시', '사카시', '봊', '보전깨', '니미', '오피누', '오피녀', '이기야', '놈딱', '북딱', '지잡', '십색기', '십색갸', '십색꺄', '일배', '일베', '일간베스트', 'ㅈ같', '보들', '자들', '섹종', '섺종', '땅끄', '땅크', '씹년', '훌짓', '섺끈', '세끈', '섹끈', '섻', '섹ㅅ', 'ㅂㅅ', 'ㅅ발', 'ㅈ밥', 'ㅂ신', '시팔', '색기', '니엄', '니앰', 'ㅆ발', 'ㅆㅂ', '무현', '부랄', '붕알', '족같', 'ㅈㄹ', 'ㅅㅂ', 'ㅈㄹ', '쎅스', '섻스', '갈보', '빙신', '병신', '걸레', '콘돔', '보빨', '걸레', '창년', '느금', '놈현', '응디', '딱좋', '틀딱', '엠창', '니미', '시팔', '씨팔', '빨통', '등신', '모텔', '잠지', '보지', '시발', '셋스', '후빨', '홍어', '창녀', '애비', '애미', '개년', '썅'}
+
 
 # BackgroundScheduler Initialize
 def schedule_init():
@@ -132,9 +135,17 @@ def real_time_insert():
 	search_log_list = find_search_log(db)
 	search_log_list = list(search_log_list)
 
-	real_tiem_result = real_time_keywords(search_log_list)
+	real_time_keywords_temp = real_time_keywords(search_log_list)
 
-	insert_search_realtime(db, real_tiem_result)
+	real_time_result = []
+	for keyword in real_time_keywords_temp:
+		#욕 필터링 걸리면 넘어감!
+		if keyword in bad_language:
+			continue
+		#최종 실시간 검색어 결과 반환
+		real_time_result.append(keyword)
+
+	insert_search_realtime(db, real_time_result)
 	
 	if db_client is not None:
 		db_client.close()

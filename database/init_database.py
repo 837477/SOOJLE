@@ -47,6 +47,9 @@ def init_db():
 	if not 'log' in db_collections:
 		db['log']
 
+	if not 'blacklist' in db_collections:
+		db['blacklist']
+
 	if db_client is not None:
 		db_client.close()
 

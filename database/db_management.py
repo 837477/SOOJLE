@@ -119,6 +119,7 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 	search_list = []
 	auto_login = 1
 	renewal = datetime.now()
+	privacy = 0
 
 	result = db['user'].insert(
 		{
@@ -135,7 +136,8 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 			'newsfeed_list': newsfeed_list,
 			'search_list': search_list,
 			'auto_login': auto_login,
-			'renewal': renewal
+			'renewal': renewal,
+			'privacy': privacy
 		})
 
 	return "success"
@@ -521,6 +523,7 @@ def find_popularity_newsfeed(db, num):
 			'_id': 1,
 			'title': 1,
 			'date': 1,
+			'end_date': 1,
 			'img': 1,
 			'fav_cnt': 1,
 			'url': 1,
@@ -743,7 +746,8 @@ def find_all_domain(db):
 def find_title_regex(db, search_str, type_check):
 	return_dict = {
 		'title':1,
-		'date':1, 
+		'date':1,
+		'end_date':1,
 		'img':1, 
 		'url':1, 
 		'fav_cnt': 1, 
@@ -885,6 +889,7 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 			'_id':1, 
 			'title':1,
 			'date':1,
+			'end_date':1,
 			'img': 1,
 			'url': 1,
 			'fav_cnt': 1,

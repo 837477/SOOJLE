@@ -283,6 +283,18 @@ def pop_blacklist(user_id):
 		result = result
 	)
 
+#관리자 판단용 API
+@BP.route('/check_admin')
+@jwt_required
+def check_admin():
+	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
+
+	#Admin 확인
+	if admin is None or admin['major'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+	
+	return jsonify(result = "success")
+
 '''	
 #admin 생성
 @BP.route('/create_admin')
@@ -295,7 +307,7 @@ def create_admin():
 		USER_ID,
 		generate_password_hash(USER_PW),
 		"SOOJLE",
-		"SJ_SUPER_ADMIN_837477_IML_NB"
+		"SJ_SUPER_ADMIN"
 	)
 
 	return jsonify(

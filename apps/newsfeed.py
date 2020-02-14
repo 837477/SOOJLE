@@ -135,7 +135,7 @@ def get_popularity_newsfeed():
 @jwt_optional
 def get_recommendation_newsfeed():
 	#게시글들을 불러온다.
-	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, info=1, title_token=1, url=1, img=1, date=1, limit_=SJ_RECOMMENDATION_LIMIT)
+	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, info=1, title_token=1, url=1, img=1, date=1, end_date=1, limit_=SJ_RECOMMENDATION_LIMIT)
 	POST_LIST = list(POST_LIST)
 	
 	#현재 시간 변수 선언
@@ -265,7 +265,6 @@ def get_recommendation_newsfeed_2(db, now_date):
 
 		POST['similarity'] = result
 		
-	print(len(POST_LIST))
 	return POST_LIST
 
 #트렌드 스코어 계산

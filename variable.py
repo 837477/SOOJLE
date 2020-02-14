@@ -28,7 +28,7 @@ SJ_NO_TOKEN_RECOMMENDATION_LIMIT = 5000
 #Log user limit number (사용자 로그 불러오기 최대 제한)
 SJ_USER_LOG_LIMIT = 300
 #ADMIN Major (관리자 판단용)
-SJ_ADMIN = "SJ_SUPER_ADMIN_837477_IML_NB"
+SJ_ADMIN = "SJ_SUPER_ADMIN"
 #Realtime Return Limit (실시간 검색어 반환 최대 제한)
 SJ_REALTIME_RETURN_LIMIT = 10
 #Domain search similarity percent
