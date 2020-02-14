@@ -129,18 +129,17 @@ def remove_post(post_obi):
 #공지사항 입력
 @BP.route('/insert_notice', methods=['POST'])
 @jwt_required
-def insert_notice():
+def insert_notice_():
 	new_title = request.form['title']
 	new_post = request.form['post']
-	new_url = request.form['url']
 
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 
 	#Admin 확인
 	if admin is None or admin['user_major'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
-
-	result = insert_notice(g.db, title, post, rul)
+	
+	result = insert_notice(g.db, new_title, new_post)
 
 	return jsonify(
 		result = result
@@ -152,7 +151,6 @@ def insert_notice():
 def update_notice(notice_obi):
 	new_title = request.form['title']
 	new_post = request.form['post']
-	new_url = request.form['url']
 	
 	admin = find_user(g.db, user_id=get_jwt_identity(), user_major=1)
 

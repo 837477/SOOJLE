@@ -1509,12 +1509,11 @@ def find_log_count(db):
 ######################################################
 
 #공지사항 추가
-def insert_notice(db, title, post, url):
+def insert_notice(db, title, post):
 	db['notice'].insert(
 		{
 			'title': title,
 			'post': post,
-			'url': url,
 			'view': 0,
 			'date': datetime.now(),
 			'activation': 1
@@ -1524,7 +1523,7 @@ def insert_notice(db, title, post, url):
 	return "success"
 
 #공지사항 수정
-def update_notice(db, notice_obi, title, post, url):
+def update_notice(db, notice_obi, title, post):
 	db['notice'].update(
 		{
 			'_id': ObjectId(notice_obi)
@@ -1534,7 +1533,6 @@ def update_notice(db, notice_obi, title, post, url):
 			{
 				'title': title,
 				'post': post,
-				'url': url,
 				'date': datetime.now()
 			}	
 		}
