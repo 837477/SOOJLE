@@ -100,8 +100,6 @@ def get_newsfeed_of_topic(newsfeed_name):
 		#logging! (메인 로그)
 		insert_log(g.db, request.remote_addr, request.path, student_num=None)
 
-	
-
 	return jsonify(
 		result = "success",
 		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))

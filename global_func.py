@@ -43,7 +43,7 @@ def schedule_init():
 
 	scheduler.add_job(measurement_run, trigger = "interval", minutes = SJ_MEASUREMENT_TIME, timezone = t_zone)
 
-	scheduler.add_job(time_visitor_analysis_work, trigger = "interval", hours = SJ_TIME_VISITOR_ANALYSIS_WORK_TIME, timezone = t_zone)
+	# scheduler.add_job(time_visitor_analysis_work, trigger = "interval", hours = SJ_TIME_VISITOR_ANALYSIS_WORK_TIME, timezone = t_zone)
 
 	#특정 시간에 실행
 	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="0", minute="1", timezone = t_zone)
