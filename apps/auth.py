@@ -71,7 +71,7 @@ def sign_in_up():
 @BP.route('/get_userinfo')
 @jwt_required
 def get_user_info():
-	user = find_user(g.db, user_id=get_jwt_identity(), auto_login=1, user_name=1, user_major=1, fav_list=1)
+	user = find_user(g.db, user_id=get_jwt_identity(), auto_login=1, user_name=1, user_major=1, fav_list=1, privacy=1)
 
 	if user is None: abort(400)
 
@@ -81,7 +81,8 @@ def get_user_info():
 		user_name = user['user_name'],
 		user_major = user['user_major'],
 		user_fav_list = user['fav_list'],
-		auto_login = user['auto_login']
+		auto_login = user['auto_login'],
+		privacy = user['privacy']
 		)
 
 #자동로그인 유무 변경
@@ -98,6 +99,25 @@ def update_auto_login(auto_login):
 	if auto_login > 1 and auto_login < 0: abort(400)
 
 	result = update_user_auto_login(g.db, USER['user_id'], auto_login)
+
+	return jsonify(
+		result = result
+	)
+
+#개인정보처리방침 동의현황 변경
+@BP.route('/update_privacy/<int:privacy>')
+@jwt_required
+def update_privacy(privacy):
+	USER = find_user(g.db, user_id=get_jwt_identity())
+
+	if USER is None: abort(400)
+
+	#메인로그 기록!
+	insert_log(g.db, USER['user_id'], request.path, student_num = True)
+
+	if auto_login > 1 and auto_login < 0: abort(400)
+
+	result = update_user_privacy(g.db, USER['user_id'], privacy)
 
 	return jsonify(
 		result = result

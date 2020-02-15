@@ -12,7 +12,7 @@ from variable import *
 ######################################################
 
 #전체 유저 목록 반환
-def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None):
+def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None: 
@@ -41,6 +41,8 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, a
 		show_dict['newsfeed_list'] = 1
 	if auto_login is not None:
 		show_dict['auto_login'] = 1
+	if privacy is not None:
+		show_dict['privacy'] = 1	
 
 	result = db['user'].find({}, show_dict)
 
@@ -78,6 +80,9 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_maj
 		show_dict['newsfeed_list'] = 1
 	if auto_login is not None:
 		show_dict['auto_login'] = 1
+	if privacy is not None:
+		show_dict['privacy'] = 1	
+
 
 	result = db['user'].find_one(
 		{
@@ -444,7 +449,18 @@ def update_user_auto_login(db, user_id, value):
 			'$set': {'auto_login': value}
 		}
 	)
+	return "success"
 
+#개인정보처리방침 동의현황 변경
+def update_user_privacy(db, user_id, value):
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$set': {'privacy': value}
+		}
+	)
 	return "success"
 
 #뉴스피드 관련############################################
