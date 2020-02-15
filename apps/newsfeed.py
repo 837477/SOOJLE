@@ -91,8 +91,9 @@ def get_newsfeed_of_topic(newsfeed_name):
 				RANDOM *= SJ_RANDOM_WEIGHT
 
 				POST['similarity'] = TOS + TAS + FAS + RANDOM
-
-				if get_plus_day(30) > POST['date']:
+				
+				#당일로부터 
+				if get_default_day(30) > POST['date']:
 					POST['similarity'] = 0
 
 			#similarity를 기준으로 내림차순 정렬.
