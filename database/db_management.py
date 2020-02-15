@@ -49,7 +49,7 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, a
 	return result
 
 #특정 유저, 특정 필드 목록 반환
-def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None):
+def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None:

@@ -75,6 +75,11 @@ def get_default_day(day):
 	date = datetime.now() - timedelta(days = day)
 	return date
 
+#날짜 플러스 연산
+def get_plus_day(day):
+	date = datetime.now() + timedelta(days = day)
+	return date
+
 #######################################################
 #Background Func#######################################
 
