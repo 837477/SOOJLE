@@ -37,7 +37,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 	#end_date 처리!
 	for POST in POST_LIST:
 		#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
-		if (('end_date' in POST) and (now_date > POST['end_date'])) or (get_plus_day(30) > POST['date']):
+		if ('end_date' in POST) and (now_date > POST['end_date']):
 			#해당 포스트 삭제.
 			POST_LIST.remove(POST)
 
@@ -91,6 +91,9 @@ def get_newsfeed_of_topic(newsfeed_name):
 				RANDOM *= SJ_RANDOM_WEIGHT
 
 				POST['similarity'] = TOS + TAS + FAS + RANDOM
+
+				if get_plus_day(30) > POST['date']:
+					POST['similarity'] = 0
 
 			#similarity를 기준으로 내림차순 정렬.
 			POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
