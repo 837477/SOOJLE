@@ -143,7 +143,7 @@ def insert_user(db, user_id, user_pw, user_nickname):
 	return "success"
 
 #유저 관심도 초기화
-def reset_user_measurement(db, user_id):
+def update_user_measurement_reset(db, user_id):
 	topic_temp = numpy.ones(26)
 	topic = (topic_temp / topic_temp.sum()).tolist()
 

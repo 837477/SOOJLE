@@ -288,15 +288,17 @@ def remove_mine():
 #회원 관심도 초기화
 @BP.route('/reset_user_measurement')
 @jwt_required
-def reset_user_measurement(user_id):
-	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
+def reset_user_measurement():
+	USER = find_user(g.db, user_id=get_jwt_identity())
 
-	if USER is None: abort(400)
+	if USER is None: abort(401)
 
 	#메인로그 기록!
 	insert_log(g.db, USER['user_id'], request.path, student_num = True)
 
 	#회원 삭제!
-	result = reset_user_measurement(g.db, USER['user_id'])
+	result = update_user_measurement_reset(g.db, USER['user_id'])
 
-	return jsonify(result = result)
+	return jsonify(
+		result = result
+	)
