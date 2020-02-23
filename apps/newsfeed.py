@@ -47,7 +47,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 		USER = find_user(g.db, _id=1, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
 		
 		#유효한 토큰인지 확인.
-		if USER is None: abort(400)
+		if USER is None: abort(401)
 
 		#logging! (메인 로그)
 		insert_log(g.db, get_jwt_identity(), request.path, student_num = True)
@@ -92,7 +92,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 
 				POST['similarity'] = TOS + TAS + FAS + RANDOM
 				
-				#당일로부터 
+				#당일로부터 30일 넘어가면 유사도 점수를 낮춘다.
 				if get_default_day(30) > POST['date']:
 					POST['similarity'] = 0
 
@@ -118,7 +118,7 @@ def get_popularity_newsfeed():
 		USER = find_user(g.db, user_id=get_jwt_identity())
 
 		#유효한 토큰이 아닐 때 
-		if USER is None: abort(400)
+		if USER is None: abort(401)
 
 		#logging (메인 로그)
 		insert_log(g.db, USER['user_id'], request.path, student_num = True)
@@ -151,7 +151,7 @@ def get_recommendation_newsfeed():
 		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
 
 		#유효한 토큰인지 확인.
-		if USER is None: abort(400)
+		if USER is None: abort(401)
 
 		#logging (메인 로그)
 		insert_log(g.db, USER['user_id'], request.path, student_num = True)

@@ -12,8 +12,8 @@ from variable import *
 #BluePrint
 BP = Blueprint('auth', __name__)
 
-
-#로그인 및 회원가입(토큰발행) (OK)
+'''
+#로그인 및 회원가입(토큰발행) (포털 API 통합형 사용안함)
 @BP.route('/sign_in_up', methods=['POST'])
 def sign_in_up():
 	USER_ID = request.form['id']
@@ -66,20 +66,127 @@ def sign_in_up():
 			)
 	else:
 		return jsonify(result = "incorrect pw")
-		
+'''	
+
+#회원가입
+@BP.route('/sign_up', methods = ['POST'])
+def sing_up():
+	USER_ID = request.form['id']
+	USER_PW = request.form['pw']
+	USER_PW_CHECK = request.form['pw_check']
+	USER_NICKNAME = request.form['nickname']
+
+	#해당 ID의 유저가 있는지 확인!
+	user = find_user(g.db, user_id=USER_ID)
+
+	#해당 ID의 유저가 있으면, 이미 있는 아이디로 반환.
+	if user:
+		return jsonify(
+			result = "already id"
+		)
+	
+	#SOOJLE DB에 추가.
+	insert_user(g.db,
+		USER_ID,
+		generate_password_hash(USER_PW),
+		USER_NICKNAME
+	)
+
+	#유저 재조회!
+	user = find_user(g.db, user_id=USER_ID, user_pw=1)
+	
+	#DB에서 성공적으로 조회되면, 회원가입 성공!
+	if user:
+		return jsonify(
+			result = "success",
+			access_token = create_access_token(
+				identity = USER_ID,
+				expires_delta=False)
+		)
+	#실패시, 실패 반환.
+	else:
+		return jsonify(
+			result = "sign_up fail"
+		)
+
+#로그인
+@BP.route('/sign_in', methods = ['POST'])
+def sing_in():
+	USER_ID = request.form['id']
+	USER_PW = request.form['pw']
+
+	user = find_user(g.db, user_id=USER_ID, user_pw=1)
+
+	#해당 유저가 존재하지 않으면?!
+	if user is None:
+		return jsonify(
+			result = "No member"
+		)
+
+	#블랙리스트 회원인지 확인!
+	if find_blacklist_one(g.db, USER_ID):
+		return jsonify(result = "blacklist user")
+	
+	#비밀번호 해시화 확인.
+	if check_password_hash(user['user_pw'], USER_PW):
+		return jsonify(
+			result = "success",
+			access_token = create_access_token(
+				identity = USER_ID,
+				expires_delta=False)
+			)
+	else:
+		return jsonify(result = "incorrect pw")
+
+#비밀번호 찾기
+
+#닉네임 변경
+@BP.route('/change_nickname', methods = ['POST'])
+def change_nickname():
+	NEW_NICKNAME = request.form['new_nick']
+
+	user = find_user(g.db, user_id=USER_ID, user_pw=1)
+
+	#해당 유저가 존재하지 않으면?!
+	if user is None:
+		return jsonify(
+			result = "No member"
+		)
+
+	result = update_nickname(g.db, user['user_id'], NEW_NICKNAME)
+
+	return jsonify(
+		result = result
+	)
+
+
+#아이디 중복체크 (회원가입할 때)
+@BP.route('/check_id/<string:user_id>')
+def check_id(user_id):
+	user = find_user(g.db, user_id=user_id)
+
+	#해당 유저가 존재하지 않으면?!
+	if user is None:
+		return jsonify(
+			result = "available"
+		)
+	else:
+		return jsonify(
+			result = "not available"
+		)
+
 #회원정보 반환
 @BP.route('/get_userinfo')
 @jwt_required
 def get_user_info():
-	user = find_user(g.db, user_id=get_jwt_identity(), auto_login=1, user_name=1, user_major=1, fav_list=1, privacy=1)
+	user = find_user(g.db, user_id=get_jwt_identity(), auto_login=1, user_nickname=1, fav_list=1, privacy=1)
 
-	if user is None: abort(400)
+	if user is None: abort(401)
 
 	return jsonify(
 		result = "success",
 		user_id = user['user_id'],
-		user_name = user['user_name'],
-		user_major = user['user_major'],
+		user_nickname = user['user_nickname'],
 		user_fav_list = user['fav_list'],
 		auto_login = user['auto_login'],
 		privacy = user['privacy']

@@ -12,17 +12,15 @@ from variable import *
 ######################################################
 
 #전체 유저 목록 반환
-def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None):
+def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None: 
 		show_dict['_id'] = 1
 	if user_id is not None:
 		show_dict['user_id'] = 1
-	if user_name is not None:
-		show_dict['user_name'] = 1
-	if user_major is not None:
-		show_dict['user_major'] = 1
+	if user_nickname is not None:
+		show_dict['user_nickname'] = 1
 	if topic is not None:
 		show_dict['topic'] = 1
 	if tag is not None:
@@ -49,7 +47,7 @@ def find_all_user(db, _id=None, user_id=None, user_name=None, user_major=None, a
 	return result
 
 #특정 유저, 특정 필드 목록 반환
-def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_major=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None):
+def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None:
@@ -58,10 +56,8 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_name=None, user_maj
 		show_dict['user_id'] = 1
 	if user_pw is not None:
 		show_dict['user_pw'] = 1
-	if user_name is not None:
-		show_dict['user_name'] = 1
-	if user_major is not None:
-		show_dict['user_major'] = 1
+	if user_nickname is not None:
+		show_dict['user_nickname'] = 1
 	if topic is not None:
 		show_dict['topic'] = 1
 	if tag is not None:
@@ -111,7 +107,7 @@ def find_user_renewal(db, renewal_time):
 	return result
 
 #유저 생성
-def insert_user(db, user_id, user_pw, user_name, user_major):
+def insert_user(db, user_id, user_pw, user_nickname):
 	topic_temp = numpy.ones(26)
 	topic = (topic_temp / topic_temp.sum()).tolist()
 
@@ -130,8 +126,7 @@ def insert_user(db, user_id, user_pw, user_name, user_major):
 		{
 			'user_id': user_id,
 			'user_pw': user_pw,
-			'user_name': user_name,
-			'user_major': user_major,
+			'user_nickname': user_nickname,
 			'ft_vector': ft_vector,
 			'tag': tag,
 			'tag_sum': tag_sum,
@@ -192,6 +187,20 @@ def remove_user(db, user_id):
 	)
 
 	return "success"
+
+#유저 닉네임 변경
+def update_nickname(db, user_id, new_nick):
+	db['user'].update(
+		{
+			'user_id': user_id
+		}, 
+		{
+			'$set': {'user_nickname': new_nick}
+		}
+	)
+	return "success"
+
+#유저 비밀번호 변경
 
 #유저 갱신 시간 갱신
 def update_user_renewal(db, user_id):
