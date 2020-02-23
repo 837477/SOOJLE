@@ -84,7 +84,17 @@ def sing_up():
 		return jsonify(
 			result = "already id"
 		)
-	
+
+	if (len(USER_ID) < 6 and len(USER_ID) > 30) or (len(USER_NICKNAME) < 1 and len(USER_NICKNAME) > 16) or len(USER_PW) < 8:
+		return jsonify(
+			result = "long user info"
+		)
+
+	if USER_PW != USER_PW_CHECK:
+		return jsonify(
+			result = "check pw"
+		)
+
 	#SOOJLE DB에 추가.
 	insert_user(g.db,
 		USER_ID,
@@ -142,10 +152,11 @@ def sing_in():
 
 #닉네임 변경
 @BP.route('/change_nickname', methods = ['POST'])
+@jwt_required
 def change_nickname():
-	NEW_NICKNAME = request.form['new_nick']
+	NEW_NICKNAME = request.form['new_nickname']
 
-	user = find_user(g.db, user_id=USER_ID, user_pw=1)
+	user = find_user(g.db, user_id=get_jwt_identity())
 
 	#해당 유저가 존재하지 않으면?!
 	if user is None:
@@ -153,6 +164,12 @@ def change_nickname():
 			result = "No member"
 		)
 
+	#닉네임 길이 체크
+	if len(NEW_NICKNAME) < 1 and len(NEW_NICKNAME) > 16:
+		return jsonify(
+			result = "rewrite_nickname"
+		)
+		
 	result = update_nickname(g.db, user['user_id'], NEW_NICKNAME)
 
 	return jsonify(
