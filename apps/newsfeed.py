@@ -165,7 +165,7 @@ def get_recommendation_newsfeed():
 		#회원 관심도가 cold 상태일 때! (즉, 관심도 측정이 안된 회원)
 		if USER['tag_sum'] == 1:
 			#비로그인 전용 추천뉴스피드 호출!
-			POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)	
+			POST_LIST = get_recommendation_newsfeed_2(g.db)	
 		
 		#관심도가 cold가 아닐 때!
 		else:
