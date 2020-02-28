@@ -85,7 +85,7 @@ def priority_search(num):
 	##################################################
 	#트랜드 스코어 용 date 함수
 	now_time = datetime.now()
-	year = now_date.year
+	year = now_time.year
 
 	#Course Manual (수강편람 기간)
 	CM_term_1 = (datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))
@@ -187,7 +187,7 @@ def category_search(type_check, num):
 	##################################################
 	#트랜드 스코어 용 date 함수
 	now_time = datetime.now()
-	year = now_date.year
+	year = now_time.year
 
 	#Course Manual (수강편람 기간)
 	CM_term_1 = (datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))

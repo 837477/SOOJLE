@@ -174,49 +174,109 @@ def get_recommendation_newsfeed():
 			#캐싱된 가장 높은 조회수를 가져온다.
 			Maxviews = find_variable(g.db, 'highest_view_cnt')
 			
-			for POST in POST_LIST:
-				#end_date 처리!
-				#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
-				if ('end_date' in POST) and (now_date > POST['end_date']):
-					#해당 포스트 삭제.
-					#POST_LIST.remove(POST)
+			##################################################
+			#트랜드 스코어 용 date 함수
+			now_time = datetime.now()
+			year = now_time.year
 
-					#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
-					POST['similarity'] = 0
-					continue
+			#Course Manual (수강편람 기간)
+			CM_term_1 = (datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))
+			CM_term_2 = (datetime(year, 8, 1) < now_date) and (now_date < datetime(year, 8, 14))
 
-				#TOS 작업
-				TOS = dot(USER['topic'], POST['topic'])/(norm(USER['topic'])*norm(POST['topic']))
+			#Seasonal Semester (계절학기 기간)
+			SS_term_1 = (datetime(year, 11, 25) < now_date) and (now_date < datetime(year, 12, 5))
+			SS_term_2 = (datetime(year, 5, 25) < now_date) and (now_date < datetime(year, 6, 5))
+			##################################################
 
-				#TAS 작업
-				USER_TAG = USER['tag'].keys()
-				TAG = USER_TAG & set(POST['tag'])
-				inter_sum = 0
-				for i in TAG:
-					inter_sum += USER['tag'][i]
-				TAS = inter_sum / USER['tag_sum']
-				
-				#FAS 작업
-				FAS = FastText.vec_sim(USER['ft_vector'], POST['ft_vector'])
+			#수강편람/계절학기 기간!
+			if (CM_term_1 or CM_term_2) or (SS_term_1 or SS_term_2):
+				for POST in POST_LIST:
+					#end_date 처리!
+					#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+					if ('end_date' in POST) and (now_date > POST['end_date']):
+						#해당 포스트 삭제.
+						#POST_LIST.remove(POST)
 
-				#IS 작업
-				IS = (((POST['fav_cnt']/Maxfav_cnt)*SJ_IS_FAV_WEIGHT) + ((POST['view']/Maxviews)*SJ_IS_VIEW_WEIGHT))
-				
-				#RANDOM 작업
-				RANDOM = numpy.random.random()
+						#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
+						POST['similarity'] = 0
+						continue
 
-				#가중치 작업
-				TOS *= SJ_TOS_WEIGHT
-				TAS *= SJ_TAS_WEIGHT
-				FAS *= SJ_FAS_WEIGHT
-				IS *= SJ_IS_WEIGHT
-				RANDOM *= SJ_RANDOM_WEIGHT
-				TREND = trendscore(POST, now_date)
+					#TOS 작업
+					TOS = dot(USER['topic'], POST['topic'])/(norm(USER['topic'])*norm(POST['topic']))
 
-				#최종 값 저장
-				result = TOS + TAS + FAS + RANDOM + TREND
+					#TAS 작업
+					USER_TAG = USER['tag'].keys()
+					TAG = USER_TAG & set(POST['tag'])
+					inter_sum = 0
+					for i in TAG:
+						inter_sum += USER['tag'][i]
+					TAS = inter_sum / USER['tag_sum']
+					
+					#FAS 작업
+					FAS = FastText.vec_sim(USER['ft_vector'], POST['ft_vector'])
 
-				POST['similarity'] = result
+					#IS 작업
+					IS = (((POST['fav_cnt']/Maxfav_cnt)*SJ_IS_FAV_WEIGHT) + ((POST['view']/Maxviews)*SJ_IS_VIEW_WEIGHT))
+					
+					#RANDOM 작업
+					RANDOM = numpy.random.random()
+
+					#가중치 작업
+					TOS *= SJ_TOS_WEIGHT
+					TAS *= SJ_TAS_WEIGHT
+					FAS *= SJ_FAS_WEIGHT
+					IS *= SJ_IS_WEIGHT
+					RANDOM *= SJ_RANDOM_WEIGHT
+					TREND = trendscore(POST, now_date)
+
+					#최종 값 저장
+					result = TOS + TAS + FAS + RANDOM + TREND
+
+					POST['similarity'] = result
+
+			else:
+				for POST in POST_LIST:
+					#end_date 처리!
+					#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+					if ('end_date' in POST) and (now_date > POST['end_date']):
+						#해당 포스트 삭제.
+						#POST_LIST.remove(POST)
+
+						#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
+						POST['similarity'] = 0
+						continue
+
+					#TOS 작업
+					TOS = dot(USER['topic'], POST['topic'])/(norm(USER['topic'])*norm(POST['topic']))
+
+					#TAS 작업
+					USER_TAG = USER['tag'].keys()
+					TAG = USER_TAG & set(POST['tag'])
+					inter_sum = 0
+					for i in TAG:
+						inter_sum += USER['tag'][i]
+					TAS = inter_sum / USER['tag_sum']
+					
+					#FAS 작업
+					FAS = FastText.vec_sim(USER['ft_vector'], POST['ft_vector'])
+
+					#IS 작업
+					IS = (((POST['fav_cnt']/Maxfav_cnt)*SJ_IS_FAV_WEIGHT) + ((POST['view']/Maxviews)*SJ_IS_VIEW_WEIGHT))
+					
+					#RANDOM 작업
+					RANDOM = numpy.random.random()
+
+					#가중치 작업
+					TOS *= SJ_TOS_WEIGHT
+					TAS *= SJ_TAS_WEIGHT
+					FAS *= SJ_FAS_WEIGHT
+					IS *= SJ_IS_WEIGHT
+					RANDOM *= SJ_RANDOM_WEIGHT
+
+					#최종 값 저장
+					result = TOS + TAS + FAS + RANDOM
+
+					POST['similarity'] = result
 
 	#비회원일 때! (no token)
 	else:
@@ -227,7 +287,7 @@ def get_recommendation_newsfeed():
 		insert_today_visitor(g.db, request.remote_addr)
 
 		#비로그인 전용 추천뉴스피드 호출!
-		POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)		
+		POST_LIST = get_recommendation_newsfeed_2(g.db)		
 
 	#similarity를 기준으로 내림차순 정렬.
 	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
@@ -237,7 +297,7 @@ def get_recommendation_newsfeed():
 		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))
 
 #비회원 전용 추천 뉴스피드
-def get_recommendation_newsfeed_2(db, now_date):
+def get_recommendation_newsfeed_2(db):
 	#요청한 뉴스피드에 대한 정보를 가져온다.
 	newsfeed_type = find_all_newsfeed_of_topic(db)
 	newsfeed_type = list(newsfeed_type)
@@ -253,30 +313,10 @@ def get_recommendation_newsfeed_2(db, now_date):
 
 			POST_LIST += list(result)
 
-	for POST in POST_LIST:
-		#end_date 처리!
-		#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
-		if ('end_date' in POST) and (now_date > POST['end_date']):
-			#해당 포스트 삭제.
-			#POST_LIST.remove(POST)
-			
-			#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
-			POST['similarity'] = 0
-			continue
-
-		RANDOM = numpy.random.random()
-		RANDOM *= SJ_RANDOM_WEIGHT
-		TREND = trendscore(POST, now_date)
-
-		result = RANDOM + TREND
-
-		POST['similarity'] = result
-		
-	return POST_LIST
-
-#트렌드 스코어 계산
-def trendscore(POST, now_date):
-	year = now_date.year
+	##################################################
+	#트랜드 스코어 용 date 함수
+	now_time = datetime.now()
+	year = now_time.year
 
 	#Course Manual (수강편람 기간)
 	CM_term_1 = (datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))
@@ -285,13 +325,58 @@ def trendscore(POST, now_date):
 	#Seasonal Semester (계절학기 기간)
 	SS_term_1 = (datetime(year, 11, 25) < now_date) and (now_date < datetime(year, 12, 5))
 	SS_term_2 = (datetime(year, 5, 25) < now_date) and (now_date < datetime(year, 6, 5))
+	##################################################
 
+	#수강편람/계절학기 기간!
+	if (CM_term_1 or CM_term_2) or (SS_term_1 or SS_term_2):
+		for POST in POST_LIST:
+			#end_date 처리!
+			#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+			if ('end_date' in POST) and (now_date > POST['end_date']):
+				#해당 포스트 삭제.
+				#POST_LIST.remove(POST)
+				
+				#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
+				POST['similarity'] = 0
+				continue
+
+			RANDOM = numpy.random.random()
+			RANDOM *= SJ_RANDOM_WEIGHT
+			TREND = trendscore(POST)
+
+			result = RANDOM + TREND
+
+			POST['similarity'] = result
+	
+	else:
+		for POST in POST_LIST:
+			#end_date 처리!
+			#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+			if ('end_date' in POST) and (now_date > POST['end_date']):
+				#해당 포스트 삭제.
+				#POST_LIST.remove(POST)
+				
+				#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
+				POST['similarity'] = 0
+				continue
+
+			RANDOM = numpy.random.random()
+			RANDOM *= SJ_RANDOM_WEIGHT
+
+			result = RANDOM
+
+			POST['similarity'] = result
+		
+	return POST_LIST
+
+#트렌드 스코어 계산
+def trendscore(POST):
 	#수강편람 except
-	if POST['info'] == 'main_student' and ('수강편람' in POST['tag']) and (CM_term_1 or CM_term_2):
+	if POST['info'] == 'main_student' and ('수강편람' in POST['tag']):
 		return 10 
 
 	#계절학기 except
-	elif POST['info'] == 'main_student' and ('계절학기' in POST['title_token']) and (SS_term_1 or SS_term_2):
+	elif POST['info'] == 'main_student' and ('계절학기' in POST['title_token']):
 		return 4
 
 	else: 
