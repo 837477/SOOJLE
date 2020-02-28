@@ -21,6 +21,9 @@ BP = Blueprint('newsfeed', __name__)
 @BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
 @jwt_optional
 def get_newsfeed_of_topic(newsfeed_name):
+	#제대로 된 뉴스피드 네임이 들어오지 않을 경우
+	if newsfeed_name not in SJ_NEWSFEED_OF_TOPIC_SET: abort(400)
+
 	#요청한 뉴스피드에 대한 정보를 가져온다.
 	newsfeed_type = find_newsfeed_of_topic(g.db, newsfeed_name)
 
@@ -50,7 +53,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 		if USER is None: abort(401)
 
 		#logging! (메인 로그)
-		insert_log(g.db, get_jwt_identity(), request.path, student_num = True)
+		insert_log(g.db, get_jwt_identity(), request.path)
 
 		#접근한 뉴스피드 기록을 위한 obj 생성!
 		newsfeed_obj = {}
@@ -102,7 +105,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 	#비로그인!
 	else:
 		#logging! (메인 로그)
-		insert_log(g.db, request.remote_addr, request.path, student_num=None)
+		insert_log(g.db, request.remote_addr, request.path)
 
 	return jsonify(
 		result = "success",
@@ -121,9 +124,9 @@ def get_popularity_newsfeed():
 		if USER is None: abort(401)
 
 		#logging (메인 로그)
-		insert_log(g.db, USER['user_id'], request.path, student_num = True)
+		insert_log(g.db, USER['user_id'], request.path)
 		#방문자 로그 기록!
-		insert_today_visitor(g.db, USER['user_id'], student_num=True)
+		insert_today_visitor(g.db, USER['user_id'])
 
 	else:
 		insert_log(g.db, request.remote_addr, request.path)
@@ -154,10 +157,10 @@ def get_recommendation_newsfeed():
 		if USER is None: abort(401)
 
 		#logging (메인 로그)
-		insert_log(g.db, USER['user_id'], request.path, student_num = True)
+		insert_log(g.db, USER['user_id'], request.path)
 		
 		#방문자 로그 기록!
-		insert_today_visitor(g.db, USER['user_id'], student_num=True)
+		insert_today_visitor(g.db, USER['user_id'])
 
 		#회원 관심도가 cold 상태일 때! (즉, 관심도 측정이 안된 회원)
 		if USER['tag_sum'] == 1:
@@ -218,10 +221,10 @@ def get_recommendation_newsfeed():
 	#비회원일 때! (no token)
 	else:
 		#logging (메인 로그)
-		insert_log(g.db, request.remote_addr, request.path, student_num=None)
+		insert_log(g.db, request.remote_addr, request.path)
 		
 		#방문자 로그 기록!
-		insert_today_visitor(g.db, request.remote_addr, student_num=None)
+		insert_today_visitor(g.db, request.remote_addr)
 
 		#비로그인 전용 추천뉴스피드 호출!
 		POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)		

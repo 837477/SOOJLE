@@ -32,7 +32,7 @@ def post_like(post_obi):
 		return jsonify(result = "already like")
 
 	#logging (메인 로깅)
-	insert_log(g.db, USER['user_id'], request.path, student_num = True)
+	insert_log(g.db, USER['user_id'], request.path)
 	#오늘 좋아요한 게시글 로깅!
 	update_variable_inc(g.db, 'today_fav', 1)
 
@@ -82,7 +82,7 @@ def post_unlike(post_obi):
 		return jsonify(result = "none like")
 
 	#logging! (메인 로깅)
-	insert_log(g.db, USER['user_id'], request.path, student_num = True)
+	insert_log(g.db, USER['user_id'], request.path)
 	#오늘 좋아요한 게시글 로깅 다시 -1!
 	update_variable_inc(g.db, 'today_fav', -1)
 
@@ -118,7 +118,7 @@ def post_view(post_obi):
 		if USER is None: abort(400)
 
 		#logging (메인 로깅)
-		insert_log(g.db, USER['user_id'], request.path, student_num = True)
+		insert_log(g.db, USER['user_id'], request.path)
 
 		#유저에 들어갈 좋아요 누른 post 인코딩
 		view_obj = {}
@@ -140,7 +140,7 @@ def post_view(post_obi):
 	#비 로그인
 	else:
 		#logging (메인 로깅)
-		insert_log(g.db, request.remote_addr, request.path, student_num = None)
+		insert_log(g.db, request.remote_addr, request.path)
 
 	#오늘 조회한 게시글 로깅!
 	update_variable_inc(g.db, 'today_view', 1)

@@ -218,7 +218,7 @@ def update_auto_login(auto_login):
 	if USER is None: abort(400)
 
 	#메인로그 기록!
-	insert_log(g.db, USER['user_id'], request.path, student_num = True)
+	insert_log(g.db, USER['user_id'], request.path)
 
 	if auto_login > 1 and auto_login < 0: abort(400)
 
@@ -237,7 +237,7 @@ def update_privacy(privacy):
 	if USER is None: abort(400)
 
 	#메인로그 기록!
-	insert_log(g.db, USER['user_id'], request.path, student_num = True)
+	insert_log(g.db, USER['user_id'], request.path)
 
 	if auto_login > 1 and auto_login < 0: abort(400)
 
@@ -294,7 +294,7 @@ def reset_user_measurement():
 	if USER is None: abort(401)
 
 	#메인로그 기록!
-	insert_log(g.db, USER['user_id'], request.path, student_num = True)
+	insert_log(g.db, USER['user_id'], request.path)
 
 	#회원 삭제!
 	result = update_user_measurement_reset(g.db, USER['user_id'])

@@ -25,29 +25,29 @@ def init_db():
 	#현재 db에 있는 collection 이름을 리스트로 불러온다.
 	db_collections = db.list_collection_names()
 
-	if not 'user' in db_collections:
+	if 'user' not in db_collections:
 		db['user']
 
-	if not 'posts' in db_collections:
+	if 'posts' not in db_collections:
 		db['posts']
 		create_dummy_post(db)
 
-	if not 'newsfeed_of_topic' in db_collections:
+	if 'newsfeed_of_topic' not in db_collections:
 		create_newsfeed_of_topic(db)
 
-	if not 'variable' in db_collections:
+	if 'variable' not in db_collections:
 		create_variable(db)
 
-	if not 'search_realtime' in db_collections:
+	if 'search_realtime' not in db_collections:
 		db['search_realtime']
 
-	if not 'search_log' in db_collections:
+	if 'search_log' not in db_collections:
 		db['search_log']
 
-	if not 'log' in db_collections:
+	if 'log' not in db_collections:
 		db['log']
 
-	if not 'blacklist' in db_collections:
+	if 'blacklist' not in db_collections:
 		db['blacklist']
 
 	if db_client is not None:

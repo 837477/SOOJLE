@@ -101,25 +101,6 @@ def simulation_fastext():
 		result = "success",
 		similarity_words = result)
 
-#외부사이트 접속했다는 것을 알려주기위한 API
-@BP.route('/access_external_site/<string:site_name>')
-@jwt_optional
-def access_external_site(site_name):
-	#logging!
-	if get_jwt_identity():
-		#유저 확인
-		USER = find_user(g.db, user_id=get_jwt_identity())
-
-		#유효한 토큰이 아닐 때 
-		if USER is None: abort(400)
-
-		#logging (메인 로그)
-		insert_log(g.db, USER['user_id'], request.path, student_num = True)
-	else:
-		result = insert_log(g.db, request.remote_addr, request.path, external = site_name)
-
-	return jsonify(result = result)
-
 #통계 통합형 반환
 @BP.route('/get_analysis')
 def get_analysis():

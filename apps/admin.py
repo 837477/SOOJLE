@@ -302,19 +302,18 @@ def check_admin():
 	
 	return jsonify(result = "success")
 
-'''	
+'''
 #admin 생성
 @BP.route('/create_admin')
 def create_admin():
-	USER_ID = "test15"
-	USER_PW = "test15"
+	USER_ID = "SOOJLE"
+	USER_PW = "test"
 
 	#SOOJLE DB에 추가.
 	insert_user(g.db,
 		USER_ID,
 		generate_password_hash(USER_PW),
-		"SOOJLE",
-		"SJ_SUPER_ADMIN"
+		"SOOJLE"
 	)
 
 	return jsonify(

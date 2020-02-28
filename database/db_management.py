@@ -1226,17 +1226,13 @@ def find_search_log(db):
 	return result
 
 #log에 기록!
-def insert_log(db, user_id, url, student_num = None):
-	log_obj = {}
-	log_obj['user_id'] = user_id
-	log_obj['url'] = url
-	log_obj['date'] = datetime.now()
-
-	if student_num:
-		log_obj['student_num'] = user_id[:2]
-		
+def insert_log(db, user_id, url):
 	db['log'].insert(
-		log_obj
+		{
+			'user_id': user_id,
+			'url': url,
+			'date': datetime.now()
+		}
 	)
 	return "success"
 
@@ -1391,7 +1387,7 @@ def aggregate_groupby_log_student_num(db):
 	return result
 
 #today_vistior 입력! (중복체크까지 여기서 함)
-def insert_today_visitor(db, user_id, student_num=None):
+def insert_today_visitor(db, user_id):
 	check = db['today_visitor'].find_one(
 		{
 			'user_id': user_id
@@ -1400,16 +1396,11 @@ def insert_today_visitor(db, user_id, student_num=None):
 
 	#방문 안한 유저라면?
 	if check is None:
-		visitor_obj = {}
-		visitor_obj['user_id'] = user_id
-		visitor_obj['date'] = datetime.now()
-
-		#학번이 있는 경우(로그인일 경우!)
-		if student_num:
-			visitor_obj['student_num'] = user_id[:2]
-
 		db['today_visitor'].insert(
-			visitor_obj
+			{
+				'user_id': user_id,
+				'date': datetime.now()
+			}
 		)
 
 		#총 방문자 수 +1
