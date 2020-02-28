@@ -25,6 +25,7 @@ sys.path.insert(0,'/home/iml/IML_Tokenizer/src/')
 ###########################################
 from global_func import *
 from init_database import *
+from db_info import JWT_SECRET_KEY
 ###########################################
 
 #APPS
@@ -36,7 +37,7 @@ cors = CORS(application)
 #Debug or Release
 application.config.update(
 		DEBUG = True,
-		JWT_SECRET_KEY = 'HELLO WE ARE SOOJLE',
+		JWT_SECRET_KEY = JWT_SECRET_KEY,
 	)
 jwt = JWTManager(application)
 
