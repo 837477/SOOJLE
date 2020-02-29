@@ -148,7 +148,7 @@ def get_recommendation_newsfeed():
 		#회원 관심도가 cold 상태일 때!
 		if USER['measurement_num'] <= SJ_USER_COLD_LIMIT:
 			#비로그인 전용 추천뉴스피드 호출!
-			POST_LIST = get_recommendation_newsfeed_2(g.db)	
+			POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)	
 		
 		#관심도가 cold가 아닐 때!
 		else:
