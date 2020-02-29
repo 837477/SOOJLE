@@ -529,6 +529,7 @@ def find_newsfeed(db, info, tag, negative_tag, num):
 			'date': 1,
 			'img': 1,
 			'fav_cnt': 1,
+			'view': 1,
 			'url': 1,
 			'title_token': 1,
 			'info': 1,

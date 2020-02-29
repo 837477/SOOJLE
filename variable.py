@@ -17,7 +17,7 @@ SJ_FASTTEXT_SIM_PERCENT = 0.7
 SJ_RETURN_NUM = 300
 #Priority Search limit number (일반 서치 DB호출 최대 제한)
 SJ_PS_LIMIT = 10000
-#Category Search limit number (카테고리 서치 DB호출 최대 제한)
+#Category Search limit number (카테고리 서치 DB호출 최대 제한) ->10000개로 줄이자.
 SJ_CS_LIMIT = 20000
 #Newsfeed of Topic limit(토픽별 뉴스피드 DB호출 최대 제한)
 SJ_NEWSFEED_TOPIC_LIMIT = 5000
