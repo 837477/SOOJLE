@@ -207,7 +207,7 @@ def get_recommendation_newsfeed():
 		#방문자 로그 기록!
 		insert_today_visitor(g.db, request.remote_addr)
 		#비로그인 전용 추천뉴스피드 호출!
-		POST_LIST = get_recommendation_newsfeed_2(g.db)		
+		POST_LIST = get_recommendation_newsfeed_2(g.db, now_date)		
 
 	#similarity를 기준으로 내림차순 정렬.
 	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
@@ -217,7 +217,7 @@ def get_recommendation_newsfeed():
 		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))
 
 #비회원 전용 추천 뉴스피드
-def get_recommendation_newsfeed_2(db):
+def get_recommendation_newsfeed_2(db, now_date):
 	#요청한 뉴스피드에 대한 정보를 가져온다.
 	newsfeed_type = find_all_newsfeed_of_topic(db)
 	newsfeed_type = list(newsfeed_type)
