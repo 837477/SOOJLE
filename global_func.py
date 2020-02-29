@@ -162,6 +162,7 @@ def measurement_run():
 
 	renewal_time = find_variable(db, 'renewal')
 
+	#리뉴얼 시간보다 이상인 사람만 측정! (관심도 측정이 될 지표의 변동이 생겼다는 뜻!)
 	USER_list = find_user_renewal(db, renewal_time)
 	USER_list = list(USER_list)
 
@@ -268,8 +269,8 @@ def measurement_run():
 		if USER_TAG_SUM == 0:
 			USER_TAG_SUM = 1
 
-		#해당 USER 관심도 갱신!
-		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR)
+		#해당 USER 관심도 갱신! (관심도 측정 횟수 +1)
+		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR, USER['measurement_num']+1)
 
 	update_variable(db, 'renewal', datetime.now())
 

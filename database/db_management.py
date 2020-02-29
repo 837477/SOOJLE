@@ -12,7 +12,7 @@ from variable import *
 ######################################################
 
 #전체 유저 목록 반환
-def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None):
+def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None, measurement_num=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None: 
@@ -40,14 +40,16 @@ def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=Non
 	if auto_login is not None:
 		show_dict['auto_login'] = 1
 	if privacy is not None:
-		show_dict['privacy'] = 1	
+		show_dict['privacy'] = 1
+	if measurement_num is not None:
+		show_dict['measurement_num'] = 1
 
 	result = db['user'].find({}, show_dict)
 
 	return result
 
 #특정 유저, 특정 필드 목록 반환
-def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None):
+def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None, measurement_num=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None:
@@ -77,7 +79,9 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto
 	if auto_login is not None:
 		show_dict['auto_login'] = 1
 	if privacy is not None:
-		show_dict['privacy'] = 1	
+		show_dict['privacy'] = 1
+	if measurement_num is not None:
+		show_dict['measurement_num'] = 1
 
 
 	result = db['user'].find_one(
@@ -101,7 +105,8 @@ def find_user_renewal(db, renewal_time):
 			'fav_list': 1,
 			'view_list': 1,
 			'search_list': 1,
-			'newsfeed_list': 1
+			'newsfeed_list': 1,
+			'measurement_num': 1
 		}
 	)
 	return result
@@ -121,6 +126,7 @@ def insert_user(db, user_id, user_pw, user_nickname):
 	auto_login = 1
 	renewal = datetime.now()
 	privacy = 0
+	measurement_num = 0
 
 	result = db['user'].insert(
 		{
@@ -137,7 +143,8 @@ def insert_user(db, user_id, user_pw, user_nickname):
 			'search_list': search_list,
 			'auto_login': auto_login,
 			'renewal': renewal,
-			'privacy': privacy
+			'privacy': privacy,
+			'measurement_num': measurement_num
 		})
 
 	return "success"
@@ -1691,7 +1698,7 @@ def remove_blacklist(db, user_id):
 ######################################################
 
 #USER의 관심도 갱신.
-def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector):
+def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector, measurement_num):
 	db['user'].update({'_id': _id}, 
 		{
 			'$set': 
@@ -1699,7 +1706,8 @@ def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector):
 				'topic': topic, 
 				'tag': tag, 
 				'tag_sum': tag_sum,
-				'ft_vector': ft_vector
+				'ft_vector': ft_vector,
+				'measurement_num': measurement_num
 			}
 		})
 
