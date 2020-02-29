@@ -77,7 +77,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 					continue
 
 				#simijlarity 구하기!
-				result = get_similarity(POST)
+				result = get_similarity(USER, POST)
 
 				#최종 similarity 적용!
 				POST['similarity'] = result
@@ -172,7 +172,7 @@ def get_recommendation_newsfeed():
 						continue
 					
 						#simijlarity 구하기!
-						result = get_similarity(POST)
+						result = get_similarity(USER, POST)
 
 						#트랜드 스코어 적용!
 						result += trendscore(POST, now_date)
@@ -194,7 +194,7 @@ def get_recommendation_newsfeed():
 						continue
 					
 					#simijlarity 구하기!
-					result = get_similarity(POST)
+					result = get_similarity(USER, POST)
 					
 					#최종 similarity 적용!
 					POST['similarity'] = result
@@ -277,7 +277,7 @@ def get_recommendation_newsfeed_2(db):
 	return POST_LIST
 
 #similarity 측정 함수
-def get_similarity(POST):
+def get_similarity(USER, POST):
 	#TOS 작업
 	TOS = dot(USER['topic'], POST['topic']) / (norm(USER['topic']) * norm(POST['topic']))
 
@@ -314,6 +314,7 @@ def get_similarity(POST):
 def trendscore_discriminate(now_date):
 	year = now_date.year
 
+	'''
 	#Course Manual (수강편람 기간)
 	CM_term_1 = (datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))
 	CM_term_2 = (datetime(year, 8, 1) < now_date) and (now_date < datetime(year, 8, 14))
@@ -328,6 +329,9 @@ def trendscore_discriminate(now_date):
 
 	else:
 		return False
+	'''
+
+	return  ((datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))) or ((datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))) or ((datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14)))
 
 #트렌드 스코어 계산 함수
 def trendscore(POST, now_date):
