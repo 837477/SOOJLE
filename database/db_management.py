@@ -870,7 +870,7 @@ def find_title_regex(db, search_str, type_check):
 	elif type_check == 1:
 		search_type = db['newsfeed_of_topic'].find_one(
 			{
-				'newsfeed_name': '진로&구인'
+				'newsfeed_name': '진로_구인'
 			}, 
 			{
 				'_id': 0,
@@ -896,8 +896,8 @@ def find_title_regex(db, search_str, type_check):
 			{
 				'$or':
 				[
-					{'newsfeed_name': '공모전&행사'},
-					{'newsfeed_name': '동아리&모임'}
+					{'newsfeed_name': '공모전_행사'},
+					{'newsfeed_name': '동아리_모임'}
 				]
 			}, 
 			{
@@ -926,9 +926,9 @@ def find_title_regex(db, search_str, type_check):
 			{
 				'$or':
 				[
-					{'newsfeed_name': '진로&구인'},
-					{'newsfeed_name': '공모전&행사'},
-					{'newsfeed_name': '동아리&모임'}
+					{'newsfeed_name': '진로_구인'},
+					{'newsfeed_name': '공모전_행사'},
+					{'newsfeed_name': '동아리_모임'}
 				]
 			}, 
 			{
@@ -1036,7 +1036,7 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 	elif type_check == 1:
 		search_type = db['newsfeed_of_topic'].find_one(
 			{
-				'newsfeed_name': '진로&구인'
+				'newsfeed_name': '진로_구인'
 			}, 
 			{
 				'_id': 0,
@@ -1068,8 +1068,8 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 			{
 				'$or':
 				[
-					{'newsfeed_name': '공모전&행사'},
-					{'newsfeed_name': '동아리&모임'}
+					{'newsfeed_name': '공모전_행사'},
+					{'newsfeed_name': '동아리_모임'}
 				]
 			}, 
 			{
@@ -1104,9 +1104,9 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 			{
 				'$or':
 				[
-					{'newsfeed_name': '진로&구인'},
-					{'newsfeed_name': '공모전&행사'},
-					{'newsfeed_name': '동아리&모임'}
+					{'newsfeed_name': '진로_구인'},
+					{'newsfeed_name': '공모전_행사'},
+					{'newsfeed_name': '동아리_모임'}
 				]
 			}, 
 			{

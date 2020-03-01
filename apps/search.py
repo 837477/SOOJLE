@@ -151,10 +151,11 @@ def priority_search(num):
 		result = "success",
 		search_result = aggregate_posts[:num])
 
-#category_검색
-@BP.route('/category_search/<int:type_check>/<int:num>', methods = ['POST'])
+#category.ver2 검색
+@BP.route('/category_search/<string:category_name>/<int:num>', methods = ['POST'])
 @jwt_optional
-def category_search(type_check, num):
+def category_search_ver2(category_name, num):
+	#검색어 입력!
 	search_str = request.form['search']
 
 	#공백 제거
@@ -171,8 +172,12 @@ def category_search(type_check, num):
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
-	aggregate_posts = find_aggregate(g.db, tokenizer_list, type_check, SJ_CS_LIMIT)
-	aggregate_posts = list(aggregate_posts)
+	#카테고리 불러오기!
+	category_type = find_category_of_topic(g.db, category_name)
+
+	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
+	POST_LIST = find_search_of_category(g.db, tokenizer_list, category_type['info_num'], category_type['tag'], SJ_CS_LIMIT)
+	POST_LIST = list(POST_LIST)
 
 	#현재 날짜 가져오기.
 	now_date = datetime.now()
@@ -427,12 +432,12 @@ def trendscore(POST, now_date):
 
 ###############################################################################################
 ###############################################################################################
-
-#category.ver2 검색
-@BP.route('/category_search_ver2/<string:category_name>/<int:num>', methods = ['POST'])
+'''
+#현재 버전 2 테스트중
+#category_검색
+@BP.route('/category_search/<int:type_check>/<int:num>', methods = ['POST'])
 @jwt_optional
-def category_search_ver2(category_name, num):
-	#검색어 입력!
+def category_search(type_check, num):
 	search_str = request.form['search']
 
 	#공백 제거
@@ -449,12 +454,8 @@ def category_search_ver2(category_name, num):
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
-	#카테고리 불러오기!
-	category_type = find_category_of_topic(g.db, category_name)
-
-	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
-	POST_LIST = find_search_of_category(g.db, tokenizer_list, category_type['info_num'], category_type['tag'], SJ_CS_LIMIT)
-	POST_LIST = list(POST_LIST)
+	aggregate_posts = find_aggregate(g.db, tokenizer_list, type_check, SJ_CS_LIMIT)
+	aggregate_posts = list(aggregate_posts)
 
 	#현재 날짜 가져오기.
 	now_date = datetime.now()
@@ -527,3 +528,4 @@ def category_search_ver2(category_name, num):
 	return jsonify(
 		result = "success",
 		search_result = aggregate_posts[:num])
+'''

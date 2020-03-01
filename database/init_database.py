@@ -91,20 +91,20 @@ def create_newsfeed_of_topic(db):
 			},
 			#동아리&모임
 			{
-				'newsfeed_name': '동아리&모임',
+				'newsfeed_name': '동아리_모임',
 				'info': 
 				[
 					'_language$', '^campuspick_job$', '_certificate$', '_study$', '_club$'
 				],
 				'tag': 
 				[
-					'멘토링', '동아리&모임', '방송국', '총학생회', '동아리', '모임', '스터디', '서포터즈', '봉사단'
+					'멘토링', '동아리_모임', '방송국', '총학생회', '동아리', '모임', '스터디', '서포터즈', '봉사단'
 				],
 				'negative_tag': []
 			},
 			#공모전&행사
 			{
-				'newsfeed_name': '공모전&행사',
+				'newsfeed_name': '공모전_행사',
 				'info': 
 				[
 					'_event$', '_shp$', '^thinkgood_', '_activity$', '_contest$', '_semina$', '_speech$'
@@ -117,7 +117,7 @@ def create_newsfeed_of_topic(db):
 			},
 			#진로&구인
 			{
-				'newsfeed_name': '진로&구인',
+				'newsfeed_name': '진로_구인',
 				'info': 
 				[
 					'_job$', '^udream_', '_college$', '^jobkorea', '^sejongbab_', '^rndjob_', '^jobsolution'
@@ -174,7 +174,7 @@ def create_category_of_topic(db):
 			},
 			#동아리&모임
 			{
-				'category_name': '동아리&모임',
+				'category_name': '동아리_모임',
 				'info': 
 				[
 					'sj27_campuspick_language', 'sj27_campuspick_job', 'sj27_campuspick_certificate', 'sj27_campuspick_study', 'sj28_campuspick_club'
@@ -187,7 +187,7 @@ def create_category_of_topic(db):
 			},
 			#공모전&행사
 			{
-				'category_name': '공모전&행사',
+				'category_name': '공모전_행사',
 				'info': 
 				[
 					'sj25_thinkgood_info', 'sj26_campuspick_activity', 'sj26_campuspick_contest', 'sj31_dodream_event', 'sj32_dodream_promotion', 'sj35_detizen_contest', 'sj35_detizen_activity'
@@ -199,7 +199,7 @@ def create_category_of_topic(db):
 			},
 			#진로&구인
 			{
-				'category_name': '진로&구인',
+				'category_name': '진로_구인',
 				'info': 
 				[
 					'sj2_udream_notice', 'sj3_udream_jobinfo', 'sj4_udream_workinfo', 'sj5_udream_workyoung', 'sj36_jobkoreatip_tip', 'sj37_jobkorea_job', 'sj37_jobkorea_public', 'sj38_sejongbab_tip', 'sj39_rndjob_job', 'sj40_jobsolution_job', 'sj41_jobsolutionAnother_semina', 'sj42_jobsolutionAnother_review', 'sj42_jobsolutionAnother_interview', 'sj43_indeed_job'
