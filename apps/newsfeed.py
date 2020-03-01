@@ -7,6 +7,7 @@ from numpy import dot
 from numpy.linalg import norm
 import numpy
 import operator
+import time
 #####################################
 from db_management import *
 from global_func import *
@@ -16,32 +17,22 @@ from variable import *
 #BluePrint
 BP = Blueprint('newsfeed', __name__)
 
-#토픽별 뉴스피드
-@BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
+#토픽별 뉴스피드.ver2
+@BP.route('/get_newsfeed_of_topic/<string:category_name>')
 @jwt_optional
-def get_newsfeed_of_topic(newsfeed_name):
-	#제대로 된 뉴스피드 네임이 들어오지 않을 경우
-	if newsfeed_name not in SJ_NEWSFEED_OF_TOPIC_SET: abort(400)
+def get_newsfeed_of_topic(category_name):
+	#제대로 된 카테고리 네임이 들어오지 않을 경우
+	if category_name not in SJ_CATEGORY_OF_TOPIC_SET: abort(400)
 
-	#요청한 뉴스피드에 대한 정보를 가져온다.
-	newsfeed_type = find_newsfeed_of_topic(g.db, newsfeed_name)
-
-	#info를 정규표현식으로 부르기위해 or연산자로 join
-	info = "|".join(newsfeed_type['info'])
-
-	#해당 토픽 뉴스피드에 관련된 게시글들을 불러온다.
-	POST_LIST = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], SJ_NEWSFEED_TOPIC_LIMIT)
-	POST_LIST = list(POST_LIST)
+	#요청한 카테고리에 대한 정보를 가져온다.
+	category = find_category_of_topic(g.db, category_name)
 
 	#end_date처리 작업을 위한 현재시간 변수 선언
 	now_date = datetime.now()
 
-	#end_date 처리!
-	for POST in POST_LIST:
-		#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
-		if ('end_date' in POST) and (now_date > POST['end_date']):
-			#해당 포스트 삭제.
-			POST_LIST.remove(POST)
+	#해당 카테고리에 관련된 게시글들을 불러온다.
+	POST_LIST = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NO_TOKEN_RECOMMENDATION_LIMIT)
+	POST_LIST = list(POST_LIST)
 
 	#로그인시!
 	if get_jwt_identity():
@@ -220,37 +211,23 @@ def get_recommendation_newsfeed():
 		result = "success",
 		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))
 
-#비회원 전용 추천 뉴스피드
+#비회원 전용 추천 뉴스피드.ver2
 def get_recommendation_newsfeed_non_member(db, now_date):
-	#요청한 뉴스피드에 대한 정보를 가져온다.
-	newsfeed_type = find_all_newsfeed_of_topic(db)
-	newsfeed_type = list(newsfeed_type)
-
+	#요청한 카테고리 대한 정보를 가져온다.
+	category_list = find_category_of_topic_list(db, list(SJ_CATEGORY_OF_TOPIC_SET))
+	category_list = list(category_list)
+	
 	POST_LIST = []
 
-	for newsfeed in newsfeed_type:
-		if newsfeed['newsfeed_name'] != '장터':
-			#info를 정규표현식으로 부르기위해 or연산자로 join
-			info = "|".join(newsfeed['info'])
+	for category in category_list:
+		temp_result = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NO_TOKEN_RECOMMENDATION_LIMIT)
 
-			result = find_newsfeed(g.db, info, newsfeed['tag'], newsfeed['negative_tag'], SJ_NO_TOKEN_RECOMMENDATION_LIMIT)
-
-			POST_LIST += list(result)
+		POST_LIST += list(temp_result)
 
 	#트랜드 스코어 적용 판별##############################################
 	#트랜드 스코어 적용일 시
 	if trendscore_discriminate(now_date):
 		for POST in POST_LIST:
-			#end_date 처리!
-			#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
-			if ('end_date' in POST) and (now_date > POST['end_date']):
-				#해당 포스트 삭제. (첫 번째 방안)
-				#POST_LIST.remove(POST)
-				
-				#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
-				POST['similarity'] = 0
-				continue
-
 			RANDOM = numpy.random.random()
 			RANDOM *= SJ_RANDOM_WEIGHT
 			TREND = trendscore(POST)
@@ -262,16 +239,6 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 	#트랜드 스코어 적용 안할 시
 	else:
 		for POST in POST_LIST:
-			#end_date 처리!
-			#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
-			if ('end_date' in POST) and (now_date > POST['end_date']):
-				#해당 포스트 삭제. (첫 번째 방안)
-				#POST_LIST.remove(POST)
-				
-				#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
-				POST['similarity'] = 0
-				continue
-
 			RANDOM = numpy.random.random()
 			RANDOM *= SJ_RANDOM_WEIGHT
 
@@ -352,5 +319,154 @@ def trendscore(POST, now_date):
 	else: 
 		return 0
 
-###############################################################################################
-###############################################################################################
+
+###########################################################################
+###########################################################################
+
+'''
+#현재 버전 2 테스트중
+#토픽별 뉴스피드
+@BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
+@jwt_optional
+def get_newsfeed_of_topic(newsfeed_name):
+	#제대로 된 뉴스피드 네임이 들어오지 않을 경우
+	if newsfeed_name not in SJ_NEWSFEED_OF_TOPIC_SET: abort(400)
+
+	#요청한 뉴스피드에 대한 정보를 가져온다.
+	newsfeed_type = find_newsfeed_of_topic(g.db, newsfeed_name)
+
+	#info를 정규표현식으로 부르기위해 or연산자로 join
+	info = "|".join(newsfeed_type['info'])
+
+	#해당 토픽 뉴스피드에 관련된 게시글들을 불러온다.
+	POST_LIST = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], SJ_NEWSFEED_TOPIC_LIMIT)
+	POST_LIST = list(POST_LIST)
+
+	#end_date처리 작업을 위한 현재시간 변수 선언
+	now_date = datetime.now()
+
+	#end_date 처리!
+	for POST in POST_LIST:
+		#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+		if ('end_date' in POST) and (now_date > POST['end_date']):
+			#해당 포스트 삭제.
+			POST_LIST.remove(POST)
+
+	#로그인시!
+	if get_jwt_identity():
+		#USER를 불러온다.
+		USER = find_user(g.db, _id=1, user_id=get_jwt_identity(), topic=1, tag=1, tag_sum=1, ft_vector=1)
+		
+		#유효한 토큰인지 확인.
+		if USER is None: abort(401)
+
+		#logging! (메인 로그)
+		insert_log(g.db, get_jwt_identity(), request.path)
+
+		#접근한 뉴스피드 기록을 위한 obj 생성!
+		newsfeed_obj = {}
+		newsfeed_obj['newsfeed_name'] = newsfeed_type['newsfeed_name']
+		newsfeed_obj['tag'] = newsfeed_type['tag']
+		newsfeed_obj['date'] = datetime.now()
+
+		#접근한 뉴스피드 기록!
+		update_user_newsfeed_list_push(g.db, USER['_id'], newsfeed_obj)
+
+		#해당 유저의 갱신시간 갱신
+		update_user_renewal(g.db, USER['user_id'])
+		
+		#캐싱된 가장 높은 좋아요 수를 가져온다.
+		Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
+		#캐싱된 가장 높은 조회수를 가져온다.
+		Maxviews = find_variable(g.db, 'highest_view_cnt')
+
+		#공모전&행사 뉴스피드는 사용자 관심도도 측정하여 따로 반환
+		if newsfeed_name == '공모전&행사':
+			for POST in POST_LIST:
+				#우선 판별!
+				#당일로부터 30일 넘어가면 유사도 점수를 낮춘다.
+				if get_default_day(30) > POST['date']:
+					POST['similarity'] = 0
+					continue
+
+				#simijlarity 구하기!
+				result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
+
+				#최종 similarity 적용!
+				POST['similarity'] = result
+				
+			#similarity를 기준으로 내림차순 정렬.
+			POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
+
+	#비로그인!
+	else:
+		#logging! (메인 로그)
+		insert_log(g.db, request.remote_addr, request.path)
+
+	return jsonify(
+		result = "success",
+		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))
+'''
+
+'''
+#현재 버전 2 테스트중
+#비회원 전용 추천 뉴스피드
+def get_recommendation_newsfeed_non_member(db, now_date):
+	#요청한 뉴스피드에 대한 정보를 가져온다.
+	newsfeed_type = find_all_newsfeed_of_topic(db)
+	newsfeed_type = list(newsfeed_type)
+
+	POST_LIST = []
+
+	for newsfeed in newsfeed_type:
+		if newsfeed['newsfeed_name'] != '장터':
+			#info를 정규표현식으로 부르기위해 or연산자로 join
+			info = "|".join(newsfeed['info'])
+
+			result = find_newsfeed(g.db, info, newsfeed['tag'], newsfeed['negative_tag'], SJ_NO_TOKEN_RECOMMENDATION_LIMIT)
+
+			POST_LIST += list(result)
+
+	#트랜드 스코어 적용 판별##############################################
+	#트랜드 스코어 적용일 시
+	if trendscore_discriminate(now_date):
+		for POST in POST_LIST:
+			#end_date 처리!
+			#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+			if ('end_date' in POST) and (now_date > POST['end_date']):
+				#해당 포스트 삭제. (첫 번째 방안)
+				#POST_LIST.remove(POST)
+				
+				#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
+				POST['similarity'] = 0
+				continue
+
+			RANDOM = numpy.random.random()
+			RANDOM *= SJ_RANDOM_WEIGHT
+			TREND = trendscore(POST)
+
+			result = RANDOM + TREND
+
+			POST['similarity'] = result
+	
+	#트랜드 스코어 적용 안할 시
+	else:
+		for POST in POST_LIST:
+			#end_date 처리!
+			#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+			if ('end_date' in POST) and (now_date > POST['end_date']):
+				#해당 포스트 삭제. (첫 번째 방안)
+				#POST_LIST.remove(POST)
+				
+				#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
+				POST['similarity'] = 0
+				continue
+
+			RANDOM = numpy.random.random()
+			RANDOM *= SJ_RANDOM_WEIGHT
+
+			POST['similarity'] = RANDOM
+	#################################################################
+		
+	return POST_LIST
+'''

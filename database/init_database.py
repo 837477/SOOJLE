@@ -266,7 +266,7 @@ def create_category_of_topic_info_num(db):
 			{
 				'$set':
 				{
-					'category_info_num': category_temp_info_num_list
+					'info_num': category_temp_info_num_list
 				}
 			}
 		)

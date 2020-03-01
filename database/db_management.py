@@ -11,7 +11,7 @@ from variable import *
 #사용자 관련#############################################
 ######################################################
 
-#전체 유저 목록 반환
+#전체 유저 목록 반환 (미사용)
 def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None, measurement_num=None):
 	
 	show_dict = {'_id': 0}
@@ -48,7 +48,7 @@ def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=Non
 
 	return result
 
-#특정 유저, 특정 필드 목록 반환
+#특정 유저 반환 (사용)
 def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None, measurement_num=None):
 	
 	show_dict = {'_id': 0}
@@ -92,26 +92,7 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto
 
 	return result
 
-#유저 갱신시간별 반환 (관심도 측정용)
-def find_user_renewal(db, renewal_time):
-	result = db['user'].find(
-		{	
-			'renewal':
-			{
-				'$gt': renewal_time
-			}
-		}, 
-		{
-			'fav_list': 1,
-			'view_list': 1,
-			'search_list': 1,
-			'newsfeed_list': 1,
-			'measurement_num': 1
-		}
-	)
-	return result
-
-#유저 생성
+#유저 생성 (사용)
 def insert_user(db, user_id, user_pw, user_nickname):
 	topic_temp = numpy.ones(26)
 	topic = (topic_temp / topic_temp.sum()).tolist()
@@ -149,7 +130,7 @@ def insert_user(db, user_id, user_pw, user_nickname):
 
 	return "success"
 
-#유저 관심도 초기화
+#유저 관심도 초기화 (사용)
 def update_user_measurement_reset(db, user_id):
 	topic_temp = numpy.ones(26)
 	topic = (topic_temp / topic_temp.sum()).tolist()
@@ -185,7 +166,7 @@ def update_user_measurement_reset(db, user_id):
 
 	return "success"
 
-#유저 삭제
+#유저 삭제 (사용)
 def remove_user(db, user_id):
 	db['user'].remove(
 		{
@@ -195,7 +176,7 @@ def remove_user(db, user_id):
 
 	return "success"
 
-#유저 닉네임 변경
+#유저 닉네임 변경 (사용)
 def update_nickname(db, user_id, new_nick):
 	db['user'].update(
 		{
@@ -207,9 +188,50 @@ def update_nickname(db, user_id, new_nick):
 	)
 	return "success"
 
-#유저 비밀번호 변경
+#유저 갱신시간별 반환 (관심도 측정용) (사용)
+def find_user_renewal(db, renewal_time):
+	result = db['user'].find(
+		{	
+			'renewal':
+			{
+				'$gt': renewal_time
+			}
+		}, 
+		{
+			'fav_list': 1,
+			'view_list': 1,
+			'search_list': 1,
+			'newsfeed_list': 1,
+			'measurement_num': 1
+		}
+	)
+	return result
 
-#유저 갱신 시간 갱신
+#유저 오토로그인 변경 (사용)
+def update_user_auto_login(db, user_id, value):
+	db['user'].update(
+		{
+			'user_id': user_id
+		}, 
+		{
+			'$set': {'auto_login': value}
+		}
+	)
+	return "success"
+
+#개인정보처리방침 동의현황 변경 (미사용)
+def update_user_privacy(db, user_id, value):
+	db['user'].update(
+		{
+			'user_id': user_id
+		},
+		{
+			'$set': {'privacy': value}
+		}
+	)
+	return "success"
+
+#유저 갱신 시간 갱신 (사용)
 def update_user_renewal(db, user_id):
 	db['user'].update(
 		{
@@ -224,7 +246,7 @@ def update_user_renewal(db, user_id):
 	)
 	return "success"
 
-#유저 fav_list 중복 체크용
+#유저 fav_list 중복 체크 (사용)
 def check_user_fav_list(db, _id, post_obi):
 	result = db['user'].find_one(
 		{
@@ -242,7 +264,7 @@ def check_user_fav_list(db, _id, post_obi):
 	)
 
 	return result
-#유저 fav_list에 요소 추가
+#유저 fav_list에 요소 추가 (사용)
 def update_user_fav_list_push(db, _id, fav_obj):
 	db['user'].update(
 		{
@@ -260,7 +282,7 @@ def update_user_fav_list_push(db, _id, fav_obj):
 		}
 	)
 	return "success"
-#유저 fav_list에 요소 삭제 (좋아요 취소한 경우)
+#유저 fav_list에 요소 삭제 (사용)
 def update_user_fav_list_pull(db, _id, post_obi):
 	db['user'].update(
 		{
@@ -277,7 +299,7 @@ def update_user_fav_list_pull(db, _id, post_obi):
 		}
 	)
 	return "success"
-#유저 fav_list 갱신
+#유저 fav_list 갱신 (pushback) (사용)
 def refresh_user_fav_list(db, user_id, refresh_obj_list):
 	#fav_list 삭제
 	db['user'].update(
@@ -308,7 +330,7 @@ def refresh_user_fav_list(db, user_id, refresh_obj_list):
 
 	return "success"
 
-#유저 view_list에 요소 추가
+#유저 view_list에 요소 추가 (사용)
 def update_user_view_list_push(db, _id, view_obj):
 	db['user'].update(
 		{
@@ -326,7 +348,7 @@ def update_user_view_list_push(db, _id, view_obj):
 		}
 	)
 	return "success"
-#유저 view_list 갱신
+#유저 view_list 갱신 (pushback) (사용)
 def refresh_user_view_list(db, user_id, refresh_obj_list):
 	#view_list 삭제
 	db['user'].update(
@@ -357,7 +379,7 @@ def refresh_user_view_list(db, user_id, refresh_obj_list):
 
 	return "success"
 
-#유저 search_list에 요소 추가
+#유저 search_list에 요소 추가 (사용)
 def update_user_search_list_push(db, user_id, search_obj):
 	db['user'].update(
 		{
@@ -375,7 +397,7 @@ def update_user_search_list_push(db, user_id, search_obj):
 		}
 	)
 	return "success"
-#유저 search_list 갱신
+#유저 search_list 갱신 (pushback) (사용)
 def refresh_user_search_list(db, user_id, refresh_obj_list):
 	#search_list 삭제
 	db['user'].update(
@@ -406,7 +428,7 @@ def refresh_user_search_list(db, user_id, refresh_obj_list):
 
 	return "success"
 
-#유저 newsfeed_list에 요소 추가
+#유저 newsfeed_list에 요소 추가 (사용)
 def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
 	db['user'].update(
 		{
@@ -424,7 +446,7 @@ def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
 		}
 	)
 	return "success"
-#유저 newsfeed_list 갱신
+#유저 newsfeed_list 갱신 (pushback) (사용)
 def refresh_user_newsfeed_list(db, user_id, refresh_obj_list):
 	#newsfeed_list 삭제
 	db['user'].update(
@@ -455,120 +477,10 @@ def refresh_user_newsfeed_list(db, user_id, refresh_obj_list):
 
 	return "success"
 
-#유저 오토로그인 변경
-def update_user_auto_login(db, user_id, value):
-	db['user'].update(
-		{
-			'user_id': user_id
-		}, 
-		{
-			'$set': {'auto_login': value}
-		}
-	)
-	return "success"
-
-#개인정보처리방침 동의현황 변경
-def update_user_privacy(db, user_id, value):
-	db['user'].update(
-		{
-			'user_id': user_id
-		},
-		{
-			'$set': {'privacy': value}
-		}
-	)
-	return "success"
-
-#뉴스피드 관련############################################
-######################################################
-
-#토픽별 뉴스피드 타입 전체 반환
-def find_all_newsfeed_of_topic(db):
-	result = db['newsfeed_of_topic'].find(
-		{
-		}, 
-		{
-			'_id': 0
-		}
-	)
-	return result
-
-#토픽별 뉴스피드 타입 반환
-def find_newsfeed_of_topic(db, newsfeed_name):
-	result = db['newsfeed_of_topic'].find_one(
-		{
-			'newsfeed_name': newsfeed_name
-		}, 
-		{
-			'_id': 0
-		}
-	)
-	return result
-
-#토빅별 뉴스피드 타입 여러개 반환
-def find_newsfeed_of_topics(db, newsfeed_list):
-	result = db['newsfeed_of_topic'].find(
-			{
-				'$or': newsfeed_list
-				
-			}, 
-			{
-				'_id': 0,
-				'info': 1
-			}
-		)
-	return result
-
-#토픽별 뉴스피드 타입에 따른 뉴시피드 게시글들 반환
-def find_newsfeed(db, info, tag, negative_tag, num):
-	result = db[SJ_DB_POST].find(
-		{
-			'$and':
-			[
-				{'info': {'$regex': info}},
-				{'tag': {'$nin': negative_tag}},
-				{'tag': {'$in': tag}}
-			]
-		},
-		{
-			'_id': 1,
-			'title': 1,
-			'date': 1,
-			'img': 1,
-			'fav_cnt': 1,
-			'view': 1,
-			'url': 1,
-			'title_token': 1,
-			'info': 1,
-			'tag': 1,
-			'topic': 1,
-			'ft_vector': 1,
-			'end_date': 1
-		}
-		).sort([('date', -1)]).limit(num)
-	return result
-
-#인기 뉴스피드 반환
-def find_popularity_newsfeed(db, num):
-	result = db[SJ_DB_POST].find(
-		{}, 
-		{
-			'_id': 1,
-			'title': 1,
-			'date': 1,
-			'end_date': 1,
-			'img': 1,
-			'fav_cnt': 1,
-			'url': 1,
-			'popularity': 1
-		}
-		).sort([('date', -1)]).limit(num).sort([('popularity', -1)])
-	return result
-
 #포스트 관련#############################################
 ######################################################
 
-#포스트 전체 가져오기
+#포스트 전체 가져오기 (사용)
 def find_all_posts(db, _id=None, title=None, date=None, end_date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None, skip_=0, limit_=None):
 
 	show_dict = {'_id': 0}
@@ -624,7 +536,7 @@ def find_all_posts(db, _id=None, title=None, date=None, end_date=None, post=None
 
 	return result
 
-#특정 포스트 가져오기 (가져오고 싶은 필드만 1로 지정하여 보내주면 됨)
+#특정 포스트 가져오기 (사용)
 def find_post(db, post_obi, _id=None, title=None, date=None, end_date=None, post=None, tag=None, img=None, url=None, hashed=None, info=None, view=None, fav_cnt=None, title_token=None, token=None, topic=None, ft_vector=None, popularity=None):
 
 	show_dict = {'_id': 0}
@@ -673,7 +585,7 @@ def find_post(db, post_obi, _id=None, title=None, date=None, end_date=None, post
 
 	return result
 
-#포스트 삭제
+#포스트 삭제 (사용)
 def remove_post(db, post_obi):
 	db[SJ_DB_POST].remove(
 		{
@@ -683,7 +595,7 @@ def remove_post(db, post_obi):
 
 	return "success"
 
-#포스트 좋아요
+#포스트 좋아요 (사용)
 def update_post_like(db, post_obi):
 	db[SJ_DB_POST].update(
 		{
@@ -695,7 +607,7 @@ def update_post_like(db, post_obi):
 	)
 	return "success"
 
-#포스트 좋아요 취소
+#포스트 좋아요 취소 (사용)
 def update_post_unlike(db, post_obi):
 	db[SJ_DB_POST].update(
 		{
@@ -711,7 +623,7 @@ def update_post_unlike(db, post_obi):
 	)
 	return "success"
 
-#포스트 조회수 올리기
+#포스트 조회수 올리기 (사용)
 def update_post_view(db, post_obi):
 	db[SJ_DB_POST].update(
 		{
@@ -728,10 +640,163 @@ def update_post_view(db, post_obi):
 
 	return "success"
 
+#newsfeed_of_topic 버전################################
+#토픽별 뉴스피드 타입 전체 반환
+def find_all_newsfeed_of_topic(db):
+	result = db['newsfeed_of_topic'].find(
+		{
+		}, 
+		{
+			'_id': 0
+		}
+	)
+	return result
+
+#토픽별 뉴스피드 타입 반환
+def find_newsfeed_of_topic(db, newsfeed_name):
+	result = db['newsfeed_of_topic'].find_one(
+		{
+			'newsfeed_name': newsfeed_name
+		}, 
+		{
+			'_id': 0
+		}
+	)
+	return result
+
+#토빅별 뉴스피드 타입 여러개 반환 (미사용 중)
+def find_newsfeed_of_topics(db, newsfeed_list):
+	result = db['newsfeed_of_topic'].find(
+			{
+				'newsfeed_name': {'$in': newsfeed_list},
+				'$or': newsfeed_list	
+			}, 
+			{
+				'_id': 0,
+				'info': 1
+			}
+		)
+	return result
+
+#토픽별 뉴스피드 타입에 따른 뉴시피드 게시글들 반환
+def find_newsfeed(db, info, tag, negative_tag, num):
+	result = db[SJ_DB_POST].find(
+		{
+			'$and':
+			[
+				{'info': {'$regex': info}},
+				{'tag': {'$nin': negative_tag}},
+				{'tag': {'$in': tag}}
+			]
+		},
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'view': 1,
+			'url': 1,
+			'title_token': 1,
+			'info': 1,
+			'tag': 1,
+			'topic': 1,
+			'ft_vector': 1,
+			'end_date': 1
+		}
+		).sort([('date', -1)]).limit(num)
+	return result
+
+#category_of_topic###################################
+#카테고리별 타입 전체 반환 (미사용)
+def find_all_category_of_topic(db):
+	result = db['category_of_topic'].find(
+		{
+		},
+		{
+			'_id': 0
+		}
+	)
+	return result
+
+#카테고리별 타입 여러개 반환 (사용)
+def find_category_of_topic_list(db, category_list):
+	result = db['category_of_topic'].find(
+			{
+				'category_name': {'$in': category_list}
+			}, 
+			{
+				'_id': 0,
+				'tag': 1,
+				'info_num': 1
+			}
+		)
+	return result
+
+#카테고리별 타입 반환 (사용)
+def find_category_of_topic(db, category_name):
+	result = db['category_of_topic'].find_one(
+		{
+			'category_name': category_name
+		}, 
+		{
+			'_id': 0,
+			'tag': 1,
+			'info_num': 1
+		}
+	)
+	return result
+
+#카테고리별 포스트들 반환
+def find_posts_of_category(db, info_num_list, tag, now_date, num):
+	result = db[SJ_DB_POST].find(
+		{
+			'$and':
+			[
+				{'info_num': {'$in': info_num_list}},
+				{'tag': {'$in': tag}},
+				{'end_date': {'$gte': now_date}}
+			]
+		},
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'view': 1,
+			'url': 1,
+			'title_token': 1,
+			'info': 1,
+			'tag': 1,
+			'topic': 1,
+			'ft_vector': 1,
+			'end_date': 1
+		}
+		).sort([('date', -1)]).limit(num)
+	return result
+
+#인기 뉴스피드 반환
+def find_popularity_newsfeed(db, num):
+	result = db[SJ_DB_POST].find(
+		{}, 
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'end_date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'url': 1,
+			'popularity': 1
+		}
+		).sort([('date', -1)]).limit(num).sort([('popularity', -1)])
+	return result
+
 #검색 관련###############################################
 #######################################################
 
-#domain_title_regex 검색
+#domain_title_regex 검색 (사용)
 def find_domain_title_regex(db, search_str):
 	result = db['domain'].find(
 			{
@@ -750,7 +815,7 @@ def find_domain_title_regex(db, search_str):
 		)
 	return result
 
-#domain_post_regex 검색
+#domain_post_regex 검색 (사용)
 def find_domain_post_regex(db, regex_str):
 	result = db['domain'].find(
 			{
@@ -765,7 +830,7 @@ def find_domain_post_regex(db, regex_str):
 		)
 	return result
 
-#domain 다 불러오기
+#domain 다 불러오기 (사용)
 def find_all_domain(db):
 	result = db['domain'].find(
 		{},
@@ -775,7 +840,7 @@ def find_all_domain(db):
 	)
 	return result
 
-#post title regex 검색
+#post title regex 검색 (사용)
 def find_title_regex(db, search_str, type_check):
 	return_dict = {
 		'title':1,
@@ -912,7 +977,7 @@ def find_title_regex(db, search_str, type_check):
 	
 	return result
 
-#가상 post ids용 반환
+#가상 post ids용 반환 (사용)
 def find_aggregate(db, tokenizer_list, type_check, limit_):
 	now_time = datetime.now()
 
@@ -967,7 +1032,6 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 			sort, 
 			limit
 		])
-
 	#진로&구인
 	elif type_check == 1:
 		search_type = db['newsfeed_of_topic'].find_one(
@@ -1102,7 +1166,7 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 
 	return result
 
-#full search title regex 검색
+#full search title regex 검색 (미사용)
 def find_full_title_regex(db, search_str, limit_):
 	#priority	
 	result = db[SJ_DB_POST].find(
@@ -1123,7 +1187,7 @@ def find_full_title_regex(db, search_str, limit_):
 	).limit(limit_)
 	return result
 
-#full search post aggregate
+#full search post aggregate 검색 (미사용)
 def find_full_aggregate(db, tokenizer_list, limit_):
 	now_time = datetime.now()
 	
@@ -1172,7 +1236,7 @@ def find_full_aggregate(db, tokenizer_list, limit_):
 
 	return result
 
-#title 토큰 검색
+#title 토큰 검색 (사용)
 def find_title_token(db, token_list):
 	result = db[SJ_DB_POST].find(
 		{
@@ -1187,7 +1251,7 @@ def find_title_token(db, token_list):
 	)
 	return result
 
-#token 검색
+#token 검색 (사용)
 def find_token(db, token_list):
 	result = db[SJ_DB_POST].find(
 		{
@@ -1202,10 +1266,41 @@ def find_token(db, token_list):
 	)
 	return result
 
-#logging############################################## 
+#카테고리 검색
+def find_search_of_category(db, tokenizer_list, info_num_list, tag_list, limit_):
+	result = db[SJ_DB_POST].find(
+		{
+			'$and':
+			[
+				{'token': {'$in': tokenizer_list}},
+				{'info_num': {'$in': info_num_list}},
+				{'tag': {'$in': tag_list}}
+			]
+		},
+		{
+			'_id':1, 
+			'title':1,
+			'date':1,
+			'end_date':1,
+			'img': 1,
+			'url': 1,
+			'fav_cnt': 1,
+			'info': 1,
+			###############
+			'title_token':1,
+			'token':1,
+			'tag':1,
+			'popularity':1,
+			'ft_vector': 1
+		}
+		).sort([('date', -1)]).limit(num)
+	return result
+
+
+#analysis#############################################
 ######################################################
 
-#search_log에 search_obj 추가
+#search_log에 search_obj 추가 (사용)
 def insert_search_log(db, user_id, split_list):
 	db['search_log'].insert(
 		{
@@ -1216,7 +1311,7 @@ def insert_search_log(db, user_id, split_list):
 	)
 	return "success"
 
-#search_log 가져온다.
+#search_log 가져온다. (사용)
 def find_search_log(db):
 	result = db['search_log'].find(
 		{
@@ -1233,7 +1328,7 @@ def find_search_log(db):
 
 	return result
 
-#log에 기록!
+#log에 기록! (사용)
 def insert_log(db, user_id, url):
 	db['log'].insert(
 		{
@@ -1244,7 +1339,7 @@ def insert_log(db, user_id, url):
 	)
 	return "success"
 
-#log에서 시간별로 가져온다.
+#log에서 시간별로 가져온다. (사용)
 def find_date_log(db, date, limit_):
 	result = db['log'].find(
 		{
@@ -1360,9 +1455,6 @@ def insert_pushback(db, user_id, type_, back_obj_list):
 			)
 		
 	return "success"
-
-#analysis#############################################
-######################################################
 
 #search_realtime 가져오기!
 def find_search_all_realtime(db):
@@ -1652,48 +1744,6 @@ def insert_user_feedback(db, feedback):
    	)
 	return "success"
 
-#블랙리스트 등록
-def insert_blacklist(db, user_id):
-	db['blacklist'].insert(
-		{
-			'user_id': user_id,
-			'black_date': datetime.now()
-		}
-	)
-
-	return "success"
-
-#블랙리스트 전체 반환
-def find_blacklist(db):
-	result = db['blacklist'].find(
-		{},
-		{
-			'_id': 0
-		}
-	)
-
-	return result
-
-#블랙리스트 개별 검색
-def find_blacklist_one(db, user_id):
-	result = db['blacklist'].find_one(
-		{
-			'user_id': user_id
-		}
-	)
-
-	return result
-
-#블랙리스트 해제
-def remove_blacklist(db, user_id):
-	db['blacklist'].remove(
-		{
-			'user_id': user_id
-		}
-	)
-
-	return "success"
-	
 #Background###########################################
 ######################################################
 
@@ -1832,3 +1882,57 @@ def check_dummy_post(db):
 	result = db[SJ_DB_POST].find_one({'title': "(o^_^)o 안녕하세요. SOOJLE 입니다."})
 
 	return result
+
+
+##################################################################
+##################################################################
+##################################################################
+#보류 DB_MANAGEMENT################################################
+##################################################################
+##################################################################
+##################################################################
+
+##################################################################
+#blacklist########################################################
+#블랙리스트 등록 (미사용)
+def insert_blacklist(db, user_id):
+	db['blacklist'].insert(
+		{
+			'user_id': user_id,
+			'black_date': datetime.now()
+		}
+	)
+
+	return "success"
+
+#블랙리스트 전체 반환 (미사용)
+def find_blacklist(db):
+	result = db['blacklist'].find(
+		{},
+		{
+			'_id': 0
+		}
+	)
+
+	return result
+
+#블랙리스트 개별 검색 (미사용)
+def find_blacklist_one(db, user_id):
+	result = db['blacklist'].find_one(
+		{
+			'user_id': user_id
+		}
+	)
+
+	return result
+
+#블랙리스트 해제 (미사용)
+def remove_blacklist(db, user_id):
+	db['blacklist'].remove(
+		{
+			'user_id': user_id
+		}
+	)
+
+	return "success"
+	

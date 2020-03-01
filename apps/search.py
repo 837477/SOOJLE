@@ -82,22 +82,12 @@ def priority_search(num):
 	#regex와 aggregate로 뽑힌 포스트를 합친다.
 	aggregate_posts += title_regex
 
-	##################################################
-	#트랜드 스코어 용 date 함수
+	#현재 날짜 가져오기.
 	now_date = datetime.now()
-	year = now_date.year
 
-	#Course Manual (수강편람 기간)
-	CM_term_1 = (datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))
-	CM_term_2 = (datetime(year, 8, 1) < now_date) and (now_date < datetime(year, 8, 14))
-
-	#Seasonal Semester (계절학기 기간)
-	SS_term_1 = (datetime(year, 11, 25) < now_date) and (now_date < datetime(year, 12, 5))
-	SS_term_2 = (datetime(year, 5, 25) < now_date) and (now_date < datetime(year, 6, 5))
-	##################################################
-
-	#수강편람/계절학기 기간!
-	if (CM_term_1 or CM_term_2) or (SS_term_1 or SS_term_2):
+	#트랜드 스코어 적용 판별##############################################
+	#트랜드 스코어 적용일 시
+	if trendscore_discriminate(now_date):
 		#검색 키워드와 문서간의 유사도 측정! (트렌드 적용 for)
 		for post in aggregate_posts:
 			#FAS 작업
@@ -115,7 +105,7 @@ def priority_search(num):
 			else: T3 = 0
 
 			#트랜드 스코어 적용!
-			TREND = trendscore(post)
+			TREND = trendscore(post, now_date)
 
 			post['similarity'] = round((T1 + T2 + T3 + FAS + TREND), 1)
 			post['_id'] = str(post['_id'])
@@ -184,22 +174,12 @@ def category_search(type_check, num):
 	aggregate_posts = find_aggregate(g.db, tokenizer_list, type_check, SJ_CS_LIMIT)
 	aggregate_posts = list(aggregate_posts)
 
-	##################################################
-	#트랜드 스코어 용 date 함수
+	#현재 날짜 가져오기.
 	now_date = datetime.now()
-	year = now_date.year
 
-	#Course Manual (수강편람 기간)
-	CM_term_1 = (datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))
-	CM_term_2 = (datetime(year, 8, 1) < now_date) and (now_date < datetime(year, 8, 14))
-
-	#Seasonal Semester (계절학기 기간)
-	SS_term_1 = (datetime(year, 11, 25) < now_date) and (now_date < datetime(year, 12, 5))
-	SS_term_2 = (datetime(year, 5, 25) < now_date) and (now_date < datetime(year, 6, 5))
-	##################################################
-
-	#수강편람/계절학기 기간!
-	if (CM_term_1 or CM_term_2) or (SS_term_1 or SS_term_2):
+	#트랜드 스코어 적용 판별##############################################
+	#트랜드 스코어 적용일 시
+	if trendscore_discriminate(now_date):
 		for post in aggregate_posts:
 			#FAS 작업
 			split_vector = FastText.get_doc_vector(del_space_str).tolist()
@@ -228,7 +208,8 @@ def category_search(type_check, num):
 			del post['token']
 			del post['tag']
 			del post['popularity']
-
+	
+	#트랜드 스코어 적용 안할 시
 	else:
 		for post in aggregate_posts:
 			#FAS 작업
@@ -406,15 +387,143 @@ def search_logging(db, user_id, original_str, split_list, tokenizer_list, simila
 	#공용 searching 기록!
 	insert_search_log(db, user_id, split_list)
 
-#트렌드 스코어 계산
-def trendscore(POST):
-	#수강편람 except
+#트랜드 스코어 판별 함수
+def trendscore_discriminate(now_date):
+	year = now_date.year
+
+	'''
+	#Course Manual (수강편람 기간)
+	CM_term_1 = (datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))
+	CM_term_2 = (datetime(year, 8, 1) < now_date) and (now_date < datetime(year, 8, 14))
+
+	#Seasonal Semester (계절학기 기간)
+	SS_term_1 = (datetime(year, 11, 25) < now_date) and (now_date < datetime(year, 12, 5))
+	SS_term_2 = (datetime(year, 5, 25) < now_date) and (now_date < datetime(year, 6, 5))
+	
+	#트랜드 스코어 판별 반환
+	if CM_term_1 or CM_term_2 or SS_term_1 or SS_term_2:
+		return True
+
+	else:
+		return False
+	'''
+
+	return  ((datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))) or ((datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14))) or ((datetime(year, 2, 1) < now_date) and (now_date < datetime(year, 2, 14)))
+
+#트렌드 스코어 계산 함수
+def trendscore(POST, now_date):
+
+	#수강편람 trendscore
 	if POST['info'] == 'main_student' and ('수강편람' in POST['tag']):
 		return 10 
 
-	#계절학기 except
+	#계절학기 trendscore
 	elif POST['info'] == 'main_student' and ('계절학기' in POST['title_token']):
 		return 4
 
+	#아니면?!
 	else: 
 		return 0
+
+###############################################################################################
+###############################################################################################
+
+#category.ver2 검색
+@BP.route('/category_search_ver2/<string:category_name>/<int:num>', methods = ['POST'])
+@jwt_optional
+def category_search_ver2(category_name, num):
+	#검색어 입력!
+	search_str = request.form['search']
+
+	#공백 제거
+	del_space_str = search_str.split(' ')
+
+	#토크나이져 작업
+	tokenizer_list = tknizer.get_tk(search_str)
+
+	#FastText를 이용한 유사단어 추출
+	ft_similarity_list = []
+	for word in tokenizer_list:
+		for sim_word in FastText.sim_words(word):
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
+				ft_similarity_list.append(sim_word[0])
+			else: break	
+
+	#카테고리 불러오기!
+	category_type = find_category_of_topic(g.db, category_name)
+
+	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
+	POST_LIST = find_search_of_category(g.db, tokenizer_list, category_type['info_num'], category_type['tag'], SJ_CS_LIMIT)
+	POST_LIST = list(POST_LIST)
+
+	#현재 날짜 가져오기.
+	now_date = datetime.now()
+
+	#트랜드 스코어 적용 판별##############################################
+	#트랜드 스코어 적용일 시
+	if trendscore_discriminate(now_date):
+		for post in aggregate_posts:
+			#FAS 작업
+			split_vector = FastText.get_doc_vector(del_space_str).tolist()
+			FAS = FastText.vec_sim(split_vector, post['ft_vector'])
+
+			T1 = match_score(del_space_str, post['title_token'])
+
+			if tokenizer_list:
+				T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
+			else:
+				T2 =0
+
+			if ft_similarity_list:
+				T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
+			else:
+				T3 = 0
+
+			#트랜드 스코어 적용!
+			TREND = trendscore(post)
+
+			post['similarity'] = round((T1 + T2 + T3 + FAS + TREND), 1)
+			post['_id'] = str(post['_id'])
+
+			#필요없는 반환 값 삭제
+			del post['title_token']
+			del post['token']
+			del post['tag']
+			del post['popularity']
+	
+	#트랜드 스코어 적용 안할 시
+	else:
+		for post in aggregate_posts:
+			#FAS 작업
+			split_vector = FastText.get_doc_vector(del_space_str).tolist()
+			FAS = FastText.vec_sim(split_vector, post['ft_vector'])
+
+			T1 = match_score(del_space_str, post['title_token'])
+
+			if tokenizer_list:
+				T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
+			else:
+				T2 =0
+
+			if ft_similarity_list:
+				T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
+			else:
+				T3 = 0
+
+			post['similarity'] = round((T1 + T2 + T3 + FAS), 1)
+			post['_id'] = str(post['_id'])
+
+			#필요없는 반환 값 삭제
+			del post['title_token']
+			del post['token']
+			del post['tag']
+			del post['popularity']
+
+	#구해진 similarity - date로 내림차순 정렬
+	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('date'), reverse=True)
+	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('similarity'), reverse=True)
+
+	#데이터로 들어온 상위 num개만 반환
+	return jsonify(
+		result = "success",
+		search_result = aggregate_posts[:num])
