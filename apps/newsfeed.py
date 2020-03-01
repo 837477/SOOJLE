@@ -16,7 +16,6 @@ from variable import *
 #BluePrint
 BP = Blueprint('newsfeed', __name__)
 
-
 #토픽별 뉴스피드
 @BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
 @jwt_optional
@@ -66,6 +65,11 @@ def get_newsfeed_of_topic(newsfeed_name):
 
 		#해당 유저의 갱신시간 갱신
 		update_user_renewal(g.db, USER['user_id'])
+		
+		#캐싱된 가장 높은 좋아요 수를 가져온다.
+		Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
+		#캐싱된 가장 높은 조회수를 가져온다.
+		Maxviews = find_variable(g.db, 'highest_view_cnt')
 
 		#공모전&행사 뉴스피드는 사용자 관심도도 측정하여 따로 반환
 		if newsfeed_name == '공모전&행사':
@@ -77,7 +81,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 					continue
 
 				#simijlarity 구하기!
-				result = get_similarity(USER, POST)
+				result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
 
 				#최종 similarity 적용!
 				POST['similarity'] = result
@@ -172,7 +176,7 @@ def get_recommendation_newsfeed():
 						continue
 					
 						#simijlarity 구하기!
-						result = get_similarity(USER, POST)
+						result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
 
 						#트랜드 스코어 적용!
 						result += trendscore(POST, now_date)
@@ -194,7 +198,7 @@ def get_recommendation_newsfeed():
 						continue
 					
 					#simijlarity 구하기!
-					result = get_similarity(USER, POST)
+					result = get_similarity(USER, POST, USER, POST, Maxfav_cnt, Maxviews)
 					
 					#최종 similarity 적용!
 					POST['similarity'] = result
@@ -277,7 +281,7 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 	return POST_LIST
 
 #similarity 측정 함수
-def get_similarity(USER, POST):
+def get_similarity(USER, POST, Maxfav_cnt, Maxviews):
 	#TOS 작업
 	TOS = dot(USER['topic'], POST['topic']) / (norm(USER['topic']) * norm(POST['topic']))
 
