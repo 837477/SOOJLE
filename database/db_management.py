@@ -773,7 +773,7 @@ def find_posts_of_category(db, info_num_list, tag, now_date, num):
 			'ft_vector': 1,
 			'end_date': 1
 		}
-		).sort([('date', -1)]).limit(num)
+		).sort([('date', -1)]).limit(num).hint("info_num_1_tag_1_end_date_-1_date_-1")
 	return result
 
 #인기 뉴스피드 반환
@@ -1265,6 +1265,8 @@ def find_token(db, token_list):
 		}
 	)
 	return result
+
+#####################################################################
 
 #카테고리 검색
 def find_search_of_category(db, tokenizer_list, info_num_list, tag_list, limit_):
