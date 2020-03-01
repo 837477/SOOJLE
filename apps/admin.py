@@ -126,11 +126,11 @@ def remove_post(post_obi):
 
 	return jsonify(result = result)
 
-#공지사항 반환
+#공지사항 전체 반환
 @BP.route('/get_all_notice')
 def get_all_notice():
 	result = find_all_notice(g.db)
-	result = list(result)
+	result = dumps(result)
 
 	return jsonify(
 		result = "success",
@@ -139,10 +139,10 @@ def get_all_notice():
 
 #공지사항 단일 반환
 @BP.route('/get_notice/<string:notice_obi>')
-def get_all_notice(notice_obi):
+def get_notice(notice_obi):
 	result = find_notice(g.db, notice_obi)
-	result = list(result)
-
+	result = dumps(result)
+	
 	return jsonify(
 		result = "success",
 		notice = result
