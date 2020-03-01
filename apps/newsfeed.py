@@ -129,7 +129,7 @@ def get_recommendation_newsfeed():
 	#회원일 때!
 	if get_jwt_identity():
 		#유저 정보 불러오기.
-		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, ft_vector=1, measurement_num=1)
+		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, ft_vector=1, tag_sum=1, measurement_num=1)
 
 		#유효한 토큰인지 확인.
 		if USER is None: abort(401)
