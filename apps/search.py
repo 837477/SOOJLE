@@ -154,7 +154,7 @@ def priority_search(num):
 #category.ver2 검색
 @BP.route('/category_search/<string:category_name>/<int:num>', methods = ['POST'])
 @jwt_optional
-def category_search_ver2(category_name, num):
+def category_search(category_name, num):
 	#검색어 입력!
 	search_str = request.form['search']
 
@@ -185,71 +185,71 @@ def category_search_ver2(category_name, num):
 	#트랜드 스코어 적용 판별##############################################
 	#트랜드 스코어 적용일 시
 	if trendscore_discriminate(now_date):
-		for post in aggregate_posts:
+		for POST in POST_LIST:
 			#FAS 작업
 			split_vector = FastText.get_doc_vector(del_space_str).tolist()
-			FAS = FastText.vec_sim(split_vector, post['ft_vector'])
+			FAS = FastText.vec_sim(split_vector, POST['ft_vector'])
 
-			T1 = match_score(del_space_str, post['title_token'])
+			T1 = match_score(del_space_str, POST['title_token'])
 
 			if tokenizer_list:
-				T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
+				T2 = match_score(tokenizer_list, set(POST['token']+POST['tag']))
 			else:
 				T2 =0
 
 			if ft_similarity_list:
-				T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
+				T3 = match_score(ft_similarity_list, set(POST['token']+POST['tag']))
 			else:
 				T3 = 0
 
 			#트랜드 스코어 적용!
-			TREND = trendscore(post)
+			TREND = trendscore(POST)
 
-			post['similarity'] = round((T1 + T2 + T3 + FAS + TREND), 1)
-			post['_id'] = str(post['_id'])
+			POST['similarity'] = round((T1 + T2 + T3 + FAS + TREND), 1)
+			POST['_id'] = str(POST['_id'])
 
 			#필요없는 반환 값 삭제
-			del post['title_token']
-			del post['token']
-			del post['tag']
-			del post['popularity']
+			del POST['title_token']
+			del POST['token']
+			del POST['tag']
+			del POST['popularity']
 	
 	#트랜드 스코어 적용 안할 시
 	else:
-		for post in aggregate_posts:
+		for POST in POST_LIST:
 			#FAS 작업
 			split_vector = FastText.get_doc_vector(del_space_str).tolist()
-			FAS = FastText.vec_sim(split_vector, post['ft_vector'])
+			FAS = FastText.vec_sim(split_vector, POST['ft_vector'])
 
-			T1 = match_score(del_space_str, post['title_token'])
+			T1 = match_score(del_space_str, POST['title_token'])
 
 			if tokenizer_list:
-				T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
+				T2 = match_score(tokenizer_list, set(POST['token']+POST['tag']))
 			else:
 				T2 =0
 
 			if ft_similarity_list:
-				T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
+				T3 = match_score(ft_similarity_list, set(POST['token']+POST['tag']))
 			else:
 				T3 = 0
 
-			post['similarity'] = round((T1 + T2 + T3 + FAS), 1)
-			post['_id'] = str(post['_id'])
+			POST['similarity'] = round((T1 + T2 + T3 + FAS), 1)
+			POST['_id'] = str(POST['_id'])
 
 			#필요없는 반환 값 삭제
-			del post['title_token']
-			del post['token']
-			del post['tag']
-			del post['popularity']
+			del POST['title_token']
+			del POST['token']
+			del POST['tag']
+			del POST['popularity']
 
 	#구해진 similarity - date로 내림차순 정렬
-	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('date'), reverse=True)
-	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('similarity'), reverse=True)
+	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('date'), reverse=True)
+	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
 
 	#데이터로 들어온 상위 num개만 반환
 	return jsonify(
 		result = "success",
-		search_result = aggregate_posts[:num])
+		search_result = POST_LIST[:num])
 
 #domain_검색
 @BP.route('/domain_search', methods = ['POST'])

@@ -1269,7 +1269,7 @@ def find_token(db, token_list):
 #####################################################################
 
 #카테고리 검색
-def find_search_of_category(db, tokenizer_list, info_num_list, tag_list, limit_):
+def find_search_of_category(db, tokenizer_list, info_num_list, tag_list, num):
 	result = db[SJ_DB_POST].find(
 		{
 			'$and':
