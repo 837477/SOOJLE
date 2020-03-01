@@ -63,7 +63,7 @@ def get_newsfeed_of_topic(category_name):
 		Maxviews = find_variable(g.db, 'highest_view_cnt')
 
 		#공모전&행사 뉴스피드는 사용자 관심도도 측정하여 따로 반환
-		if newsfeed_name == '공모전&행사':
+		if category_name == '공모전&행사':
 			for POST in POST_LIST:
 				#우선 판별!
 				#당일로부터 30일 넘어가면 유사도 점수를 낮춘다.
