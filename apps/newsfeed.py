@@ -189,7 +189,7 @@ def get_recommendation_newsfeed():
 						continue
 					
 					#simijlarity 구하기!
-					result = get_similarity(USER, POST, USER, POST, Maxfav_cnt, Maxviews)
+					result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
 					
 					#최종 similarity 적용!
 					POST['similarity'] = result
