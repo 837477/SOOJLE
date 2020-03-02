@@ -151,7 +151,7 @@ def priority_search(num):
 		result = "success",
 		search_result = aggregate_posts[:num])
 
-#category.ver2 검색
+#category.ver2 검색 (테스트 대상)
 @BP.route('/category_search/<string:category_name>/<int:num>', methods = ['POST'])
 @jwt_optional
 def category_search(category_name, num):

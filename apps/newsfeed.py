@@ -14,13 +14,18 @@ from global_func import *
 #####################################
 from variable import *
 
+
 #BluePrint
 BP = Blueprint('newsfeed', __name__)
 
-#토픽별 뉴스피드.ver2
+#토픽별 뉴스피드.ver2 (테스트 대상)
 @BP.route('/get_newsfeed_of_topic/<string:category_name>')
 @jwt_optional
 def get_newsfeed_of_topic(category_name):
+	#총 시간 측정#################################################
+	TOTAL_TIME_START = time.time()
+	###########################################################
+
 	#제대로 된 카테고리 네임이 들어오지 않을 경우
 	if category_name not in SJ_CATEGORY_OF_TOPIC_SET: abort(400)
 
@@ -30,9 +35,17 @@ def get_newsfeed_of_topic(category_name):
 	#end_date처리 작업을 위한 현재시간 변수 선언
 	now_date = datetime.now()
 
+	#find_posts_of_category 시간 측정 (불러와서 리스트화 시킨 시간)#####
+	FIND_POSTS_OF_CATEGORY_TIME_START = time.time()
+	###########################################################
+
 	#해당 카테고리에 관련된 게시글들을 불러온다.
-	POST_LIST = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NO_TOKEN_RECOMMENDATION_LIMIT)
+	POST_LIST = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
 	POST_LIST = list(POST_LIST)
+
+	#find_posts_of_category 측정 종료 (불러와서 리스트화 시킨 시간)#####
+	FIND_POSTS_OF_CATEGORY_TIME_END = time.time()
+	###########################################################
 
 	#로그인시!
 	if get_jwt_identity():
@@ -61,9 +74,13 @@ def get_newsfeed_of_topic(category_name):
 		Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
 		#캐싱된 가장 높은 조회수를 가져온다.
 		Maxviews = find_variable(g.db, 'highest_view_cnt')
-
+		
 		#공모전&행사 뉴스피드는 사용자 관심도도 측정하여 따로 반환
 		if category_name == '공모전&행사':
+
+			#공모전&행사 뉴스피드 관심도 반영 시간 측정 (불러와서 리스트화 시킨 시간)###
+			GET_SIMILARITY_TIME_START = time.time()
+			###########################################################
 			for POST in POST_LIST:
 				#우선 판별!
 				#당일로부터 30일 넘어가면 유사도 점수를 낮춘다.
@@ -76,7 +93,11 @@ def get_newsfeed_of_topic(category_name):
 
 				#최종 similarity 적용!
 				POST['similarity'] = result
-				
+			
+			#공모전&행사 뉴스피드 관심도 반영 측정 종료 (불러와서 리스트화 시킨 시간)###
+			GET_SIMILARITY_TIME_END = time.time()
+			###########################################################
+
 			#similarity를 기준으로 내림차순 정렬.
 			POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
 
@@ -85,9 +106,23 @@ def get_newsfeed_of_topic(category_name):
 		#logging! (메인 로그)
 		insert_log(g.db, request.remote_addr, request.path)
 
+	#총 시간 측정 종료#############################################
+	TOTAL_TIME_END = time.time()
+	###########################################################
+
+	SPEED_RESULT = {}
+	SPEED_RESULT['FIND_POSTS_OF_CATEGROY'] = FIND_POSTS_OF_CATEGORY_TIME_START - FIND_POSTS_OF_CATEGORY_TIME_END
+	if get_jwt_identity():
+		SPEED_RESULT['GET_SIMILARITY'] = GET_SIMILARITY_TIME_START - GET_SIMILARITY_TIME_END
+	SPEED_RESULT['TOTAL'] = TOTAL_TIME_START - TOTAL_TIME_END
+	SPEED_RESULT['SJ_NEWSFEED_TOPIC_LIMIT'] = SJ_NEWSFEED_TOPIC_LIMIT
+	SPEED_RESULT['SJ_RETURN_NUM'] = SJ_RETURN_NUM
+
 	return jsonify(
-		result = "success",
-		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))
+			result = "success",
+			newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]),
+			speed_result = SPEED_RESULT
+		)
 
 #인기 뉴스피드
 @BP.route('/get_popularity_newsfeed')
@@ -115,14 +150,29 @@ def get_popularity_newsfeed():
 		result = "success",
 		newsfeed = dumps(result))
 
-#추천 뉴스피드
+#추천 뉴스피드 (테스트 대상)
 @BP.route('/get_recommendation_newsfeed')
 @jwt_optional
 def get_recommendation_newsfeed():
+	#테스트 구분용
+	SIM_TREND_TEST_FLAG = False
+
+	#총 시간 측정#################################################
+	TOTAL_TIME_START = time.time()
+	###########################################################
+
+	#뉴스피드에 반환 될 게시글들 불러오기 시간 측정#######################
+	FIND_ALL_POSTS_TIME_START = time.time()
+	###########################################################
+
 	#게시글들을 불러온다.
 	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, info=1, title_token=1, url=1, img=1, date=1, end_date=1, limit_=SJ_RECOMMENDATION_LIMIT)
 	POST_LIST = list(POST_LIST)
-	
+
+	#뉴스피드에 반환 될 게시글들 불러오기 시간 측정#######################
+	FIND_ALL_POSTS_TIME_END = time.time()
+	###########################################################
+
 	#현재 날짜 가져오기.
 	now_date = datetime.now()
 	
@@ -136,21 +186,36 @@ def get_recommendation_newsfeed():
 
 		#logging (메인 로그)
 		insert_log(g.db, USER['user_id'], request.path)
-		
+
 		#방문자 로그 기록!
 		insert_today_visitor(g.db, USER['user_id'])
 
 		#회원 관심도가 cold 상태일 때!
 		if USER['measurement_num'] <= SJ_USER_COLD_LIMIT:
+			#비회원 뉴스피드 제작 함수 시간 측정################################
+			NON_MEMBER_TIME_START = time.time()
+			###########################################################
+
 			#비로그인 전용 추천뉴스피드 호출!
 			POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)	
-		
+
+			#비회원 뉴스피드 제작 함수 측정 종료################################
+			NON_MEMBER_TIME_END = time.time()
+			###########################################################
+
 		#관심도가 cold가 아닐 때!
 		else:
 			#캐싱된 가장 높은 좋아요 수를 가져온다.
 			Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
 			#캐싱된 가장 높은 조회수를 가져온다.
 			Maxviews = find_variable(g.db, 'highest_view_cnt')
+
+			#관심분야 반영/미반영 시간 측정###################################
+			#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
+			#1. similarity // 2. trendscore + similarity
+			SIM_TREND_TIME_START = time.time()
+			SIM_TREND_TEST_FLAG = True
+			###########################################################
 
 			#트랜드 스코어 적용 판별##############################################
 			#트랜드 스코어 적용일 시
@@ -195,21 +260,53 @@ def get_recommendation_newsfeed():
 					POST['similarity'] = result
 			#################################################################
 
+			#관심분야 반영/미반영 시간 측정###################################
+			#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
+			#1. similarity // 2. trendscore + similarity
+			SIM_TREND_TIME_END = time.time()
+			###########################################################
+
 	#비회원일 때! (no token)
 	else:
 		#logging (메인 로그)
 		insert_log(g.db, request.remote_addr, request.path)
 		#방문자 로그 기록!
 		insert_today_visitor(g.db, request.remote_addr)
+		
+		#비회원 뉴스피드 제작 함수 시간 측정################################
+		NON_MEMBER_TIME_START = time.time()
+		###########################################################
+		
 		#비로그인 전용 추천뉴스피드 호출!
-		POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)		
+		POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)
+
+		#비회원 뉴스피드 제작 함수 측정 종료################################
+		NON_MEMBER_TIME_END = time.time()
+		###########################################################
 
 	#similarity를 기준으로 내림차순 정렬.
 	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
 
+	#총 시간 측정 종료#############################################
+	TOTAL_TIME_END = time.time()
+	###########################################################
+
+	SPEED_RESULT = {}
+	SPEED_RESULT['FIND_ALL_POSTS'] = FIND_ALL_POSTS_TIME_START - FIND_ALL_POSTS_TIME_END
+	SPEED_RESULT['NON_MEMBER'] = NON_MEMBER_TIME_START - NON_MEMBER_TIME_END
+	if SIM_TREND_TEST_FLAG:
+		SPEED_RESULT['SIM_TREND'] = SIM_TREND_TIME_START - SIM_TREND_TIME_END
+	SPEED_RESULT['TOTAL'] = TOTAL_TIME_START - TOTAL_TIME_END
+	SPEED_RESULT['SJ_NO_TOKEN_RECOMMENDATION_LIMIT'] = SJ_NO_TOKEN_RECOMMENDATION_LIMIT
+	SPEED_RESULT['SJ_RECOMMENDATION_LIMIT'] = SJ_RECOMMENDATION_LIMIT
+	SPEED_RESULT['SJ_RETURN_NUM'] = SJ_RETURN_NUM
+
+
 	return jsonify(
-		result = "success",
-		newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]))
+			result = "success",
+			newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]),
+			speed_result = SPEED_RESULT
+		)
 
 #비회원 전용 추천 뉴스피드.ver2
 def get_recommendation_newsfeed_non_member(db, now_date):
@@ -325,8 +422,8 @@ def trendscore(POST, now_date):
 
 '''
 #현재 버전 2 테스트중
-#토픽별 뉴스피드
-@BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
+#토픽별 뉴스피드.ver1
+@BP.route('/get_topic_newsfeed/<string:newsfeed_name>')
 @jwt_optional
 def get_newsfeed_of_topic(newsfeed_name):
 	#제대로 된 뉴스피드 네임이 들어오지 않을 경우
@@ -410,7 +507,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 
 '''
 #현재 버전 2 테스트중
-#비회원 전용 추천 뉴스피드
+#비회원 전용 추천 뉴스피드.ver1
 def get_recommendation_newsfeed_non_member(db, now_date):
 	#요청한 뉴스피드에 대한 정보를 가져온다.
 	newsfeed_type = find_all_newsfeed_of_topic(db)

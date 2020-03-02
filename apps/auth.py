@@ -70,7 +70,7 @@ def sign_in_up():
 
 #회원가입
 @BP.route('/sign_up', methods = ['POST'])
-def sing_up():
+def sign_up():
 	USER_ID = request.form['id']
 	USER_PW = request.form['pw']
 	USER_PW_CHECK = request.form['pw_check']
@@ -87,7 +87,7 @@ def sing_up():
 
 	if (len(USER_ID) < 6 and len(USER_ID) > 30) or (len(USER_NICKNAME) < 1 and len(USER_NICKNAME) > 16) or len(USER_PW) < 8:
 		return jsonify(
-			result = "long user info"
+			result = "wrong user info"
 		)
 
 	if USER_PW != USER_PW_CHECK:
@@ -121,7 +121,7 @@ def sing_up():
 
 #로그인
 @BP.route('/sign_in', methods = ['POST'])
-def sing_in():
+def sign_in():
 	USER_ID = request.form['id']
 	USER_PW = request.form['pw']
 
@@ -175,22 +175,6 @@ def change_nickname():
 	return jsonify(
 		result = result
 	)
-
-
-#아이디 중복체크 (회원가입할 때)
-@BP.route('/check_id/<string:user_id>')
-def check_id(user_id):
-	user = find_user(g.db, user_id=user_id)
-
-	#해당 유저가 존재하지 않으면?!
-	if user is None:
-		return jsonify(
-			result = "available"
-		)
-	else:
-		return jsonify(
-			result = "not available"
-		)
 
 #회원정보 반환
 @BP.route('/get_userinfo')

@@ -41,6 +41,129 @@ def admin_remove_user(user_id):
 
 	return jsonify(result = result)
 
+#공지사항 전체 반환
+@BP.route('/get_all_notice')
+def get_all_notice():
+	result = find_all_notice(g.db)
+	result = dumps(result)
+
+	return jsonify(
+		result = "success",
+		notice_list = result
+	)
+
+#공지사항 단일 반환
+@BP.route('/get_notice/<string:notice_obi>')
+def get_notice(notice_obi):
+	result = find_notice(g.db, notice_obi)
+	result = dumps(result)
+	
+	return jsonify(
+		result = "success",
+		notice = result
+	)
+
+#공지사항 입력
+@BP.route('/insert_notice', methods=['POST'])
+@jwt_required
+def insert_notice_():
+	new_title = request.form['title']
+	new_post = request.form['post']
+
+	admin = find_user(g.db, user_id=get_jwt_identity())
+
+	#Admin 확인
+	if admin is None or admin['user_id'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+	
+	result = insert_notice(g.db, new_title, new_post)
+
+	return jsonify(
+		result = result
+	)
+
+#공지사항 수정
+@BP.route('/update_notice/<string:notice_obi>', methods=['POST'])
+@jwt_required
+def update_notice(notice_obi):
+	new_title = request.form['title']
+	new_post = request.form['post']
+	
+	admin = find_user(g.db, user_id=get_jwt_identity())
+
+	#Admin 확인
+	if admin is None or admin['user_id'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	result = update_notice(g.db, notice_obi, title, post, url)
+
+	return jsonify(
+		reuslt = result
+	)
+
+#공지사항 삭제
+@BP.route('/remove_notice/<string:notice_obi>')
+@jwt_required
+def remove_notice(notice_obi):
+	admin = find_user(g.db, user_id=get_jwt_identity())
+
+	#Admin 확인
+	if admin is None or admin['user_id'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+
+	notice = find_notice(g.db, notice_obi)
+
+	if notice is None:
+		return jsonify(result = "Not found")
+
+	result = remove_notice(g.db, notice_obi)
+
+	return jsonify(
+		result = result
+	)
+
+#피드백 전송
+@BP.route('/send_feedback', methods=['POST'])
+@jwt_required
+def send_feedback():
+	user = find_user(g.db, user_id=get_jwt_identity())
+	if user is None: abort(400)
+
+	FEEDBACK_TYPE = request.form['type']
+	FEEDBACK_POST = request.form['post']
+	FEEDBACK_TIME = datetime.now()
+	FEEDBACK_AUTHOR = user['user_id']
+
+	feedback_data = {
+    	'type': FEEDBACK_TYPE,
+    	'time': FEEDBACK_TIME,
+    	'post': FEEDBACK_POST,
+    	'author': FEEDBACK_AUTHOR
+	}
+
+	result = insert_user_feedback(g.db, feedback_data)
+
+	if result == "success":
+		return jsonify(result = "success")
+	else:
+		return jsonify(result = "fail")
+
+#관리자 판단용 API
+@BP.route('/check_admin')
+@jwt_required
+def check_admin():
+	admin = find_user(g.db, user_id=get_jwt_identity())
+
+	#Admin 확인
+	if admin is None or admin['user_id'] != SJ_ADMIN:
+		return jsonify(result = "Not admin")
+	
+	return jsonify(result = "success")
+
+#############################################################################
+#############################################################################
+
+'''
 #게시글 입력
 @BP.route('/insert_post', methods=['POST'])
 @jwt_required
@@ -125,114 +248,9 @@ def remove_post(post_obi):
 	result = remove_post(g.db, post_obi)
 
 	return jsonify(result = result)
+'''
 
-#공지사항 전체 반환
-@BP.route('/get_all_notice')
-def get_all_notice():
-	result = find_all_notice(g.db)
-	result = dumps(result)
-
-	return jsonify(
-		result = "success",
-		notice_list = result
-	)
-
-#공지사항 단일 반환
-@BP.route('/get_notice/<string:notice_obi>')
-def get_notice(notice_obi):
-	result = find_notice(g.db, notice_obi)
-	result = dumps(result)
-	
-	return jsonify(
-		result = "success",
-		notice = result
-	)
-
-#공지사항 입력
-@BP.route('/insert_notice', methods=['POST'])
-@jwt_required
-def insert_notice_():
-	new_title = request.form['title']
-	new_post = request.form['post']
-
-	admin = find_user(g.db, user_id=get_jwt_identity())
-
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
-	
-	result = insert_notice(g.db, new_title, new_post)
-
-	return jsonify(
-		result = result
-	)
-
-#공지사항 수정
-@BP.route('/update_notice/<string:notice_obi>', methods=['POST'])
-@jwt_required
-def update_notice(notice_obi):
-	new_title = request.form['title']
-	new_post = request.form['post']
-	
-	admin = find_user(g.db, user_id=get_jwt_identity())
-
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
-
-	result = update_notice(g.db, notice_obi, title, post, url)
-
-	return jsonify(
-		reuslt = result
-	)
-
-#공지사항 삭제
-@BP.route('/remove_notice/<string:notice_obi>', methods=['POST'])
-@jwt_required
-def remove_notice(notice_obi):
-	admin = find_user(g.db, user_id=get_jwt_identity())
-
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
-
-	notice = find_notice(g.db, notice_obi)
-
-	if notice is None:
-		return jsonify(result = "Not found")
-
-	result = remove_notice(g.db, notice_obi)
-
-	return jsonify(
-		result = result
-	)
-
-#피드백 전송
-@BP.route('/send_feedback', methods=['POST'])
-@jwt_required
-def send_feedback():
-	user = find_user(g.db, user_id=get_jwt_identity())
-	if user is None: abort(400)
-
-	FEEDBACK_TYPE = request.form['type']
-	FEEDBACK_POST = request.form['post']
-	FEEDBACK_TIME = datetime.now()
-	FEEDBACK_AUTHOR = user['user_id']
-
-	feedback_data = {
-    	'type': FEEDBACK_TYPE,
-    	'time': FEEDBACK_TIME,
-    	'post': FEEDBACK_POST,
-    	'author': FEEDBACK_AUTHOR
-	}
-
-	result = insert_user_feedback(g.db, feedback_data)
-
-	if result == "success":
-		return jsonify(result = "success")
-	else:
-		return jsonify(result = "fail")
-
+'''
 #블랙리스트 등록
 @BP.route('/push_blacklist/<string:user_id>')
 @jwt_required
@@ -312,17 +330,7 @@ def pop_blacklist(user_id):
 		result = result
 	)
 
-#관리자 판단용 API
-@BP.route('/check_admin')
-@jwt_required
-def check_admin():
-	admin = find_user(g.db, user_id=get_jwt_identity())
-
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
-	
-	return jsonify(result = "success")
+'''
 
 '''
 #admin 생성

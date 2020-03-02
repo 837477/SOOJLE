@@ -26,8 +26,9 @@ def get_search_realtime():
 	result = result[0]
 
 	return jsonify(
-		result = "success",
-		search_realtime = result['real_time'][:SJ_REALTIME_RETURN_LIMIT])
+			result = "success",
+			search_realtime = result['real_time'][:SJ_REALTIME_RETURN_LIMIT]
+		)
 
 #log) 시간대 반환 (date는 한개씩만 사용 가능, limit 설정!)
 @BP.route('/get_log_date/<int:months>/<int:days>/<int:hours>/<int:limit>')
@@ -79,7 +80,7 @@ def get_log_user_date(user_id, months, days, hours, limit):
 		result = "success",
 		log = result)
 
-#입력된 str을 fasttext로 유사한 단어를 추출 해주는 API
+#입력된 str을 fasttext로 유사한 단어를 추출 해주는 API (연관검색어)
 @BP.route('/get_similarity_words', methods = ['POST'])
 def simulation_fastext():
 	input_str = request.form['search']

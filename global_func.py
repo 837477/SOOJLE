@@ -34,7 +34,7 @@ def schedule_init():
 	scheduler.start()
 
 	#매 달마다 실행
-	scheduler.add_job(create_word_cloud, trigger = "interval", days=SJ_CREATE_WORDCLOUD_TIME, timezone = t_zone)
+	#scheduler.add_job(create_word_cloud, trigger = "interval", days=SJ_CREATE_WORDCLOUD_TIME, timezone = t_zone)
 
 	scheduler.add_job(update_posts_highest, trigger = "interval", days=SJ_UPDATE_HIGHEST_FAV_VIEW_TIME, timezone = t_zone)
 
@@ -152,7 +152,7 @@ def real_time_insert():
 	if db_client is not None:
 		db_client.close()
 
-#사용자 관심도 측정
+#사용자 관심도 측정 (테스트 대상)
 def measurement_run():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
@@ -424,7 +424,7 @@ def create_word_cloud():
 	if db_client is not None:
 		db_client.close()
 
-#하루 통계 작업 (하루마다!)
+#하루 통계 작업 (하루마다!) (테스트 대상)
 def visitor_analysis_work():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
