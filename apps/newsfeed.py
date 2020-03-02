@@ -44,7 +44,7 @@ def get_newsfeed_of_topic(category_name):
 	POST_LIST = list(POST_LIST)
 
 	#find_posts_of_category 측정 종료 (불러와서 리스트화 시킨 시간)#####
-	FIND_POSTS_OF_CATEGORY_TIME_END = time.time()
+	FIND_POSTS_OF_CATEGORY_TIME_END = time.time() - FIND_POSTS_OF_CATEGORY_TIME_START
 	###########################################################
 
 	#로그인시!
@@ -95,7 +95,7 @@ def get_newsfeed_of_topic(category_name):
 				POST['similarity'] = result
 			
 			#공모전&행사 뉴스피드 관심도 반영 측정 종료 (불러와서 리스트화 시킨 시간)###
-			GET_SIMILARITY_TIME_END = time.time()
+			GET_SIMILARITY_TIME_END = time.time() - GET_SIMILARITY_TIME_START
 			###########################################################
 
 			#similarity를 기준으로 내림차순 정렬.
@@ -107,15 +107,15 @@ def get_newsfeed_of_topic(category_name):
 		insert_log(g.db, request.remote_addr, request.path)
 
 	#총 시간 측정 종료#############################################
-	TOTAL_TIME_END = time.time()
+	TOTAL_TIME_END = time.time() - TOTAL_TIME_START
 	###########################################################
 
 	SPEED_RESULT = {}
-	SPEED_RESULT['FIND_POSTS_OF_CATEGROY'] = FIND_POSTS_OF_CATEGORY_TIME_START - FIND_POSTS_OF_CATEGORY_TIME_END
+	SPEED_RESULT['FIND_POSTS_OF_CATEGROY'] = FIND_POSTS_OF_CATEGORY_TIME_END
 	if get_jwt_identity():
 		if category_name == '공모전&행사':
-			SPEED_RESULT['GET_SIMILARITY'] = GET_SIMILARITY_TIME_START - GET_SIMILARITY_TIME_END
-	SPEED_RESULT['TOTAL'] = TOTAL_TIME_START - TOTAL_TIME_END
+			SPEED_RESULT['GET_SIMILARITY'] = GET_SIMILARITY_TIME_END
+	SPEED_RESULT['TOTAL'] = TOTAL_TIME_END
 	SPEED_RESULT['SJ_NEWSFEED_TOPIC_LIMIT'] = SJ_NEWSFEED_TOPIC_LIMIT
 	SPEED_RESULT['SJ_RETURN_NUM'] = SJ_RETURN_NUM
 
@@ -172,7 +172,7 @@ def get_recommendation_newsfeed():
 	POST_LIST = list(POST_LIST)
 
 	#뉴스피드에 반환 될 게시글들 불러오기 시간 측정#######################
-	FIND_ALL_POSTS_TIME_END = time.time()
+	FIND_ALL_POSTS_TIME_END = time.time() - FIND_ALL_POSTS_TIME_START
 	###########################################################
 
 	#현재 날짜 가져오기.
@@ -194,17 +194,8 @@ def get_recommendation_newsfeed():
 
 		#회원 관심도가 cold 상태일 때!
 		if USER['measurement_num'] <= SJ_USER_COLD_LIMIT:
-			#비회원 뉴스피드 제작 함수 시간 측정################################
-			NON_MEMBER_TIME_START = time.time()
-			NON_MEMBER_TEST_FLAG = True
-			###########################################################
-
 			#비로그인 전용 추천뉴스피드 호출!
 			POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)	
-
-			#비회원 뉴스피드 제작 함수 측정 종료################################
-			NON_MEMBER_TIME_END = time.time()
-			###########################################################
 
 		#관심도가 cold가 아닐 때!
 		else:
@@ -266,7 +257,7 @@ def get_recommendation_newsfeed():
 			#관심분야 반영/미반영 시간 측정###################################
 			#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
 			#1. similarity // 2. trendscore + similarity
-			SIM_TREND_TIME_END = time.time()
+			SIM_TREND_TIME_END = time.time() - SIM_TREND_TIME_START
 			###########################################################
 
 	#비회원일 때! (no token)
@@ -285,23 +276,23 @@ def get_recommendation_newsfeed():
 		POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)
 
 		#비회원 뉴스피드 제작 함수 측정 종료################################
-		NON_MEMBER_TIME_END = time.time()
+		NON_MEMBER_TIME_END = time.time() - NON_MEMBER_TIME_START
 		###########################################################
 
 	#similarity를 기준으로 내림차순 정렬.
 	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
 
 	#총 시간 측정 종료#############################################
-	TOTAL_TIME_END = time.time()
+	TOTAL_TIME_END = time.time() - TOTAL_TIME_START
 	###########################################################
 
 	SPEED_RESULT = {}
-	SPEED_RESULT['FIND_ALL_POSTS'] = FIND_ALL_POSTS_TIME_START - FIND_ALL_POSTS_TIME_END
+	SPEED_RESULT['FIND_ALL_POSTS'] = FIND_ALL_POSTS_TIME_END
 	if NON_MEMBER_TEST_FLAG:
-		SPEED_RESULT['NON_MEMBER'] = NON_MEMBER_TIME_START - NON_MEMBER_TIME_END
+		SPEED_RESULT['NON_MEMBER'] = NON_MEMBER_TIME_END
 	if SIM_TREND_TEST_FLAG:
-		SPEED_RESULT['SIM_TREND'] = SIM_TREND_TIME_START - SIM_TREND_TIME_END
-	SPEED_RESULT['TOTAL'] = TOTAL_TIME_START - TOTAL_TIME_END
+		SPEED_RESULT['SIM_TREND'] = SIM_TREND_TIME_END
+	SPEED_RESULT['TOTAL'] = TOTAL_TIME_END
 	SPEED_RESULT['SJ_NO_TOKEN_RECOMMENDATION_LIMIT'] = SJ_NO_TOKEN_RECOMMENDATION_LIMIT
 	SPEED_RESULT['SJ_RECOMMENDATION_LIMIT'] = SJ_RECOMMENDATION_LIMIT
 	SPEED_RESULT['SJ_RETURN_NUM'] = SJ_RETURN_NUM
