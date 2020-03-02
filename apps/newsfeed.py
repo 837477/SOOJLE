@@ -112,8 +112,9 @@ def get_newsfeed_of_topic(category_name):
 
 	SPEED_RESULT = {}
 	SPEED_RESULT['FIND_POSTS_OF_CATEGROY'] = FIND_POSTS_OF_CATEGORY_TIME_START - FIND_POSTS_OF_CATEGORY_TIME_END
-	if category_name == '공모전&행사':
-		SPEED_RESULT['GET_SIMILARITY'] = GET_SIMILARITY_TIME_START - GET_SIMILARITY_TIME_END
+	if get_jwt_identity():
+		if category_name == '공모전&행사':
+			SPEED_RESULT['GET_SIMILARITY'] = GET_SIMILARITY_TIME_START - GET_SIMILARITY_TIME_END
 	SPEED_RESULT['TOTAL'] = TOTAL_TIME_START - TOTAL_TIME_END
 	SPEED_RESULT['SJ_NEWSFEED_TOPIC_LIMIT'] = SJ_NEWSFEED_TOPIC_LIMIT
 	SPEED_RESULT['SJ_RETURN_NUM'] = SJ_RETURN_NUM
@@ -156,6 +157,7 @@ def get_popularity_newsfeed():
 def get_recommendation_newsfeed():
 	#테스트 구분용
 	SIM_TREND_TEST_FLAG = False
+	NON_MEMBER_TEST_FLAG = False
 
 	#총 시간 측정#################################################
 	TOTAL_TIME_START = time.time()
@@ -194,6 +196,7 @@ def get_recommendation_newsfeed():
 		if USER['measurement_num'] <= SJ_USER_COLD_LIMIT:
 			#비회원 뉴스피드 제작 함수 시간 측정################################
 			NON_MEMBER_TIME_START = time.time()
+			NON_MEMBER_TEST_FLAG = True
 			###########################################################
 
 			#비로그인 전용 추천뉴스피드 호출!
@@ -275,6 +278,7 @@ def get_recommendation_newsfeed():
 		
 		#비회원 뉴스피드 제작 함수 시간 측정################################
 		NON_MEMBER_TIME_START = time.time()
+		NON_MEMBER_TEST_FLAG = True
 		###########################################################
 		
 		#비로그인 전용 추천뉴스피드 호출!
@@ -293,7 +297,8 @@ def get_recommendation_newsfeed():
 
 	SPEED_RESULT = {}
 	SPEED_RESULT['FIND_ALL_POSTS'] = FIND_ALL_POSTS_TIME_START - FIND_ALL_POSTS_TIME_END
-	SPEED_RESULT['NON_MEMBER'] = NON_MEMBER_TIME_START - NON_MEMBER_TIME_END
+	if NON_MEMBER_TEST_FLAG:
+		SPEED_RESULT['NON_MEMBER'] = NON_MEMBER_TIME_START - NON_MEMBER_TIME_END
 	if SIM_TREND_TEST_FLAG:
 		SPEED_RESULT['SIM_TREND'] = SIM_TREND_TIME_START - SIM_TREND_TIME_END
 	SPEED_RESULT['TOTAL'] = TOTAL_TIME_START - TOTAL_TIME_END
