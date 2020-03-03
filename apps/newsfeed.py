@@ -166,6 +166,9 @@ def get_recommendation_newsfeed():
 	#현재 날짜 가져오기.
 	now_date = datetime.now()
 	
+	#반환 할 포스트 초기화
+	POST_LIST = []
+
 	#회원일 때!
 	if get_jwt_identity():
 		#유저 정보 불러오기.
