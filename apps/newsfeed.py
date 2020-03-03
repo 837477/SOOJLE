@@ -519,6 +519,9 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 	#트랜드 스코어 미적용
 	else:
 		for POST in POST_LIST:
+			#트랜드 스코어 적용!
+			TREND = trendscore(POST, now_date)
+
 			#simijlarity 구하기!
 			result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
 					
@@ -636,6 +639,7 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 		for POST in POST_LIST:
 			RANDOM = numpy.random.random()
 			RANDOM *= SJ_RANDOM_WEIGHT
+			TREND = trendscore(POST)
 
 			POST['similarity'] = RANDOM
 	#트랜드 스코어 반영하는 시간 측정 종료##############################
