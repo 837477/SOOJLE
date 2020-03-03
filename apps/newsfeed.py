@@ -18,19 +18,18 @@ from variable import *
 #BluePrint
 BP = Blueprint('newsfeed', __name__)
 
-'''
+
 #현재 버전 2 테스트중
 #토픽별 뉴스피드.ver1
 @BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
 @jwt_optional
-def get_topic_newsfeed(newsfeed_name):
+def get_newsfeed_of_topic(newsfeed_name):
 	#총 시간 측정#################################################
 	TOTAL_TIME_START = time.time()
 	###########################################################
 
 	#제대로 된 뉴스피드 네임이 들어오지 않을 경우
 	if newsfeed_name not in SJ_NEWSFEED_OF_TOPIC_SET: abort(400)
-
 
 	#요청한 뉴스피드에 대한 정보를 가져온다.
 	newsfeed_type = find_newsfeed_of_topic(g.db, newsfeed_name)
@@ -44,7 +43,6 @@ def get_topic_newsfeed(newsfeed_name):
 	#find_posts_of_category 시간 측정 (불러와서 리스트화 시킨 시간)#####
 	FIND_POSTS_OF_CATEGORY_TIME_START = time.time()
 	###########################################################
-
 	#해당 토픽 뉴스피드에 관련된 게시글들을 불러온다.
 	POST_LIST = find_newsfeed(g.db, info, newsfeed_type['tag'], newsfeed_type['negative_tag'], SJ_NEWSFEED_TOPIC_LIMIT)
 	POST_LIST = list(POST_LIST)
@@ -55,8 +53,6 @@ def get_topic_newsfeed(newsfeed_name):
 		if ('end_date' in POST) and (now_date > POST['end_date']):
 			#해당 포스트 삭제.
 			POST_LIST.remove(POST)
-
-
 	#find_posts_of_category 측정 종료 (불러와서 리스트화 시킨 시간)#####
 	FIND_POSTS_OF_CATEGORY_TIME_END = time.time() - FIND_POSTS_OF_CATEGORY_TIME_START
 	###########################################################
@@ -91,11 +87,9 @@ def get_topic_newsfeed(newsfeed_name):
 
 		#공모전&행사 뉴스피드는 사용자 관심도도 측정하여 따로 반환
 		if newsfeed_name == '공모전&행사':
-
 			#공모전&행사 뉴스피드 관심도 반영 시간 측정 (불러와서 리스트화 시킨 시간)###
 			GET_SIMILARITY_TIME_START = time.time()
 			###########################################################
-
 			for POST in POST_LIST:
 				#우선 판별!
 				#당일로부터 30일 넘어가면 유사도 점수를 낮춘다.
@@ -126,21 +120,21 @@ def get_topic_newsfeed(newsfeed_name):
 	###########################################################
 
 	SPEED_RESULT = {}
-	SPEED_RESULT['FIND_POSTS_OF_CATEGROY'] = FIND_POSTS_OF_CATEGORY_TIME_END
+	SPEED_RESULT['FIND_POSTS_OF_CATEGROY_TIME'] = FIND_POSTS_OF_CATEGORY_TIME_END
 	if get_jwt_identity():
-		if newsfeed_name == '공모전&행사':
-			SPEED_RESULT['GET_SIMILARITY'] = GET_SIMILARITY_TIME_END
-	SPEED_RESULT['TOTAL'] = TOTAL_TIME_END
-	SPEED_RESULT['SJ_NEWSFEED_TOPIC_LIMIT'] = len(POST_LIST)
-	SPEED_RESULT['SJ_RETURN_NUM'] = SJ_RETURN_NUM
+		if category_name == '공모전&행사':
+			SPEED_RESULT['GET_SIMILARITY_TIME'] = GET_SIMILARITY_TIME_END
+	SPEED_RESULT['TOTAL_TIME'] = TOTAL_TIME_END
+	SPEED_RESULT['PROCESSING_POSTS_NUM'] = len(POST_LIST)
+	SPEED_RESULT['RETURN_NUM'] = SJ_RETURN_NUM
 
 	return jsonify(
 			result = "success",
 			newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]),
 			speed_result = SPEED_RESULT
 		)
-'''
 
+'''
 #토픽별 뉴스피드.ver2 (테스트 대상)
 @BP.route('/get_newsfeed_of_topic/<string:category_name>')
 @jwt_optional
@@ -244,6 +238,7 @@ def get_newsfeed_of_topic(category_name):
 			newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]),
 			speed_result = SPEED_RESULT
 		)
+'''
 
 #추천 뉴스피드 (테스트 대상)
 @BP.route('/get_recommendation_newsfeed')
