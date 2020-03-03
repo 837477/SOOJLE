@@ -707,7 +707,7 @@ def find_newsfeed(db, info, tag, negative_tag, num):
 		).sort([('date', -1)]).limit(num)
 	return result
 
-#category_of_topic###################################
+#category_of_topic 버전#################################
 #카테고리별 타입 전체 반환 (미사용)
 def find_all_category_of_topic(db):
 	result = db['category_of_topic'].find(
@@ -755,7 +755,7 @@ def find_posts_of_category(db, info_num_list, tag, now_date, num):
 			[
 				{'info_num': {'$in': info_num_list}},
 				{'tag': {'$in': tag}},
-				{'end_date': {'$gte': now_date}}
+				{'end_date': {'$gt': now_date}}
 			]
 		},
 		{
@@ -773,7 +773,31 @@ def find_posts_of_category(db, info_num_list, tag, now_date, num):
 			'ft_vector': 1,
 			'end_date': 1
 		}
-		).sort([('date', -1)]).limit(num).hint("info_num_1_tag_1_end_date_-1_date_-1")
+	).sort([('date', -1)]).limit(num).hint("info_num_1_tag_1_end_date_-1_date_-1")
+	return result
+
+#find_posts_of_recommendation 버전######################
+def find_posts_of_recommendation(db, now_date, num):
+	result = db[SJ_DB_POST].find(
+		{
+			'end_date': {'$gt': now_date}
+		},
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'view': 1,
+			'url': 1,
+			'title_token': 1,
+			'info': 1,
+			'tag': 1,
+			'topic': 1,
+			'ft_vector': 1,
+			'end_date': 1
+		}
+	).sort([('date', -1)]).limit(num)
 	return result
 
 #인기 뉴스피드 반환
