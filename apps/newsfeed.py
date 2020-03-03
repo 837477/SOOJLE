@@ -163,18 +163,6 @@ def get_recommendation_newsfeed():
 	TOTAL_TIME_START = time.time()
 	###########################################################
 
-	#뉴스피드에 반환 될 게시글들 불러오기 시간 측정#######################
-	FIND_ALL_POSTS_TIME_START = time.time()
-	###########################################################
-
-	#게시글들을 불러온다.
-	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, info=1, title_token=1, url=1, img=1, date=1, end_date=1, limit_=SJ_RECOMMENDATION_LIMIT)
-	POST_LIST = list(POST_LIST)
-
-	#뉴스피드에 반환 될 게시글들 불러오기 시간 측정#######################
-	FIND_ALL_POSTS_TIME_END = time.time() - FIND_ALL_POSTS_TIME_START
-	###########################################################
-
 	#현재 날짜 가져오기.
 	now_date = datetime.now()
 	
@@ -188,7 +176,6 @@ def get_recommendation_newsfeed():
 
 		#logging (메인 로그)
 		insert_log(g.db, USER['user_id'], request.path)
-
 		#방문자 로그 기록!
 		insert_today_visitor(g.db, USER['user_id'])
 
@@ -199,85 +186,18 @@ def get_recommendation_newsfeed():
 
 		#관심도가 cold가 아닐 때!
 		else:
-			#캐싱된 가장 높은 좋아요 수를 가져온다.
-			Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
-			#캐싱된 가장 높은 조회수를 가져온다.
-			Maxviews = find_variable(g.db, 'highest_view_cnt')
+			#로그인 전용 추천뉴스피드 호출!
+			get_recommendation_newsfeed_member(g.db, now_date)
 
-			#관심분야 + 트렌드 반영/미반영 시간 측정############################
-			#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
-			#1. similarity // 2. trendscore + similarity
-			SIM_TREND_TIME_START = time.time()
-			SIM_TREND_TEST_FLAG = True
-			###########################################################
-
-			#트랜드 스코어 적용 판별##############################################
-			#트랜드 스코어 적용일 시
-			if trendscore_discriminate(now_date):
-				for POST in POST_LIST:
-					#end_date 처리!
-					#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
-					if ('end_date' in POST) and (now_date > POST['end_date']):
-						#해당 포스트 삭제. (첫 번째 방안)
-						#POST_LIST.remove(POST)
-
-						#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
-						POST['similarity'] = 0
-						continue
-					
-					#simijlarity 구하기!
-					result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
-
-					#트랜드 스코어 적용!
-					result += trendscore(POST, now_date)
-
-					#최종 similarity 적용!
-					POST['similarity'] = result
-					
-			#트랜드 스코어 적용 안할 시
-			else:
-				for POST in POST_LIST:
-					#end_date 처리!
-					#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
-					if ('end_date' in POST) and (now_date > POST['end_date']):
-						#해당 포스트 삭제. (첫 번째 방안)
-						#POST_LIST.remove(POST)
-
-						#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
-						POST['similarity'] = 0
-						continue
-					
-					#simijlarity 구하기!
-					result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
-					
-					#최종 similarity 적용!
-					POST['similarity'] = result
-			#################################################################
-
-			#관심분야 + 트렌드 반영/미반영 측정 ###############################
-			#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
-			#1. similarity // 2. trendscore + similarity
-			SIM_TREND_TIME_END = time.time() - SIM_TREND_TIME_START
-			###########################################################
-
-	#비회원일 때! (no token)
+	#비회원일 때!
 	else:
 		#logging (메인 로그)
 		insert_log(g.db, request.remote_addr, request.path)
 		#방문자 로그 기록!
-		insert_today_visitor(g.db, request.remote_addr)
-		
-		#비회원 뉴스피드 제작 함수 시간 측정################################
-		NON_MEMBER_TIME_START = time.time()
-		NON_MEMBER_TEST_FLAG = True
-		###########################################################
+		insert_today_visitor(g.db, request.remote_addr)		
 		
 		#비로그인 전용 추천뉴스피드 호출!
 		POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)
-
-		#비회원 뉴스피드 제작 함수 측정 종료################################
-		NON_MEMBER_TIME_END = time.time() - NON_MEMBER_TIME_START
-		###########################################################
 
 	#similarity를 기준으로 내림차순 정렬.
 	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
@@ -285,24 +205,67 @@ def get_recommendation_newsfeed():
 	#총 시간 측정 종료#############################################
 	TOTAL_TIME_END = time.time() - TOTAL_TIME_START
 	###########################################################
-
+	
 	SPEED_RESULT = {}
-	SPEED_RESULT['FIND_ALL_POSTS'] = FIND_ALL_POSTS_TIME_END
-	if NON_MEMBER_TEST_FLAG:
-		SPEED_RESULT['NON_MEMBER'] = NON_MEMBER_TIME_END
-	if SIM_TREND_TEST_FLAG:
-		SPEED_RESULT['SIM_TREND'] = SIM_TREND_TIME_END
-	SPEED_RESULT['TOTAL'] = TOTAL_TIME_END
-	SPEED_RESULT['SJ_NO_TOKEN_RECOMMENDATION_LIMIT'] = SJ_NO_TOKEN_RECOMMENDATION_LIMIT
-	SPEED_RESULT['SJ_RECOMMENDATION_LIMIT'] = len(POST_LIST)
-	SPEED_RESULT['SJ_RETURN_NUM'] = SJ_RETURN_NUM
-
 
 	return jsonify(
 			result = "success",
 			newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]),
 			speed_result = SPEED_RESULT
 		)
+
+#회원 전용 추천 뉴스피드
+def get_recommendation_newsfeed_member(db, now_date):
+	#게시글들을 불러온다.
+	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, info=1, title_token=1, url=1, img=1, date=1, end_date=1, limit_=SJ_RECOMMENDATION_LIMIT)
+	POST_LIST = list(POST_LIST)
+
+	#캐싱된 가장 높은 좋아요 수를 가져온다.
+	Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
+	#캐싱된 가장 높은 조회수를 가져온다.
+	Maxviews = find_variable(g.db, 'highest_view_cnt')
+
+	#트랜드 스코어 적용 판별##############################################
+	#트랜드 스코어 적용일 시
+	if trendscore_discriminate(now_date):
+		for POST in POST_LIST:
+			#end_date 처리!
+			#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+			if ('end_date' in POST) and (now_date > POST['end_date']):
+				#해당 포스트 삭제. (첫 번째 방안)
+				#POST_LIST.remove(POST)
+
+				#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
+				POST['similarity'] = 0
+				continue
+					
+			#simijlarity 구하기!
+			result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
+
+			#트랜드 스코어 적용!
+			result += trendscore(POST, now_date)
+
+			#최종 similarity 적용!
+			POST['similarity'] = result
+					
+	#트랜드 스코어 적용 안할 시
+	else:
+		for POST in POST_LIST:
+			#end_date 처리!
+			#포스트에 end_date가 존재하고, 현재 날짜가 더 커버리면 (이미 지난 글)
+			if ('end_date' in POST) and (now_date > POST['end_date']):
+				#해당 포스트 삭제. (첫 번째 방안)
+				#POST_LIST.remove(POST)
+
+				#해당 포스트 유사도를 0으로 측정 (두 번째 방안)
+				POST['similarity'] = 0
+				continue
+					
+			#simijlarity 구하기!
+			result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
+					
+			#최종 similarity 적용!
+			POST['similarity'] = result
 
 #비회원 전용 추천 뉴스피드.ver2
 def get_recommendation_newsfeed_non_member(db, now_date):
