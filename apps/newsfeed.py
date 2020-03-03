@@ -122,7 +122,7 @@ def get_newsfeed_of_topic(newsfeed_name):
 	SPEED_RESULT = {}
 	SPEED_RESULT['FIND_POSTS_OF_CATEGROY_TIME'] = FIND_POSTS_OF_CATEGORY_TIME_END
 	if get_jwt_identity():
-		if category_name == '공모전&행사':
+		if newsfeed_name == '공모전&행사':
 			SPEED_RESULT['GET_SIMILARITY_TIME'] = GET_SIMILARITY_TIME_END
 	SPEED_RESULT['TOTAL_TIME'] = TOTAL_TIME_END
 	SPEED_RESULT['PROCESSING_POSTS_NUM'] = len(POST_LIST)
