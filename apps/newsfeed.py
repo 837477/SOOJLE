@@ -187,7 +187,7 @@ def get_recommendation_newsfeed():
 		#관심도가 cold가 아닐 때!
 		else:
 			#로그인 전용 추천뉴스피드 호출!
-			get_recommendation_newsfeed_member(g.db, now_date)
+			get_recommendation_newsfeed_member(g.db, USER, now_date)
 
 	#비회원일 때!
 	else:
@@ -215,7 +215,7 @@ def get_recommendation_newsfeed():
 		)
 
 #회원 전용 추천 뉴스피드
-def get_recommendation_newsfeed_member(db, now_date):
+def get_recommendation_newsfeed_member(db, USER, now_date):
 	#게시글들을 불러온다.
 	POST_LIST = find_all_posts(g.db, _id=1, topic=1, ft_vector=1, fav_cnt=1, view=1, tag=1, title=1, info=1, title_token=1, url=1, img=1, date=1, end_date=1, limit_=SJ_RECOMMENDATION_LIMIT)
 	POST_LIST = list(POST_LIST)
@@ -266,6 +266,8 @@ def get_recommendation_newsfeed_member(db, now_date):
 					
 			#최종 similarity 적용!
 			POST['similarity'] = result
+
+	return POST_LIST
 
 #비회원 전용 추천 뉴스피드.ver2
 def get_recommendation_newsfeed_non_member(db, now_date):
