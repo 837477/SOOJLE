@@ -18,7 +18,7 @@ from variable import *
 #BluePrint
 BP = Blueprint('newsfeed', __name__)
 
-
+'''
 #현재 버전 2 테스트중
 #토픽별 뉴스피드.ver1
 @BP.route('/get_newsfeed_of_topic/<string:newsfeed_name>')
@@ -133,8 +133,8 @@ def get_newsfeed_of_topic(newsfeed_name):
 			newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]),
 			speed_result = SPEED_RESULT
 		)
-
 '''
+
 #토픽별 뉴스피드.ver2 (테스트 대상)
 @BP.route('/get_newsfeed_of_topic/<string:category_name>')
 @jwt_optional
@@ -238,7 +238,6 @@ def get_newsfeed_of_topic(category_name):
 			newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]),
 			speed_result = SPEED_RESULT
 		)
-'''
 
 #추천 뉴스피드 (테스트 대상)
 @BP.route('/get_recommendation_newsfeed')
