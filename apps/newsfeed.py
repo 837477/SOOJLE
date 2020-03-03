@@ -630,7 +630,7 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 		for POST in POST_LIST:
 			RANDOM = numpy.random.random()
 			RANDOM *= SJ_RANDOM_WEIGHT
-			TREND = trendscore(POST)
+			TREND = trendscore(POST, now_date)
 
 			POST['similarity'] = RANDOM + TREND
 	
@@ -639,7 +639,7 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 		for POST in POST_LIST:
 			RANDOM = numpy.random.random()
 			RANDOM *= SJ_RANDOM_WEIGHT
-			TREND = trendscore(POST)
+			TREND = trendscore(POST, now_date)
 
 			POST['similarity'] = RANDOM
 	#트랜드 스코어 반영하는 시간 측정 종료##############################
