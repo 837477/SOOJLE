@@ -225,14 +225,14 @@ def get_recommendation_newsfeed():
 						POST['similarity'] = 0
 						continue
 					
-						#simijlarity 구하기!
-						result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
+					#simijlarity 구하기!
+					result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
 
-						#트랜드 스코어 적용!
-						result += trendscore(POST, now_date)
+					#트랜드 스코어 적용!
+					result += trendscore(POST, now_date)
 
-						#최종 similarity 적용!
-						POST['similarity'] = result
+					#최종 similarity 적용!
+					POST['similarity'] = result
 					
 			#트랜드 스코어 적용 안할 시
 			else:
