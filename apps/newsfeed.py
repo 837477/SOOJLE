@@ -526,12 +526,12 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 			#최종 similarity 적용!
 			POST['similarity'] = result
 	#트랜드 스코어 반영하는 시간 측정 종료##############################
-	SIM_TREND_TIME_END = time.time() - TREND_TIME_START
+	SIM_TREND_TIME_END = time.time() - SIM_TREND_TIME_START
 	###########################################################
 
 	SPEED_RESULT = {}
 	SPEED_RESULT['MEMBER_FIND_ALL_POSTS_TIME'] = FIND_ALL_POSTS_TIME_END
-	SPEED_RESULT['MEMBER_SIM_TREND_TIME'] = TREND_TIME_END
+	SPEED_RESULT['MEMBER_SIM_TREND_TIME'] = SIM_TREND_TIME_END
 	SPEED_RESULT['MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
 	return POST_LIST, SPEED_RESULT
