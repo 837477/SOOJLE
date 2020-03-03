@@ -190,7 +190,7 @@ def get_recommendation_newsfeed():
 		#관심도가 cold가 아닐 때!
 		else:
 			#로그인 전용 추천뉴스피드 호출!
-			get_recommendation_newsfeed_member(g.db, USER, now_date)
+			POST_LIST = get_recommendation_newsfeed_member(g.db, USER, now_date)
 
 	#비회원일 때!
 	else:
