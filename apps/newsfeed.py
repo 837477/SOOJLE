@@ -204,7 +204,7 @@ def get_recommendation_newsfeed():
 			#캐싱된 가장 높은 조회수를 가져온다.
 			Maxviews = find_variable(g.db, 'highest_view_cnt')
 
-			#관심분야 반영/미반영 시간 측정###################################
+			#관심분야 + 트렌드 반영/미반영 시간 측정############################
 			#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
 			#1. similarity // 2. trendscore + similarity
 			SIM_TREND_TIME_START = time.time()
@@ -254,7 +254,7 @@ def get_recommendation_newsfeed():
 					POST['similarity'] = result
 			#################################################################
 
-			#관심분야 반영/미반영 시간 측정###################################
+			#관심분야 + 트렌드 반영/미반영 측정 ###############################
 			#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
 			#1. similarity // 2. trendscore + similarity
 			SIM_TREND_TIME_END = time.time() - SIM_TREND_TIME_START

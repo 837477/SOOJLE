@@ -7,6 +7,7 @@ from datetime import timedelta, datetime
 import operator
 import math
 import jpype
+import time
 ##########################################
 from db_management import *
 from global_func import *
@@ -155,14 +156,30 @@ def priority_search(num):
 @BP.route('/category_search/<string:category_name>/<int:num>', methods = ['POST'])
 @jwt_optional
 def category_search(category_name, num):
+	#총 시간 측정#################################################
+	TOTAL_TIME_START = time.time()
+	###########################################################
+
 	#검색어 입력!
 	search_str = request.form['search']
 
 	#공백 제거
 	del_space_str = search_str.split(' ')
 
+	#토크나이저 시간 측정###########################################
+	TOKENIZER_TIME_START = time.time()
+	###########################################################
+
 	#토크나이져 작업
 	tokenizer_list = tknizer.get_tk(search_str)
+
+	#토크나이저 측정 종료###########################################
+	TOKENIZER_TIME_END = time.time() - TOKENIZER_TIME_START
+	###########################################################
+
+	#FT 유사 단어 추출 시간 측정#####################################
+	FASTTEXT_TIME_START = time.time()
+	###########################################################
 
 	#FastText를 이용한 유사단어 추출
 	ft_similarity_list = []
@@ -172,15 +189,35 @@ def category_search(category_name, num):
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
+	#FT 유사 단어 추출 시간 측정#####################################
+	FASTTEXT_TIME_END = time.time() - FASTTEXT_TIME_START
+	###########################################################
+
+
 	#카테고리 불러오기!
 	category_type = find_category_of_topic(g.db, category_name)
+
+
+	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
+	FIND_SEARCH_OF_CATEGORY_TIME_START = time.time()
+	###########################################################
 
 	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
 	POST_LIST = find_search_of_category(g.db, tokenizer_list, category_type['info_num'], category_type['tag'], SJ_CS_LIMIT)
 	POST_LIST = list(POST_LIST)
 
+	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
+	FIND_SEARCH_OF_CATEGORY_TIME_END = time.time() - FIND_SEARCH_OF_CATEGORY_TIME_START
+	###########################################################
+
 	#현재 날짜 가져오기.
 	now_date = datetime.now()
+
+	#매치스코어 + 트랜드 반영/미반영 시간 측정##########################
+	#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
+	#1. Matchscore // 2. trendscore + Matchscore
+	MATCH_TREND_TIME_START = time.time()
+	###########################################################
 
 	#트랜드 스코어 적용 판별##############################################
 	#트랜드 스코어 적용일 시
@@ -241,15 +278,37 @@ def category_search(category_name, num):
 			del POST['token']
 			del POST['tag']
 			del POST['popularity']
+	
+	#매치스코어 + 트랜드 반영/미반영 시간 측정##########################
+	#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
+	#1. Matchscore // 2. trendscore + Matchscore
+	MATCH_TREND_TIME_END = time.time() - MATCH_TREND_TIME_START
+	###########################################################
 
 	#구해진 similarity - date로 내림차순 정렬
 	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('date'), reverse=True)
 	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
 
+	#총 시간 측정 종료#############################################
+	TOTAL_TIME_END = time.time() - TOTAL_TIME_START
+	###########################################################
+
+	SPEED_RESULT = {}
+	SPEED_RESULT['TOKENIZER'] = TOKENIZER_TIME_END
+	SPEED_RESULT['FASTTEXT'] = FASTTEXT_TIME_END
+	SPEED_RESULT['FIND_SEARCH_OF_CATEGORY'] = FIND_SEARCH_OF_CATEGORY_TIME_END
+	SPEED_RESULT['MATCH_TREND'] = MATCH_TREND_TIME_START
+	SPEED_RESULT['TOTAL'] = TOTAL_TIME_END
+	SPEED_RESULT['SJ_CS_LIMIT'] = SJ_CS_LIMIT
+	SPEED_RESULT['SJ_RETURN_NUM'] = num
+
+
 	#데이터로 들어온 상위 num개만 반환
 	return jsonify(
-		result = "success",
-		search_result = POST_LIST[:num])
+			result = "success",
+			search_result = POST_LIST[:num],
+			speed_result = SPEED_RESULT
+		)
 
 #domain_검색
 @BP.route('/domain_search', methods = ['POST'])
