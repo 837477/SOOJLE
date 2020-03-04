@@ -1710,6 +1710,22 @@ def find_notice(db, notice_obi):
 
 	return result
 
+#공지사항 조회수 올리기
+def update_notice_view(db, notice_obi):
+	db['notice'].update(
+		{
+			'_id': ObjectId(notice_obi)
+		}, 
+		{
+			'$inc': 
+			{
+				'view': 1
+			}
+		}
+	)
+
+	return "success"
+
 #게시글 추가
 def insert_post(db, title, post, tag, img, url, info, hashed, url_hashed, token, view, fav_cnt, title_token, login, learn, popularity, topic, ft_vector):
 	db['posts'].insert(
