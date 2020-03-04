@@ -151,7 +151,7 @@ def priority_search(num):
 	return jsonify(
 		result = "success",
 		search_result = aggregate_posts[:num])
-
+'''
 #category.ver2 검색 (테스트 대상)
 @BP.route('/category_search/<string:category_name>/<int:num>', methods = ['POST'])
 @jwt_optional
@@ -299,7 +299,7 @@ def category_search(category_name, num):
 			search_result = POST_LIST[:num],
 			speed_result = SPEED_RESULT
 		)
-
+'''
 #domain_검색
 @BP.route('/domain_search', methods = ['POST'])
 @jwt_optional
@@ -481,7 +481,7 @@ def trendscore(POST, now_date):
 
 ###############################################################################################
 ###############################################################################################
-'''
+
 #현재 버전 2 테스트중
 #category_검색
 @BP.route('/category_search/<int:type_check>/<int:num>', methods = ['POST'])
@@ -614,7 +614,7 @@ def category_search(type_check, num):
 	SPEED_RESULT['FIND_SEARCH_OF_CATEGORY_TIME'] = FIND_SEARCH_OF_CATEGORY_TIME_END
 	SPEED_RESULT['MATCH_TREND_TIME'] = MATCH_TREND_TIME_END
 	SPEED_RESULT['TOTAL_TIME'] = TOTAL_TIME_END
-	SPEED_RESULT['PROCESSING_POSTS_NUM'] = len(POST_LIST)
+	SPEED_RESULT['PROCESSING_POSTS_NUM'] = len(aggregate_posts)
 	SPEED_RESULT['RETURN_NUM'] = num
 
 	#데이터로 들어온 상위 num개만 반환
@@ -623,4 +623,4 @@ def category_search(type_check, num):
 			search_result = aggregate_posts[:num],
 			speed_result = SPEED_RESULT
 		)
-'''
+
