@@ -284,13 +284,13 @@ def category_search(category_name, num):
 	###########################################################
 
 	SPEED_RESULT = {}
-	SPEED_RESULT['TOKENIZER'] = TOKENIZER_TIME_END
-	SPEED_RESULT['FASTTEXT'] = FASTTEXT_TIME_END
-	SPEED_RESULT['FIND_SEARCH_OF_CATEGORY'] = FIND_SEARCH_OF_CATEGORY_TIME_END
-	SPEED_RESULT['MATCH_TREND'] = MATCH_TREND_TIME_END
-	SPEED_RESULT['TOTAL'] = TOTAL_TIME_END
-	SPEED_RESULT['SJ_CS_LIMIT'] = len(POST_LIST)
-	SPEED_RESULT['SJ_RETURN_NUM'] = num
+	SPEED_RESULT['TOKENIZER_TIME'] = TOKENIZER_TIME_END
+	SPEED_RESULT['FASTTEXT_TIME'] = FASTTEXT_TIME_END
+	SPEED_RESULT['FIND_SEARCH_OF_CATEGORY_TIME'] = FIND_SEARCH_OF_CATEGORY_TIME_END
+	SPEED_RESULT['MATCH_TREND_TIME'] = MATCH_TREND_TIME_END
+	SPEED_RESULT['TOTAL_TIME'] = TOTAL_TIME_END
+	SPEED_RESULT['PROCESSING_POSTS_NUM'] = len(POST_LIST)
+	SPEED_RESULT['RETURN_NUM'] = num
 
 
 	#데이터로 들어온 상위 num개만 반환
@@ -487,14 +487,28 @@ def trendscore(POST, now_date):
 @BP.route('/category_search/<int:type_check>/<int:num>', methods = ['POST'])
 @jwt_optional
 def category_search(type_check, num):
+	#총 시간 측정#################################################
+	TOTAL_TIME_START = time.time()
+	###########################################################
+
+	#검색어 입력!
 	search_str = request.form['search']
 
 	#공백 제거
 	del_space_str = search_str.split(' ')
 
+	#토크나이저 시간 측정###########################################
+	TOKENIZER_TIME_START = time.time()
+	###########################################################
 	#토크나이져 작업
 	tokenizer_list = tknizer.get_tk(search_str)
-
+	#토크나이저 측정 종료###########################################
+	TOKENIZER_TIME_END = time.time() - TOKENIZER_TIME_START
+	###########################################################
+	
+	#FT 유사 단어 추출 시간 측정#####################################
+	FASTTEXT_TIME_START = time.time()
+	###########################################################
 	#FastText를 이용한 유사단어 추출
 	ft_similarity_list = []
 	for word in tokenizer_list:
@@ -502,12 +516,25 @@ def category_search(type_check, num):
 			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
+	#FT 유사 단어 추출 시간 측정#####################################
+	FASTTEXT_TIME_END = time.time() - FASTTEXT_TIME_START
+	###########################################################
 
+	#find_aggregate 시간 측정 (불러와서 리스트화 시킨 시간)#############
+	FIND_SEARCH_OF_CATEGORY_TIME_START = time.time()
+	###########################################################
 	aggregate_posts = find_aggregate(g.db, tokenizer_list, type_check, SJ_CS_LIMIT)
 	aggregate_posts = list(aggregate_posts)
+	#find_aggregate 시간 측정 (불러와서 리스트화 시킨 시간)#############
+	FIND_SEARCH_OF_CATEGORY_TIME_END = time.time() - FIND_SEARCH_OF_CATEGORY_TIME_START
+	###########################################################
 
 	#현재 날짜 가져오기.
 	now_date = datetime.now()
+
+	#매치스코어 + 트랜드 반영/미반영 시간 측정##########################
+	MATCH_TREND_TIME_START = time.time()
+	###########################################################
 
 	#트랜드 스코어 적용 판별##############################################
 	#트랜드 스코어 적용일 시
@@ -569,12 +596,31 @@ def category_search(type_check, num):
 			del post['tag']
 			del post['popularity']
 
+	#매치스코어 + 트랜드 반영/미반영 시간 측정##########################
+	MATCH_TREND_TIME_END = time.time() - MATCH_TREND_TIME_START
+	###########################################################
+
 	#구해진 similarity - date로 내림차순 정렬
 	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('date'), reverse=True)
 	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('similarity'), reverse=True)
 
+	#총 시간 측정 종료#############################################
+	TOTAL_TIME_END = time.time() - TOTAL_TIME_START
+	###########################################################
+
+	SPEED_RESULT = {}
+	SPEED_RESULT['TOKENIZER_TIME'] = TOKENIZER_TIME_END
+	SPEED_RESULT['FASTTEXT_TIME'] = FASTTEXT_TIME_END
+	SPEED_RESULT['FIND_SEARCH_OF_CATEGORY_TIME'] = FIND_SEARCH_OF_CATEGORY_TIME_END
+	SPEED_RESULT['MATCH_TREND_TIME'] = MATCH_TREND_TIME_END
+	SPEED_RESULT['TOTAL_TIME'] = TOTAL_TIME_END
+	SPEED_RESULT['PROCESSING_POSTS_NUM'] = len(POST_LIST)
+	SPEED_RESULT['RETURN_NUM'] = num
+
 	#데이터로 들어온 상위 num개만 반환
 	return jsonify(
-		result = "success",
-		search_result = aggregate_posts[:num])
+			result = "success",
+			search_result = aggregate_posts[:num],
+			speed_result = SPEED_RESULT
+		)
 '''
