@@ -1665,7 +1665,7 @@ def insert_notice(db, title, post):
 	return "success"
 
 #공지사항 수정
-def update_notice(db, notice_obi, title, post):
+def update_notice(db, notice_obi, title, post, activation):
 	db['notice'].update(
 		{
 			'_id': ObjectId(notice_obi)
@@ -1675,6 +1675,7 @@ def update_notice(db, notice_obi, title, post):
 			{
 				'title': title,
 				'post': post,
+				'activation': activation,
 				'date': datetime.now()
 			}	
 		}

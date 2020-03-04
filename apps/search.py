@@ -159,7 +159,7 @@ def category_search(category_name, num):
 	#총 시간 측정#################################################
 	TOTAL_TIME_START = time.time()
 	###########################################################
-
+	
 	#검색어 입력!
 	search_str = request.form['search']
 
@@ -169,10 +169,8 @@ def category_search(category_name, num):
 	#토크나이저 시간 측정###########################################
 	TOKENIZER_TIME_START = time.time()
 	###########################################################
-
 	#토크나이져 작업
 	tokenizer_list = tknizer.get_tk(search_str)
-
 	#토크나이저 측정 종료###########################################
 	TOKENIZER_TIME_END = time.time() - TOKENIZER_TIME_START
 	###########################################################
@@ -180,7 +178,6 @@ def category_search(category_name, num):
 	#FT 유사 단어 추출 시간 측정#####################################
 	FASTTEXT_TIME_START = time.time()
 	###########################################################
-
 	#FastText를 이용한 유사단어 추출
 	ft_similarity_list = []
 	for word in tokenizer_list:
@@ -188,7 +185,6 @@ def category_search(category_name, num):
 			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
-
 	#FT 유사 단어 추출 시간 측정#####################################
 	FASTTEXT_TIME_END = time.time() - FASTTEXT_TIME_START
 	###########################################################
@@ -201,11 +197,9 @@ def category_search(category_name, num):
 	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
 	FIND_SEARCH_OF_CATEGORY_TIME_START = time.time()
 	###########################################################
-
 	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
 	POST_LIST = find_search_of_category(g.db, tokenizer_list, category_type['info_num'], category_type['tag'], SJ_CS_LIMIT)
 	POST_LIST = list(POST_LIST)
-
 	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
 	FIND_SEARCH_OF_CATEGORY_TIME_END = time.time() - FIND_SEARCH_OF_CATEGORY_TIME_START
 	###########################################################
@@ -214,8 +208,6 @@ def category_search(category_name, num):
 	now_date = datetime.now()
 
 	#매치스코어 + 트랜드 반영/미반영 시간 측정##########################
-	#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
-	#1. Matchscore // 2. trendscore + Matchscore
 	MATCH_TREND_TIME_START = time.time()
 	###########################################################
 
@@ -280,8 +272,6 @@ def category_search(category_name, num):
 			del POST['popularity']
 	
 	#매치스코어 + 트랜드 반영/미반영 시간 측정##########################
-	#측정 방식은 트랜드 스코어 반영일 때, 미반영일 때 로 구분한다.
-	#1. Matchscore // 2. trendscore + Matchscore
 	MATCH_TREND_TIME_END = time.time() - MATCH_TREND_TIME_START
 	###########################################################
 

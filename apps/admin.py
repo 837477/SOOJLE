@@ -85,9 +85,10 @@ def insert_notice_():
 #공지사항 수정
 @BP.route('/update_notice/<string:notice_obi>', methods=['POST'])
 @jwt_required
-def update_notice(notice_obi):
+def update_notice_(notice_obi):
 	new_title = request.form['title']
 	new_post = request.form['post']
+	new_activation = request.form['activation']
 	
 	admin = find_user(g.db, user_id=get_jwt_identity())
 
@@ -95,16 +96,16 @@ def update_notice(notice_obi):
 	if admin is None or admin['user_id'] != SJ_ADMIN:
 		return jsonify(result = "Not admin")
 
-	result = update_notice(g.db, notice_obi, title, post, url)
+	result = update_notice(g.db, notice_obi, new_title, new_post, new_activation)
 
 	return jsonify(
-		reuslt = result
+		result = result
 	)
 
 #공지사항 삭제
 @BP.route('/remove_notice/<string:notice_obi>')
 @jwt_required
-def remove_notice(notice_obi):
+def remove_notice_(notice_obi):
 	admin = find_user(g.db, user_id=get_jwt_identity())
 
 	#Admin 확인
