@@ -406,7 +406,7 @@ def trendscore(POST, now_date):
 	else: 
 		return 0
 
-'''
+
 #현재 버전 2 테스트중
 #회원 전용 추천 뉴스피드.ver1
 def get_recommendation_newsfeed_member(db, USER, now_date):
@@ -427,8 +427,8 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 
 
 
-	#트랜드 스코어 반영하는 시간 측정 시작##############################
-	TREND_TIME_START = time.time()
+	#관심도 및 트랜드 스코어 반영하는 시간 측정 시작######################
+	SIM_TREND_TIME_START = time.time()
 	###########################################################
 	#트랜드 스코어 적용
 	if trendscore_discriminate(now_date):
@@ -470,18 +470,18 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 					
 			#최종 similarity 적용!
 			POST['similarity'] = result
-	#트랜드 스코어 반영하는 시간 측정 종료##############################
-	TREND_TIME_END = time.time() - TREND_TIME_START
+	#관심도 및 트랜드 스코어 반영하는 시간 측정 종료######################
+	SIM_TREND_TIME_END = time.time() - SIM_TREND_TIME_START
 	###########################################################
 
 	SPEED_RESULT = {}
 	SPEED_RESULT['MEMBER_FIND_ALL_POSTS_TIME'] = FIND_ALL_POSTS_TIME_END
-	SPEED_RESULT['MEMBER_TREND_TIME'] = TREND_TIME_END
+	SPEED_RESULT['MEMBER_SIM_TREND_TIME'] = SIM_TREND_TIME_END
 	SPEED_RESULT['MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
 	return POST_LIST, SPEED_RESULT
-'''
 
+'''
 #회원 전용 추천 뉴스피드.ver2
 def get_recommendation_newsfeed_member(db, USER, now_date):
 	#추쳔 뉴스피드를 위한 포스트들을 불러오는 시간 측정 시작#################
@@ -501,7 +501,7 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 
 
 
-	#트랜드 스코어 반영하는 시간 측정 시작##############################
+	#관심도 및 트랜드 스코어 반영하는 시간 측정 시작######################
 	SIM_TREND_TIME_START = time.time()
 	###########################################################
 	#트랜드 스코어 적용
@@ -519,15 +519,12 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 	#트랜드 스코어 미적용
 	else:
 		for POST in POST_LIST:
-			#트랜드 스코어 적용!
-			TREND = trendscore(POST, now_date)
-
 			#simijlarity 구하기!
 			result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
 					
 			#최종 similarity 적용!
 			POST['similarity'] = result
-	#트랜드 스코어 반영하는 시간 측정 종료##############################
+	#관심도 및 트랜드 스코어 반영하는 시간 측정 종료######################
 	SIM_TREND_TIME_END = time.time() - SIM_TREND_TIME_START
 	###########################################################
 
@@ -537,8 +534,8 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 	SPEED_RESULT['MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
 	return POST_LIST, SPEED_RESULT
-
 '''
+
 #현재 버전 2 테스트중
 #비회원 전용 추천 뉴스피드.ver1
 def get_recommendation_newsfeed_non_member(db, now_date):
@@ -548,6 +545,9 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 
 	POST_LIST = []
 
+	#각각의 카테고리의 포스트들을 불러오는 시간 측정 시작###################
+	FIND_POSTS_OF_CATEGORY_TIME_START = time.time()
+	###########################################################
 	for newsfeed in newsfeed_type:
 		if newsfeed['newsfeed_name'] != '장터':
 			#info를 정규표현식으로 부르기위해 or연산자로 join
@@ -556,8 +556,14 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 			result = find_newsfeed(g.db, info, newsfeed['tag'], newsfeed['negative_tag'], SJ_NO_TOKEN_RECOMMENDATION_LIMIT)
 
 			POST_LIST += list(result)
+	#각각의 카테고리의 포스트들을 불러오는 시간 측정 종료###################
+	FIND_POSTS_OF_CATEGORY_TIME_END = time.time() - FIND_POSTS_OF_CATEGORY_TIME_START
+	###########################################################
 
-	#트랜드 스코어 적용 판별##############################################
+
+	#트랜드 스코어 반영하는 시간 측정 시작##############################
+	TREND_TIME_START = time.time()
+	###########################################################
 	#트랜드 스코어 적용일 시
 	if trendscore_discriminate(now_date):
 		for POST in POST_LIST:
@@ -596,11 +602,18 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 			RANDOM *= SJ_RANDOM_WEIGHT
 
 			POST['similarity'] = RANDOM
-	#################################################################
-		
-	return POST_LIST
-'''
+	#트랜드 스코어 반영하는 시간 측정 종료##############################
+	TREND_TIME_END = time.time() - TREND_TIME_START
+	###########################################################
+	
+	SPEED_RESULT = {}
+	SPEED_RESULT['NON_MEMBER_FIND_POSTS_OF_CATEGORY_TIME'] = FIND_POSTS_OF_CATEGORY_TIME_END
+	SPEED_RESULT['NON_MEMBER_TREND_TIME'] = TREND_TIME_END
+	SPEED_RESULT['NON_MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
+	return POST_LIST
+
+'''
 #비회원 전용 추천 뉴스피드.ver2
 def get_recommendation_newsfeed_non_member(db, now_date):
 	#요청한 카테고리 대한 정보를 가져온다.
@@ -639,7 +652,6 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 		for POST in POST_LIST:
 			RANDOM = numpy.random.random()
 			RANDOM *= SJ_RANDOM_WEIGHT
-			TREND = trendscore(POST, now_date)
 
 			POST['similarity'] = RANDOM
 	#트랜드 스코어 반영하는 시간 측정 종료##############################
@@ -652,3 +664,4 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 	SPEED_RESULT['NON_MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
 	return POST_LIST, SPEED_RESULT
+'''
