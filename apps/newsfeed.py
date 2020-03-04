@@ -406,7 +406,7 @@ def trendscore(POST, now_date):
 	else: 
 		return 0
 
-
+'''
 #현재 버전 2 테스트중
 #회원 전용 추천 뉴스피드.ver1
 def get_recommendation_newsfeed_member(db, USER, now_date):
@@ -480,8 +480,8 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 	SPEED_RESULT['MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
 	return POST_LIST, SPEED_RESULT
-
 '''
+
 #회원 전용 추천 뉴스피드.ver2
 def get_recommendation_newsfeed_member(db, USER, now_date):
 	#추쳔 뉴스피드를 위한 포스트들을 불러오는 시간 측정 시작#################
@@ -534,8 +534,8 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 	SPEED_RESULT['MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
 	return POST_LIST, SPEED_RESULT
-'''
 
+'''
 #현재 버전 2 테스트중
 #비회원 전용 추천 뉴스피드.ver1
 def get_recommendation_newsfeed_non_member(db, now_date):
@@ -612,8 +612,8 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 	SPEED_RESULT['NON_MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
 	return POST_LIST, SPEED_RESULT
-
 '''
+
 #비회원 전용 추천 뉴스피드.ver2
 def get_recommendation_newsfeed_non_member(db, now_date):
 	#요청한 카테고리 대한 정보를 가져온다.
@@ -664,4 +664,3 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 	SPEED_RESULT['NON_MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
 	return POST_LIST, SPEED_RESULT
-'''
