@@ -611,7 +611,7 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 	SPEED_RESULT['NON_MEMBER_TREND_TIME'] = TREND_TIME_END
 	SPEED_RESULT['NON_MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
-	return POST_LIST
+	return POST_LIST, SPEED_RESULT
 
 '''
 #비회원 전용 추천 뉴스피드.ver2
