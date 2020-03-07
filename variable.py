@@ -22,7 +22,7 @@ SJ_CS_LIMIT = 5000
 #Newsfeed of Topic limit(토픽별 뉴스피드 DB호출 최대 제한)
 SJ_NEWSFEED_TOPIC_LIMIT = 2000
 #Recommendation limit (추천뉴스피드 DB호출 최대 제한)
-SJ_RECOMMENDATION_LIMIT = 20000
+SJ_RECOMMENDATION_LIMIT = 10000
 #No Token User Recommendation limit (비로그인 추천뉴스피드 DB호출 최대 제한)
 SJ_NO_TOKEN_RECOMMENDATION_LIMIT = 500
 #Log user limit number (사용자 로그 불러오기 최대 제한)
