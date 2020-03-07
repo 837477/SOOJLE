@@ -640,74 +640,6 @@ def update_post_view(db, post_obi):
 
 	return "success"
 
-#newsfeed_of_topic 버전################################
-#토픽별 뉴스피드 타입 전체 반환
-def find_all_newsfeed_of_topic(db):
-	result = db['newsfeed_of_topic'].find(
-		{
-		}, 
-		{
-			'_id': 0
-		}
-	)
-	return result
-
-#토픽별 뉴스피드 타입 반환
-def find_newsfeed_of_topic(db, newsfeed_name):
-	result = db['newsfeed_of_topic'].find_one(
-		{
-			'newsfeed_name': newsfeed_name
-		}, 
-		{
-			'_id': 0
-		}
-	)
-	return result
-
-#토빅별 뉴스피드 타입 여러개 반환 (미사용 중)
-def find_newsfeed_of_topics(db, newsfeed_list):
-	result = db['newsfeed_of_topic'].find(
-			{
-				'newsfeed_name': {'$in': newsfeed_list},
-				'$or': newsfeed_list	
-			}, 
-			{
-				'_id': 0,
-				'info': 1
-			}
-		)
-	return result
-
-#토픽별 뉴스피드 타입에 따른 뉴시피드 게시글들 반환
-def find_newsfeed(db, info, tag, negative_tag, num):
-	result = db[SJ_DB_POST].find(
-		{
-			'$and':
-			[
-				{'info': {'$regex': info}},
-				{'tag': {'$nin': negative_tag}},
-				{'tag': {'$in': tag}}
-			]
-		},
-		{
-			'_id': 1,
-			'title': 1,
-			'date': 1,
-			'img': 1,
-			'fav_cnt': 1,
-			'view': 1,
-			'url': 1,
-			'title_token': 1,
-			'info': 1,
-			'tag': 1,
-			'topic': 1,
-			'ft_vector': 1,
-			'end_date': 1
-		}
-		).sort([('date', -1)]).limit(num)
-	return result
-
-#category_of_topic 버전#################################
 #카테고리별 타입 전체 반환 (미사용)
 def find_all_category_of_topic(db):
 	result = db['category_of_topic'].find(
@@ -776,7 +708,7 @@ def find_posts_of_category(db, info_num_list, tag, now_date, num):
 	).sort([('date', -1)]).limit(num).hint("info_num_1_tag_1_end_date_-1_date_-1")
 	return result
 
-#find_posts_of_recommendation 버전######################
+#추천 뉴스피드 포스트들 불러오기
 def find_posts_of_recommendation(db, now_date, num):
 	result = db[SJ_DB_POST].find(
 		{
