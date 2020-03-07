@@ -18,13 +18,13 @@ SJ_RETURN_NUM = 300
 #Priority Search limit number (일반 서치 DB호출 최대 제한)
 SJ_PS_LIMIT = 10000
 #Category Search limit number (카테고리 서치 DB호출 최대 제한)
-SJ_CS_LIMIT = 10000
+SJ_CS_LIMIT = 5000
 #Newsfeed of Topic limit(토픽별 뉴스피드 DB호출 최대 제한)
-SJ_NEWSFEED_TOPIC_LIMIT = 5000
+SJ_NEWSFEED_TOPIC_LIMIT = 2000
 #Recommendation limit (추천뉴스피드 DB호출 최대 제한)
-SJ_RECOMMENDATION_LIMIT = 20000
+SJ_RECOMMENDATION_LIMIT = 10000
 #No Token User Recommendation limit (비로그인 추천뉴스피드 DB호출 최대 제한)
-SJ_NO_TOKEN_RECOMMENDATION_LIMIT = 2000
+SJ_NO_TOKEN_RECOMMENDATION_LIMIT = 500
 #Log user limit number (사용자 로그 불러오기 최대 제한)
 SJ_USER_LOG_LIMIT = 300
 #ADMIN Major (관리자 판단용)
@@ -34,7 +34,7 @@ SJ_REALTIME_RETURN_LIMIT = 10
 #Domain search similarity percent
 SJ_DOMAIN_SIM_PERCENT = 0.8
 #User cold limit (유저 Cold 기준)
-SJ_USER_COLD_LIMIT = 7
+SJ_USER_COLD_LIMIT = 30
 
 #Newsfeed_of_topic 종류
 SJ_NEWSFEED_OF_TOPIC_SET = {'대학교', '동아리&모임', '공모전&행사', '진로&구인', '장터', '자유'}

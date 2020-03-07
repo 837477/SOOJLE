@@ -1260,7 +1260,7 @@ def find_full_aggregate(db, tokenizer_list, limit_):
 
 	return result
 
-#title 토큰 검색 (사용)
+#title 토큰 검색 (미사용)
 def find_title_token(db, token_list):
 	result = db[SJ_DB_POST].find(
 		{
@@ -1343,7 +1343,7 @@ def find_search_log(db):
 		{
 			'date':
 			{
-				'$gte': global_func.get_default_day(1)
+				'$gt': global_func.get_default_day(1)
 			}
 		},
 		{
@@ -1535,26 +1535,6 @@ def insert_today_visitor(db, user_id):
 #today_visitor_count 반환!
 def find_today_visitor_count(db):
 	result = db['today_visitor'].find().count()
-
-	return result
-
-#today_visitrot_studnet_num group by(학번별 방문자 수) 반환!
-def find_today_visitor_student_num(db):
-	result = db['today_visitor'].aggregate([
-		{
-			"$group":
-			{
-				'_id': "$student_num",
-				'count': {'$sum': 1}
-			}
-		},
-		{
-			'$sort': 
-			{
-				'count': -1
-			}
-		}
-	])
 
 	return result
 
@@ -1817,7 +1797,7 @@ def insert_search_realtime(db, real_time_list):
 	return "success"
 
 #search_realtime 가져오기!
-def find_search_realtime(db):
+def find_search_realtime(db, skip_ = 0):
 	result = db['search_realtime'].find(
 		{},
 		{
@@ -1825,7 +1805,7 @@ def find_search_realtime(db):
 			'real_time': 1,
 			'date': 1
 		}
-	).sort([('date', -1)]).limit(1)
+	).sort([('date', -1)]).skip(skip_).limit(1)
 	return result
 
 #제일 높은 좋아요 수 반환

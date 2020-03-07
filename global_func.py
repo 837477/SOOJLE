@@ -134,11 +134,14 @@ def real_time_insert():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
+	#최근 하루 이전의 검색 기록들을 가져온다.
 	search_log_list = find_search_log(db)
 	search_log_list = list(search_log_list)
 
+	#검색기록들을 통하여 실시간 검색어를 추출한다.
 	real_time_keywords_temp = real_time_keywords(search_log_list)
 
+	#욕 필터링을 거친다.
 	real_time_result = []
 	for keyword in real_time_keywords_temp:
 		#욕 필터링 걸리면 넘어감!
@@ -146,6 +149,7 @@ def real_time_insert():
 			continue
 		#최종 실시간 검색어 결과 반환
 		real_time_result.append(keyword)
+
 
 	insert_search_realtime(db, real_time_result)
 	
@@ -162,9 +166,6 @@ def measurement_run():
 	#리뉴얼 시간보다 이상인 사람만 측정! (관심도 측정이 될 지표의 변동이 생겼다는 뜻!)
 	USER_list = find_user_renewal(db, renewal_time)
 	USER_list = list(USER_list)
-
-	#모든 유저의 관심도 측정 지표를 다 가져온다.
-	# USER_list = find_all_user(db, _id=1, fav_list=1, view_list=1, search_list=1, newsfeed_list=1)
 
 	for USER in USER_list:
 		fav_tag = []
@@ -429,8 +430,11 @@ def visitor_analysis_work():
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
+
+
+
 	#오늘 통계 객체화
-	##############################################################################
+	################################################################
 	today_analysis = {}
 	#오늘 방문자 수 가져오기
 	today_analysis['today_visitor'] = find_today_visitor_count(db)
@@ -440,20 +444,6 @@ def visitor_analysis_work():
 	today_analysis['today_view'] = find_variable(db, 'today_view')
 	#오늘 좋아요된 게시글
 	today_analysis['today_fav'] = find_variable(db, 'today_fav')
-	#오늘 학번별 방문자 수
-	today_analysis['today_student_visitor'] = []
-	today_student_visitor = find_today_visitor_student_num(db)
-
-	for student in today_student_visitor:
-		temp = {}
-
-		if student['_id'] == None or student['_id'] == 'te':
-			student['_id'] = 'guest'
-
-		temp['student_num'] = student['_id']
-		temp['count'] = student['count']
-
-		today_analysis['today_student_visitor'].append(temp)
 
 	today_year = datetime.today().year
 	today_month = datetime.today().month
@@ -465,6 +455,11 @@ def visitor_analysis_work():
 	#매일 기록되는 통계 테이블에 기록!
 	insert_everyday_analysis(db, today_analysis)
 	################################################################
+
+
+
+
+
 
 	#매일마다 갱신 시켜야하는 정적 변수들!
 	################################################################
@@ -504,6 +499,10 @@ def visitor_analysis_work():
 	communication_avg = API_log_cnt // service_period
 	update_variable(db, 'communication_avg', communication_avg)
 	################################################################
+
+
+
+
 
 	#매일마다 초기화 해줘야하는 정적 변수들!
 	################################################################

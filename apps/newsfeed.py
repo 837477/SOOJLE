@@ -494,6 +494,7 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 	FIND_ALL_POSTS_TIME_END = time.time() - FIND_ALL_POSTS_TIME_START
 	###########################################################
 
+
 	#캐싱된 가장 높은 좋아요 수를 가져온다.
 	Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
 	#캐싱된 가장 높은 조회수를 가져온다.
