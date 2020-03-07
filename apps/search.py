@@ -201,7 +201,6 @@ def search_logging():
 		#공용 searching 기록!
 		insert_search_log(g.db, "unknown", del_space_str)
 
-	#데이터로 들어온 상위 num개만 반환
 	return jsonify(
 			result = "success"
 		)

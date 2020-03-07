@@ -1442,7 +1442,7 @@ def find_everyday_analysis_days(db, date):
 		{
 			'date': 
 			{
-				'$gte': date
+				'$gt': date
 			}
 		},
 		{
