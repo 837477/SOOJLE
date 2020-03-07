@@ -824,6 +824,35 @@ def find_all_domain(db):
 	)
 	return result
 
+#카테고리 검색
+def find_search_of_category(db, search_list, info_num_list, num):
+	result = db[SJ_DB_POST].find(
+		{
+			'$and':
+			[
+				{'token': {'$in': search_list}},
+				{'info_num': {'$in': info_num_list}}
+			]
+		},
+		{
+			'_id':1, 
+			'title':1,
+			'date':1,
+			'end_date':1,
+			'img': 1,
+			'url': 1,
+			'fav_cnt': 1,
+			'info': 1,
+			###############
+			'title_token':1,
+			'token':1,
+			'tag':1,
+			'popularity':1,
+			'ft_vector': 1
+		}
+		).sort([('date', -1)]).limit(num)
+	return result
+
 #post title regex 검색 (미사용)
 def find_title_regex(db, search_str, type_check):
 	return_dict = {
@@ -961,7 +990,7 @@ def find_title_regex(db, search_str, type_check):
 	
 	return result
 
-#가상 post ids용 반환 (사용)
+#가상 post ids용 반환 (미사용)
 def find_aggregate(db, tokenizer_list, type_check, limit_):
 	now_time = datetime.now()
 
@@ -1148,152 +1177,6 @@ def find_aggregate(db, tokenizer_list, type_check, limit_):
 			limit
 		])
 
-	return result
-
-#full search title regex 검색 (미사용)
-def find_full_title_regex(db, search_str, limit_):
-	#priority	
-	result = db[SJ_DB_POST].find(
-		{
-			'title': {'$regex':search_str}
-		}, 
-		{
-			'title':1,
-			'date':1, 
-			'img':1, 
-			'url':1, 
-			'fav_cnt': 1, 
-			'title_token': 1, 
-			'token': 1, 
-			'tag': 1, 
-			'popularity': 1
-		}
-	).limit(limit_)
-	return result
-
-#full search post aggregate 검색 (미사용)
-def find_full_aggregate(db, tokenizer_list, limit_):
-	now_time = datetime.now()
-	
-	result = db[SJ_DB_POST].aggregate([
-		{
-			'$project':
-			{
-				'_id':1, 
-				'title':1,
-				'date':1,
-				'img': 1,
-				'url': 1,
-				'fav_cnt': 1,
-				'info': 1,
-				###############
-				'title_token':1,
-				'token':1,
-				'tag':1,
-				'popularity':1
-			}
-		},
-		{
-			'$match': 
-			{
-				'token': {'$in': tokenizer_list}
-			}
-		}, 
-		{
-			'$addFields':
-			{
-				'ids': 
-				{
-					'$divide':['$popularity', {'$subtract':[now_time, '$date']}]
-				}
-			}
-		},
-		{
-			'$sort': 
-			{
-				'ids': -1, 
-				'date': -1
-			}
-		}, 
-		{'$limit': limit_}
-	])
-
-	return result
-
-
-#token 검색 (사용)
-def find_token(db, token_list):
-	result = db[SJ_DB_POST].find(
-		{
-			'token': {'$in': token_list}
-		}, 
-		{
-			'_id':0, 
-			'title':1, 
-			'token': 1, 
-			'data': 1
-		}
-	)
-	return result
-
-#카테고리 검색
-def find_search_of_category(db, tokenizer_list, info_num_list, tag_list, num):
-	result = db[SJ_DB_POST].find(
-		{
-			'$and':
-			[
-				{'token': {'$in': tokenizer_list}},
-				{'info_num': {'$in': info_num_list}},
-				{'tag': {'$in': tag_list}}
-			]
-		},
-		{
-			'_id':1, 
-			'title':1,
-			'date':1,
-			'end_date':1,
-			'img': 1,
-			'url': 1,
-			'fav_cnt': 1,
-			'info': 1,
-			###############
-			'title_token':1,
-			'token':1,
-			'tag':1,
-			'popularity':1,
-			'ft_vector': 1
-		}
-		).sort([('date', -1)]).limit(num)
-	return result
-
-#title 토큰 검색 (사용)
-def find_title_token_of_category(db, split_list, info_num_list, tag_list, num):
-	result = db[SJ_DB_POST].find(
-		{	
-			'$and':
-			[
-				{'title_token': {'$in': split_list}},
-				{'info_num': {'$in': info_num_list}},
-				{'tag': {'$in': tag_list}}
-			]
-		}, 
-		{
-			'_id':1, 
-			'title':1,
-			'date':1,
-			'end_date':1,
-			'img': 1,
-			'url': 1,
-			'fav_cnt': 1,
-			'info': 1,
-			###############
-			'title_token':1,
-			'token':1,
-			'tag':1,
-			'popularity':1,
-			'ft_vector': 1
-		}
-	)
 	return result
 
 #analysis#############################################
