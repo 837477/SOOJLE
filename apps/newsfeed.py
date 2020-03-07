@@ -18,6 +18,7 @@ from variable import *
 #BluePrint
 BP = Blueprint('newsfeed', __name__)
 
+
 #토픽별 뉴스피드.ver2 (테스트 대상)
 @BP.route('/get_newsfeed_of_topic/<string:category_name>')
 @jwt_optional
@@ -38,9 +39,32 @@ def get_newsfeed_of_topic(category_name):
 	#find_posts_of_category 시간 측정 (불러와서 리스트화 시킨 시간)#####
 	FIND_POSTS_OF_CATEGORY_TIME_START = time.time()
 	###########################################################
-	#해당 카테고리에 관련된 게시글들을 불러온다.
-	POST_LIST = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
-	POST_LIST = list(POST_LIST)
+	
+	if category_name == "대학교":
+		#해당 카테고리에 관련된 게시글들을 불러온다.
+		POST_LIST = find_posts_of_category_default_date(g.db, category['info_num'], category['tag'], now_date, 60, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = list(POST_LIST)
+
+	elif category_name == "동아리&모임":
+		#해당 카테고리에 관련된 게시글들을 불러온다.
+		POST_LIST = find_posts_of_category_default_date(g.db, category['info_num'], category['tag'], now_date, 60, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = list(POST_LIST)
+
+	elif category_name == "공모전&행사":
+		#해당 카테고리에 관련된 게시글들을 불러온다.
+		POST_LIST = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = list(POST_LIST)
+
+	elif category_name == "진로&구인":
+		#해당 카테고리에 관련된 게시글들을 불러온다.
+		POST_LIST = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = list(POST_LIST)
+
+	else:
+		#해당 카테고리에 관련된 게시글들을 불러온다.
+		POST_LIST = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = list(POST_LIST)
+	
 	#find_posts_of_category 측정 종료 (불러와서 리스트화 시킨 시간)#####
 	FIND_POSTS_OF_CATEGORY_TIME_END = time.time() - FIND_POSTS_OF_CATEGORY_TIME_START
 	###########################################################
@@ -61,30 +85,25 @@ def get_newsfeed_of_topic(category_name):
 		newsfeed_obj['newsfeed_name'] = category_name
 		newsfeed_obj['tag'] = category['tag']
 		newsfeed_obj['date'] = datetime.now()
-
+		
 		#접근한 뉴스피드 기록!
 		update_user_newsfeed_list_push(g.db, USER['_id'], newsfeed_obj)
 
 		#해당 유저의 갱신시간 갱신
 		update_user_renewal(g.db, USER['user_id'])
 		
-		#캐싱된 가장 높은 좋아요 수를 가져온다.
-		Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
-		#캐싱된 가장 높은 조회수를 가져온다.
-		Maxviews = find_variable(g.db, 'highest_view_cnt')
-		
 		#공모전&행사 뉴스피드는 사용자 관심도도 측정하여 따로 반환
 		if category_name == '공모전&행사':
 			#공모전&행사 뉴스피드 관심도 반영 시간 측정 (불러와서 리스트화 시킨 시간)###
 			GET_SIMILARITY_TIME_START = time.time()
 			###########################################################
-			for POST in POST_LIST:
-				#우선 판별!
-				#당일로부터 30일 넘어가면 유사도 점수를 낮춘다.
-				if get_default_day(30) > POST['date']:
-					POST['similarity'] = 0
-					continue
 
+			#캐싱된 가장 높은 좋아요 수를 가져온다.
+			Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
+			#캐싱된 가장 높은 조회수를 가져온다.
+			Maxviews = find_variable(g.db, 'highest_view_cnt')
+
+			for POST in POST_LIST:
 				#simijlarity 구하기!
 				result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
 

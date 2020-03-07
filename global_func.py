@@ -200,16 +200,7 @@ def measurement_run():
 			search_list += search_obj['tokenizer_split']
 		
 		search_topic = LDA.get_topics(search_list)
-		
-		#FAS 구하기
-		similarwords = []
-		for search_keyword in search_list:
-			for keyword in FastText.sim_words(search_keyword):
-				if keyword[1] >= SJ_FASTTEXT_SIM_PERCENT: 
-					similarwords.append(keyword[0])
-				else: break
-
-		search_doc = search_list + similarwords
+		search_doc = search_list
 
 		#사용자가 접근한 뉴스피드 ################################
 		for newsfeed in USER['newsfeed_list']:

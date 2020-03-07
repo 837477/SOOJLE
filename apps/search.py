@@ -29,6 +29,7 @@ def match_score(token1, token2):
 	MR = MC / len(token1)
 	return MC * (1 + MR + math.floor(MR))
 
+'''
 #priority_검색
 @BP.route('/priority_search/<int:num>', methods = ['POST'])
 @jwt_optional
@@ -151,6 +152,7 @@ def priority_search(num):
 	return jsonify(
 		result = "success",
 		search_result = aggregate_posts[:num])
+'''
 
 #category.ver2 검색 (테스트 대상)
 @BP.route('/category_search/<string:category_name>/<int:num>', methods = ['POST'])

@@ -3,9 +3,7 @@ from bson.json_util import loads, dumps
 from datetime import datetime, timedelta
 import numpy
 ######################################################
-from global_func import *
 import global_func
-######################################################
 from variable import *
 
 #사용자 관련#############################################
@@ -679,7 +677,7 @@ def find_category_of_topic(db, category_name):
 	)
 	return result
 
-#카테고리별 포스트들 반환
+#카테고리별 포스트들 반환 (사용)
 def find_posts_of_category(db, info_num_list, tag, now_date, num):
 	result = db[SJ_DB_POST].find(
 		{
@@ -708,7 +706,37 @@ def find_posts_of_category(db, info_num_list, tag, now_date, num):
 	).sort([('date', -1)]).limit(num).hint("info_num_1_tag_1_end_date_-1_date_-1")
 	return result
 
-#추천 뉴스피드 포스트들 불러오기
+#카테고리별 포스트들 반환 (디폴트 데이트도 적용된 쿼리) (사용)
+def find_posts_of_category_default_date(db, info_num_list, tag, now_date, default_date, num):
+	result = db[SJ_DB_POST].find(
+		{
+			'$and':
+			[
+				{'info_num': {'$in': info_num_list}},
+				{'tag': {'$in': tag}},
+				{'end_date': {'$gt': now_date}},
+				{'date': {'$gt': global_func.get_default_day(default_date)}}
+			]
+		},
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'view': 1,
+			'url': 1,
+			'title_token': 1,
+			'info': 1,
+			'tag': 1,
+			'topic': 1,
+			'ft_vector': 1,
+			'end_date': 1
+		}
+	).sort([('date', -1)]).limit(num).hint("info_num_1_tag_1_end_date_-1_date_-1")
+	return result
+
+#추천 뉴스피드 포스트들 불러오기 (사용)
 def find_posts_of_recommendation(db, now_date, num):
 	result = db[SJ_DB_POST].find(
 		{
@@ -732,7 +760,7 @@ def find_posts_of_recommendation(db, now_date, num):
 	).sort([('date', -1)]).limit(num)
 	return result
 
-#인기 뉴스피드 반환
+#인기 뉴스피드 반환 (사용)
 def find_popularity_newsfeed(db, num):
 	result = db[SJ_DB_POST].find(
 		{}, 
