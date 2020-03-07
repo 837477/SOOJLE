@@ -142,8 +142,12 @@ def get_analysis():
 #매일 기록되는 통계 반환 API (몇일 전 버전)
 @BP.route('/get_everyday_analysis_days_ago/<int:days>')
 def get_everyday_analysis_days_ago(days):
-	date = get_default_day(days)
-
+	today_year = datetime.today().year
+	today_month = datetime.today().month
+	today_day = datetime.today().day
+	
+	date = datetime(today_year, today_month, today_day) - timedelta(days = 2)
+	
 	result = find_everyday_analysis_days(g.db, date)
 	result = list(result)
 
