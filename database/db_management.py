@@ -1220,30 +1220,6 @@ def find_full_aggregate(db, tokenizer_list, limit_):
 
 	return result
 
-#title 토큰 검색 (사용)
-def find_title_token(db, split_list):
-	result = db[SJ_DB_POST].find(
-		{
-			'title_token': {'$in': split_list}
-		}, 
-		{
-			'_id':1, 
-			'title':1,
-			'date':1,
-			'end_date':1,
-			'img': 1,
-			'url': 1,
-			'fav_cnt': 1,
-			'info': 1,
-			###############
-			'title_token':1,
-			'token':1,
-			'tag':1,
-			'popularity':1,
-			'ft_vector': 1
-		}
-	)
-	return result
 
 #token 검색 (사용)
 def find_token(db, token_list):
@@ -1290,6 +1266,35 @@ def find_search_of_category(db, tokenizer_list, info_num_list, tag_list, num):
 		).sort([('date', -1)]).limit(num)
 	return result
 
+#title 토큰 검색 (사용)
+def find_title_token_of_category(db, split_list, info_num_list, tag_list, num):
+	result = db[SJ_DB_POST].find(
+		{	
+			'$and':
+			[
+				{'title_token': {'$in': split_list}},
+				{'info_num': {'$in': info_num_list}},
+				{'tag': {'$in': tag_list}}
+			]
+		}, 
+		{
+			'_id':1, 
+			'title':1,
+			'date':1,
+			'end_date':1,
+			'img': 1,
+			'url': 1,
+			'fav_cnt': 1,
+			'info': 1,
+			###############
+			'title_token':1,
+			'token':1,
+			'tag':1,
+			'popularity':1,
+			'ft_vector': 1
+		}
+	)
+	return result
 
 #analysis#############################################
 ######################################################
