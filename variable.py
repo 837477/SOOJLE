@@ -34,7 +34,7 @@ SJ_REALTIME_RETURN_LIMIT = 10
 #Domain search similarity percent
 SJ_DOMAIN_SIM_PERCENT = 0.8
 #User cold limit (유저 Cold 기준)
-SJ_USER_COLD_LIMIT = 30
+SJ_USER_COLD_LIMIT = 20
 
 #Newsfeed_of_topic 종류
 SJ_NEWSFEED_OF_TOPIC_SET = {'대학교', '동아리&모임', '공모전&행사', '진로&구인', '장터', '자유'}
