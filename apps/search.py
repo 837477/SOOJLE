@@ -199,9 +199,13 @@ def category_search(category_name, num):
 	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
 	FIND_SEARCH_OF_CATEGORY_TIME_START = time.time()
 	###########################################################
+	#title token 검색으로 일치하는 포스트 불러오기!
+	POST_TITLE_LIST = find_title_token(g.db, del_space_str)
+
 	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
 	POST_LIST = find_search_of_category(g.db, tokenizer_list, category_type['info_num'], category_type['tag'], SJ_CS_LIMIT)
-	POST_LIST = list(POST_LIST)
+	POST_LIST = list(POST_LIST) + list(POST_TITLE_LIST)
+
 	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
 	FIND_SEARCH_OF_CATEGORY_TIME_END = time.time() - FIND_SEARCH_OF_CATEGORY_TIME_START
 	###########################################################

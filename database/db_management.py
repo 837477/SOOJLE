@@ -824,7 +824,7 @@ def find_all_domain(db):
 	)
 	return result
 
-#post title regex 검색 (사용)
+#post title regex 검색 (미사용)
 def find_title_regex(db, search_str, type_check):
 	return_dict = {
 		'title':1,
@@ -1220,17 +1220,27 @@ def find_full_aggregate(db, tokenizer_list, limit_):
 
 	return result
 
-#title 토큰 검색 (미사용)
-def find_title_token(db, token_list):
+#title 토큰 검색 (사용)
+def find_title_token(db, split_list):
 	result = db[SJ_DB_POST].find(
 		{
-			'title_token': {'$in': token_list}
+			'title_token': {'$in': split_list}
 		}, 
 		{
-			'_id':0, 
-			'title':1, 
-			'title_token': 1, 
-			'data': 1
+			'_id':1, 
+			'title':1,
+			'date':1,
+			'end_date':1,
+			'img': 1,
+			'url': 1,
+			'fav_cnt': 1,
+			'info': 1,
+			###############
+			'title_token':1,
+			'token':1,
+			'tag':1,
+			'popularity':1,
+			'ft_vector': 1
 		}
 	)
 	return result
@@ -1249,8 +1259,6 @@ def find_token(db, token_list):
 		}
 	)
 	return result
-
-#####################################################################
 
 #카테고리 검색
 def find_search_of_category(db, tokenizer_list, info_num_list, tag_list, num):
