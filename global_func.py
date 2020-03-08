@@ -39,7 +39,7 @@ def schedule_init():
 	scheduler.add_job(update_posts_highest, trigger = "interval", days=SJ_UPDATE_HIGHEST_FAV_VIEW_TIME, timezone = t_zone)
 
 	#매 시간마다 실행
-	scheduler.add_job(real_time_insert, trigger = "interval", minutes = SJ_REALTIME_TIME, timezone = t_zone)
+	#scheduler.add_job(real_time_insert, trigger = "interval", minutes = SJ_REALTIME_TIME, timezone = t_zone)
 
 	scheduler.add_job(measurement_run, trigger = "interval", minutes = SJ_MEASUREMENT_TIME, timezone = t_zone)
 
