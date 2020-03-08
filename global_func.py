@@ -39,7 +39,7 @@ def schedule_init():
 	scheduler.add_job(update_posts_highest, trigger = "interval", days=SJ_UPDATE_HIGHEST_FAV_VIEW_TIME, timezone = t_zone)
 
 	#매 시간마다 실행
-	#scheduler.add_job(real_time_insert, trigger = "interval", minutes = SJ_REALTIME_TIME, timezone = t_zone)
+	scheduler.add_job(real_time_insert, trigger = "interval", minutes = SJ_REALTIME_TIME, timezone = t_zone)
 
 	scheduler.add_job(measurement_run, trigger = "interval", minutes = SJ_MEASUREMENT_TIME, timezone = t_zone)
 
@@ -142,23 +142,43 @@ def real_time_insert():
 	real_time_keywords_temp = real_time_keywords(search_log_list)
 
 	#욕 필터링을 거친다.
-	real_time_result = []
+	realtime_result = []
 	for keyword in real_time_keywords_temp:
 		#욕 필터링 걸리면 넘어감!
 		if keyword in SJ_BAD_LANGUAGE:
 			continue
 		#최종 실시간 검색어 결과 반환
-		real_time_result.append(keyword)
+		realtime_result.append(keyword)
 
-	if len(real_time_result) < 10:
+	if len(realtime_result) < 20:
 		lately_realtime = find_search_realtime(db)
 		lately_realtime = list(lately_realtime)
+		lately_realtime = lately_realtime['real_time']
+		
+		realtime_result.sort(key=lambda x:x[1], reverse=True)
+		lately_realtime.sort(key=lambda x:x[1], reverse=True)
 
-		for new_keyword in real_time_result:
-			for lately_keyword in lately_realtime:
-				print()
+		#가장 작은 값 찾기
+		min_value = realtime_result[len(realtime_result) - 1][1]
+		min_value -= 0.1
+
+		#중복 키 찾기
+		duple_key_list = list(set(dict(realtime_result)) & set(dict(lately_realtime)))
+		
+		#실시간 검색어 최종 리스트에 저번 리스트 순위를 추가하는 작업
+		for lately in lately_realtime:
+			check = True
 			
+			for duple_key in duple_key_list:
+				if lately[0] == duple_key:
+					check = False
+			
+			if check:
+				realtime_result.append([lately[0], min_value])
 
+			if len(realtime_result) == 20:
+				break
+			
 	insert_search_realtime(db, real_time_result)
 	
 	if db_client is not None:
