@@ -684,7 +684,6 @@ def find_posts_of_category(db, info_num_list, tag, now_date, num):
 			'$and':
 			[
 				{'info_num': {'$in': info_num_list}},
-				{'tag': {'$in': tag}},
 				{'end_date': {'$gt': now_date}}
 			]
 		},
@@ -703,7 +702,7 @@ def find_posts_of_category(db, info_num_list, tag, now_date, num):
 			'ft_vector': 1,
 			'end_date': 1
 		}
-	).sort([('date', -1)]).limit(num).hint("info_num_1_tag_1_end_date_-1_date_-1")
+	).sort([('date', -1)]).limit(num).hint("info_num_1_end_date_-1_date_-1")
 	return result
 
 #카테고리별 포스트들 반환 (디폴트 데이트도 적용된 쿼리) (사용)
@@ -713,7 +712,6 @@ def find_posts_of_category_default_date(db, info_num_list, tag, now_date, defaul
 			'$and':
 			[
 				{'info_num': {'$in': info_num_list}},
-				{'tag': {'$in': tag}},
 				{'end_date': {'$gt': now_date}},
 				{'date': {'$gt': global_func.get_default_day(default_date)}}
 			]
@@ -733,7 +731,7 @@ def find_posts_of_category_default_date(db, info_num_list, tag, now_date, defaul
 			'ft_vector': 1,
 			'end_date': 1
 		}
-	).sort([('date', -1)]).limit(num).hint("info_num_1_tag_1_end_date_-1_date_-1")
+	).sort([('date', -1)]).limit(num).hint("info_num_1_end_date_-1_date_-1")
 	return result
 
 #추천 뉴스피드 포스트들 불러오기 (사용)
@@ -853,332 +851,6 @@ def find_search_of_category(db, search_list, info_num_list, num):
 		).sort([('date', -1)]).limit(num)
 	return result
 
-#post title regex 검색 (미사용)
-def find_title_regex(db, search_str, type_check):
-	return_dict = {
-		'title':1,
-		'date':1,
-		'end_date':1,
-		'img':1, 
-		'url':1, 
-		'fav_cnt': 1, 
-		'title_token': 1, 
-		'token': 1, 
-		'tag': 1, 
-		'popularity': 1,
-		'ft_vector': 1,
-		'info':1
-	}
-
-	#priority
-	if type_check == 0:
-		result = db[SJ_DB_POST].find(
-			{
-				'title': {'$regex':search_str}
-			}, 
-			return_dict
-		)
-
-	#진로&구인
-	elif type_check == 1:
-		search_type = db['newsfeed_of_topic'].find_one(
-			{
-				'newsfeed_name': '진로&구인'
-			}, 
-			{
-				'_id': 0,
-				'info': 1
-			}
-		)
-		info = "|".join(search_type['info'])
-
-		result = db[SJ_DB_POST].find(
-			{
-				'$and':
-				[
-					{'title': {'$regex':search_str}},
-					{'info': {'$regex': info}}
-				]
-			}, 
-			return_dict
-		)
-	
-	#공모전&행사 + 동아리&모임
-	elif type_check == 2:
-		search_type = db['newsfeed_of_topic'].find(
-			{
-				'$or':
-				[
-					{'newsfeed_name': '공모전&행사'},
-					{'newsfeed_name': '동아리&모임'}
-				]
-			}, 
-			{
-				'_id': 0,
-				'info': 1
-			}
-		)
-		search_type = list(search_type)
-		temp_list = search_type[0]['info'] + search_type[1]['info']
-		info = "|".join(temp_list)
-
-		result = db[SJ_DB_POST].find(
-			{
-				'$and':
-				[
-					{'title': {'$regex':search_str}},
-					{'info': {'$regex': info}}
-				]
-			}, 
-			return_dict
-		)
-
-	#나머지
-	elif type_check == 3:
-		search_type = db['newsfeed_of_topic'].find(
-			{
-				'$or':
-				[
-					{'newsfeed_name': '진로&구인'},
-					{'newsfeed_name': '공모전&행사'},
-					{'newsfeed_name': '동아리&모임'}
-				]
-			}, 
-			{
-				'_id': 0,
-				'info': 1
-			}
-		)
-		search_type = list(search_type)
-		info = []
-		
-		for temp in search_type:
-			info += temp['info']
-
-		for i in info:
-			if i[0] == '^':
-				i = i[1:]
-			if i[-1] == '$':
-				i = i[:-1]
-
-		info = '^(?!(' + "|".join(info) + '|everytime_))'
-
-		result = db[SJ_DB_POST].find(
-			{
-				'$and':
-				[
-					{'title': {'$regex':search_str}},
-					{'info': {'$regex': info}}
-				]
-			}, 
-			return_dict
-		)
-
-	#커뮤니티
-	else:
-		result = db[SJ_DB_POST].find(
-			{
-				'$and':
-				[
-					{'title': {'$regex':search_str}},
-					{'info': {'$regex': '^everytime_'}}
-				]
-				
-			}, 
-			return_dict
-		)
-	
-	return result
-
-#가상 post ids용 반환 (미사용)
-def find_aggregate(db, tokenizer_list, type_check, limit_):
-	now_time = datetime.now()
-
-	project = {
-		'$project':
-		{
-			'_id':1, 
-			'title':1,
-			'date':1,
-			'end_date':1,
-			'img': 1,
-			'url': 1,
-			'fav_cnt': 1,
-			'info': 1,
-			###############
-			'title_token':1,
-			'token':1,
-			'tag':1,
-			'popularity':1,
-			'ft_vector': 1
-		}
-	}
-	addFields = {
-		'$addFields':
-		{
-			'ids': 
-			{
-				'$divide':['$popularity', {'$subtract':[now_time, '$date']}]
-			}
-		}
-	}
-	sort = {
-		'$sort': 
-		{
-			'ids': -1, 
-			'date': -1
-		}
-	}
-	limit = {'$limit': limit_}
-
-	#priority
-	if type_check == 0:
-		result = db[SJ_DB_POST].aggregate([
-			project, 
-			{
-				'$match': 
-				{
-					'token': {'$in': tokenizer_list}
-				}
-			}, 
-			addFields, 
-			sort, 
-			limit
-		])
-	#진로&구인
-	elif type_check == 1:
-		search_type = db['newsfeed_of_topic'].find_one(
-			{
-				'newsfeed_name': '진로&구인'
-			}, 
-			{
-				'_id': 0,
-				'info': 1
-			}
-		)
-		info = "|".join(search_type['info'])
-
-		result = db[SJ_DB_POST].aggregate([
-			project,
-			{
-				'$match': 
-				{
-					'$and': 
-					[
-						{'token': {'$in': tokenizer_list}},
-						{'info': {'$regex': info}}
-					]
-				}
-			},
-			addFields,
-			sort,
-			limit
-		])
-
-	#공모전&행사 + 동아리&모임
-	elif type_check == 2:
-		search_type = db['newsfeed_of_topic'].find(
-			{
-				'$or':
-				[
-					{'newsfeed_name': '공모전&행사'},
-					{'newsfeed_name': '동아리&모임'}
-				]
-			}, 
-			{
-				'_id': 0,
-				'info': 1
-			}
-		)
-		search_type = list(search_type)
-		temp_list = search_type[0]['info'] + search_type[1]['info']
-		info = "|".join(temp_list)
-
-		result = db[SJ_DB_POST].aggregate([
-			project,
-			{
-				'$match': 
-				{
-					'$and': 
-					[
-						{'token': {'$in': tokenizer_list}},
-						{'info': {'$regex': info}}
-					]
-				}
-			},
-			addFields,
-			sort,
-			limit
-		])
-
-	#나머지
-	elif type_check == 3:
-		search_type = db['newsfeed_of_topic'].find(
-			{
-				'$or':
-				[
-					{'newsfeed_name': '진로&구인'},
-					{'newsfeed_name': '공모전&행사'},
-					{'newsfeed_name': '동아리&모임'}
-				]
-			}, 
-			{
-				'_id': 0,
-				'info': 1
-			}
-		)
-		search_type = list(search_type)
-		info = []
-		
-		for temp in search_type:
-			info += temp['info']
-
-		for i in info:
-			if i[0] == '^':
-				i = i[1:]
-			if i[-1] == '$':
-				i = i[:-1]
-
-		info = '^((?!' + "|".join(info) + '|everytime_).)*$'
-
-		result = db[SJ_DB_POST].aggregate([
-			project,
-			{
-				'$match': 
-				{
-					'$and': 
-					[
-						{'token': {'$in': tokenizer_list}},
-						{'info': {'$regex': info}}
-					]
-				}
-			},
-			addFields,
-			sort,
-			limit
-		])
-
-	#커뮤니티
-	else:
-		result = db[SJ_DB_POST].aggregate([
-			project,
-			{
-				'$match': 
-				{
-					'$and': 
-					[
-						{'token': {'$in': tokenizer_list}},
-						{'info': {'$regex': '^everytime_'}}
-					]
-				}
-			},
-			addFields,
-			sort,
-			limit
-		])
-
-	return result
-
 #analysis#############################################
 ######################################################
 
@@ -1212,7 +884,7 @@ def find_search_log(db):
 
 #log에 기록! (사용)
 def insert_log(db, user_id, url):
-	db['log'].insert(
+	db[SJ_LOG].insert(
 		{
 			'user_id': user_id,
 			'url': url,
@@ -1223,7 +895,7 @@ def insert_log(db, user_id, url):
 
 #log에서 시간별로 가져온다. (사용)
 def find_date_log(db, date, limit_):
-	result = db['log'].find(
+	result = db[SJ_LOG].find(
 		{
 			'date':
 			{
@@ -1240,7 +912,7 @@ def find_date_log(db, date, limit_):
 
 #log에서 회원별로 가져온다.
 def find_user_log(db, user_id, limit_):
-	result = db['log'].find(
+	result = db[SJ_LOG].find(
 		{
 			'user_id': user_id
 		},
@@ -1253,7 +925,7 @@ def find_user_log(db, user_id, limit_):
 
 #log에서 시간별 + 회원별로 가져온다.
 def find_user_date_log(db, user_id, date, limit_):
-	result = db['log'].find(
+	result = db[SJ_LOG].find(
 		{
 			'$and':
 			[
@@ -1350,7 +1022,7 @@ def find_search_all_realtime(db):
 
 #log 학번 group by count 가져오기!
 def aggregate_groupby_log_student_num(db):
-	result = db['log'].aggregate([
+	result = db[SJ_LOG].aggregate([
 		{
 			"$group":
 			{
@@ -1409,7 +1081,7 @@ def find_today_time_visitor(db, time):
 
 #today 매 시간별 방문자 수 기록!
 def push_today_time_visitor(db, hour_visitor_obj):
-	db['variable'].update(
+	db[SJ_VARIABLE].update(
 		{
 			'key': 'today_time_visitor'
 		},
@@ -1479,7 +1151,7 @@ def find_posts_count(db):
 
 #총 API로그 갯수 반환
 def find_log_count(db):
-	result = db['log'].find().count()
+	result = db[SJ_LOG].find().count()
 
 	return result
 
@@ -1644,7 +1316,7 @@ def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector, measurement
 
 #search_realtime에 기록!
 def insert_search_realtime(db, real_time_list):
-	db['search_realtime'].insert(
+	db[SJ_REALTIME].insert(
 		{
 			'real_time' : real_time_list,
 			'date': datetime.now()
@@ -1654,7 +1326,7 @@ def insert_search_realtime(db, real_time_list):
 
 #search_realtime 가져오기!
 def find_search_realtime(db, skip_ = 0):
-	result = db['search_realtime'].find(
+	result = db[SJ_REALTIME].find(
 		{},
 		{
 			'_id': 0,
@@ -1694,7 +1366,7 @@ def find_highest_view_cnt(db):
 
 #정적 테이블 변수 불러오기
 def find_variable(db, key):
-	result = db['variable'].find_one(
+	result = db[SJ_VARIABLE].find_one(
 		{
 			'key': key
 		}, 
@@ -1707,7 +1379,7 @@ def find_variable(db, key):
 
 #정적 테이블 변수 수정하기(값 변경)
 def update_variable(db, key, value):
-	db['variable'].update(
+	db[SJ_VARIABLE].update(
 		{
 			'key': key
 		}, 
@@ -1719,7 +1391,7 @@ def update_variable(db, key, value):
 
 #정적 테이블 변수 수정하기(값 증가, 감소) _ 정수 자료형만 가능!
 def update_variable_inc(db, key, increase):
-	db['variable'].update(
+	db[SJ_VARIABLE].update(
 		{
 			'key': key
 		}, 

@@ -42,12 +42,12 @@ def get_newsfeed_of_topic(category_name):
 	
 	if category_name == "대학교":
 		#해당 카테고리에 관련된 게시글들을 불러온다.
-		POST_LIST = find_posts_of_category_default_date(g.db, category['info_num'], category['tag'], now_date, 60, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = find_posts_of_category_default_date(g.db, category['info_num'], now_date, 60, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 
 	elif category_name == "동아리&모임":
 		#해당 카테고리에 관련된 게시글들을 불러온다.
-		POST_LIST = find_posts_of_category_default_date(g.db, category['info_num'], category['tag'], now_date, 60, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = find_posts_of_category_default_date(g.db, category['info_num'], now_date, 60, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 
 	elif category_name == "공모전&행사":

@@ -36,7 +36,7 @@ def init_db():
 		create_category_of_topic(db)
 		create_category_of_topic_info_num(db)
 
-	if 'variable' not in db_collections:
+	if SJ_VARIABLE not in db_collections:
 		create_variable(db)
 
 	if 'search_realtime' not in db_collections:
@@ -166,7 +166,7 @@ def create_category_of_topic_info_num(db):
 					#info num 추출!
 					category_temp_info_num_list.append(post_info['info_num'])
 					#시간복잡도를 위해 찾은건 다시 for문 돌릴때 볼 필요 없으므로 삭제.
-					post_info_list.remove(post_info)
+					#post_info_list.remove(post_info)
 		
 		#category_of_topic 콜렉션에 info_num 리스트 컬럼 추가!
 		db['category_of_topic'].update(
@@ -183,7 +183,7 @@ def create_category_of_topic_info_num(db):
 
 #정적 테이블 컬럼 생성!
 def create_variable(db):
-	db['variable'].insert(
+	db[SJ_VARIABLE].insert(
 		[
 			{
 				'key': 'highest_fav_cnt',

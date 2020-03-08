@@ -1,3 +1,5 @@
+#백그라운드 시간
+#####################################################
 #Measurement_run Time (minutes)
 SJ_MEASUREMENT_TIME = 30
 #Create_Wordcloud_run TIME (days)
@@ -9,8 +11,15 @@ SJ_UPDATE_HIGHEST_FAV_VIEW_TIME = 1
 #Update_today_time_visitor (hour)
 SJ_TIME_VISITOR_ANALYSIS_WORK_TIME = 1
 
+#DB콜렉션 명
+#####################################################
 #DB_POST Collection name (현재 포스트 디비 이름)
 SJ_DB_POST = "posts"
+SJ_REALTIME = "SJ_REALTIME"
+SJ_USER = "SJ_USER"
+SJ_VARIABLE = "SJ_VARIABLE"
+SJ_LOG = "SJ_LOG"
+
 #FASTTEXT Similarity percent (FT 유사도 비율)
 SJ_FASTTEXT_SIM_PERCENT = 0.7
 #ALL post return number (모든 포스트 반환 최대 제한)
