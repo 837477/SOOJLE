@@ -27,14 +27,14 @@ def init_db():
 	#현재 db에 있는 collection 이름을 리스트로 불러온다.
 	db_collections = db.list_collection_names()
 
-	if 'user' not in db_collections:
-		db['user']
-
 	if 'posts' not in db_collections:
 		db['posts']
 		create_dummy_post(db)
 
-	if 'category_of_topic' not in db_collections:
+	if 'SJ_USER' not in db_collections:
+		db['SJ_USER']
+
+	if 'SJ_CATEGORY' not in db_collections:
 		create_category_of_topic(db)
 		create_category_of_topic_info_num(db)
 
@@ -44,23 +44,23 @@ def init_db():
 	if 'SJ_REALTIME' not in db_collections:
 		db['SJ_REALTIME']
 
-	if 'search_log' not in db_collections:
-		db['search_log']
+	if 'SJ_SEARCH_LOG' not in db_collections:
+		db['SJ_SEARCH_LOG']
 
 	if 'SJ_LOG' not in db_collections:
 		db['SJ_LOG']
 
-	if 'today_visitor' not in db_collections:
-		db['today_visitor']
+	if 'SJ_VISITOR' not in db_collections:
+		db['SJ_VISITOR']
 
-	if 'pushback' not in db_collections:
-		db['pushback']
+	if 'SJ_USER_BACKUP' not in db_collections:
+		db['SJ_USER_BACKUP']
 
-	if 'notice' not in db_collections:
-		db['notice']
+	if 'SJ_NOTICE' not in db_collections:
+		db['SJ_NOTICE']
 
-	if 'feedback' not in db_collections:
-		db['feedback']
+	if 'SJ_FEEDBACK' not in db_collections:
+		db['SJ_FEEDBACK']
 
 	if 'SJ_ANALYSIS' not in db_collections:
 		db['SJ_ANALYSIS']
@@ -70,7 +70,7 @@ def init_db():
 
 #카테고리별 뉴스피드 컬럼 생성!
 def create_category_of_topic(db):
-	db['category_of_topic'].insert(
+	db[SJ_CATEGORY].insert(
 		[
 			#대학교
 			{
@@ -151,7 +151,7 @@ def create_category_of_topic_info_num(db):
 	post_info_list = list(post_info_list)
 
 	#category_of_topic 전체 호출
-	category_of_topic_list = db['category_of_topic'].find()
+	category_of_topic_list = db[SJ_CATEGORY].find()
 	category_of_topic_list = list(category_of_topic_list)
 
 	#카테고리 를 반복문 돌림
@@ -171,7 +171,7 @@ def create_category_of_topic_info_num(db):
 					#post_info_list.remove(post_info)
 		
 		#category_of_topic 콜렉션에 info_num 리스트 컬럼 추가!
-		db['category_of_topic'].update(
+		db[SJ_CATEGORY].update(
 			{
 				'category_name': category['category_name']
 			},

@@ -42,7 +42,7 @@ def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=Non
 	if measurement_num is not None:
 		show_dict['measurement_num'] = 1
 
-	result = db['user'].find({}, show_dict)
+	result = db[SJ_USER].find({}, show_dict)
 
 	return result
 
@@ -82,7 +82,7 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto
 		show_dict['measurement_num'] = 1
 
 
-	result = db['user'].find_one(
+	result = db[SJ_USER].find_one(
 		{
 			'user_id': user_id
 		}, 
@@ -107,7 +107,7 @@ def insert_user(db, user_id, user_pw, user_nickname):
 	privacy = 0
 	measurement_num = 0
 
-	result = db['user'].insert(
+	result = db[SJ_USER].insert(
 		{
 			'user_id': user_id,
 			'user_pw': user_pw,
@@ -142,7 +142,7 @@ def update_user_measurement_reset(db, user_id):
 	search_list = []
 	renewal = datetime.now()
 
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -166,7 +166,7 @@ def update_user_measurement_reset(db, user_id):
 
 #유저 삭제 (사용)
 def remove_user(db, user_id):
-	db['user'].remove(
+	db[SJ_USER].remove(
 		{
 			'user_id': user_id
 		}
@@ -176,7 +176,7 @@ def remove_user(db, user_id):
 
 #유저 닉네임 변경 (사용)
 def update_nickname(db, user_id, new_nick):
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		}, 
@@ -188,7 +188,7 @@ def update_nickname(db, user_id, new_nick):
 
 #유저 갱신시간별 반환 (관심도 측정용) (사용)
 def find_user_renewal(db, renewal_time):
-	result = db['user'].find(
+	result = db[SJ_USER].find(
 		{	
 			'renewal':
 			{
@@ -207,7 +207,7 @@ def find_user_renewal(db, renewal_time):
 
 #유저 오토로그인 변경 (사용)
 def update_user_auto_login(db, user_id, value):
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		}, 
@@ -219,7 +219,7 @@ def update_user_auto_login(db, user_id, value):
 
 #개인정보처리방침 동의현황 변경 (미사용)
 def update_user_privacy(db, user_id, value):
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -231,7 +231,7 @@ def update_user_privacy(db, user_id, value):
 
 #유저 갱신 시간 갱신 (사용)
 def update_user_renewal(db, user_id):
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -246,7 +246,7 @@ def update_user_renewal(db, user_id):
 
 #유저 fav_list 중복 체크 (사용)
 def check_user_fav_list(db, _id, post_obi):
-	result = db['user'].find_one(
+	result = db[SJ_USER].find_one(
 		{
 			'_id': _id
 		}, 
@@ -264,7 +264,7 @@ def check_user_fav_list(db, _id, post_obi):
 	return result
 #유저 fav_list에 요소 추가 (사용)
 def update_user_fav_list_push(db, _id, fav_obj):
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'_id': _id
 		},
@@ -282,7 +282,7 @@ def update_user_fav_list_push(db, _id, fav_obj):
 	return "success"
 #유저 fav_list에 요소 삭제 (사용)
 def update_user_fav_list_pull(db, _id, post_obi):
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'_id': _id
 		},
@@ -300,7 +300,7 @@ def update_user_fav_list_pull(db, _id, post_obi):
 #유저 fav_list 갱신 (pushback) (사용)
 def refresh_user_fav_list(db, user_id, refresh_obj_list):
 	#fav_list 삭제
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -310,7 +310,7 @@ def refresh_user_fav_list(db, user_id, refresh_obj_list):
 	)
 
 	#새로운 fav_list 등록
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -330,7 +330,7 @@ def refresh_user_fav_list(db, user_id, refresh_obj_list):
 
 #유저 view_list에 요소 추가 (사용)
 def update_user_view_list_push(db, _id, view_obj):
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'_id': _id
 		},
@@ -349,7 +349,7 @@ def update_user_view_list_push(db, _id, view_obj):
 #유저 view_list 갱신 (pushback) (사용)
 def refresh_user_view_list(db, user_id, refresh_obj_list):
 	#view_list 삭제
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -359,7 +359,7 @@ def refresh_user_view_list(db, user_id, refresh_obj_list):
 	)
 
 	#새로운 view_list 등록
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -379,7 +379,7 @@ def refresh_user_view_list(db, user_id, refresh_obj_list):
 
 #유저 search_list에 요소 추가 (사용)
 def update_user_search_list_push(db, user_id, search_obj):
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -398,7 +398,7 @@ def update_user_search_list_push(db, user_id, search_obj):
 #유저 search_list 갱신 (pushback) (사용)
 def refresh_user_search_list(db, user_id, refresh_obj_list):
 	#search_list 삭제
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -408,7 +408,7 @@ def refresh_user_search_list(db, user_id, refresh_obj_list):
 	)
 
 	#새로운 view_list 등록
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -428,7 +428,7 @@ def refresh_user_search_list(db, user_id, refresh_obj_list):
 
 #유저 newsfeed_list에 요소 추가 (사용)
 def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'_id': _id
 		},
@@ -447,7 +447,7 @@ def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
 #유저 newsfeed_list 갱신 (pushback) (사용)
 def refresh_user_newsfeed_list(db, user_id, refresh_obj_list):
 	#newsfeed_list 삭제
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -457,7 +457,7 @@ def refresh_user_newsfeed_list(db, user_id, refresh_obj_list):
 	)
 
 	#새로운 view_list 등록
-	db['user'].update(
+	db[SJ_USER].update(
 		{
 			'user_id': user_id
 		},
@@ -640,7 +640,7 @@ def update_post_view(db, post_obi):
 
 #카테고리별 타입 전체 반환 (미사용)
 def find_all_category_of_topic(db):
-	result = db['category_of_topic'].find(
+	result = db[SJ_CATEGORY].find(
 		{
 		},
 		{
@@ -651,7 +651,7 @@ def find_all_category_of_topic(db):
 
 #카테고리별 타입 여러개 반환 (사용)
 def find_category_of_topic_list(db, category_list):
-	result = db['category_of_topic'].find(
+	result = db[SJ_CATEGORY].find(
 			{
 				'category_name': {'$in': category_list}
 			}, 
@@ -665,7 +665,7 @@ def find_category_of_topic_list(db, category_list):
 
 #카테고리별 타입 반환 (사용)
 def find_category_of_topic(db, category_name):
-	result = db['category_of_topic'].find_one(
+	result = db[SJ_CATEGORY].find_one(
 		{
 			'category_name': category_name
 		}, 
@@ -856,7 +856,7 @@ def find_search_of_category(db, search_list, info_num_list, num):
 
 #search_log에 search_obj 추가 (사용)
 def insert_search_log(db, user_id, split_list):
-	db['search_log'].insert(
+	db[SJ_SEARCH_LOG].insert(
 		{
 			'user_id': user_id,
 			'search_split': split_list,
@@ -867,7 +867,7 @@ def insert_search_log(db, user_id, split_list):
 
 #search_log 가져온다. (사용)
 def find_search_log(db):
-	result = db['search_log'].find(
+	result = db[SJ_SEARCH_LOG].find(
 		{
 			'date':
 			{
@@ -945,7 +945,7 @@ def insert_pushback(db, user_id, type_, back_obj_list):
 	#좋아요 타입
 	if type_ == 'fav':
 		for back_obj in back_obj_list:
-			db['pushback'].insert(
+			db[SJ_USER_BACKUP].insert(
 				{
 					'user_id': user_id,
 					'type': 'fav',
@@ -964,7 +964,7 @@ def insert_pushback(db, user_id, type_, back_obj_list):
 	#조회수 타입
 	elif type_ == 'view':
 		for back_obj in back_obj_list:
-			db['pushback'].insert(
+			db[SJ_USER_BACKUP].insert(
 				{
 					'user_id': user_id,
 					'type': 'view',
@@ -983,7 +983,7 @@ def insert_pushback(db, user_id, type_, back_obj_list):
 	#검색 타입
 	elif type_ == 'search':
 		for back_obj in back_obj_list:
-			db['pushback'].insert(
+			db[SJ_USER_BACKUP].insert(
 				{
 					'user_id': user_id,
 					'type': 'search',
@@ -998,7 +998,7 @@ def insert_pushback(db, user_id, type_, back_obj_list):
 	#뉴스피드 타입
 	else:
 		for back_obj in back_obj_list:
-			db['pushback'].insert(
+			db[SJ_USER_BACKUP].insert(
 				{
 					'user_id': user_id,
 					'type': 'newsfeed',
@@ -1042,7 +1042,7 @@ def aggregate_groupby_log_student_num(db):
 
 #today_vistior 입력! (중복체크까지 여기서 함)
 def insert_today_visitor(db, user_id):
-	check = db['today_visitor'].find_one(
+	check = db[SJ_VISITOR].find_one(
 		{
 			'user_id': user_id
 		}
@@ -1050,7 +1050,7 @@ def insert_today_visitor(db, user_id):
 
 	#방문 안한 유저라면?
 	if check is None:
-		db['today_visitor'].insert(
+		db[SJ_VISITOR].insert(
 			{
 				'user_id': user_id,
 				'date': datetime.now()
@@ -1062,13 +1062,13 @@ def insert_today_visitor(db, user_id):
 
 #today_visitor_count 반환!
 def find_today_visitor_count(db):
-	result = db['today_visitor'].find().count()
+	result = db[SJ_VISITOR].find().count()
 
 	return result
 
 #today (현재시간 ~ 특정 시간) 방문자 수 가져오기!
 def find_today_time_visitor(db, time):
-	result = db['today_visitor'].find(
+	result = db[SJ_VISITOR].find(
 		{
 			'date':
 			{
@@ -1097,7 +1097,7 @@ def push_today_time_visitor(db, hour_visitor_obj):
 
 #today visitor 콜렉션 데이터 전체 삭제! (데이터 비우기)
 def remove_today_visitor(db):
-	db['today_visitor'].remove({})
+	db[SJ_VISITOR].remove({})
 
 	return "success"
 
@@ -1139,7 +1139,7 @@ def find_everyday_analysis_specific_day(db, date):
 
 #총 검색 횟수 반환.
 def find_search_count(db):
-	result = db['search_log'].find().count()
+	result = db[SJ_SEARCH_LOG].find().count()
 
 	return result
 
@@ -1160,7 +1160,7 @@ def find_log_count(db):
 
 #공지사항 추가
 def insert_notice(db, title, post):
-	db['notice'].insert(
+	db[SJ_NOTICE].insert(
 		{
 			'title': title,
 			'post': post,
@@ -1174,7 +1174,7 @@ def insert_notice(db, title, post):
 
 #공지사항 수정
 def update_notice(db, notice_obi, title, post, activation):
-	db['notice'].update(
+	db[SJ_NOTICE].update(
 		{
 			'_id': ObjectId(notice_obi)
 		},
@@ -1194,7 +1194,7 @@ def update_notice(db, notice_obi, title, post, activation):
 
 #공지사항 삭제
 def remove_notice(db, notice_obi):
-	db['notice'].remove(
+	db[SJ_NOTICE].remove(
 		{
 			'_id': ObjectId(notice_obi)
 		}
@@ -1204,13 +1204,13 @@ def remove_notice(db, notice_obi):
 
 #공지사항 전체 반환
 def find_all_notice(db):
-	result = db['notice'].find().sort([('date', -1)])
+	result = db[SJ_NOTICE].find().sort([('date', -1)])
 
 	return result
 
 #공지사항 단일 반환
 def find_notice(db, notice_obi):
-	result = db['notice'].find_one(
+	result = db[SJ_NOTICE].find_one(
 		{
 			'_id': ObjectId(notice_obi)
 		}
@@ -1220,7 +1220,7 @@ def find_notice(db, notice_obi):
 
 #공지사항 조회수 올리기
 def update_notice_view(db, notice_obi):
-	db['notice'].update(
+	db[SJ_NOTICE].update(
 		{
 			'_id': ObjectId(notice_obi)
 		}, 
@@ -1290,7 +1290,7 @@ def update_post(db, post_obi, title, post, tag, img, url, info, hashed, url_hash
 
 #피드백 입력
 def insert_user_feedback(db, feedback):
-	db['feedback'].insert(
+	db[SJ_FEEDBACK].insert(
     	feedback
    	)
 	return "success"
@@ -1300,7 +1300,7 @@ def insert_user_feedback(db, feedback):
 
 #USER의 관심도 갱신.
 def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector, measurement_num):
-	db['user'].update({'_id': _id}, 
+	db[SJ_USER].update({'_id': _id}, 
 		{
 			'$set': 
 			{
