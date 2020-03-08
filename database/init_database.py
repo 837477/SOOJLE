@@ -47,8 +47,8 @@ def init_db():
 	if 'SJ_SEARCH_LOG' not in db_collections:
 		db['SJ_SEARCH_LOG']
 
-	if 'SJ_LOG' not in db_collections:
-		db['SJ_LOG']
+	if 'SJ_DB_LOG' not in db_collections:
+		db['SJ_DB_LOG']
 
 	if 'SJ_VISITOR' not in db_collections:
 		db['SJ_VISITOR']
@@ -68,9 +68,9 @@ def init_db():
 	if db_client is not None:
 		db_client.close()
 
-#카테고리별 뉴스피드 컬럼 생성!
+#카테고리 컬럼 생성!
 def create_category_of_topic(db):
-	db[SJ_CATEGORY].insert(
+	db[SJ_DB_CATEGORY].insert(
 		[
 			#대학교
 			{
@@ -144,14 +144,14 @@ def create_category_of_topic(db):
 			}
 		])
 
-#카테고리별 뉴스피드 컬럼 info_num 추가!
+#카테고리 컬럼 info_num 추가!
 def create_category_of_topic_info_num(db):
 	#post_info 전체 호출
 	post_info_list = db['post_info'].find()
 	post_info_list = list(post_info_list)
 
 	#category_of_topic 전체 호출
-	category_of_topic_list = db[SJ_CATEGORY].find()
+	category_of_topic_list = db[SJ_DB_CATEGORY].find()
 	category_of_topic_list = list(category_of_topic_list)
 
 	#카테고리 를 반복문 돌림
@@ -171,7 +171,7 @@ def create_category_of_topic_info_num(db):
 					#post_info_list.remove(post_info)
 		
 		#category_of_topic 콜렉션에 info_num 리스트 컬럼 추가!
-		db[SJ_CATEGORY].update(
+		db[SJ_DB_CATEGORY].update(
 			{
 				'category_name': category['category_name']
 			},
@@ -185,7 +185,7 @@ def create_category_of_topic_info_num(db):
 
 #정적 테이블 컬럼 생성!
 def create_variable(db):
-	db[SJ_VARIABLE].insert(
+	db[SJ_DB_VARIABLE].insert(
 		[
 			{
 				'key': 'highest_fav_cnt',

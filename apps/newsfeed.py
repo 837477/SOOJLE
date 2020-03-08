@@ -52,17 +52,17 @@ def get_newsfeed_of_topic(category_name):
 
 	elif category_name == "공모전&행사":
 		#해당 카테고리에 관련된 게시글들을 불러온다.
-		POST_LIST = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = find_posts_of_category(g.db, category['info_num'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 
 	elif category_name == "진로&구인":
 		#해당 카테고리에 관련된 게시글들을 불러온다.
-		POST_LIST = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = find_posts_of_category(g.db, category['info_num'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 
 	else:
 		#해당 카테고리에 관련된 게시글들을 불러온다.
-		POST_LIST = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = find_posts_of_category(g.db, category['info_num'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 	
 	#find_posts_of_category 측정 종료 (불러와서 리스트화 시킨 시간)#####
