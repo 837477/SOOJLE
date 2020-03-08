@@ -5,7 +5,7 @@ SJ_MEASUREMENT_TIME = 30
 #Create_Wordcloud_run TIME (days)
 SJ_CREATE_WORDCLOUD_TIME = 30
 #Realtime_run Time (minutes)
-SJ_REALTIME_TIME = 1
+SJ_REALTIME_TIME = 5
 #Update_highest_fav_view (day)
 SJ_UPDATE_HIGHEST_FAV_VIEW_TIME = 1
 #Update_today_time_visitor (hour)
