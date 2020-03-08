@@ -377,7 +377,7 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 	FIND_POSTS_OF_CATEGORY_TIME_START = time.time()
 	###########################################################
 	for category in category_list:
-		temp_result = find_posts_of_category(g.db, category['info_num'], category['tag'], now_date, SJ_NO_TOKEN_RECOMMENDATION_LIMIT)
+		temp_result = find_posts_of_category(g.db, category['info_num'], now_date, SJ_NO_TOKEN_RECOMMENDATION_LIMIT)
 		POST_LIST += list(temp_result)
 	#각각의 카테고리의 포스트들을 불러오는 시간 측정 종료###################
 	FIND_POSTS_OF_CATEGORY_TIME_END = time.time() - FIND_POSTS_OF_CATEGORY_TIME_START
