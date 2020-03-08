@@ -678,7 +678,7 @@ def find_category_of_topic(db, category_name):
 	return result
 
 #카테고리별 포스트들 반환 (사용)
-def find_posts_of_category(db, info_num_list, tag, now_date, num):
+def find_posts_of_category(db, info_num_list, now_date, num):
 	result = db[SJ_DB_POST].find(
 		{
 			'$and':
@@ -706,7 +706,7 @@ def find_posts_of_category(db, info_num_list, tag, now_date, num):
 	return result
 
 #카테고리별 포스트들 반환 (디폴트 데이트도 적용된 쿼리) (사용)
-def find_posts_of_category_default_date(db, info_num_list, tag, now_date, default_date, num):
+def find_posts_of_category_default_date(db, info_num_list, now_date, default_date, num):
 	result = db[SJ_DB_POST].find(
 		{
 			'$and':
