@@ -150,10 +150,10 @@ def real_time_insert():
 		#최종 실시간 검색어 결과 반환
 		realtime_result.append(keyword)
 
-	if len(realtime_result) < 20:
+	if len(realtime_result) < SJ_REALTIME_LIMIT:
 		lately_realtime = find_search_realtime(db)
 		lately_realtime = list(lately_realtime)
-		lately_realtime = lately_realtime['real_time']
+		lately_realtime = lately_realtime[0]['real_time']
 		
 		realtime_result.sort(key=lambda x:x[1], reverse=True)
 		lately_realtime.sort(key=lambda x:x[1], reverse=True)
@@ -176,7 +176,7 @@ def real_time_insert():
 			if check:
 				realtime_result.append([lately[0], min_value])
 
-			if len(realtime_result) == 20:
+			if len(realtime_result) == SJ_REALTIME_LIMIT:
 				break
 			
 	insert_search_realtime(db, real_time_result)

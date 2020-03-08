@@ -45,12 +45,15 @@ SJ_RECOMMENDATION_LIMIT = 10000
 SJ_NO_TOKEN_RECOMMENDATION_LIMIT = 500
 #Log user limit number (사용자 로그 불러오기 최대 제한)
 SJ_USER_LOG_LIMIT = 300
+#실시간 검색 리미트
+SJ_REALTIME_LIMIT = 20
 #Realtime Return Limit (실시간 검색어 반환 최대 제한)
 SJ_REALTIME_RETURN_LIMIT = 10
 #Domain search similarity percent
 SJ_DOMAIN_SIM_PERCENT = 0.8
 #User cold limit (유저 Cold 기준)
 SJ_USER_COLD_LIMIT = 20
+
 
 #스트링 변수들
 #####################################################
