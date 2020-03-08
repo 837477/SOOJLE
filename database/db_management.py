@@ -1173,7 +1173,7 @@ def find_search_all_realtime(db):
 	return result
 
 #search_realtime 단일 가져오기!
-def find_search_realtime(db, skip_ = 0):
+def find_search_realtime(db):
 	result = db[SJ_DB_REALTIME].find(
 		{},
 		{
@@ -1181,7 +1181,7 @@ def find_search_realtime(db, skip_ = 0):
 			'real_time': 1,
 			'date': 1
 		}
-	).sort([('date', -1)]).skip(skip_).limit(1)
+	).sort([('date', -1)]).limit(1)
 	return result
 
 #search_realtime에 기록!

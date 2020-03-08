@@ -230,9 +230,9 @@ def reset_user_measurement():
 	)
 
 #회원 최근 검색어 반환
-@BP.route('/get_user_lately_saerch/<int:num>')
+@BP.route('/get_user_lately_search/<int:num>')
 @jwt_required
-def get_user_lately_saerch(num):
+def get_user_lately_search(num):
 	USER = find_user(g.db, user_id=get_jwt_identity())
 
 	if USER is None: abort(401)

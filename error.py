@@ -15,7 +15,8 @@ def admin_only(error):
 
 @BP.app_errorhandler(404)
 def page_not_found(error):
-		return render_template('etc/404.html')
+		return jsonify(result = "No Page"), 404
+		#return render_template('etc/404.html')
 
 @BP.app_errorhandler(405)
 def bad_requests(error):

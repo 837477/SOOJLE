@@ -42,7 +42,7 @@ def init_db():
 		create_variable(db)
 
 	if 'SJ_REALTIME' not in db_collections:
-		db['SJ_REALTIME']
+		create_realtime(db)
 
 	if 'SJ_SEARCH_LOG' not in db_collections:
 		db['SJ_SEARCH_LOG']
@@ -270,9 +270,40 @@ def create_variable(db):
 		]
 	)
 
-##좋아요/조회수 초기 셋팅용 더비 포스트 생성!
+#좋아요/조회수 초기 셋팅용 더비 포스트 생성!
 def create_dummy_post(db):
 	check_ = check_dummy_post(db)
 
 	if not 'title' in check_:
 		insert_dummy_post(db)
+
+#실시간 검색어 초기 설정
+def create_realtime(db):
+	db[SJ_DB_REALTIME].insert(
+		{
+			'real_time' : 
+			[
+				['세종대', 0.9],
+				['장학금', 0.9],
+				['학식', 0.9],
+				['공모전', 0.9],
+				['공결', 0.9],
+				['스터디', 0.9],
+				['세종사회봉사', 0.9],
+				['수강', 0.9],
+				['기초코딩', 0.9],
+				['학술정보원', 0.9],
+				['교양', 0.9],
+				['토익', 0.9],
+				['동아리', 0.9],
+				['야식행사', 0.9],
+				['기숙사', 0.9],
+				['대양AI센터', 0.9],
+				['어린이대공원', 0.9],
+				['카페', 0.9],
+				['맛집', 0.9],
+				['대동제', 0.9]
+			],
+			'date': datetime.now()
+		}
+	)

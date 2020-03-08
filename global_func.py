@@ -150,6 +150,14 @@ def real_time_insert():
 		#최종 실시간 검색어 결과 반환
 		real_time_result.append(keyword)
 
+	if len(real_time_result) < 10:
+		lately_realtime = find_search_realtime(db)
+		lately_realtime = list(lately_realtime)
+
+		for new_keyword in real_time_result:
+			for lately_keyword in lately_realtime:
+				print()
+			
 
 	insert_search_realtime(db, real_time_result)
 	
