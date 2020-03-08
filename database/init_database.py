@@ -2,6 +2,8 @@ from pymongo import *
 from flask import g
 from datetime import datetime, timedelta
 from db_info import *
+from variable import *
+
 
 
 def get_db():
@@ -36,16 +38,16 @@ def init_db():
 		create_category_of_topic(db)
 		create_category_of_topic_info_num(db)
 
-	if SJ_VARIABLE not in db_collections:
+	if 'SJ_VARIABLE' not in db_collections:
 		create_variable(db)
 
-	if 'search_realtime' not in db_collections:
+	if 'SJ_REALTIME' not in db_collections:
 		db['search_realtime']
 
 	if 'search_log' not in db_collections:
 		db['search_log']
 
-	if 'log' not in db_collections:
+	if 'SJ_LOG' not in db_collections:
 		db['log']
 
 	if 'today_visitor' not in db_collections:
