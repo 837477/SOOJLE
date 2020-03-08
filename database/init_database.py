@@ -77,7 +77,7 @@ def create_category_of_topic(db):
 				'category_name': '대학교',
 				'info': 
 				[
-					'sj1_main_founded', 'sj1_main_notice', 'sj1_main_entrance', 'sj1_main_job',  'sj1_main_schoiarship', 'sj1_main_college', 'sj1_main_bidding' 'sj1_main_dataprocessFAQ', 'sj1_main_studentFAQ', 'sj1_main_schoiarshipFAQ', 'sj1_main_foreignerFAQ', 'sj1_main_foreignernotice', 'sj6_library_notice', 'sj6_library_book', 'sj6_library_FAQ', 'sj7_promotion_article', 'sj7_promotion_prism', 'sj7_promotion_report', 'sj7_promotion_research', 'sj7_promotion_speech', 'sj8_promotion_media', 'sj15_classic_notice', 'sj15_classic_news', 'sj15_classic_creative', 'sj15_classic_event', 'sj15_classic_shp', 'sj17_counselor_notice', 'sj17_counselor_free', 'sj18_skbs_notice', 'sj18_skbs_event', 'sj18_skbs_article', 'sj18_skbs_music', 'sj18_skbs_news', 'sj19_chong_news', 'sj19_chong_notice', 'sj19_chong_lost','sj24_sejong_allie', 'sj29_sejong_dormitory', 'sj33_mobilelibrary_notice', 'sj44_naverblog_sejong', 'sj44_naverblog_campustown'
+					'sj1_main_founded', 'sj1_main_notice', 'sj1_main_entrance', 'sj1_main_job',  'sj1_main_schoiarship', 'sj1_main_college', 'sj1_main_bidding', 'sj1_main_dataprocessFAQ', 'sj1_main_studentFAQ', 'sj1_main_schoiarshipFAQ', 'sj1_main_foreignerFAQ', 'sj1_main_foreignernotice', 'sj1_main_student', 'sj6_library_notice', 'sj6_library_book', 'sj6_library_FAQ', 'sj7_promotion_article', 'sj7_promotion_prism', 'sj7_promotion_report', 'sj7_promotion_research', 'sj7_promotion_speech', 'sj8_promotion_media', 'sj15_classic_notice', 'sj15_classic_news', 'sj15_classic_creative', 'sj15_classic_event', 'sj15_classic_shp', 'sj17_counselor_notice', 'sj17_counselor_free', 'sj18_skbs_notice', 'sj18_skbs_event', 'sj18_skbs_article', 'sj18_skbs_music', 'sj18_skbs_news', 'sj19_chong_news', 'sj19_chong_notice', 'sj19_chong_lost','sj24_sejong_allie', 'sj29_sejong_dormitory', 'sj33_mobilelibrary_notice', 'sj44_naverblog_sejong', 'sj44_naverblog_campustown'
 				],
 				'tag': 
 				[
@@ -139,6 +139,14 @@ def create_category_of_topic(db):
 				'info':
 				[
 					'sj9_chinatrade_notice', 'sj9_chinatrade_job', 'sj9_history_notice', 'sj9_history_data', 'sj9_ecotrade_notice', 'sj9_ecotrade_event', 'sj9_administ_notice', 'sj9_management_notice', 'sj9_management_job', 'sj9_hotel_notice', 'sj9_software_notice', 'sj9_elecommunication_notice', 'sj9_elecommunication_data', 'sj9_infoprotection_notice', 'sj9_infoprotection_job', 'sj9_energy_notice', 'sj9_nano_notice', 'sj9_nano_job', 'sj9_nano_FAQ', 'sj9_defensesys_notice', 'sj9_indusdesign_notice', 'sj9_indusdesign_data', 'sj9_designinnovation_studentnotice', 'sj9_designinnovation_notice', 'sj9_designinnovation_data', 'sj9_animation_notice', 'sj9_pysical_notice', 'sj9_pysical_job', 'sj9_dance_notice', 'sj9_dance_event', 'sj9_law_notice', 'sj10_pysics_notice', 'sj11_japanese_notice', 'sj12_archi_notice', 'sj12_archi_news', 'sj13_computer_notice', 'sj13_computer_event', 'sj13_computer_job', 'sj14_imc_notice', 'sj14_imc_news', 'sj14_imc_student', 'sj16_navercafe_foreigner', 'sj16_navercafe_music', 'sj16_navercafe_animation', 'sj16_navercafe_math', 'sj16_navercafe_korean', 'sj16_navercafe_environmentenergy', 'sj16_navercafe_chemistry', 'sj16_navercafe_sjnanuri', 'sj16_navercafe_eleinfoengineer', 'sj16_navercafe_imc', 'sj16_navercafe_club', 'sj21_sejong_wiki', 'sj9_computer_notice'
+				],
+				'tag': []
+			},
+			{
+				'category_name': '미사용',
+				'info':
+				[
+					'sj23_everytime_book', 'sj34_everytime_all'
 				],
 				'tag': []
 			}

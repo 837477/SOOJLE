@@ -148,8 +148,6 @@ def sign_in():
 	else:
 		return jsonify(result = "incorrect pw")
 
-#비밀번호 찾기
-
 #닉네임 변경
 @BP.route('/change_nickname', methods = ['POST'])
 @jwt_required
@@ -285,4 +283,22 @@ def reset_user_measurement():
 
 	return jsonify(
 		result = result
+	)
+
+#회원 최근 검색어 반환
+@BP.route('/get_user_lately_saerch/<int:num>')
+@jwt_required
+def get_user_lately_saerch(num):
+	USER = find_user(g.db, user_id=get_jwt_identity())
+
+	if USER is None: abort(401)
+
+	#메인로그 기록!
+	insert_log(g.db, USER['user_id'], request.path)
+
+	result = find_user_lately_search(g.db, USER['user_id'], num)
+
+	return jsonify(
+		result = "success",
+		lately_search_list = result
 	)

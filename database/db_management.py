@@ -9,8 +9,6 @@ from variable import *
 
 
 
-
-
 #SJ_DB_USER 관련#######################################
 ######################################################
 #전체 유저 목록 반환 (미사용)
@@ -479,7 +477,7 @@ def refresh_user_newsfeed_list(db, user_id, refresh_obj_list):
 
 	return "success"
 
-#USER의 관심도 갱신.
+#유저 관심도 갱신.
 def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector, measurement_num):
 	db[SJ_DB_USER].update({'_id': _id}, 
 		{
@@ -494,6 +492,34 @@ def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector, measurement
 		})
 
 	return "success"
+
+#유저 최근 검색 X개 불러오기
+def find_user_lately_search(db, user_id, num):
+	result = db[SJ_DB_USER].find_one(
+		{	
+			'user_id': user_id
+		},
+		{
+			'_id': 0,
+			'user_id': 0,
+			'user_pw': 0,
+			'user_nickname': 0,
+			'ft_vector': 0,
+			'topic': 0,
+			'search_list': {'$slice': num},
+			'fav_list': 0,
+			'view_list': 0,
+			'newsfeed_list': 0,
+			'tag': 0,
+			'tag_sum': 0,
+			'auto_login': 0,
+			'renewal': 0,
+			'privacy': 0,
+			'measurement_num': 0
+		}
+	)
+	return result['search_list']
+
 
 
 
@@ -793,9 +819,15 @@ def find_posts_of_recommendation(db, now_date, num):
 	return result
 
 #인기 뉴스피드 반환 (사용)
-def find_popularity_newsfeed(db, num):
+def find_popularity_newsfeed(db, default_date, num):
 	result = db[SJ_DB_POST].find(
-		{}, 
+		{
+			'$and':
+			[
+				{'popularity': {'$gt': 0}},
+				{'date': {'$gt': global_func.get_default_day(default_date)}}
+			]
+		},
 		{
 			'_id': 1,
 			'title': 1,
@@ -806,7 +838,7 @@ def find_popularity_newsfeed(db, num):
 			'url': 1,
 			'popularity': 1
 		}
-		).sort([('date', -1)]).limit(num).sort([('popularity', -1)])
+		).sort([('popularity', -1)]).limit(num)
 	return result
 
 #카테고리 검색
@@ -846,30 +878,24 @@ def find_posts_count(db):
 
 #제일 높은 좋아요 수 반환
 def find_highest_fav_cnt(db):
-	result = db[SJ_DB_POST].find_one(
-		{
-			'$query': {},
-			'$orderby': {'fav_cnt': -1}
-		},
+	result = db[SJ_DB_POST].find(
+		{},
 		{
 			'_id': 0,
 			'fav_cnt': 1
 		}
-	)
+	).sort([('fav_cnt', -1)]).limit(1)
 	return result['fav_cnt']
 
 #제일 높은 조회수 반환
 def find_highest_view_cnt(db):
 	result = db[SJ_DB_POST].find_one(
-		{
-			'$query': {},
-			'$orderby': {'view': -1}
-		},
+		{},
 		{
 			'_id': 0,
 			'view': 1
 		}
-	)
+	).sort([('view', -1)]).limit(1)
 	return result['view']
 
 #더미 포스트 체크(있는지 확인용)

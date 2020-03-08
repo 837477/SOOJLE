@@ -226,7 +226,9 @@ def get_popularity_newsfeed():
 	else:
 		insert_log(g.db, request.remote_addr, request.path)
 
-	result = find_popularity_newsfeed(g.db, SJ_RETURN_NUM)
+	now_date = datetime.now()
+
+	result = find_popularity_newsfeed(g.db, 30, SJ_RETURN_NUM)
 
 	return jsonify(
 		result = "success",
