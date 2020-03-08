@@ -12,62 +12,6 @@ from variable import *
 #BluePrint
 BP = Blueprint('auth', __name__)
 
-'''
-#로그인 및 회원가입(토큰발행) (포털 API 통합형 사용안함)
-@BP.route('/sign_in_up', methods=['POST'])
-def sign_in_up():
-	USER_ID = request.form['id']
-	USER_PW = request.form['pw']
-
-	user = find_user(g.db, user_id=USER_ID, user_pw=1)
-
-	#SOOJLE DB에 해당 user가 없다면?
-	if user is None:
-		user = {}
-		try:
-			sejong_api_result = dosejong_api(USER_ID, USER_PW)
-		except:
-			return jsonify(result = "api error")
-		if not sejong_api_result['result']:
-			try:
-				sejong_api_result = sjlms_api(USER_ID, USER_PW)
-			except:
-				return jsonify(result = "api error")
-			if not sejong_api_result['result']:
-				try:
-					sejong_api_result = uis_api(USER_ID, USER_PW)
-				except:
-					return jsonify(result = "api error")
-
-		#3개의 세종 API 불통시에 반환.
-		if not sejong_api_result['result']:
-			return jsonify(result = "not sejong")
-
-		#SOOJLE DB에 추가.
-		insert_user(g.db,
-			USER_ID,
-			generate_password_hash(USER_PW),
-			sejong_api_result['name'],
-			sejong_api_result['major']
-			)
-
-	#블랙리스트 회원인지 확인.
-	if find_blacklist_one(g.db, USER_ID):
-		return jsonify(result = "blacklist user")
-		
-	user = find_user(g.db, user_id=USER_ID, user_pw=1)
-	
-	if check_password_hash(user['user_pw'], USER_PW):
-		return jsonify(
-			result = "success",
-			access_token = create_access_token(
-				identity = USER_ID,
-				expires_delta=False)
-			)
-	else:
-		return jsonify(result = "incorrect pw")
-'''	
-
 #회원가입
 @BP.route('/sign_up', methods = ['POST'])
 def sign_up():
@@ -302,3 +246,4 @@ def get_user_lately_saerch(num):
 		result = "success",
 		lately_search_list = result
 	)
+
