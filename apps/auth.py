@@ -76,10 +76,6 @@ def sign_in():
 		return jsonify(
 			result = "No member"
 		)
-
-	#블랙리스트 회원인지 확인!
-	if find_blacklist_one(g.db, USER_ID):
-		return jsonify(result = "blacklist user")
 	
 	#비밀번호 해시화 확인.
 	if check_password_hash(user['user_pw'], USER_PW):
