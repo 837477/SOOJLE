@@ -42,13 +42,13 @@ def init_db():
 		create_variable(db)
 
 	if 'SJ_REALTIME' not in db_collections:
-		db['search_realtime']
+		db['SJ_REALTIME']
 
 	if 'search_log' not in db_collections:
 		db['search_log']
 
 	if 'SJ_LOG' not in db_collections:
-		db['log']
+		db['SJ_LOG']
 
 	if 'today_visitor' not in db_collections:
 		db['today_visitor']
@@ -62,8 +62,8 @@ def init_db():
 	if 'feedback' not in db_collections:
 		db['feedback']
 
-	if 'everyday_analysis' not in db_collections:
-		db['everyday_analysis']
+	if 'SJ_ANALYSIS' not in db_collections:
+		db['SJ_ANALYSIS']
 
 	if db_client is not None:
 		db_client.close()

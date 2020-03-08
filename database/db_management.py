@@ -1012,7 +1012,7 @@ def insert_pushback(db, user_id, type_, back_obj_list):
 
 #search_realtime 가져오기!
 def find_search_all_realtime(db):
-	result = db['search_realtime'].find(
+	result = db[SJ_REALTIME].find(
 		{},
 		{
 			'_id': 0
@@ -1103,14 +1103,14 @@ def remove_today_visitor(db):
 
 #매일 갱신되는 통계 테이블에 추가!
 def insert_everyday_analysis(db, analysis_obj):
-	db['everyday_analysis'].insert(
+	db[SJ_ANALYSIS].insert(
 		analysis_obj
 	)
 	return "success"
 
 #매일 통계에서 특정 날짜 이후 통계 반환
 def find_everyday_analysis_days(db, date):
-	result = db['everyday_analysis'].find(
+	result = db[SJ_ANALYSIS].find(
 		{
 			'date': 
 			{
@@ -1126,7 +1126,7 @@ def find_everyday_analysis_days(db, date):
 
 #매일 통계에서 특정 날짜 통계 반환
 def find_everyday_analysis_specific_day(db, date):
-	result = db['everyday_analysis'].find_one(
+	result = db[SJ_ANALYSIS].find_one(
 		{
 			'date': date
 		},
