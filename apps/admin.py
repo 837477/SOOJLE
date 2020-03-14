@@ -163,19 +163,6 @@ def send_feedback():
 		result = result
 	)
 
-#관리자 판단용 API
-@BP.route('/check_admin')
-@jwt_required
-def check_admin():
-	ADMIN = find_user(g.db, user_id=get_jwt_identity())
-
-	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
-	if ADMIN is None or ADMIN['user_id'] != SJ_ADMIN: abort(403)
-	
-	return jsonify(
-		result = "success"
-	)
-
 #############################################################################
 #############################################################################
 

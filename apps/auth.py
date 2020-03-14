@@ -105,13 +105,24 @@ def get_user_info():
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
 	if USER is None: abort(401)
 
+	#반환 할 user_info 객체
+	return_info = {}
+	return_info['result'] = "success"
+	return_info['user_id'] = USER['user_id']
+	return_info['user_nickname'] = USER['user_nickname']
+	return_info['user_fav_list'] = USER['fav_list']
+	return_info['auto_login'] = USER['auto_login']
+	return_info['auto_login'] = USER['auto_login']
+	return_info['privacy'] = USER['privacy']
+
+	#들어온 토큰이 ADMIN 토큰인지 확인!
+	if USER['user_id'] == SJ_ADMIN:
+		return_info['admin'] = 1
+	else:
+		return_info['admin'] = 0
+
 	return jsonify(
-		result = "success",
-		user_id = USER['user_id'],
-		user_nickname = USER['user_nickname'],
-		user_fav_list = USER['fav_list'],
-		auto_login = USER['auto_login'],
-		privacy = USER['privacy']
+		return_info
 	)
 
 #자동로그인 유무 변경
