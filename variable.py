@@ -53,7 +53,20 @@ SJ_REALTIME_RETURN_LIMIT = 10
 SJ_DOMAIN_SIM_PERCENT = 0.8
 #User cold limit (유저 Cold 기준)
 SJ_USER_COLD_LIMIT = 20
-
+#Request length limit (사용자 전송 데이터 제한) (이상, 이하 제도)
+SJ_REQUEST_LENGTH_LIMIT = {
+	'search_max': 200,
+	'user_id_min': 6,
+	'user_id_max': 30,
+	'user_pw_max': 8,
+	'user_nickname_min': 1,
+	'user_nickname_max': 16,
+	'feedback_max': 1000,
+	'notice_title_min': 1,
+	'notice_title_max': 50,
+	'notice_post_min': 1,
+	'notice_post_max': 1000
+}
 
 #스트링 변수들
 #####################################################

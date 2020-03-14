@@ -48,7 +48,8 @@ def get_log_date(months, days, hours, limit):
 
 	return jsonify(
 		result = "success",
-		log = result)
+		log = result
+	)
 
 #log) 특정 user 반환
 @BP.route('/get_log_user/<string:user_id>/<int:limit>')
@@ -58,7 +59,8 @@ def get_log_user(user_id, limit):
 
 	return jsonify(
 		result = "success",
-		log = result)
+		log = result
+	)
 	
 #log) 특정 user, 시간별 반환
 @BP.route('/get_log_user_date/<string:user_id>/<int:months>/<int:days>/<int:hours>/<int:limit>')
@@ -172,12 +174,11 @@ def get_everyday_analysis_specific_days(year, month, day):
 #무슨 디바이스로 접속했는지 기록용 API
 @BP.route('/insert_device/<string:device>')
 def insert_device(device):
-
 	if device == 'device_pc' or device == 'device_tablet' or device == 'device_mobile':
 		result = update_variable_inc(g.db, device, 1)
 
-	else:
-		return jsonify(result = "wrong device")
+	#잘못된 디바이스가 들어왔을 때!, Bad request 핸들러 반환
+	else: abort(400)
 
 	return jsonify(
 		result = result

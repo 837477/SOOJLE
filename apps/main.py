@@ -12,5 +12,4 @@ BP = Blueprint('main', __name__)
 @BP.route('/')
 @BP.route('/home')
 def main_home():
-	
 	return render_template('main/index.html')

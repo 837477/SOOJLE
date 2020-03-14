@@ -206,7 +206,7 @@ def search_logging():
 		)
 
 
-#category.ver2 검색 (테스트 대상)
+#category.ver2 검색
 @BP.route('/category_search/<string:category_name>/<int:num>', methods = ['POST'])
 @jwt_optional
 def category_search(category_name, num):
@@ -216,6 +216,10 @@ def category_search(category_name, num):
 	
 	#검색어 입력!
 	search_str = request.form['search']
+
+	#길이 체크
+	if len(search_str) > SJ_REQUEST_LENGTH_LIMIT['search_max']:
+		return jsonify(result = "long string")
 
 	#공백 제거
 	del_space_str = search_str.split(' ')

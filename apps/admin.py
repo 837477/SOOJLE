@@ -20,15 +20,14 @@ BP = Blueprint('admin', __name__)
 #md5 해쉬
 enc = hashlib.md5()
 
-#회원 삭제
+#회원 삭제 (보류)
 @BP.route('/admin_remove_user/<string:user_id>')
 @jwt_required
 def admin_remove_user(user_id):
 	admin = find_user(g.db, user_id=get_jwt_identity())
 
 	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
+	if admin is None or admin['user_id'] != SJ_ADMIN: abort(403)
 
 	#삭제 대상 획원 유무 확인
 	target_user = find_user(g.db, _id=1, user_id=user_id)
@@ -59,6 +58,10 @@ def get_notice(notice_obi):
 	update_notice_view(g.db, notice_obi)
 	
 	result = find_notice(g.db, notice_obi)
+
+	#잘못된 요청을 보냈음!, Bad request 핸들러 반환
+	if result is None: abort(400)
+
 	result = dumps(result)
 	
 	return jsonify(
@@ -70,16 +73,19 @@ def get_notice(notice_obi):
 @BP.route('/insert_notice', methods=['POST'])
 @jwt_required
 def insert_notice_():
-	new_title = request.form['title']
-	new_post = request.form['post']
+	NEW_TITLE = request.form['title']
+	NEW_POST = request.form['post']
 
-	admin = find_user(g.db, user_id=get_jwt_identity())
+	ADMIN = find_user(g.db, user_id=get_jwt_identity())
 
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
+	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
+	if ADMIN is None or ADMIN['user_id'] != SJ_ADMIN: abort(403)
 	
-	result = insert_notice(g.db, new_title, new_post)
+	#길이 검증 실패!, Bad request 핸들러 반환
+	if (len(NEW_TITLE) < SJ_REQUEST_LENGTH_LIMIT['notice_title_min'] and len(NEW_TITLE) > SJ_REQUEST_LENGTH_LIMIT['notice_title_max']) or (len(NEW_TITLE) < SJ_REQUEST_LENGTH_LIMIT['notice_post_min'] and len(NEW_TITLE) > SJ_REQUEST_LENGTH_LIMIT['notice_post_max']): abort(400)
+
+
+	result = insert_notice(g.db, NEW_TITLE, NEW_POST)
 
 	return jsonify(
 		result = result
@@ -89,17 +95,19 @@ def insert_notice_():
 @BP.route('/update_notice/<string:notice_obi>', methods=['POST'])
 @jwt_required
 def update_notice_(notice_obi):
-	new_title = request.form['title']
-	new_post = request.form['post']
-	new_activation = request.form['activation']
+	NEW_TITLE = request.form['title']
+	NEW_POST = request.form['post']
+	NEW_ACTIVATION = request.form['activation']
 	
-	admin = find_user(g.db, user_id=get_jwt_identity())
+	ADMIN = find_user(g.db, user_id=get_jwt_identity())
 
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
+	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
+	if ADMIN is None or ADMIN['user_id'] != SJ_ADMIN: abort(403)
 
-	result = update_notice(g.db, notice_obi, new_title, new_post, new_activation)
+	#길이 검증 실패!, Bad request 핸들러 반환
+	if (len(NEW_TITLE) < SJ_REQUEST_LENGTH_LIMIT['notice_title_min'] and len(NEW_TITLE) > SJ_REQUEST_LENGTH_LIMIT['notice_title_max']) or (len(NEW_POST) < SJ_REQUEST_LENGTH_LIMIT['notice_post_min'] and len(NEW_POST) > SJ_REQUEST_LENGTH_LIMIT['notice_post_max']): abort(400)
+
+	result = update_notice(g.db, notice_obi, NEW_TITLE, NEW_POST, NEW_ACTIVATION)
 
 	return jsonify(
 		result = result
@@ -109,16 +117,15 @@ def update_notice_(notice_obi):
 @BP.route('/remove_notice/<string:notice_obi>')
 @jwt_required
 def remove_notice_(notice_obi):
-	admin = find_user(g.db, user_id=get_jwt_identity())
+	ADMIN = find_user(g.db, user_id=get_jwt_identity())
 
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
+	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
+	if ADMIN is None or ADMIN['user_id'] != SJ_ADMIN: abort(403)
 
-	notice = find_notice(g.db, notice_obi)
+	NOTICE = find_notice(g.db, notice_obi)
 
-	if notice is None:
-		return jsonify(result = "Not found")
+	#해당 공지사항이 없는경우, Bad request 핸들러 반환
+	if NOTICE is None: abort(400)
 
 	result = remove_notice(g.db, notice_obi)
 
@@ -130,13 +137,18 @@ def remove_notice_(notice_obi):
 @BP.route('/send_feedback', methods=['POST'])
 @jwt_required
 def send_feedback():
-	user = find_user(g.db, user_id=get_jwt_identity())
-	if user is None: abort(400)
+	USER = find_user(g.db, user_id=get_jwt_identity())
+
+	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
+	if USER is None: abort(401)
 
 	FEEDBACK_TYPE = request.form['type']
 	FEEDBACK_POST = request.form['post']
 	FEEDBACK_TIME = datetime.now()
-	FEEDBACK_AUTHOR = user['user_id']
+	FEEDBACK_AUTHOR = USER['user_id']
+
+	#길이 검증 실패!, Bad request 핸들러 반환
+	if len(FEEDBACK_POST) > SJ_REQUEST_LENGTH_LIMIT['feedback_max']: abort(400)
 
 	feedback_data = {
     	'type': FEEDBACK_TYPE,
@@ -147,22 +159,22 @@ def send_feedback():
 
 	result = insert_user_feedback(g.db, feedback_data)
 
-	if result == "success":
-		return jsonify(result = "success")
-	else:
-		return jsonify(result = "fail")
+	return jsonify(
+		result = result
+	)
 
 #관리자 판단용 API
 @BP.route('/check_admin')
 @jwt_required
 def check_admin():
-	admin = find_user(g.db, user_id=get_jwt_identity())
+	ADMIN = find_user(g.db, user_id=get_jwt_identity())
 
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
+	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
+	if ADMIN is None or ADMIN['user_id'] != SJ_ADMIN: abort(403)
 	
-	return jsonify(result = "success")
+	return jsonify(
+		result = "success"
+	)
 
 #############################################################################
 #############################################################################

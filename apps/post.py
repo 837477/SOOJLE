@@ -22,14 +22,14 @@ def post_like(post_obi):
 	#USER 정보 불러오기
 	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
 	
-	#잘못된 USER 정보(잘못된 token)
-	if USER is None: abort(400)
+	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
+	if USER is None: abort(401)
 
 	#이미 좋아요 한 글인지 확인용으로 불러온다.
 	check_fav = check_user_fav_list(g.db, USER['_id'], post_obi)
-	#좋아요 중복 확인
-	if 'fav_list' in check_fav:
-		return jsonify(result = "already like")
+	
+	#좋아요를 중복으로 또 요청했을 때!, Bad request 핸들러 반환
+	if 'fav_list' in check_fav: abort(400)
 
 	#logging (메인 로깅)
 	insert_log(g.db, USER['user_id'], request.path)
@@ -39,9 +39,8 @@ def post_like(post_obi):
 	#해당 POST를 불러온다.
 	POST = find_post(g.db, post_obi, _id=1, topic=1, token=1, tag=1, fav_cnt=1, view=1, date=1, title=1, url=1, img=1)
 
-	#해당 POST가 없으면?!
-	if POST is None:
-		return jsonify(result = "post is deleted")
+	#잘못된 POST_ID 들어왔을 때, Bad request 핸들러 반환
+	if POST is None: abort(400)
 
 	#해당 POST 좋아요 처리.
 	update_post_like(g.db, POST['_id'])
@@ -63,7 +62,9 @@ def post_like(post_obi):
 	#해당 유저의 갱신시간 갱신
 	update_user_renewal(g.db, USER['user_id'])
 
-	return jsonify(result = result)
+	return jsonify(
+		result = result
+	)
 
 #포스트 좋아요 취소 (사용자가 관심기능 수행한 게시물 모듈 포함)
 @BP.route('/post_unlike/<string:post_obi>')
@@ -72,14 +73,14 @@ def post_unlike(post_obi):
 	#USER 정보 불러오기
 	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
 
-	#잘못된 USER 정보(잘못된 token)
-	if USER is None: abort(400)
+	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
+	if USER is None: abort(401)
 
 	#이미 좋아요 한 글인지 확인용으로 불러온다.
 	check_fav = check_user_fav_list(g.db, USER['_id'], post_obi)
-	#좋아요를 한 글인지 확인한다.
-	if not 'fav_list' in check_fav:
-		return jsonify(result = "none like")
+	
+	#좋아요가 안된 게시글을 요청했을 때!, Bad request 핸들러 반환
+	if not 'fav_list' in check_fav: abort(400)
 
 	#logging! (메인 로깅)
 	insert_log(g.db, USER['user_id'], request.path)
@@ -88,9 +89,9 @@ def post_unlike(post_obi):
 
 	#해당 POST를 불러온다.
 	POST = find_post(g.db, post_obi, _id=1)
-	#해당 POST가 없으면?!
-	if POST is None:
-		return jsonify(result = "post is deleted")
+	
+	#잘못된 POST_ID 들어왔을 때, Bad request 핸들러 반환
+	if POST is None: abort(400)
 
 	#해당 POST 좋아요 취소 처리.
 	update_post_unlike(g.db, post_obi)
@@ -100,7 +101,9 @@ def post_unlike(post_obi):
 	#해당 유저의 갱신시간 갱신
 	update_user_renewal(g.db, USER['user_id'])
 
-	return jsonify(result = result)
+	return jsonify(
+		result = result
+	)
 
 #포스트 조회수
 @BP.route('/post_view/<string:post_obi>')
@@ -114,8 +117,8 @@ def post_view(post_obi):
 		#USER 정보 불러오기
 		USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
 		
-		#잘못된 USER 정보(잘못된 token)
-		if USER is None: abort(400)
+		#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
+		if USER is None: abort(401)
 
 		#logging (메인 로깅)
 		insert_log(g.db, USER['user_id'], request.path)
@@ -145,6 +148,8 @@ def post_view(post_obi):
 	#오늘 조회한 게시글 로깅!
 	update_variable_inc(g.db, 'today_view', 1)
 
-	return jsonify(result = result)
+	return jsonify(
+		result = result
+	)
 
 
