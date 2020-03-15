@@ -4,7 +4,6 @@ from flask_jwt_extended import *
 from pprint import pprint
 ###########################################
 from db_management import *
-from sj_auth import *
 ###########################################
 from variable import *
 
