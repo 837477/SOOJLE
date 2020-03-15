@@ -32,4 +32,3 @@ def testing_search():
 @BP.route('/testing_recommend')
 def testing_recommend():
 	return render_template('testing/testing_recommend.html')
-
