@@ -1,0 +1,124 @@
+.lab_title_wrap {
+	position: relative;
+	width: 95%;
+	height: auto;
+	margin-bottom: 20px;
+	margin-left: 2.5%;
+	border: none;
+}
+.lab_title {
+	position: relative;
+	width: 100%;
+	font-size: 24px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+.lab_subtitle {
+	position: relative;
+	width: 100%;
+	font-size: 14px;
+	margin-bottom: 50px;
+	text-align: center;
+	color: rgba(0,0,0,.8);
+}
+.lab_service_contents_wrap {
+	position: relative;
+	width: 95%;
+	height: auto;
+	margin-left: 2.5%;
+	margin-bottom: 40px;
+	box-sizing: border-box;
+}
+@media screen and (max-width: 450px) {
+	.lab_soojle_content {
+		position: relative;
+		width: 95%;
+		height: 100px;
+		border-radius: 5px;
+		border: 2px solid #ebebeb;
+		margin-bottom: 10px;
+		margin-left: 2.5%;
+		transition: .1s ease-in-out;
+		box-sizing: border-box;
+	}
+}
+.lab_service_info_wrap {
+	position: relative;
+	display: inline-block;
+	width: 60%;
+	height: 100%;
+	box-sizing: border-box;
+	margin: 10px;
+	padding: 20px;
+	border: 2px solid rgba(0,0,0,0);
+	border-radius: 10px;
+	transition: .1s ease-in-out;
+}
+.lab_service_choice_wrap {
+	position: relative;
+	display: inline-block;
+	width: 30%;
+	height: 100%;
+	box-sizing: border-box;
+	border-left: 2px solid #ebebeb;
+	top: 50%;
+	transform: translate(0, -50%);
+	transition: .4s ease-in-out;
+}
+.lab_service_choice_wrap:hover > .lab_service_choice_content {
+	color: initial;
+}
+.lab_service_choice_number {
+	position: relative;
+	width: 100%;
+	height: auto;
+	padding: 20px 10px 0 10px;
+	text-align: center;
+	font-size: 20px;
+	line-height: 35px;
+}
+@media screen and (max-width: 450px) {
+	.lab_service_choice_content {
+		position: relative;
+		width: 100%;
+		height: auto;
+		padding: 0 10px 20px 10px;
+		text-align: center;
+		font-size: 12px;
+		line-height: 20px;
+		color: rgba(0,0,0,.7);
+	}
+}
+.lab_service_choice_content {
+	position: relative;
+	width: 100%;
+	height: auto;
+	padding: 0 10px 20px 10px;
+	text-align: center;
+	font-size: 14px;
+	line-height: 20px;
+	color: rgba(0,0,0,.7);
+}
+.lab_service_content_title {
+	position: relative;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 30px;
+	transition: .1s ease-in-out;
+}
+.lab_service_content_subtitle {
+	position: relative;
+	font-size: 14px;
+	line-height: 20px;
+	transition: .1s ease-in-out;
+}
+.lab_nothing {
+	position: relative;
+	width: 95%;
+	height: auto;
+	font-size: 20px;
+	line-height: 100px;
+	font-weight: 300;
+	margin: 50px 0;
+	margin-left: 2.5%;
+}

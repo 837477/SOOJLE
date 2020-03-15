@@ -1,0 +1,253 @@
+html {
+	background-color: white;
+	font-family: 'AppleSdNeo';
+}
+.content__title_sub {
+	position: absolute;
+	top: 55%;
+	left: 50%;
+	transform: translate(-50%, 0);
+	width: auto;
+	text-align: center;
+	color: black;
+	font-size: 2vw;
+	font-weight: 800;
+	z-index: 100;
+}
+.content--canvas {
+	background-color: white;
+}
+.demo-1 {
+	--color-text: black;
+	--color-bg: white;
+	--color-link: #c30e2e;
+	--color-link-hover: #555;
+	--color-info: black;
+	--color-main-text: #1d1c1c;
+	--color-scroll-text: black;
+	--font-scroll-text: 'AppleSdNeo', monospace;
+	--fontsize-scroll-text: 3vw;
+}
+.js .content__text::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    height: 69%;
+    bottom: 0;
+    border-radius: 100%;
+    width: calc(6vmax - 1.5rem);
+    width: 2vw;
+    height: 2vw;
+    left: 3vw;
+    top: 50%;
+    transform: translate(0, -50%);
+    background: url(../../static/image/shortcut_black.jpg);
+    background-size: 2vw 2vw;
+}
+.introduce_subtitle {
+	position: relative;
+	width: 100%;
+	height: 30px;
+	color: black;
+	opacity: 1;
+	text-align: center;
+	font-size: 24px;
+	line-height: 30px;
+	margin-bottom: 10px;
+	cursor: default;
+}
+.introduce_title {
+	position: relative;
+	width: 100%;
+	height: 40px;
+	color: black;
+	text-align: center;
+	font-size: 34px;
+	line-height: 40px;
+	margin-bottom: 40px;
+	cursor: default;
+	word-break: keep-all;
+	font-weight: 800;
+}
+.introduce_post {
+	position: relative;
+	width: 100%;
+	max-width: 400px;
+	height: auto;
+	color: black;
+	opacity: 1;
+	font-size: 20px;
+	text-align: center;
+	line-height: 25px;
+	cursor: default;
+	margin: auto;
+	word-break: keep-all;
+}
+
+/*공감 조회 검색*/
+.recommend_element_introduce {
+	max-width: 500px;
+}
+.recommend_element_cont {
+	position: relative;
+	width: 33.33%;
+	float: left;
+	height: auto;
+	margin-top: 10vw;
+	text-align: center;
+}
+.recommend_element_icon {
+	position: relative;
+	width: 3vw;
+	height: 3vw;
+	font-size: 3vw;
+}
+.recommend_element_text {
+	position: relative;
+	width: auto;
+	height: 2vw;
+	font-size: 20px;
+	line-height: 2vw;
+	margin-top: 2vw;
+	font-weight: 800;
+}
+
+
+.user_element_cont {
+	position: relative;
+	width: 40%;
+	float: left;
+	height: auto;
+	text-align: center;
+}
+.user_element_cont_second {
+	position: relative;
+	width: 20%;
+	float: left;
+	height: auto;
+	text-align: center;
+}
+.user_element_tag {
+	position: relative;
+	width: auto;
+	height: 5vw;
+	line-height: 5vw;
+	font-size: 2vw;
+	font-weight: 800;
+	color: black;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.recommend_analysis_element_introduce {
+	max-width: 500px;
+	margin-bottom: 5vw;
+}
+.recommend_element_text  {
+	position: relative;
+	width: auto;
+	height: 3vw;
+	font-size: 40px;
+	line-height: 3vw;
+	margin-bottom: 2vw;
+	text-align: center;
+	font-weight: 800;
+}
+.chart_plus {
+	transition: .6s ease-in-out;
+}
+.chart_plus:hover {
+	transform: scale(1.2);
+}
+.recommend_menu_img {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 500px;
+	height: auto;
+	margin-right: 2vw;
+}
+.recommend_posts {
+	position: relative;
+	width: 700px;
+	height: 200px;
+	border: 3px solid #EBEBEB;;
+	background-color: white;
+	border-radius: 3px 30px 30px 3px;
+	margin-left: 2vw;
+	margin-bottom: 20px;
+	padding: 20px;
+    transition: .1s ease-in-out;
+    text-align: left;
+}
+.recommend_posts:hover {
+	border: 3px solid black;
+}
+.view_post_title {
+	position: relative;
+    font-size: 30px;
+    color: black;
+    line-height: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 15px;
+}
+.view_post_url {
+	position: relative;
+    font-size: 24px;
+    color: #009932;
+    line-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: .1s ease-in-out;
+}
+.view_post_url:hover {
+	text-decoration: underline;
+}
+.view_post_time {
+	position: relative;
+    font-size: 20px;
+    color: rgba(0,0,0,.8);
+    line-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.recommend_token_title {
+	position: relative;
+	width: 100%;
+	height: 4vw;
+	font-size: 2.6vw;
+	line-height: 4vw;
+	text-align: center;
+	margin-top: 5vw;
+	margin-bottom: 1vw;
+	font-weight: 800;
+}
+.page_up {
+	position: absolute;
+	width: 20vw;
+	height: 5vw;
+	left: 50%;
+	bottom: 2vw;
+	transform: translate(-50%, 0);
+	background-color: rgba(0,0,0,0);
+}
+.page_up_icon {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	line-height: 5vw;
+	font-size: 3vw;
+	color: black;
+	opacity: .5;
+	transition: .2s ease-in-out;
+}
+.page_up:hover > .page_up_icon {
+	opacity: 1;
+}

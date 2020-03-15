@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko" class="no-js">
+<head>
+	<title>SOOJLE</title>
+	<meta name="author" content="Team IML">
+	<meta name="keywords" content="세종,세종대학교,세종정보,세종검색,세종커뮤니티">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<!-- 모바일 브라우저 상태바 컬러 -->
+    <meta name="theme-color" content="##232833">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<!-- shortcut 아이콘 -->
+	<link rel="icon" type="image/png" href="/static/image/shortcut.jpg">
+	<link rel="apple-touch-icon-precomposed" type="image/png" href="/static/image/shortcut.jpg">
+	<!-- 아이콘 -->
+	<script src="https://kit.fontawesome.com/69ff864019.js" crossorigin="anonymous"></script>
+	<!-- Animation CSS -->
+	<link href="/static/css/animation/animate.css" rel="stylesheet">
+	<!-- Custom CSS -->
+	<link rel="stylesheet" type="text/css" href="/static/testing/pipline_base.css" />
+	<link rel="stylesheet" type="text/css" href="/static/testing/pipline_demo5.css" />
+	<link rel="stylesheet" type="text/css" href="/static/testing/scroll_base.css" />
+	<link rel="stylesheet" type="text/css" href="/static/testing/scroll_demo1.css" />
+	<link rel="stylesheet" type="text/css" href="/static/testing/recommend.css">
+	<!-- Chart JS -- >
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css" integrity="sha256-IvM9nJf/b5l2RoebiFno92E5ONttVyaEEsdemDC6iQA=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css" integrity="sha256-IvM9nJf/b5l2RoebiFno92E5ONttVyaEEsdemDC6iQA=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+	<!-- pipline -->
+	<script>document.documentElement.className="js";var supportsCssVars=function(){var e,t=document.createElement("style");return t.innerHTML="root: { --tmp-var: bold; }",document.head.appendChild(t),e=!!(window.CSS&&window.CSS.supports&&window.CSS.supports("font-weight","var(--tmp-var)")),t.parentNode.removeChild(t),e};supportsCssVars()||alert("Please view this demo in a modern browser that supports CSS Variables.");</script>
+</head>
+<body class="demo-1 loading">
+	<main>
+		<div class="content content--canvas">
+			<img class="content__title pointer" src="static/image/SOOJLE_LOGO_BIG.png" onclick="moveToinfo(1)">
+			<div class="content__title_sub noselect">추천 시스템</div>
+		</div>
+	</main>
+
+	<main style="position: relative; height: 550vh;">
+		<div class="content">
+			<div class="content__section">
+				<div class="content__link"><div class="content__img wow display_none" data-wow-duration="1.5s">
+					<div class="introduce_img_cont">
+						<img src="./static/testing/recommend.png" class="introduce_img noselect pointer" onclick="moveToinfo(2);">
+					</div>
+					<div class="introduce_text_box">
+						<div class="introduce_subtitle">SOOJLE 인공지능</div>
+						<div class="introduce_title">세종인을 위한 맞춤화된 추천</div>
+						<div class="introduce_post">SOOJLE은 우리 세종인들이 관심을 가질만한 정보에 초점을 두고 있습니다. 또한 사용자의 관심지표를 분석하여, 보다 유용한 정보를 제공합니다.</div>
+					</div>
+				</div></div>
+				<h2 class="content__text">SOOJLE의 추천 시스템</h2>
+			</div>
+			<div class="content__section">
+				<div class="content__link"><div class="content__img wow display_none" data-wow-duration="1.5s">
+					<div class="recommend_token_title pointer noselect" onclick="moveToinfo(3)">사용자의 모든 행동이 단서가 될 수 있습니다.</div>
+					<div class="introduce_post recommend_element_introduce">SOOJLE은 사용자의 검색어, 조회 게시글, 공감 게시물 등을 분석하여 사용자의 관심도를 추출합니다.</div>
+					<div class="recommend_element_cont">
+						<i class="fas fa-search recommend_element_icon"></i>
+						<div class="recommend_element_text noselect">사용자 검색</div>
+					</div>
+					<div class="recommend_element_cont">
+						<i class="far fa-star recommend_element_icon"></i>
+						<div class="recommend_element_text noselect">사용자 관심 게시글</div>
+					</div>
+					<div class="recommend_element_cont">
+						<i class="fas fa-mouse recommend_element_icon"></i>
+						<div class="recommend_element_text noselect">사용자 조회 게시글</div>
+					</div>
+				</div></div>
+				<h2 class="content__text">사용자 관심 지표</h2>
+			</div>
+			<div class="content__section">
+				<div class="content__link"><div class="content__img wow display_none" data-wow-duration="1.5s">
+					<div class="recommend_token_title pointer noselect" onclick="moveToinfo(4)">다음과 같이 분석합니다.</div>
+					<div id="recommend_analysis_element_introduce" class="introduce_post recommend_analysis_element_introduce">16011075 김형석</div>
+					<div id="user_lda_cont" class="user_element_cont">
+						<div class="recommend_element_text noselect">LDA 분석</div>
+					</div>
+					<div id="user_tag_cont" class="user_element_cont_second">
+						
+					</div>
+					<div id="user_fasttext_cont" class="user_element_cont">
+						<div class="recommend_element_text noselect">FastText 분석</div>
+					</div>
+				</div></div>
+				<h2 class="content__text">사용자 관심 분포도</h2>
+			</div>
+			<div class="content__section">
+				<div class="content__link"><div class="content__img wow display_none" data-wow-duration="1.5s">
+					<div class="view_posts_cont">
+						<div class="view_menu">
+							<img src="./static/testing/recommend_menu.png" class="recommend_menu_img">
+						</div>
+						<div id="view_target" class="view_target">
+							<div id="post1" class="recommend_posts noselect"></div>
+							<div id="post2" class="recommend_posts noselect"></div>
+							<div id="post3" class="recommend_posts noselect"></div>
+							<div id="post4" class="recommend_posts noselect"></div>
+							<div id="post5" class="recommend_posts noselect"></div>
+							<div id="post6" class="recommend_posts noselect"></div>
+						</div>
+					</div>
+				</div></div>
+				<h2 class="content__text">사용자 추천 게시글</h2>
+			</div>
+		</div>
+		<div class="page_up pointer noselect" onclick="page_reload();">
+			<i class="fas fa-caret-up page_up_icon"></i>
+		</div>
+	</main>
+	<div class="SJ_board_footer">
+		<div class="SJ_footer_background"></div>
+		<div class="SJ_footer_guideline">
+			<img src="/static/image/SOOJLE_LOGO_BIG_BLACK.png" class="SJ_footer_item pointer noselect" onclick="Go_home();">
+			<div class="SJ_footer_item pointer">소개</div>
+			<div class="SJ_footer_item pointer">개발자</div>
+			<div class="SJ_footer_item pointer">광고</div>
+			<div class="SJ_footer_item pointer">개인정보처리방침</div>
+			<div class="SJ_footer_item pointer">서비스이용약관</div>
+			<div class="SJ_footer_item noselect">©2019 TEAM IML</div>
+		</div>
+	</div>
+	<div id="snackbar_target" class="snackbar_target"></div>
+</body>
+
+
+<!-- Test Host JS -->
+<script src="/static/js/host.js"></script>
+<!-- JQuery JS -->
+<script src="/static/js/jquery/jquery.min.js"></script>
+<!-- Ajax JS -->
+<script src="/static/js/ajax.js"></script>
+<!-- Animation JS -->
+<script src="/static/js/wow/wow.min.js"></script>
+<script>new WOW().init();</script>
+<!-- Snackbar JS -->
+<script src="/static/js/snackbar.js"></script>
+<!-- MAIN JS -->
+<script src="/static/js/main.js"></script>
+<script src="/static/testing/noise.min.js"></script>
+<script src="/static/testing/util.js"></script>
+<script src="/static/testing/recommend/pipline.js"></script>
+<script src="/static/testing/imagesloaded.pkgd.min.js"></script>
+<script src="/static/testing/charming.min.js"></script>
+<script src="/static/testing/scroll_demo1.js"></script>
+<script src="/static/testing/recommend.js"></script>
+</html>

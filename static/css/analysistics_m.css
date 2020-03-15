@@ -1,0 +1,115 @@
+.anlt_time_weather_wrap {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	height: auto;
+	margin: none;
+	border : none;
+}
+.anlt_time_wrap {
+	position: relative;
+	float: left;
+	width: 95%;
+	height: 50%;
+	margin: 0 2.5%;
+}
+.anlt_weather_wrap {
+	position: relative;
+	float: left;
+	width: 95%;
+	height: 50%;
+	margin: 0 2.5%;
+}
+.anlt_realtime_wrap {
+	position: relative;
+	float: left;
+	width: 95%;
+	height: auto;
+	margin: 50px 2.5% 0 2.5%;
+}
+.anlt_reatime_word_elements {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+.anlt_reatime_word_elements:nth-child(2) {
+	position: relative;
+	top: auto;
+	right: auto;
+}
+#anlt_reatime_word_6to10 > .anlt_realtime_word,
+#anlt_reatime_word_6to10 > .anlt_realtime_word_real {
+	margin-top: 0;
+}
+.anlt_visitor_wrap {
+	position: relative;
+	width: 95%;
+	float: left;
+	margin: 40px 2.5% 0 2.5%;
+}
+.anlt_visitor_box {
+	position: relative;
+	float: left;
+	width: 48%;
+	height: 130px;
+	box-sizing: border-box;
+	margin-left: 2%;
+	margin-right: 0%;
+	margin-bottom: 15px;
+	padding: 15px;
+	padding-top: 30px;
+	border: 2px solid #ebebeb;
+	transition: .1s ease-in-out;
+}
+.anlt_visitor_box_title {
+	position: relative;
+	font-size: 14px;
+	text-align: center;
+	line-height: 20px;
+}
+.anlt_visitor_box_data {
+	position: relative;
+	font-size: 30px;
+	text-align: center;
+	font-weight: 300;
+	line-height: 50px;
+}
+.anlt_top_text_data {
+	position: relative;
+	font-size: 24px;
+	text-align: center;
+	font-weight: 300;
+	line-height: 50px;
+	color: #c30e2e;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.anlt_greeting_wrapper {
+	position: relative;
+	width: 90%;
+	margin-left: 5%;
+	height: auto;
+	margin-top: 40px;
+	margin-bottom: 40px;
+}
+.anlt_greeting_text {
+	position: relative;
+	width: 100%;
+	height: auto;
+	text-align: center;
+	font-size: 18px;
+	line-height: 40px;
+	font-weight: 300;
+	transition: .4s ease-in-out;
+}
+.anlt_greeting_text:hover {
+	transform: scale(1.1);
+	font-weight: 500;
+}
+.anlt_greeting_text_checked {
+	transform: scale(1.1);
+	font-weight: 500;
+}

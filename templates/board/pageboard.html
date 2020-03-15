@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title>SOOJLE</title>
+	<meta name="author" content="Team IML">
+	<meta name="keywords" content="세종,세종대학교,세종정보,세종검색,세종커뮤니티">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<!--Open Graph tag-->
+	<meta property="og:title" content="SOOJLE">
+	<meta property="og:description" content="세종대학교의 정보를 체계화하여 모두가 편리하게 이용할 수 있도록 합니다.">
+	<meta property="og:image" content="/static/image/shortcut_mobile.png">
+	<!-- 모바일 브라우저 상태바 컬러 -->
+    <meta name="theme-color" content="#fff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- 모바일 전체화면 가능 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+	<!-- shortcut 아이콘 -->
+	<link rel="icon" type="image/png" href="/static/image/shortcut_mobile.png">
+	<link rel="apple-touch-icon-precomposed" type="image/png" href="/static/image/shortcut.png">
+	<!-- 아이콘 -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+	<!-- Animation CSS -->
+	<link href="/static/css/animation/animate.css" rel="stylesheet">
+	<!-- Custom CSS -->
+	<link href="/static/css/main.css" rel="stylesheet">
+	<link href="/static/css/board.css" rel="stylesheet">
+	<link href="/static/css/analysistics.css" rel="stylesheet">
+	<link href="/static/css/lab.css" rel="stylesheet">
+	<script type="text/javascript">
+		let mobile_ver = false;
+		if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4)) || (/iPad|iPhone|iPod/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1))) { 
+	    	mobile_ver = true;
+	    }
+	    if (mobile_ver) {
+			let link_board = document.createElement('link');
+			link_board.rel = 'stylesheet';
+			link_board.type = 'text/css';
+			link_board.href = '/static/css/board_m.css';
+			document.getElementsByTagName('HEAD')[0].appendChild(link_board);
+			let link_anlt = document.createElement('link');
+			link_anlt.rel = 'stylesheet';
+			link_anlt.type = 'text/css';
+			link_anlt.href = '/static/css/analysistics_m.css';
+			document.getElementsByTagName('HEAD')[0].appendChild(link_anlt);
+			let link_lab = document.createElement('link');
+			link_lab.rel = 'stylesheet';
+			link_lab.type = 'text/css';
+			link_lab.href = '/static/css/lab_m.css';
+			document.getElementsByTagName('HEAD')[0].appendChild(link_lab);
+		}
+	</script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css" integrity="sha256-IvM9nJf/b5l2RoebiFno92E5ONttVyaEEsdemDC6iQA=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+</head>
+<body>
+	<!--Header-->
+	<div class="SJ_board_header header_down">
+		<div class="header_guideline">
+			<img id="board_logo" src="/static/image/SOOJLE_LOGO_BIG.png" class="board_logo pointer noselect" onclick="Goboard()">
+			<div id="pc_search" class="pc_search">
+				<div class="pc_search_container">
+					<input id="pc_search_input" type="text" class="pc_search_input result_target" onkeyup="search_focus(event.keyCode, $(this))" onblur="search_blur()" autocomplete="off" onfocus="search_focuson()">
+					<div class="pc_search_button pointer" onclick="search_button()">
+						<img src="/static/icons/search.png" class="pc_search_icon noselect">
+					</div>
+				</div>
+			</div>
+			<div id="mobile_search" class="mobile_search display_none">
+				<div class="mobile_search_header">
+					<div class="mobile_search_button_modal pointer" onclick="search_button($(this))">
+						<img src="/static/icons/search.png" class="mobile_search_icon_modal">
+					</div>
+					<input id="mobile_search_input" type="text" class="mobile_search_input result_target" onkeyup="search_focus(event.keyCode, $(this))" onfocus="search_focus(0, $(this)); search_focuson();" autocomplete="off">
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--Body Guide Line-->
+	<div class="SJ_board_body">
+		<div class="body_guideline">
+			<div id="menu_container" class="menu_container menu_container_fixed">
+				<img src="/static/image/menu_line.png" class="board_info_menu_line noselect">
+				<div class="board_info_container">
+					<div id="board_info_board" class="board_info_board noselect">뉴스피드</div>
+					<div id="board_info_text" class="board_info_text noselect" onclick="Mobile_menu_modal_onoff()">추천</div>
+					<div class="board_mobile_login_container pointer" onclick="open_login_or_setting()">
+						<div id="user_login_mobile" class="board_mobile_login_name menu_container_login_accent">로그인</div>
+						<div id="user_info_mobile" class="board_mobile_login_name display_none"></div>
+						<div class="board_mobile_login_bar"></div>
+					</div>
+				</div>
+				<div id="menu_realtime_searchwords" class="menu_realtime_searchwords">
+					<div id="menu_realtime_searchwords_wrapper" class="menu_realtime_searchwords_wrapper"></div>
+					<i class="fa fa-chevron-down menu_realtime_hover"></i>
+				</div>
+				<div id="user_login" class="menu_container_button_small menu_container_login_accent pointer" onclick="Login_open()">로그인</div>
+				<div id="user_info" class="menu_container_button_small_info noselect display_none"></div>
+				<div class="menu_container_button_small pointer" onclick="menu_modal_onoff()">메뉴</div>
+				<div class="menu_container_button_small pointer" onclick="grid_modal_onoff()">책갈피</div>
+				<div class="menu_container_button_small pointer" onclick="pageUp()">검색</div>
+				<div id="realtime_searchwords_table" class="realtime_searchwords_table display_none">
+					<div class="realtime_searchwords_table_title noselect">실시간 검색어</div>
+					<div id="realtime_searchwords_table_words">
+					</div>
+					<div id="realtime_searchwords_table_time" class="anlt_realtime_standard"></div>
+				</div>
+			</div>
+			<div id="board_container" class="board_container">
+				<div id="posts_target" class="posts_target_container">
+				</div>
+				<div class="posts_creating_loading">
+					<div id="posts_creating_loading" class="posts_creating_loading_content loader-8 display_none"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--Footer-->
+	<div class="SJ_board_footer">
+		<div class="SJ_footer_background"></div>
+		<div class="SJ_footer_guideline">
+			<img src="/static/image/SOOJLE_LOGO_BIG_BLACK.png" class="SJ_footer_item pointer noselect" onclick="Go_home();">
+			<div class="SJ_footer_item pointer" onclick="Go_introduce()">소개</div>
+			<div class="SJ_footer_item pointer" onclick="Go_programmer()">개발자</div>
+			<!--<div class="SJ_footer_item pointer" onclick="Go_advertisement()">광고</div>-->
+			<div class="SJ_footer_item pointer" onclick="Go_privacy()">개인정보처리방침</div>
+			<div class="SJ_footer_item pointer" onclick="Go_license()">라이센스</div>
+			<div class="SJ_footer_item noselect">©2019 TEAM IML</div>
+		</div>
+	</div>
+	<!--Mobile Contoroller-->
+	<div id="mobile_controller_none" class="mobile_controller_none"></div>
+	<div id="mobile_controller" class="mobile_controller">
+		<div class="mobile_controller_content pointer" onclick="menu_modal_onoff()">
+			<div id="mobile_menu" class="mobile_menu">
+				<img src="/static/icons/menu.png" class="mobile_menu_icon">
+			</div>
+		</div>
+		<div class="mobile_controller_content pointer"  onclick="mobile_search_modal_open()">
+			<div id="mobile_search" class="mobile_search">
+				<div class="mobile_search_button pointer">
+					<img src="/static/icons/search.png" class="mobile_search_icon">
+				</div>
+			</div>
+		</div>
+		<div class="mobile_controller_content pointer" onclick="grid_modal_onoff()">
+			<div class="mobile_grid">
+				<img src="/static/icons/grid.png" class="mobile_grid_icon">
+			</div>
+		</div>
+	</div>
+	<!--------------------------- Modal -------------------------------->
+	<!--Login/SignUp Modal-->
+	<div id="login_modal" class="login_modal wow display_none" data-wow-duration="0.4s">
+		<div class="login_container">
+			<div class="login_logo">SOOJLE</div>
+			<!--Select Tab-->
+			<div class="select_form">
+				<div id="select_login_form" class="login_title login_title_select">로그인
+				</div><div id="select_signup_form" class="login_title">회원가입
+				</div>
+			</div>
+			<!--Login Tab-->
+			<div id="LoginTab">
+				<form novalidate="novalidate" id="login_form" name="login_form">
+					<div class="login_input_container">
+						<input type="text" id="user_id" class="login_input" name="user_id">
+						<p class="formLabel">아이디</p>
+					</div>
+					<div class="login_input_container">
+						<input type="password" id="user_pw" class="login_input" name="user_pw">
+						<p class="formLabel">비밀번호</p>
+					</div>
+				</form>
+				<div class="login_info noselect">
+					계정을 모르시겠나요?<br>
+					<span class="find_user_info_btn" onclick="Find_ID()">아이디 찾기</span> / <span class="find_user_info_btn" onclick="Find_PW()">비밀번호 찾기</span>
+				</div>
+				<div class="menu_container_button_ss_container">
+					<div class="menu_container_button_ss pointer" onclick="login_modal_onoff();">
+						<img src="/static/icons/back.png" class="menu_container_button_ss_icon noselect">
+						<div class="menu_container_button_ss_text noselect">나가기</div>
+					</div>
+					<div class="menu_container_button_ss pointer" onclick="Sign_in()">
+						<img src="/static/icons/power.png" class="menu_container_button_ss_icon noselect">
+						<div class="menu_container_button_ss_text noselect">로그인</div>
+					</div>
+				</div>
+			</div>
+			<!--SingUp Tab-->
+			<div id="SignUpTab" class="display_none">
+				<div class="login_input_container">
+					<input type="text" id="signup_id" class="login_input" autocomplete="off">
+					<p class="formLabel">아이디</p>
+					<div class="signup_check_img"></div>
+				</div>
+				<div class="login_input_container">
+					<input type="text" id="signup_nickname" class="login_input" autocomplete="off">
+					<p class="formLabel">닉네임</p>
+					<div class="signup_check_img"></div>
+				</div>
+				<div class="login_input_container login_input_container_password">
+					<input type="password" id="signup_pw" class="login_input" autocomplete="new-password">
+					<p class="formLabel">비밀번호</p>
+					<div class="signup_check_img"></div>
+				</div>
+				<div class="login_info noselect">
+					<span id="pwleast" class="input_form_check_not">8~30 자리</span>, 
+					<span id="pwletternum" class="input_form_check_not"> 문자와 숫자 포함</span>, 
+					<span id="pwsymbol" class="input_form_check_not"> 특수기호 1개 이상 포함</span>
+				</div>
+				<div class="login_input_container login_input_container_last">
+					<input type="password" id="signup_pw_check" class="login_input" autocomplete="new-password">
+					<p class="formLabel">비밀번호 확인</p>
+					<div class="signup_check_img"></div>
+				</div>
+				<div class="menu_container_button_ss_container">
+					<div class="menu_container_button_ss pointer" onclick="login_modal_onoff();">
+						<img src="/static/icons/back.png" class="menu_container_button_ss_icon noselect">
+						<div class="menu_container_button_ss_text noselect">나가기</div>
+					</div>
+					<div class="menu_container_button_ss pointer" onclick="Sign_Up()">
+						<img src="/static/icons/power.png" class="menu_container_button_ss_icon noselect">
+						<div class="menu_container_button_ss_text noselect">가입하기</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--Grid Modal-->
+	<div id="grid_modal" class="grid_modal wow display_none" data-wow-duration="0.4s">
+		<div class="grid_item_container">
+			<a href="https://portal.sejong.ac.kr/" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/portal.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">세종대포털</div>
+				</div>
+			</a>
+			<a href="https://blackboard.sejong.ac.kr/" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/blackboard.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">블랙보드</div>
+				</div>
+			</a>
+			<a href="https://uis.sejong.ac.kr" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/uis.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">UIS</div>
+				</div>
+			</a>
+			<a href="http://classic.sejong.ac.kr/" target="_blank">
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/classic.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">대양휴머니티칼리지</div>
+				</div>
+			</a>
+			<a href="https://ex-oj.sejong.ac.kr/" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/oj.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">OJ</div>
+				</div>
+			</a>
+			<a href="https://do.sejong.ac.kr/" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/dodream.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">두드림</div>
+				</div>
+			</a>
+			<a href="https://udream.sejong.ac.kr/" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/udream.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">유드림</div>
+				</div>
+			</a>
+			<a href="http://210.107.226.14/seat/domian5.asp" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/studyroom.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">열람실</div>
+				</div>
+			</a>
+			<a href="http://library.sejong.ac.kr/search/Search.ax?sid=9&interface_type=SIMPLE" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/booksearch.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">도서검색</div>
+				</div>
+			</a>
+			<a href="http://sejong.bookcosmos.com/" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/bookcafe.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">북카페</div>
+				</div>
+			</a>
+			<a href="http://www.sejong.ac.kr/sejong/buidings.html" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/map.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">세종지도</div>
+				</div>
+			</a>
+			<a href="http://www.sejong.ac.kr/unilife/program_01.html" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/info.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">학사일정</div>
+				</div>
+			</a>
+			<a href="http://sejongwiki.kr/" target="_blank">	
+				<div class="grid_item_box pointer">
+					<img src="./static/icons/outsource/wiki.png" class="grid_item_icon noselect" onerror="this.src='./static/image/noimage.jpg'">
+					<div class="grid_item_text">세종위키</div>
+				</div>
+			</a>
+		</div>
+		<div class="grid_modal_close_cont">
+			<div class="grid_modal_close pointer" onclick="grid_modal_onoff();">
+				<img src="./static/icons/export.png" class="grid_modal_close_icon noselect">
+				<div class="grid_modal_close_text">나가기</div>
+			</div>
+		</div>
+		<div class="grid_modal_footer"></div>
+	</div>
+	<!--Menu Modal-->
+	<div id="menu_modal" class="menu_modal wow display_none animated" data-wow-duration="0.4s">
+		<div class="menu_guideline">
+			<div class="menu_container_title noselect">내 정보</div>
+			<div class="menu_container_button pointer" onclick="menu_modal_onoff(); menu_modal_off();">
+				<img src="/static/icons/back.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">뒤로가기</div>
+			</div>
+			<div id="login_button" class="menu_container_button pointer" onclick="Login();">
+				<img src="/static/icons/user.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">회원가입</div>
+			</div>
+			<div id="view_button" class="menu_container_button display_none pointer" onclick="click_user_view_posts()">
+				<img src="/static/icons/time.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">최근 본 게시글</div>
+			</div>
+			<div id="like_button" class="menu_container_button display_none pointer" onclick="click_user_like_posts()">
+				<img src="/static/icons/like.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">관심 게시글</div>
+			</div>
+			<div id="logout_button" class="menu_container_button display_none pointer" onclick="Logout()">
+				<img src="/static/icons/export.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">로그아웃</div>
+			</div>
+			<div class="menu_container_title noselect">뉴스피드</div>
+			<div class="menu_container_button pointer" onclick="click_recommend_posts()">
+				<img src="/static/icons/home.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">추천</div>
+			</div>
+			<div class="menu_container_button pointer" onclick="click_popularity_posts()">
+				<img src="/static/icons/flame.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">인기</div>
+			</div>
+			<div class="menu_container_button pointer" onclick="click_topic_posts($(this))">
+				<img src="/static/icons/Graduate.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">대학교</div>
+			</div>
+			<div class="menu_container_button pointer" onclick="click_topic_posts($(this))">
+				<img src="/static/icons/group.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">동아리&모임</div>
+			</div>
+			<div class="menu_container_button pointer" onclick="click_topic_posts($(this))">
+				<img src="/static/icons/Award.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">공모전&행사</div>
+			</div>
+			<div class="menu_container_button pointer" onclick="click_topic_posts($(this))">
+				<img src="/static/icons/job.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">진로&구인</div>
+			</div>
+			<!--
+			임시폐쇄
+			<div class="menu_container_button pointer" onclick="click_topic_posts($(this))">
+				<img src="/static/icons/Store.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">장터</div>
+			</div>
+			-->
+			<div class="menu_container_button pointer" onclick="click_topic_posts($(this))">
+				<img src="/static/icons/Comments.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">자유</div>
+			</div>
+			<div class="menu_container_title noselect">수즐 연구소</div>
+			<div class="menu_container_button pointer" onclick="Go_lab()">
+				<img src="/static/icons/Lab.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">Lab</div>
+			</div>
+			<div class="menu_container_title noselect">더보기</div>
+			<div class="menu_container_button pointer" onclick="Click_analysistic()">
+				<img src="/static/icons/Graph.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">통계</div>
+			</div>
+			<div class="menu_container_button pointer" onclick="Click_setting()">
+				<img src="/static/icons/setting.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">설정</div>
+			</div>
+			<div class="menu_container_button pointer" onclick="Go_feedback()">
+				<img src="/static/icons/flag.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">피드백 보내기</div>
+			</div>
+			<div class="menu_container_button pointer" onclick="Click_dvnote()">
+				<img src="/static/icons/classic.png" class="menu_container_button_icon noselect">
+				<div class="menu_container_button_text noselect">개발자노트</div>
+			</div>
+			<div id="sm_target" style="position: relative; float: left; width: 100%; height: 100px;"></div>
+		</div>
+	</div>
+	<!--Search Recommend Box Modal-->
+	<div id="search_remcommend_box_container" class="search_remcommend_box_container display_none">
+		<div id="search_recommend_box" class="search_recommend_box">
+			<div id="search_loading" class="search_loading pointer noselect">
+				<i class="fas fa-grip-lines"></i>
+			</div>
+		</div>
+	</div>
+	<div id="mobile_search_remcommend_box_container" class="search_remcommend_box_container display_none">
+		<div id="mobile_search_recommend_box" class="search_recommend_box">
+			<div id="search_loading" class="search_loading pointer noselect">
+				<i class="fas fa-grip-lines"></i>
+			</div>
+		</div>
+	</div>
+	<!--Post Menu Modal-->
+	<div id="post_menu_modal_container" class="post_menu_modal_container display_none" p-id="0" p-url="0">
+		<div id="post_menu_modal" class="post_menu_modal display_none wow animated" data-wow-duration="0.2s">
+			<div class="post_menu_title noselect">게시글 부가기능</div>
+			<div class="post_menu_content post_menu_content_facebook" onclick="Share_facebook($(this))">페이스북 공유</div>
+			<div class="post_menu_content post_menu_content_twitter" onclick="Share_twitter($(this))">트위터 공유</div>
+			<div class="post_menu_content" onclick="post_url_copy($(this))">URL 복사</div>
+			<div class="post_menu_content" onclick="post_menu_close()">닫기</div>
+		</div>
+	</div>
+	<!--Loading Modal-->
+	<div id="loading_modal" class="loading_modal loading_modal_unvisible">
+		<svg width="200" height="200" viewBox="0 0 100 100">
+			<polyline class="line-cornered stroke-still" points="0,0 100,0 100,100" stroke-width="5" fill="none"></polyline>
+  			<polyline class="line-cornered stroke-still" points="0,0 0,100 100,100" stroke-width="5" fill="none"></polyline>
+		 	<polyline class="line-cornered stroke-animation" points="0,0 100,0 100,100" stroke-width="5" fill="none"></polyline>
+			<polyline class="line-cornered stroke-animation" points="0,0 0,100 100,100" stroke-width="5" fill="none"></polyline>
+		</svg>
+	</div>
+	<div id="board_loading_modal" class="board_loading_modal">
+		<div class="board_loading_search_cont">
+			<div class="board_loading_search"></div>
+		</div>
+		<div class="board_loading_body">
+			<div class="board_container_name"></div>
+			<div class="board_container_user"></div>
+			<div class="body_guideline_loading">
+				<div class="menu_container_loading">
+					<div class="menu_container_title_loading"></div>
+					<div class="menu_container_subtitle_loading"></div>
+					<div class="menu_container_blank_loading"></div>
+					<div class="menu_container_blank_loading"></div>
+					<div class="menu_container_subtitle_loading"></div>
+					<div class="menu_container_subtitle_loading" style="width: 70px;"></div>
+					<div class="menu_container_subtitle_loading"></div>
+					<div class="menu_container_subtitle_loading" style="width: 70px;"></div>
+				</div>
+				<div class="board_container_loading">
+					<div class="board_container_post_loading">
+						<div class="board_container_post_circle_loading"></div>
+						<div class="board_container_post_line_loading"></div>
+					</div>
+					<div class="board_container_post_loading">
+						<div class="board_container_post_circle_loading"></div>
+						<div class="board_container_post_line_loading"></div>
+					</div>
+					<div class="board_container_post_loading">
+						<div class="board_container_post_circle_loading"></div>
+						<div class="board_container_post_line_loading"></div>
+					</div>
+					<div class="board_container_post_loading">
+						<div class="board_container_post_circle_loading"></div>
+						<div class="board_container_post_line_loading"></div>
+					</div>
+					<div class="board_container_post_loading">
+						<div class="board_container_post_circle_loading"></div>
+						<div class="board_container_post_line_loading"></div>
+					</div>
+					<div class="board_container_post_loading">
+						<div class="board_container_post_circle_loading"></div>
+						<div class="board_container_post_line_loading"></div>
+					</div>
+					<div class="board_container_post_loading">
+						<div class="board_container_post_circle_loading"></div>
+						<div class="board_container_post_line_loading"></div>
+					</div>
+					<div class="board_container_post_loading">
+						<div class="board_container_post_circle_loading"></div>
+						<div class="board_container_post_line_loading"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--Setting Modal-->
+	<div id="user_data_modal_container" class="post_menu_modal_container display_none">
+		<div class="user_data_delete_container">
+			<div id="user_data_delete_info" class="user_data_delete_info noselect"></div>
+			<input id="user_data_delete_input" type="text" class="user_data_delete_input" autocomplete="off">
+			<div id="user_data_delete_button_ok" class="user_data_delete_button pointer">확인</div>
+			<div id="user_data_delete_button_cancel" class="user_data_delete_button pointer" onclick="user_data_modal_cancel()">취소</div>
+		</div>
+	</div>
+	<!--User Info Agreement Modal-->
+	<div id="user_agreement_modal" class="privacy_modal wow display_none" data-wow-duration="0.4s">
+		<div class="empty_block">
+			<img id="empty_block_logo" src="/static/image/SOOJLE_LOGO_BIG.png" class="empty_block_logo pointer noselect" onclick="Goboard()">
+		</div>
+		<div class="lab_title_wrap">
+			<div class="lab_title noselect">개인정보처리방침</div>
+			<div class="lab_subtitle noselect">SOOJLE 서비스를 이용하기 위한 개인정보처리방침 동의서입니다.<br>동의하지 않으시면 서비스를 정상적으로 이용하실 수 없습니다.</div>
+			<div id="license_block" class="empty_block_privacy"></div>
+		</div>
+		<div class="privacy_agree_btns noselect">
+			<div id="privacy_ok_btn" class="privacy_ok_btn">동의합니다</div>
+			<div id="privacy_no_btn" class="privacy_no_btn">동의하지 않습니다</div>
+		</div>
+	</div>
+	<!--Snackbar Modal-->
+	<div id="snackbar_target" class="snackbar_target"></div>
+</body>
+
+<!-- Test Host JS -->
+<script src="/static/js/host.js"></script>
+<!-- JQuery JS -->
+<script src="/static/js/jquery/jquery.min.js"></script>
+<script src="/static/js/jquery/jquery.ajax-cross-origin.min.js"></script>
+<!-- Animation JS -->
+<script src="/static/js/wow/wow.min.js"></script>
+<script>new WOW().init();</script>
+<!-- Snackbar JS -->
+<script src="/static/js/snackbar.js"></script>
+<!-- Ajax JS -->
+<script src="/static/js/ajax.js"></script>
+<!-- MAIN JS -->
+<script src="/static/js/user.js"></script>
+<script src="/static/js/community.js"></script>
+<script src="/static/js/board.js"></script>
+<script src="/static/js/manager.js"></script>
+<script src="/static/js/post.js"></script>
+<script src="/static/js/search.js"></script>
+<script src="/static/js/setting.js"></script>
+<script src="/static/js/analysistic.js"></script>
+<script src="/static/js/lab.js"></script>
+<script src="/static/js/feedback.js"></script>
+<script src="/static/js/footer.js"></script>
+</html>

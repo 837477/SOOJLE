@@ -1,0 +1,232 @@
+.anlt_time_weather_wrap {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	height: 120px;
+	margin: none;
+	border : none;
+}
+.anlt_time_wrap {
+	position: relative;
+	float: left;
+	width: 90%;
+	height: 100%;
+}
+.anlt_time_yymmdd {
+	position: relative;
+	display: block;
+	font-size: 20px;
+}
+.anlt_time_hhmmss {
+	position: relative;
+	float: left;
+	width: auto;
+	font-size: 48px;
+	margin-left: 15px;
+}
+.anlt_time_ampm {
+	position: relative;
+	float: left;
+	font-size: 30px;
+	line-height: 52px;
+}
+.anlt_time_event {
+	position: relative;
+	float: left;
+	width: 100%;
+	font-size: 16px;
+}
+.anlt_weather_wrap {
+	position: relative;
+	float: left;
+	width: 60%;
+	height: 100%;
+}
+.anlt_realtime_wrap {
+	position: relative;
+	float: left;
+	width: 100%;
+	height: auto;
+	margin-top: 40px;
+}
+.anlt_realtime_title {
+	position: relative;
+	width: 100%;
+	font-size: 28px;
+	font-weight: bold;
+}
+.anlt_realtime_subtitle {
+	position: relative;
+	width: 100%;
+	font-size: 16px;
+	margin-bottom: 20px;
+}
+.anlt_realtime_standard {
+	position: relative;
+	width: 100%;
+	font-size: 14px;
+	margin-top: 10px;
+	color: rgba(0,0,0,.8);
+}
+.anlt_reatime_words_wrap {
+	position: relative;
+	width: 100%;
+	height: auto;
+	min-height: 150px;
+	border: 2px solid #ebebeb;
+	margin-top: 20px;
+	box-sizing: border-box;
+	transition: .1s ease-in-out;
+}
+.anlt_reatime_words_wrap:hover {
+	border: 2px solid black;
+}
+.anlt_reatime_word_elements {
+	position: relative;
+	display: inline-block;
+	width: 50%;
+	height: 100%;
+	border: none;
+}
+.anlt_reatime_word_elements:nth-child(2) {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.anlt_realtime_word {
+	position: relative;
+	width: 90%;
+	display: inline-block;
+	line-height: 24px;
+	margin-bottom: 10px;
+	font-size: 18px;
+	padding: 0 5%;
+}
+.anlt_realtime_word:first-child {
+	margin-top: 10px;
+}
+.anlt_realtime_word_num {
+	position: absolute;
+	left: 5%;
+	font-size: 18px;
+	line-height: 24px;
+	font-weight:bold;
+	font-style: italic;
+}
+.anlt_realtime_word_real {
+	position: relative;
+	width: 100%;
+	display: inline-block;
+	line-height: 24px;
+	font-size: 18px;
+	padding-left: 33px;
+	box-sizing: border-box;
+}
+.anlt_realtime_word_real:first-child {
+	margin-top: 10px;
+}
+.anlt_realtime_word_real:hover {
+	text-decoration: underline;
+}
+.anlt_visitor_wrap {
+	position: relative;
+	width: 100%;
+	float: left;
+	margin-top: 40px;
+}
+.anlt_visitor_title {
+	position: relative;
+	font-size: 28px;
+	font-weight: bold;
+}
+.anlt_visitor_box {
+	position: relative;
+	float: left;
+	width: 48%;
+	height: 150px;
+	box-sizing: border-box;
+	margin-left: 2%;
+	margin-right: 0%;
+	margin-bottom: 15px;
+	padding: 15px;
+	padding-top: 40px;
+	border: 2px solid #ebebeb;
+	transition: .1s ease-in-out;
+}
+.anlt_visitor_box:nth-child(2n - 1) {
+	margin-left: 0%;
+	margin-right: 2%;
+}
+.anlt_visitor_box:hover {
+	border: 2px solid black;
+}
+.anlt_visitor_box_title {
+	position: relative;
+	font-size: 18px;
+	text-align: center;
+	line-height: 20px;
+}
+.anlt_visitor_box_data {
+	position: relative;
+	font-size: 40px;
+	text-align: center;
+	font-weight: 300;
+	line-height: 50px;
+	color: #12b886;
+}
+.anlt_visitor_chart_box {
+	position: relative;
+	float: left;
+	width: 100%;
+	height: auto;
+	margin-bottom: 20px;
+}
+.anlt_visitor_chart_element {
+	position: relative;
+	width: 100%;
+	height: auto;
+}
+.anlt_visitor_box_title_big {
+	position: relative;
+	font-size: 18px;
+	text-align: center;
+	line-height: 20px;
+	font-weight: bold;
+	margin: 10px 0;
+}
+.anlt_top_text_data {
+	position: relative;
+	font-size: 30px;
+	text-align: center;
+	font-weight: 300;
+	line-height: 50px;
+	color: #c30e2e;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.anlt_greeting_wrapper {
+	position: relative;
+	width: 100%;
+	height: auto;
+	margin-top: 40px;
+	margin-bottom: 40px;
+}
+.anlt_greeting_text {
+	position: relative;
+	width: 100%;
+	height: auto;
+	text-align: center;
+	font-size: 18px;
+	line-height: 40px;
+	font-weight: 300;
+	transition: .4s ease-in-out;
+}
+.anlt_greeting_text:hover {
+	transform: scale(1.1);
+	font-weight: 500;
+}
+.anlt_greeting_text_checked {
+	transform: scale(1.1);
+	font-weight: 500;
+}
