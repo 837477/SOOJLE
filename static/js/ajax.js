@@ -58,4 +58,4 @@ function A_JAX_CORS(url, type){
     return ajax_;
 }
 
-// test
+// release test
