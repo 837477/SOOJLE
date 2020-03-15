@@ -8,7 +8,6 @@ from flask_cors import CORS
 #837477 Path
 sys.path.insert(0,'./')
 sys.path.insert(0,'../')
-sys.path.insert(0,'../SJ_Auth')
 sys.path.insert(0,'../SJ_AI/src')
 sys.path.insert(0,'../IML_Tokenizer/src')
 sys.path.insert(0,'../../IML_Tokenizer/src/')
@@ -19,7 +18,6 @@ sys.path.insert(0,'./apps')
 sys.path.insert(0,'/home/iml/')
 sys.path.insert(0,'/home/iml/SOOJLE/')
 sys.path.insert(0,'/home/iml/SOOJLE_Crawler/src/')
-sys.path.insert(0,'/home/iml/SJ_Auth')
 sys.path.insert(0,'/home/iml/SJ_AI/src')
 sys.path.insert(0,'/home/iml/IML_Tokenizer/src/')
 ###########################################
@@ -29,7 +27,7 @@ from db_info import JWT_SECRET_KEY
 ###########################################
 
 #APPS
-import main, auth, newsfeed, post, search, admin, analysis, simulation, error
+import main, newsfeed, post, search, admin, analysis, simulation, error
 
 application = Flask(__name__, instance_relative_config=True)
 cors = CORS(application)
