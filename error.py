@@ -26,5 +26,4 @@ def page_not_found(error):
 def server_error(error):
 	return jsonify(result = "Fail"), 500
 
-#테스트중
 ########################################################################
