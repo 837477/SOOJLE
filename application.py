@@ -27,7 +27,7 @@ from db_info import JWT_SECRET_KEY
 ###########################################
 
 #APPS
-import main, newsfeed, post, search, admin, analysis, simulation, error
+import main, auth, newsfeed, post, search, admin, analysis, simulation, error
 
 application = Flask(__name__, instance_relative_config=True)
 cors = CORS(application)
