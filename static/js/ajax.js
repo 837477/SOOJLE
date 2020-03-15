@@ -57,3 +57,6 @@ function A_JAX_CORS(url, type){
     });
     return ajax_;
 }
+
+
+// 정민이의필요한API 작업..끝냄
