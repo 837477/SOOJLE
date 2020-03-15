@@ -1247,27 +1247,6 @@ def remove_today_visitor(db):
 
 
 
-#SJ_DB_VARIABLE 관련###################################
-######################################################
-#today 매 시간별 방문자 수 기록!
-def push_today_time_visitor(db, hour_visitor_obj):
-	db[SJ_DB_VARIABLE].update(
-		{
-			'key': 'today_time_visitor'
-		},
-		{
-			'$push':
-			{
-				'value': hour_visitor_obj
-			}
-		}
-	)
-
-	return "success"
-
-
-
-
 #SJ_DB_ANALYSIS 관련###################################
 ######################################################
 #매일 갱신되는 통계 테이블에 추가!
@@ -1440,6 +1419,23 @@ def update_variable_inc(db, key, increase):
 		}
 	)
 	return "success"
+
+#today 매 시간별 방문자 수 기록!
+def push_today_time_visitor(db, hour_visitor_obj):
+	db[SJ_DB_VARIABLE].update(
+		{
+			'key': 'today_time_visitor'
+		},
+		{
+			'$push':
+			{
+				'value': hour_visitor_obj
+			}
+		}
+	)
+
+	return "success"
+
 
 
 

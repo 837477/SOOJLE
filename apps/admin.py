@@ -163,92 +163,46 @@ def send_feedback():
 		result = result
 	)
 
-#############################################################################
-#############################################################################
-
-'''
-#게시글 입력
-@BP.route('/insert_post', methods=['POST'])
+#메인 Info 메시지 수정
+@BP.route('/update_main_info', methods=['POST'])
 @jwt_required
-def insert_post():
-	admin = find_user(g.db, user_id=get_jwt_identity())
+def update_main_info():
+	ADMIN = find_user(g.db, user_id=get_jwt_identity())
 
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
+	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
+	if ADMIN is None or ADMIN['user_id'] != SJ_ADMIN: abort(403)
 
-	title = request.form['title']
-	post = request.form['post']
-	tag = request.form['tag']
-	img = request.form['img']
-	url = request.form['url']
-	info = request.form['info']
+	NEW_INFO_1 = request.form['new_info_1']
+	NEW_INFO_2 = request.form['new_info_2']
 
-	hashed = hashlib.md5((title + post).encode('utf-8')).hexdigest()
-	url_hashed = hashlib.md5(url.encode('utf-8')).hexdigest()
-	token = tknizer.get_tk(title + post).lower()
-	view = 0
-	fav_cnt = 0
-	title_token = title.split(' ')
-	login = 0
-	learn = 0
-	popularity = 0
-	topic = LDA.get_topics((tag + token))
-	ft_vector = FastText.get_doc_vector((tag + token)).tolist()
+	#길이 검증 실패!, Bad request 핸들러 반환
+	if len(NEW_INFO_1) > 50 or len(NEW_INFO_2) > 50: abort(400)
 
-	result = insert_post(g.db, title, post, tag, img, url, info, hashed, url_hashed, token, view, fav_cnt, title_token, login, learn, popularity, topic, ft_vector)
+	result = update_variable(g.db, 'main_info_1', NEW_INFO_1)
+	result = update_variable(g.db, 'main_info_2', NEW_INFO_2)
 
 	return jsonify(
 		result = result
 	)
 
-#게시글 수정
-@BP.route('/update_post/<string:post_obi>', methods=['POST'])
-@jwt_required
-def update_post(post_obi):
-	admin = find_user(g.db, user_id=get_jwt_identity())
+#메인 Info 메시지 반환
+@BP.route('/get_main_info')
+def get_main_info():
+	main_info_1 = find_variable(g.db, 'main_info_1')
+	main_info_2 = find_variable(g.db, 'main_info_2')
+	
+	result = []
 
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
-
-	title = request.form['title']
-	post = request.form['post']
-	tag = request.form['tag']
-	img = request.form['img']
-	url = request.form['url']
-	info = request.form['info']
-
-	hashed = hashlib.md5((title + post).encode('utf-8')).hexdigest()
-	url_hashed = hashlib.md5(url.encode('utf-8')).hexdigest()
-	token = tknizer.get_tk(title + post).lower()
-	title_token = title.split(' ')
-	topic = LDA.get_topics((tag + token))
-	ft_vector = FastText.get_doc_vector((tag + token)).tolist()
-
-	result = update_post(g.db, post_obi, title, post, tag, img, url, info, hashed, url_hashed, token, title_token, topic, ft_vector)
+	result.append(main_info_1)
+	result.append(main_info_2)
 
 	return jsonify(
-		result = result
+		result = "success",
+		main_info = result
 	)
 
-#게시글 삭제
-@BP.route('/remove_post/<string:post_obi>')
-@jwt_required
-def remove_post(post_obi):
-	admin = find_user(g.db, user_id=get_jwt_identity())
 
-	#Admin 확인
-	if admin is None or admin['user_id'] != SJ_ADMIN:
-		return jsonify(result = "Not admin")
 
-	target_post = find_post(g.db, post_obi=post_obi)
 
-	if target_post is None:
-		return jsonify(result = "Not found")
-
-	#post 삭제!
-	result = remove_post(g.db, post_obi)
-
-	return jsonify(result = result)
-'''
+#############################################################################
+#############################################################################

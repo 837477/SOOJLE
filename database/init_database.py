@@ -266,7 +266,15 @@ def create_variable(db):
 			{
 				'key': 'device_mobile',
 				'value': 0
-			}
+			},
+			{
+				'key': 'main_info_1',
+				'value': "세종대학교 정보통합솔루션!"
+			},
+			{
+				'key': 'main_info_2',
+				'value': "안녕하세요! SOOJLE입니다."
+			},
 		]
 	)
 

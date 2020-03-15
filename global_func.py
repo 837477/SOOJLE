@@ -179,7 +179,7 @@ def real_time_insert():
 			if len(realtime_result) == SJ_REALTIME_LIMIT:
 				break
 			
-	insert_search_realtime(db, realtime_result)
+	insert_search_realtime(db, realtime_result[:SJ_REALTIME_LIMIT])
 	
 	if db_client is not None:
 		db_client.close()

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify
 BP = Blueprint('error', __name__)
 
-#잘못된 요청일 때! (프론트 무시하고 비정상적인 경로로 요청했을 경우!)
+#잘못된 요청일 때! (프론트 1차 과정을 무시하고 비정상적인 경로로 요청했을 경우!)
 @BP.app_errorhandler(400)
 def bad_requests(error):
 	return jsonify(result = "Bad request"), 400
@@ -16,9 +16,10 @@ def bad_requests(error):
 def admin_only(error):
 	return jsonify(result = "Admin only"), 403
 
+#없는 주소 접속시!
 @BP.app_errorhandler(404)
 def page_not_found(error):
-	return jsonify(result = "No Page"), 404
+	return render_template('etc/404.html')
 
 #서버에서 처리할 수 없는 경우가 발생시!
 @BP.app_errorhandler(500)

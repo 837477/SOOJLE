@@ -65,7 +65,8 @@ SJ_REQUEST_LENGTH_LIMIT = {
 	'notice_title_min': 1,
 	'notice_title_max': 50,
 	'notice_post_min': 1,
-	'notice_post_max': 1000
+	'notice_post_max': 1000,
+	'main_info_max': 50
 }
 
 #스트링 변수들
