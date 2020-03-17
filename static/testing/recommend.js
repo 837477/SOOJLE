@@ -288,15 +288,6 @@ function recommend_tag_chart(tags) {
 	}
 }
 
-function page_reload() {
-	$('html, body').animate({
-		scrollTop: 0
-	}, 1000);
-	setTimeout(function() {
-		location.reload();
-	}, 1000);
-}
-
 // static token ajax
 function A_JAX_TOKEN(url, type, token, data){
     let authorization;
