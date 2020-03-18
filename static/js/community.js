@@ -87,7 +87,6 @@ function Get_notice_posts(callback) {
 // 공지사항 Components 구성
 function insert_notice() {
 	let target = $("#posts_target");
-	//No_posts($("#posts_target"));	// 임시파일
 	Get_notice_posts(function(result) {
 		if (result) {
 			let oid, title, phara, date, tag, activation = 0, activation_tag = ``;
