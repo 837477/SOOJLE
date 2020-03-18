@@ -46,7 +46,7 @@ function set_analysistic() {
 			$("#posts_creating_loading").addClass("display_none");
 			insert_greeting_div();			// 소개
 			insert_time_div();				// 시간
-			insert_realtimesearch_div();	// 실시간 검색어
+			insert_realtimesearch_div();	// 실시간 인기 키워드
 			//insert_hall();				// 명예의 전당
 			insert_visitor_div();			// 방문자 분석
 			insert_post_div();				// 게시글 분석
@@ -61,15 +61,16 @@ function insert_greeting_div() {
 	let posts_num = analysis_data['posts_count'];
 	let actions_num = analysis_data['communication_avg'];// /86400.toFixed(0); // 1일 == 86400초
 	let view_num = analysis_data['total_view'];
+	let search_count = analysis_data['search_count'];
 	let div =	`<div id="anlt_greeting_wrapper" class="anlt_greeting_wrapper">
 					<div class="anlt_greeting_text noselect">
-						사용자는 <span style="font-weight:500; color: #12b886;">${number_unit(posts_num)}</span> 개의 포스트에서 정보를 찾아볼 수 있습니다.
+						SOOJLE은 현재까지 <span style="font-weight:500; color: #12b886;">${numberWithCommas(posts_num)}</span> 개의 정보를 수집하였습니다.
 					</div>\
 					<div class="anlt_greeting_text noselect">
-						사용자와 SOOJLE은 하루 평균 <span style="font-weight:500; color: #12b886;">${number_unit(actions_num)}</span> 번의 소통을 하고있습니다.
+						SOOJLE은 사용자와 하루 평균 <span style="font-weight:500; color: #12b886;">${numberWithCommas(actions_num)}</span> 번 소통하고 있습니다.
 					</div>\
 					<div class="anlt_greeting_text noselect">
-						사용자들은 SOOJLE을 통해서 <span style="font-weight:500; color: #12b886;">${number_unit(view_num)}</span> 번의 정보를 찾았습니다.
+						SOOJLE의 검색 기능은 총 <span style="font-weight:500; color: #12b886;">${numberWithCommas(search_count + view_num)}</span> 번 사용되었습니다.
 					</div>\
 				</div>`;
 	let m_div = `<div id="anlt_greeting_wrapper" class="anlt_greeting_wrapper">
@@ -77,10 +78,10 @@ function insert_greeting_div() {
 						SOOJLE 정보량 <span style="font-weight:500; color: #12b886;">${number_unit(posts_num)}</span>
 					</div>\
 					<div class="anlt_greeting_text noselect">
-						SOOJLE과의 1초 평균 <span style="font-weight:500; color: #12b886;">${number_unit(actions_num)}</span> 번의 소통
+						SOOJLE과 하루 평균 <span style="font-weight:500; color: #12b886;">${number_unit(actions_num + view_num)}</span> 번의 소통
 					</div>\
 					<div class="anlt_greeting_text noselect">
-						<span style="font-weight:500; color: #12b886;">${number_unit(view_num)}</span> 번의 정보 이용
+						총 <span style="font-weight:500; color: #12b886;">${number_unit(search_count)}</span> 번의 검색 사용
 					</div>\
 				</div>`;
 	if (mobilecheck()) $("#posts_target").append(m_div);
@@ -155,12 +156,12 @@ function set_analysistic_time_event(month, date) {
 		$("#anlt_time_event").empty();
 }
 
-// 실시간 검색어 div Insert---------------------------------------------
+// 실시간 인기 키워드 div Insert---------------------------------------------
 function insert_realtimesearch_div() {
-	let info = `SOOJLE에서 가장 인기있는 검색어를 실시간으로 보여드립니다.`;
+	let info = ``;//`SOOJLE에서 가장 인기있는 검색어를 실시간으로 보여드립니다.`;
 	let div = 	`
 					<div id="anlt_realtime_wrap" class="anlt_realtime_wrap">
-						<div class="anlt_realtime_title noselect">실시간 검색어</div>\
+						<div class="anlt_realtime_title noselect">실시간 인기 키워드</div>\
 						<div class="anlt_realtime_subtitle noselect">${info}</div>\
 						<div class="anlt_reatime_words_wrap">\
 							<div id="anlt_reatime_word_1to5" class="anlt_reatime_word_elements">\
@@ -201,7 +202,7 @@ function set_realtimesearch() {
 				}
 			}
 		} else {
-			Snackbar("실시간 검색어를 불러오지 못하였습니다.");
+			Snackbar("실시간 인기 키워드를 불러오지 못하였습니다.");
 		}
 	});
 	let date = $("#anlt_time_yymmdd").text();
@@ -218,7 +219,7 @@ function realtime_word_search(tag) {
 
 // 명예의 전당 div Insert-------------------------------------------------
 function insert_hall() {
-	let info = `사용자들이 SOOJLE에서 최고 기록을 갱신하신 분야에 대해서 분석해드립니다.`;
+	let info = ``;//`사용자들이 SOOJLE에서 최고 기록을 갱신하신 분야에 대해서 분석해드립니다.`;
 	let div = 	`
 				<div id="anlt_postdata_wrap" class="anlt_visitor_wrap">
 					<div class="anlt_visitor_title noselect">명예의 전당</div>\
@@ -250,7 +251,7 @@ function set_hall_data() {
 
 // 방문자 분석 div Insert-----------------------------------------------
 function insert_visitor_div() {
-	let info = `SOOJLE의 모든 방문자들의 통계를 분석하여 보여드립니다.`;
+	let info = ``;//`SOOJLE의 모든 방문자들의 통계를 분석하여 보여드립니다.`;
 	let div = 	`
 					<div id="anlt_visitor_wrap" class="anlt_visitor_wrap">
 						<div class="anlt_visitor_title noselect">방문자 분석</div>\
@@ -322,7 +323,7 @@ function set_visitor_data() {
 
 // 게시글 분석 div Insert------------------------------------------------
 function insert_post_div() {
-	let info = `게시글에 대한 전체 통계를 분석해 보여드립니다.`;
+	let info = ``;//`게시글에 대한 전체 통계를 분석해 보여드립니다.`;
 	let div = 	`
 				<div id="anlt_postdata_wrap" class="anlt_visitor_wrap">
 					<div class="anlt_visitor_title noselect">게시글 분석</div>\
@@ -346,7 +347,7 @@ function set_post_data() {
 
 // 외부사이트 div Insert--------------------------------------------------
 function insert_outlink_div() {
-	let info = `외부사이트 이용률을 분석하여 보여드립니다.`;
+	let info = ``;//`외부사이트 이용률을 분석하여 보여드립니다.`;
 	let div = 	`
 				<div id="anlt_postdata_wrap" class="anlt_visitor_wrap">
 					<div class="anlt_visitor_title noselect">외부사이트 분석</div>\
@@ -377,7 +378,7 @@ function set_outlink_data() {
 
 // 디바이스 분석
 function insert_device_div() {
-	let info = `디바이스별 SOOJLE 이용률을 분석하여 보여드립니다.`;
+	let info = ``;//`디바이스별 SOOJLE 이용률을 분석하여 보여드립니다.`;
 	let div = 	`
 				<div id="anlt_postdata_wrap" class="anlt_visitor_wrap">
 					<div class="anlt_visitor_title noselect">디바이스 분석</div>\
@@ -720,12 +721,12 @@ function menu_realtime_moving(block_h) {
 
 
 $("#menu_realtime_searchwords").on({
-	"mouseenter": function() {	// 메뉴 실시간 검색어 mouseenter
+	"mouseenter": function() {	// 메뉴 인기 키워드 mouseenter
 		$("#realtime_searchwords_table").removeClass("display_none");
 	}
 });
 $("#realtime_searchwords_table").on({
-	"mouseleave": function() {	// 메뉴 실시간 검색어 mouseleave
+	"mouseleave": function() {	// 메뉴 인기 키워드 mouseleave
 		$("#realtime_searchwords_table").addClass("display_none");
 	}
 });
@@ -745,4 +746,7 @@ function number_unit(num, comma = false) {
 			return num;
 		}
 	}
+}
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
