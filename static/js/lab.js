@@ -63,7 +63,7 @@ function set_lab() {
 	let div = 	`<div class="lab_title_wrap">
 					<div class="lab_title noselect">수즐 연구소에 오신 것을 환영합니다.</div>
 					<div class="lab_subtitle noselect">
-						세종대학교 여러분에게 새로운 경험을 드리겠습니다.
+						세종대학교 학우들의 편의성 증진을 위한 부가 서비스를 소개합니다.
 					</div>
 				</div>`;
 	$("#posts_target").append(div);
@@ -73,15 +73,10 @@ function set_lab() {
 function insert_lab_service() {
 	let div =	`<div id="lab_service_contents_wrap" class="lab_service_contents_wrap">
 					<div class="lab_category_title noselect">새로운 서비스를 도전!</div>
-					<div class="lab_category_subtitle noselect">수즐팀 또는 인재들의 야심찬 서비스입니다.</div>
-				</div>
-				<div id="lab_function_contents_wrap" class="lab_service_contents_wrap">
-					<div class="lab_category_title noselect">새로운 기능을 도전!</div>
-					<div class="lab_category_subtitle noselect">수즐을 좀 더 재미있게 만들기 위한 수즐팀의 도전 기능입니다.</div>
+					<div class="lab_category_subtitle noselect">수즐 연구소의 확장 기능을 통해 학교 생활을 더 알차게 즐겨보세요!</div>
 				</div>`;
 	$("#posts_target").append(div);
 	set_lab_service();
-	set_lab_function();
 }
 function set_lab_service() {
 	let title = `모닥불`;
@@ -101,13 +96,7 @@ function set_lab_service() {
 					</div>`;
 	//$("#lab_service_contents_wrap").append(content);
 	let nothing =	`<div class="lab_nothing noselect">
-						더 나은 서비스를 위해 준비중입니다.
+						현재 개발중인 기능입니다.
 					</div>`;
 	$("#lab_service_contents_wrap").append(nothing);
-}
-function set_lab_function() {
-	let nothing =	`<div class="lab_nothing noselect">
-						더 나은 서비스를 위해 준비중입니다.
-					</div>`;
-	$("#lab_function_contents_wrap").append(nothing);
 }

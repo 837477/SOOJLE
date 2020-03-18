@@ -845,6 +845,7 @@ function get_user_view_posts() {
 
 // 공지사항 상단에 추가하기
 function Insert_Notice_Posts() {
+	$(".board_notice_cont").remove();
 	let target = $("#posts_target");
 	Get_notice_posts(function(result) {
 		if (result) {
