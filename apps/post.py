@@ -25,7 +25,7 @@ def post_like(post_obi):
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
 	if USER is None: abort(401)
 
-	#이미 좋아요 한 글인지 확인용으로 불러온다.
+	#이미 좋아요 한 글인지 확인용으로 불러온다!
 	check_fav = check_user_fav_list(g.db, USER['_id'], post_obi)
 	
 	#좋아요를 중복으로 또 요청했을 때!, Bad request 핸들러 반환
