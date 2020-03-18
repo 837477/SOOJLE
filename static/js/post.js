@@ -44,8 +44,10 @@ function get_recommend_posts(is_first = 0) {
 	else
 		menu_modal_onoff();
 	// 공지사항 삽입하기
+	$("#posts_target").empty();
 	Insert_Notice_Posts();
 	$.when(A_JAX(host_ip+"/get_recommendation_newsfeed", "GET", null, null)).done(function (data) {
+		if (now_topic != "추천") { return; }
 		if (data['result'] == 'success') {
 			let output = JSON.parse(data["newsfeed"]);
 			if (output.length == 0)
@@ -88,11 +90,11 @@ function get_popularity_posts() {
 	$("#board_info_board").text("뉴스피드");
 	// 공지사항 삽입하기
 	Insert_Notice_Posts();
-	let a_jax = A_JAX(host_ip+"/get_popularity_newsfeed", "GET", null, null);
-	$.when(a_jax).done(function () {
-		let json = a_jax.responseJSON;
-		if (json['result'] == 'success') {
-			let output = JSON.parse(json["newsfeed"]);
+	$.when(A_JAX(host_ip+"/get_popularity_newsfeed", "GET", null, null))
+	.done(function (data) {
+		if (now_topic != "인기") { return; }
+		if (data['result'] == 'success') {
+			let output = JSON.parse(data["newsfeed"]);
 			save_posts = output.slice(30);
 			output = output.slice(0, 30);
 			creating_post($("#posts_target"), output, "인기");
@@ -134,14 +136,13 @@ function get_topic_posts(tag) {
 	$("#board_info_board").text("뉴스피드");
 	// 공지사항 삽입하기
 	Insert_Notice_Posts();
-	let a_jax = A_JAX(host_ip+"/get_newsfeed_of_topic/"+topic, "GET", null, null);
-	$.when(a_jax).done(function () {
-		let json = a_jax.responseJSON;
-		if (json['result'] == 'success') {
-			let output = JSON.parse(json["newsfeed"]);
+	$.when(A_JAX(host_ip+"/get_newsfeed_of_topic/"+topic, "GET", null, null))
+	.done(function (data) {
+		if (where_topic != "뉴스피드") { return; }
+		if (data['result'] == 'success') {
+			let output = JSON.parse(data["newsfeed"]);
 			if (output.length == 0) {
 				No_posts($("#posts_target"));
-
 			} else {
 				save_posts = output.slice(30);
 				output = output.slice(0, 30);	
