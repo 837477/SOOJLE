@@ -89,6 +89,7 @@ function get_popularity_posts() {
 	$("#board_info_board").empty();
 	$("#board_info_board").text("뉴스피드");
 	// 공지사항 삽입하기
+	$("#posts_target").empty();
 	Insert_Notice_Posts();
 	$.when(A_JAX(host_ip+"/get_popularity_newsfeed", "GET", null, null))
 	.done(function (data) {
@@ -135,6 +136,7 @@ function get_topic_posts(tag) {
 	$("#board_info_board").empty();
 	$("#board_info_board").text("뉴스피드");
 	// 공지사항 삽입하기
+	$("#posts_target").empty();
 	Insert_Notice_Posts();
 	$.when(A_JAX(host_ip+"/get_newsfeed_of_topic/"+topic, "GET", null, null))
 	.done(function (data) {
