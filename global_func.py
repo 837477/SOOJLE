@@ -26,29 +26,33 @@ import FastText
 #######################################################
 from variable import *
 
-
 # BackgroundScheduler Initialize
 def schedule_init():
 	t_zone = get_localzone()
 	scheduler = BackgroundScheduler()
 	scheduler.start()
 
-	#매 달마다 실행
+	#매 달마다 실행 ###################################################
 	#scheduler.add_job(create_word_cloud, trigger = "interval", days=SJ_CREATE_WORDCLOUD_TIME, timezone = t_zone)
 
 	scheduler.add_job(update_posts_highest, trigger = "interval", days=SJ_UPDATE_HIGHEST_FAV_VIEW_TIME, timezone = t_zone)
 
-	#매 시간마다 실행
+	#매 시간마다 실행 ##################################################
+
+	#실시간 검색어 캐싱
 	scheduler.add_job(real_time_insert, trigger = "interval", minutes = SJ_REALTIME_TIME, timezone = t_zone)
 
-	scheduler.add_job(measurement_run, trigger = "interval", minutes = SJ_MEASUREMENT_TIME, timezone = t_zone)
+	#사용자 관심도 측정
+	scheduler.add_job(measurement_run, trigger = "interval", hours = SJ_MEASUREMENT_TIME, timezone = t_zone)
 
-	# scheduler.add_job(time_visitor_analysis_work, trigger = "interval", hours = SJ_TIME_VISITOR_ANALYSIS_WORK_TIME, timezone = t_zone)
+	#특정 시간에 실행 ##################################################
 
-	#특정 시간에 실행
+	#방문자 통계
 	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="23", minute="59", timezone = t_zone)
 
+	#매 시간별 방문자 측정
 	scheduler.add_job(time_visitor_analysis_work, trigger = 'cron', minute="59", timezone = t_zone)
+	
 
 	# weeks, days, hours, minutes, seconds
 	# start_date='2010-10-10 09:30', end_date='2014-06-15 11:00'
@@ -195,7 +199,13 @@ def measurement_run():
 	USER_list = find_user_renewal(db, renewal_time)
 	USER_list = list(USER_list)
 
+	#액션 수행 날짜 제한에 필요한 기준 날짜 추출
+	ACTION_DAY_CHECK = get_default_day(SJ_USER_ACTION_DAY_CHECK)
+
 	for USER in USER_list:
+		#사용자 로그 액션 먼저 개수 백업처리.
+		user_log_backup(db, USER)
+
 		fav_tag = []
 		view_tag = []
 		newsfeed_tag = []
@@ -205,34 +215,58 @@ def measurement_run():
 
 		#사용자가 관심 기능을 수행한 게시물 ##########################
 		fav_topic = (np.zeros(LDA.NUM_TOPICS))
-		for fav in USER['fav_list']:
-			fav_topic += fav['topic']
-			fav_tag += fav['tag']
-			fav_token += fav['token']
+		if len(USER['fav_list']) <= SJ_USER_LOG_LIMIT['fav'] * SJ_USER_ACTION_NUM_CHECK_PERCENT: 
+			for fav in USER['fav_list']:
+				fav_topic += fav['topic']
+				fav_tag += fav['tag']
+				fav_token += fav['token']
+		else:
+			for fav in USER['fav_list']:
+				if fav['date'] < ACTION_DAY_CHECK: continue
+				fav_topic += fav['topic']
+				fav_tag += fav['tag']
+				fav_token += fav['token']
 
 		#FAS 구하기
 		fav_doc = (fav_tag + fav_token) * 2
 
 		#사용자가 접근을 수행한 게시물 ##############################
 		view_topic = (np.zeros(LDA.NUM_TOPICS))
-		for view in USER['view_list']:
-			view_topic += view['topic']
-			view_tag += view['tag']
-			view_token += view['token']
+		if len(USER['view_list']) <= SJ_USER_LOG_LIMIT['view'] * SJ_USER_ACTION_NUM_CHECK_PERCENT: 
+			for view in USER['view_list']:
+				view_topic += view['topic']
+				view_tag += view['tag']
+				view_token += view['token']
+		else:
+			for view in USER['view_list']:
+				if view['date'] < ACTION_DAY_CHECK: continue
+				view_topic += view['topic']
+				view_tag += view['tag']
+				view_token += view['token']
 
 		#FAS 구하기
 		view_doc = view_tag + view_token
 
 		#사용자가 검색을 수행한 키워드 ##############################
-		for search_obj in USER['search_list'][:SJ_SEARCH_MEASURE_NUM]:
-			search_list += search_obj['tokenizer_split']
+		if len(USER['search_list']) <= SJ_USER_LOG_LIMIT['search'] * SJ_USER_ACTION_NUM_CHECK_PERCENT:
+			for search in USER['search_list']:
+				search_list += search['tokenizer_split']
+		else:
+			for search in USER['search_list']:
+				if search['date'] < ACTION_DAY_CHECK: continue
+				search_list += search['tokenizer_split']
 		
 		search_topic = LDA.get_topics(search_list)
 		search_doc = search_list
 
 		#사용자가 접근한 뉴스피드 ################################
-		for newsfeed in USER['newsfeed_list']:
-			newsfeed_tag += newsfeed['tag']
+		if len(USER['newsfeed_list']) <= SJ_USER_LOG_LIMIT['newsfeed'] * SJ_USER_ACTION_NUM_CHECK_PERCENT:
+			for newsfeed in USER['newsfeed_list']:
+				newsfeed_tag += newsfeed['tag']
+		else:
+			for newsfeed in USER['newsfeed_list']:
+				if newsfeed['date'] < ACTION_DAY_CHECK: continue
+				newsfeed_tag += newsfeed['tag']
 
 		newsfeed_topic = LDA.get_topics(newsfeed_tag)
 
@@ -287,91 +321,42 @@ def measurement_run():
 			USER_TAG_SUM = 1
 
 		#해당 USER 관심도 갱신! (관심도 측정 횟수 +1)
-		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR, USER['measurement_num']+1)
+		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR, len(USER['fav_list']) + len(USER['view_list']) + len(USER['search_list']) + len(USER['newsfeed_list']))
 
 	update_variable(db, 'renewal', datetime.now())
 
 	if db_client is not None:
 		db_client.close()
 
-#유저 로그 푸시백
-def user_log_pushback():
-	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
-	db = db_client["soojle"]
+#사용자 로그 액션 백업
+def user_log_backup(db, USER):
+	#fav
+	if len(USER['fav_list']) > SJ_USER_LOG_LIMIT['fav']:
+		#SJ_USER_LOG_LIMIT개로 다시 갱신!
+		update_user_action_log_refresh(db, USER['_id'], 'fav', USER['fav_list'][:SJ_USER_LOG_LIMIT['fav']])
+		#SJ_BACKUP 으로 이전!
+		insert_user_backup(db, USER['user_id'], 'fav', USER['fav_list'][SJ_USER_LOG_LIMIT['fav']:])
 
-	# 'fav_list': {'$slice': mongo_num}, 
-	# 	'view_list': {'$slice': mongo_num}, 
-	# 	'search_list': {'$slice': mongo_num},
-	# 	'newsfeed_list': {'$slice': mongo_num}
+	#view
+	if len(USER['view_list']) > SJ_USER_LOG_LIMIT['view']:
+		#SJ_USER_LOG_LIMIT개로 다시 갱신!
+		update_user_action_log_refresh(db, USER['_id'], 'view', USER['view_list'][:SJ_USER_LOG_LIMIT['view']])
+		#SJ_BACKUP 으로 이전!
+		insert_user_backup(db, USER['user_id'], 'view', USER['view_list'][SJ_USER_LOG_LIMIT['view']:])
 
-	#모든 유저의 관심도 측정 지표를 다 가져온다.
-	USER_list = find_all_user(db, user_id=1, fav_list=1, view_list=1, search_list=1, newsfeed_list=1)
-	USER_list = list(USER_list)
+	#search
+	if len(USER['search_list']) > SJ_USER_LOG_LIMIT['search']:
+		#SJ_USER_LOG_LIMIT개로 다시 갱신!
+		update_user_action_log_refresh(db, USER['_id'], 'search', USER['search_list'][:SJ_USER_LOG_LIMIT['search']])
+		#SJ_BACKUP 으로 이전!
+		insert_user_backup(db, USER['user_id'], 'search', USER['search_list'][SJ_USER_LOG_LIMIT['search']:])
 
-	for USER in USER_list:
-		#fav
-		if len(USER['fav_list']) > SJ_USER_LOG_LIMIT:
-			refresh_obj = []
-			back_obj_list = []
-			cnt = 0
-			for fav in USER['fav_list']:
-				if cnt < SJ_USER_LOG_LIMIT:
-					refresh_obj.append(fav)
-				else:
-					back_obj_list.append(fav)
-				cnt += 1
-			#400개로 맞춤 갱신!
-			refresh_user_fav_list(db, USER['user_id'], refresh_obj)
-			#pushback 으로 이전!
-			insert_pushback(db, USER['user_id'], 'fav', back_obj_list)
-
-		#view
-		if len(USER['view_list']) > SJ_USER_LOG_LIMIT:
-			refresh_obj = []
-			back_obj_list = []
-			cnt = 0
-			for view in USER['view_list']:
-				if cnt < SJ_USER_LOG_LIMIT:
-					refresh_obj.append(view)
-				else:
-					back_obj_list.append(view)
-				cnt += 1
-			#400개로 맞춤 갱신!
-			refresh_user_view_list(db, USER['user_id'], refresh_obj)
-			#pushback 으로 이전!
-			insert_pushback(db, USER['user_id'], 'view', back_obj_list)
-
-		#search
-		if len(USER['search_list']) > SJ_USER_LOG_LIMIT:
-			refresh_obj = []
-			back_obj_list = []
-			cnt = 0
-			for search in USER['search_list']:
-				if cnt < SJ_USER_LOG_LIMIT:
-					refresh_obj.append(search)
-				else:
-					back_obj_list.append(search)
-				cnt += 1
-			#400개로 맞춤 갱신!
-			refresh_user_search_list(db, USER['user_id'], refresh_obj)
-			#pushback 으로 이전!
-			insert_pushback(db, USER['user_id'], 'search', back_obj_list)
-
-		#newsfeed
-		if len(USER['newsfeed_list']) > SJ_USER_LOG_LIMIT:
-			refresh_obj = []
-			back_obj_list = []
-			cnt = 0
-			for newsfeed in USER['newsfeed_list']:
-				if cnt < SJ_USER_LOG_LIMIT:
-					refresh_obj.append(newsfeed)
-				else:
-					back_obj_list.append(newsfeed)
-				cnt += 1
-			#400개로 맞춤 갱신!
-			refresh_user_newsfeed_list(db, USER['user_id'], refresh_obj)
-			#pushback 으로 이전!
-			insert_pushback(db, USER['user_id'], 'newsfeed', back_obj_list)
+	#newsfeed
+	if len(USER['newsfeed_list']) > SJ_USER_LOG_LIMIT['newsfeed']:
+		#SJ_USER_LOG_LIMIT개로 다시 갱신!
+		update_user_action_log_refresh(db, USER['_id'], 'newsfeed', USER['newsfeed_list'][:SJ_USER_LOG_LIMIT['newsfeed']])
+		#SJ_BACKUP 으로 이전!
+		insert_user_backup(db, USER['user_id'], 'newsfeed', USER['newsfeed_list'][SJ_USER_LOG_LIMIT['newsfeed']:])
 
 #variable 가장 높은 좋아요/조회수 갱신
 def update_posts_highest():
@@ -566,3 +551,4 @@ def time_visitor_analysis_work():
 
 	if db_client is not None:
 		db_client.close()
+
