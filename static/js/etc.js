@@ -70,7 +70,7 @@ function download_file(fileURL, fileName) {
 }
 
 $("body").ready(function() {
-	var $cursor = $("#d_title_cursor")
+	var $cursor = $(".d_title_cursor")
 	setInterval(function() {
 		if ($cursor.css('opacity') === "0") {
 			$cursor.css({opacity: 1});
