@@ -272,60 +272,85 @@ let Message_animating = false;
 function Main_Info_Message_Btn() {
 	if (Message_animating) return;
 	let tag = $("#main_info_message_btn");
-	let target = $("#main_info_message_area");
-	if (target.hasClass("display_none")) {
-		tag.attr("src", "/static/icons/message_green.png");
+	let target = $(".msg_open");
+	if ($(".msg_open").length == 0) {
 		Message_animating = !Message_animating;
-		tag.addClass("main_info_message_btn_selected");
-		$.when(A_JAX(host_ip+"/get_main_info", "GET", null, null))
-		.done((data) => {
-			target.removeClass("display_none");
-			messages = data['main_info'];
-			new Promise((resolve, reject) => {
-				for (let i in messages) {
-					let div = `<div class="main_info_message_box pointer wow animated fadeInLeft" onclick="Drop_Main_Info_Message_Btn(this)">${messages[i]}</div>`;
-					setTimeout(function(i) {
-						target.append(div);
-					}, 500*i);
-				}
-				resolve();
-			}).then(() => {
-				Message_animating = !Message_animating;
-			});
-		}).catch((data) => {
-			Snackbar("서버와의 연결이 원활하지 않습니다.");
+		Change_Main_Info_Message_Btn_Color('green');
+		$("#main_info_message_btn").addClass("main_info_message_btn_selected");
+		target = $(".main_info_message_box");
+		target_len = target.length;
+		new Promise((resolve, reject) => {
+			for (let i = 0; i < target_len; i++) {
+				setTimeout(function() {
+					$(target[i]).css("right", "0px");
+					$(target[i]).addClass("msg_open");
+				}, 500*i);
+			}
+			resolve();
+		}).then(() => {
+			Message_animating = !Message_animating;
 		});
 	} else {
-		tag.attr("src", "/static/icons/message_black.png");
+		Change_Main_Info_Message_Btn_Color("black");
 		Message_animating = !Message_animating;
+		for (let msg of target) {
+			$(msg).removeClass("msg_open");
+			$(msg).css("right", "225px");
+		}
 		tag.removeClass("main_info_message_btn_selected");
-		$(".main_info_message_box").removeClass("fadeInLeft");
-		$(".main_info_message_box").css("animation-name", "fadeOutLeft");
+		$(".main_info_message_box").css("animation-name", "slideInLeft");
 		setTimeout(function() {
-			target.empty();
-			target.addClass("display_none");
 			Message_animating = !Message_animating;
 		}, 1000);
 	}
 }
-Main_Info_Message_Btn();
-// 모바일경우에는 5초뒤에 바로 OFF
-if(mobilecheck()) {setTimeout(function() {Main_Info_Message_Btn()}, 5000);}
+
+// 메인 페이지 소개 메세지 버튼 제작
+function Main_Info_Message_Btn_Making() {
+	Message_animating = !Message_animating;
+	$.when(A_JAX(host_ip+"/get_main_info", "GET", null, null))
+	.done((data) => {
+		target = $("#main_info_message_area");
+		messages = data['main_info'];
+		new Promise((resolve, reject) => {
+			for (let i in messages) {
+				let div = `<div class="main_info_message_box pointer" onclick="Drop_Main_Info_Message_Btn(this)">${messages[i]}</div>`;
+				setTimeout(function(i) {
+					target.append(div);
+					setTimeout(function() {$(".main_info_message_box").css("right", "225px");}, 100);
+				}, 500*i);
+			}
+			resolve();
+		}).then(() => {
+			Message_animating = !Message_animating;
+		});
+	}).catch((data) => {
+		Snackbar("서버와의 연결이 원활하지 않습니다.");
+	});
+}
+Main_Info_Message_Btn_Making();
+
 
 function Drop_Main_Info_Message_Btn(tag) {
-	$(tag).removeClass("fadeInLeft");
-	$(tag).css("animation-name", "fadeOutLeft");
+	$(tag).removeClass("msg_open");
+	$(tag).css("right", "225px");
 	setTimeout(function() {
-		$(tag).remove();
 		Check_Main_Info_Message();
 	}, 1000);
 }
 
 function Check_Main_Info_Message() {
-	if ($(".main_info_message_box").length == 0) {
+	if ($(".msg_open").length == 0) {
 		let tag = $("#main_info_message_btn");
-		tag.attr("src", "/static/icons/message_black.png");
+		Change_Main_Info_Message_Btn_Color("black");
 		tag.removeClass("main_info_message_btn_selected");
-		$("#main_info_message_area").addClass("display_none");
+	}
+}
+
+function Change_Main_Info_Message_Btn_Color(color) {
+	if (color == "green") {
+		$("#main_info_message_btn").attr("src", "/static/icons/message_green.png");
+	} else {
+		$("#main_info_message_btn").attr("src", "/static/icons/message_black.png");
 	}
 }

@@ -149,9 +149,11 @@ function Sign_in() {									// 로그인 완료 버튼
 }
 function SignIn_id_Check(tag) {							// 로그인 ID 검사
 	// ID 길이는 6~30자 사이
+	console.log($(tag).val());
 	if ($(tag).val().length >= 6
 	 && $(tag).val().length <= 30
-	 && ABORT_ID.indexOf($(tag).val().toLowerCase()) == -1) {
+	 && ABORT_ID.indexOf($(tag).val().toLowerCase()) == -1
+	 && $(tag).val().indexOf(" ") == -1) {
 		$(tag).css("border", "2px solid #12b886");
 		$($(tag).next()[0]).css("color", "#12b886");
 		return true;
@@ -231,7 +233,8 @@ function SignUp_id_Check(tag) {					// 회원가입 ID 검사
 		$($(tag).siblings(":last")[0]).empty();
 	} else if ($(tag).val().length >= 6
 	 && $(tag).val().length <= 30
-	 && ABORT_ID.indexOf($(tag).val().toLowerCase()) == -1) {
+	 && ABORT_ID.indexOf($(tag).val().toLowerCase()) == -1
+	 && $(tag).val().indexOf(" ") == -1) {
 		$(tag).css("border", "2px solid #12b886");
 		$($(tag).next()[0]).css("color", "#12b886");
 		$($(tag).siblings(":last")[0]).empty();
