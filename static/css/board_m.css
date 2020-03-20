@@ -20,7 +20,6 @@
 		width: 100px;
 		height: auto;
 		z-index: 10;
-		transition: .2s ease-in-out;
 	}
 	.mobile_menu {
 		position: absolute;
@@ -1515,6 +1514,9 @@
 		margin-bottom: 40px;
 		font-size: 12px;
 		line-height: 20px;
+	}
+	.board_notice_cont {
+		margin-left: 2%;
 	}
 }
 /*=============================================================================*/

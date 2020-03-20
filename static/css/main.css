@@ -1184,7 +1184,7 @@ ol { margin-left: 15px; }
 	margin: 10px 0 0 4px;
 	padding: 0 5px;
 	border-radius: 10px;
-	transition: .2s ease-in-out;
+	transition: .1s ease-in-out;
 }
 .main_info_message_btn:hover {
 	box-shadow: 0 2px 5px rgba(0,0,0,0.2);

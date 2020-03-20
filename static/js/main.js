@@ -308,7 +308,9 @@ function Main_Info_Message_Btn() {
 		}, 1000);
 	}
 }
-if (!mobilecheck()) Main_Info_Message_Btn();
+Main_Info_Message_Btn();
+// 모바일경우에는 5초뒤에 바로 OFF
+if(mobilecheck()) {setTimeout(function() {Main_Info_Message_Btn()}, 5000);}
 
 function Drop_Main_Info_Message_Btn(tag) {
 	$(tag).removeClass("fadeInLeft");
