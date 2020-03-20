@@ -1450,11 +1450,9 @@
 		margin-top: auto;
 		margin-bottom: auto;
 		width: 300px;
-		height: 180px;
-		border-radius: 30px;
+		height: 200px;
 		background-color: white;
-		box-shadow: 0 3px 20px rgba(0,0,0,.1),
-					0 0 20px rgba(0,0,0,.15) inset;
+		box-shadow: 0 3px 20px rgba(0,0,0,.1), 0 0 20px rgba(0,0,0,.15) inset;
 		transition: .1s ease-in-out;
 	}
 	.user_data_delete_info {
@@ -1466,7 +1464,7 @@
 		padding: 0 10px;
 		box-sizing: border-box;
 		height: auto;
-		margin-top: 30px;
+		margin-top: 40px;
 	}
 	.user_data_delete_input {
 		position: relative;
