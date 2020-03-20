@@ -36,7 +36,6 @@ async function URL_Select() {
 	}
 	else if (url_target == "license") Insert_license();
 	else if (url_target == "privacy") Insert_privacy();
-	else if (url_target == "recommend") get_recommend_posts(1);
 	else if (url_target == "popularity") {
 		menu_open = 1;
 		get_popularity_posts();

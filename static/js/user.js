@@ -113,7 +113,6 @@ function Sign_in() {									// 로그인 완료 버튼
 			if (data['result'] == 'success') {
 				let token = data['access_token'];
 				sessionStorage.setItem('sj-state', token);
-				window.location.replace("/board#recommend");
 				Get_UserInfo(function(result) {
 					nickname = "사용자";
 					if (result) {
