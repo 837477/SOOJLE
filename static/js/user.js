@@ -267,7 +267,11 @@ function SignUp_nickname_Check(tag) {			// 회원가입 닉네임 검사
 	return false;
 }
 function Change_nickname_Check(str) {			// 닉네임 공백란 검사
-	if (str.length >= 1 && str.length <= 16 && ABORT_ID.indexOf(str.toLowerCase()) == -1)
+	for (let abort of ABORT_ID) {
+		if (str.toLowerCase().indexOf(abort) != -1)
+			return false;
+	}
+	if (str.length >= 1 && str.length <= 16)
 		return true;
 	return false;
 }
