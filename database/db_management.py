@@ -198,6 +198,7 @@ def find_user_renewal(db, renewal_time):
 			}
 		}, 
 		{
+			'user_id': 1,
 			'fav_list': 1,
 			'view_list': 1,
 			'search_list': 1,
@@ -299,36 +300,6 @@ def update_user_fav_list_pull(db, _id, post_obi):
 		}
 	)
 	return "success"
-#유저 fav_list 갱신 (pushback) (사용)
-def refresh_user_fav_list(db, user_id, refresh_obj_list):
-	#fav_list 삭제
-	db[SJ_DB_USER].update(
-		{
-			'user_id': user_id
-		},
-		{
-			'$unset': {'fav_list': 1}
-		}
-	)
-
-	#새로운 fav_list 등록
-	db[SJ_DB_USER].update(
-		{
-			'user_id': user_id
-		},
-		{
-			'$push': 
-			{
-				'fav_list':
-				{
-					'$each': refresh_obj_list,
-					'$position': 0
-				}
-			}
-		}
-	)
-
-	return "success"
 
 #유저 view_list에 요소 추가 (사용)
 def update_user_view_list_push(db, _id, view_obj):
@@ -347,36 +318,6 @@ def update_user_view_list_push(db, _id, view_obj):
 			}
 		}
 	)
-	return "success"
-#유저 view_list 갱신 (pushback) (사용)
-def refresh_user_view_list(db, user_id, refresh_obj_list):
-	#view_list 삭제
-	db[SJ_DB_USER].update(
-		{
-			'user_id': user_id
-		},
-		{
-			'$unset': {'view_list': 1}
-		}
-	)
-
-	#새로운 view_list 등록
-	db[SJ_DB_USER].update(
-		{
-			'user_id': user_id
-		},
-		{
-			'$push': 
-			{
-				'view_list':
-				{
-					'$each': refresh_obj_list,
-					'$position': 0
-				}
-			}
-		}
-	)
-
 	return "success"
 
 #유저 search_list에 요소 추가 (사용)
@@ -397,36 +338,6 @@ def update_user_search_list_push(db, user_id, search_obj):
 		}
 	)
 	return "success"
-#유저 search_list 갱신 (pushback) (사용)
-def refresh_user_search_list(db, user_id, refresh_obj_list):
-	#search_list 삭제
-	db[SJ_DB_USER].update(
-		{
-			'user_id': user_id
-		},
-		{
-			'$unset': {'search_list': 1}
-		}
-	)
-
-	#새로운 view_list 등록
-	db[SJ_DB_USER].update(
-		{
-			'user_id': user_id
-		},
-		{
-			'$push': 
-			{
-				'search_list':
-				{
-					'$each': refresh_obj_list,
-					'$position': 0
-				}
-			}
-		}
-	)
-
-	return "success"
 
 #유저 newsfeed_list에 요소 추가 (사용)
 def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
@@ -445,36 +356,6 @@ def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
 			}
 		}
 	)
-	return "success"
-#유저 newsfeed_list 갱신 (pushback) (사용)
-def refresh_user_newsfeed_list(db, user_id, refresh_obj_list):
-	#newsfeed_list 삭제
-	db[SJ_DB_USER].update(
-		{
-			'user_id': user_id
-		},
-		{
-			'$unset': {'newsfeed_list': 1}
-		}
-	)
-
-	#새로운 view_list 등록
-	db[SJ_DB_USER].update(
-		{
-			'user_id': user_id
-		},
-		{
-			'$push': 
-			{
-				'newsfeed_list':
-				{
-					'$each': refresh_obj_list,
-					'$position': 0
-				}
-			}
-		}
-	)
-
 	return "success"
 
 #유저 관심도 갱신.
@@ -520,8 +401,120 @@ def find_user_lately_search(db, user_id, num):
 	)
 	return result['search_list']
 
+def update_user_action_log_refresh(db, _id, type_, refresh_obj):
+	if type_ == "fav":
+		#fav_list 삭제
+		db[SJ_DB_USER].update(
+			{
+				'_id': _id
+			},
+			{
+				'$unset': {'fav_list': 1}
+			}
+		)
 
+		#새로운 fav_list 등록
+		db[SJ_DB_USER].update(
+			{
+				'_id': _id
+			},
+			{
+				'$push': 
+				{
+					'fav_list':
+					{
+						'$each': refresh_obj,
+						'$position': 0
+					}
+				}
+			}
+		)
+	
+	elif type_ == "view":
+		#view_list 삭제
+		db[SJ_DB_USER].update(
+			{
+				'_id': _id
+			},
+			{
+				'$unset': {'view_list': 1}
+			}
+		)
 
+		#새로운 view_list 등록
+		db[SJ_DB_USER].update(
+			{
+				'_id': _id
+			},
+			{
+				'$push': 
+				{
+					'view_list':
+					{
+						'$each': refresh_obj,
+						'$position': 0
+					}
+				}
+			}
+		)
+	
+	elif type_ == "search":
+		#search_list 삭제
+		db[SJ_DB_USER].update(
+			{
+				'_id': _id
+			},
+			{
+				'$unset': {'search_list': 1}
+			}
+		)
+
+		#새로운 search_list 등록
+		db[SJ_DB_USER].update(
+			{
+				'_id': _id
+			},
+			{
+				'$push': 
+				{
+					'search_list':
+					{
+						'$each': refresh_obj,
+						'$position': 0
+					}
+				}
+			}
+		)
+
+	elif type_ == "newsfeed":
+		#newsfeed_list 삭제
+		db[SJ_DB_USER].update(
+			{
+				'_id': _id
+			},
+			{
+				'$unset': {'newsfeed_list': 1}
+			}
+		)
+
+		#새로운 newsfeed_list 등록
+		db[SJ_DB_USER].update(
+			{
+				'_id': _id
+			},
+			{
+				'$push': 
+				{
+					'newsfeed_list':
+					{
+						'$each': refresh_obj,
+						'$position': 0
+					}
+				}
+			}
+		)
+	
+	return "success"
 
 #SJ_DB_POST 관련#######################################
 ######################################################
@@ -1088,7 +1081,7 @@ def find_log_count(db):
 #SJ_DB_USER_BACKUP 관련################################
 ######################################################
 #pushback 함수 (user document 16Mb 초과 방지)
-def insert_pushback(db, user_id, type_, back_obj_list):
+def insert_user_backup(db, user_id, type_, back_obj_list):
 	#좋아요 타입
 	if type_ == 'fav':
 		for back_obj in back_obj_list:
@@ -1143,7 +1136,7 @@ def insert_pushback(db, user_id, type_, back_obj_list):
 			)
 	
 	#뉴스피드 타입
-	else:
+	elif type_ == 'newsfeed':
 		for back_obj in back_obj_list:
 			db[SJ_DB_USER_BACKUP].insert(
 				{
