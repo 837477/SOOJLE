@@ -177,10 +177,6 @@ def real_time_insert():
 		#실시간 검색어 최종 리스트에 저번 리스트 순위를 추가하는 작업
 		for lately in lately_realtime:
 			check = True
-			
-			#10자 이상 삭제
-			if len(lately) > 10:
-				continue
 
 			for duple_key in duple_key_list:
 				if lately[0] == duple_key:
