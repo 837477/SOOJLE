@@ -748,14 +748,14 @@ html, body {
 	margin-right: 20px;
 	margin-bottom: 20px;
 	border-radius: 20px;
-	transition: .1s ease-in-out;
-	-webkit-transition: .1s ease-in-out;
 	text-align: center;
 	font-size: 24px;
 	border: 2px solid rgba(0,0,0,0);
+	transition: .1s cubic-bezier(0.2, 0, 0.87, 1);
+	-webkit-transition: .1s cubic-bezier(0.2, 0, 0.87, 1);
 }
 .menu_container_button:hover {
-	border: 2px solid black;
+	box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16) inset, 2px 0px 10px 0 rgba(0, 0, 0, 0.08) inset;
 }
 .menu_container_button_small_info {
 	position: relative;
@@ -1018,14 +1018,16 @@ html, body {
 	width: 100%;
 	height: auto;
 	border: 2px solid rgba(0,0,0,0);
-	box-shadow: 0 2px 6px rgba(0,0,0,.16);
+	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.08);
 	border-radius: 3px 30px 30px 3px;
-	transition: .1s ease-in-out;
+	transition: .1s cubic-bezier(0.2, 0, 0.87, 1);
+	-webkit-transition: .1s cubic-bezier(0.2, 0, 0.87, 1);
 	margin-bottom: 5px;
 }
 .post_block:hover {
 	border: 2px solid black;
 	box-shadow: 0 2px 6px rgba(0,0,0,.16);
+	/*box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.08) inset, 0 2px 10px 0 rgba(0, 0, 0, 0.16) inset;*/
 }
 .post_block_img_cont {
 	position: relative;
@@ -2059,7 +2061,7 @@ span.selectbox_choose {
 	margin-top: 40px;
 	padding: 10px;
 	background-color: white;
-	border: 2px solid black;
+	box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16), -2px 0px 10px 0 rgba(0, 0, 0, 0.08);
 }
 .realtime_searchwords_table_title {
 	position: relative;
@@ -2685,9 +2687,10 @@ span.selectbox_choose {
 	width: auto;
 	max-width: 100%;
 	height: auto;
+	margin-right: 10px;
 	margin-bottom: 10px;
 	border-radius: 30px;
-	box-shadow: 0 2px 6px rgba(0,0,0,.16);
+	box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.2), -2px 0px 4px 0 rgba(0, 0, 0, 0.08);
 	padding: 3px 30px;
 	font-size: 18px;
 	line-height: 30px;
@@ -2698,9 +2701,7 @@ span.selectbox_choose {
 	text-overflow: ellipsis;
 }
 .board_notice_cont:hover {
-	box-shadow: 0 2px 8px rgba(0,0,0,0);
-	color: white;
-	background-color: #12b886;
+	box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16) inset, -2px 0px 10px 0 rgba(0, 0, 0, 0.08) inset;
 }
 
 .setting_info_message_cont {
