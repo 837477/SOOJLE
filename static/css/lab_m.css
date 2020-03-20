@@ -20,6 +20,7 @@
 	margin-bottom: 50px;
 	text-align: center;
 	color: rgba(0,0,0,.8);
+	word-break: keep-all;
 }
 .lab_service_contents_wrap {
 	position: relative;

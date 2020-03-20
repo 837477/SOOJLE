@@ -619,7 +619,10 @@ function Check_Visite_Today() {
 		before = before.getDate();
 		now = new Date().getDate();
 		if (now == before) return false;
-		else return true;
+		else {
+			localStorage.setItem('sj-visited', new Date());
+			return true;
+		}
 	} else {
 		localStorage.setItem('sj-visited', new Date());
 	}
