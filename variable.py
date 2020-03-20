@@ -1,7 +1,7 @@
 #백그라운드 시간
 #####################################################
-#Measurement_run Time (minutes)
-SJ_MEASUREMENT_TIME = 30
+#Measurement_run Time (hours)
+SJ_MEASUREMENT_TIME = 2
 #Create_Wordcloud_run TIME (days)
 SJ_CREATE_WORDCLOUD_TIME = 30
 #Realtime_run Time (minutes)
@@ -44,7 +44,12 @@ SJ_RECOMMENDATION_LIMIT = 10000
 #No Token User Recommendation limit (비로그인 추천뉴스피드 DB호출 최대 제한)
 SJ_NO_TOKEN_RECOMMENDATION_LIMIT = 500
 #Log user limit number (사용자 로그 불러오기 최대 제한)
-SJ_USER_LOG_LIMIT = 300
+SJ_USER_LOG_LIMIT = {
+	'view': 100,
+	'search': 40,
+	'fav': 20,
+	'newsfeed': 30
+}
 #실시간 검색 리미트
 SJ_REALTIME_LIMIT = 20
 #Realtime Return Limit (실시간 검색어 반환 최대 제한)
@@ -95,14 +100,14 @@ SJ_RANDOM_WEIGHT = 1.5
 SJ_FAV_TAG_WEIGHT = 4
 SJ_VIEW_TAG_WEIGHT = 3
 
-SJ_SEARCH_MEASURE_NUM = 100
-
-SJ_FAV_TOPIC_WEIGHT = 45
+SJ_FAV_TOPIC_WEIGHT = 35
 SJ_VIEW_TOPIC_WEIGHT = 30
-SJ_SEARCH_TOPIC_WEIGHT = 10
-SJ_NEWSFEED_TOPIC_WEIGHT = 5
+SJ_SEARCH_TOPIC_WEIGHT = 25
+SJ_NEWSFEED_TOPIC_WEIGHT = 10
 
 SJ_TOPIC_RESULT_DIV = SJ_FAV_TOPIC_WEIGHT + SJ_VIEW_TOPIC_WEIGHT + SJ_SEARCH_TOPIC_WEIGHT + SJ_NEWSFEED_TOPIC_WEIGHT
 
 SJ_TAG_SUM_WEIGHT = 1.5
 
+SJ_USER_ACTION_NUM_CHECK_PERCENT = 0.15
+SJ_USER_ACTION_DAY_CHECK = 30
