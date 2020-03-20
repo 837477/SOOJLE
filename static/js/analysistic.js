@@ -252,6 +252,9 @@ function set_hall_data() {
 // 방문자 분석 div Insert-----------------------------------------------
 function insert_visitor_div() {
 	let info = ``;//`SOOJLE의 모든 방문자들의 통계를 분석하여 보여드립니다.`;
+	if (analysis_data['highest_day_visitor'] < analysis_data['today_visitor']) {
+		analysis_data['highest_day_visitor'] = analysis_data['today_visitor'];
+	}
 	let div = 	`
 					<div id="anlt_visitor_wrap" class="anlt_visitor_wrap">
 						<div class="anlt_visitor_title noselect">방문자 분석</div>\
