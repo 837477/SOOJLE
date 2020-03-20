@@ -151,6 +151,11 @@ def real_time_insert():
 		#욕 필터링 걸리면 넘어감!
 		if keyword in SJ_BAD_LANGUAGE:
 			continue
+		
+		#10자 이상 삭제
+		elif len(keyword) > 10:
+			continue
+
 		#최종 실시간 검색어 결과 반환
 		realtime_result.append(keyword)
 
@@ -173,6 +178,10 @@ def real_time_insert():
 		for lately in lately_realtime:
 			check = True
 			
+			#10자 이상 삭제
+			if len(lately) > 10:
+				continue
+
 			for duple_key in duple_key_list:
 				if lately[0] == duple_key:
 					check = False
