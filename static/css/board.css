@@ -755,7 +755,7 @@ html, body {
 	-webkit-transition: .1s cubic-bezier(0.2, 0, 0.87, 1);
 }
 .menu_container_button:hover {
-	box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16) inset, 2px 0px 10px 0 rgba(0, 0, 0, 0.08) inset;
+	border: 2px solid black;
 }
 .menu_container_button_small_info {
 	position: relative;
@@ -1851,10 +1851,8 @@ input[type="checkbox"]:checked ~ .setting_toggle_red label::after{
 	margin-bottom: auto;
 	width: 400px;
 	height: 300px;
-	border-radius: 30px;
 	background-color: white;
-	box-shadow: 0 3px 20px rgba(0,0,0,.1),
-				0 0 20px rgba(0,0,0,.15) inset;
+	box-shadow: 0 3px 20px rgba(0,0,0,.1), 0 0 20px rgba(0,0,0,.15) inset;
 	transition: .1s ease-in-out;
 }
 .user_data_delete_info {
@@ -1866,7 +1864,7 @@ input[type="checkbox"]:checked ~ .setting_toggle_red label::after{
 	padding: 0 20px;
 	box-sizing: border-box;
 	height: auto;
-	margin-top: 70px;
+	margin-top: 60px;
 }
 .user_data_delete_input {
 	position: relative;
@@ -2061,7 +2059,7 @@ span.selectbox_choose {
 	margin-top: 40px;
 	padding: 10px;
 	background-color: white;
-	box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16), -2px 0px 10px 0 rgba(0, 0, 0, 0.08);
+	border: 2px solid black;
 }
 .realtime_searchwords_table_title {
 	position: relative;
@@ -2701,7 +2699,8 @@ span.selectbox_choose {
 	text-overflow: ellipsis;
 }
 .board_notice_cont:hover {
-	box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16) inset, -2px 0px 10px 0 rgba(0, 0, 0, 0.08) inset;
+	background-color: #12b886;
+	color: white;
 }
 
 .setting_info_message_cont {
