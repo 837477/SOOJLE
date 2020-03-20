@@ -45,25 +45,25 @@ def init_db():
 		create_realtime(db)
 
 	if 'SJ_SEARCH_LOG' not in db_collections:
-		db['SJ_SEARCH_LOG']
+		db['SJ_SEARCH_LOG'].insert({})
 
 	if 'SJ_DB_LOG' not in db_collections:
-		db['SJ_DB_LOG']
+		db['SJ_LOG'].insert({})
 
 	if 'SJ_VISITOR' not in db_collections:
-		db['SJ_VISITOR']
+		db['SJ_VISITOR'].insert({})
 
 	if 'SJ_USER_BACKUP' not in db_collections:
-		db['SJ_USER_BACKUP']
+		db['SJ_USER_BACKUP'].insert({})
 
 	if 'SJ_NOTICE' not in db_collections:
-		db['SJ_NOTICE']
+		db['SJ_NOTICE'].insert({})
 
 	if 'SJ_FEEDBACK' not in db_collections:
-		db['SJ_FEEDBACK']
+		db['SJ_FEEDBACK'].insert({})
 
 	if 'SJ_ANALYSIS' not in db_collections:
-		db['SJ_ANALYSIS']
+		db['SJ_ANALYSIS'].insert({})
 
 	if db_client is not None:
 		db_client.close()
