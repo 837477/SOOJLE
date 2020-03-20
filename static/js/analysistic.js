@@ -289,6 +289,9 @@ function set_visitor_data() {
 			let visitor_time_data_array1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]; 
 			let visitor_time_data_array2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,];
 			let visitor_time_data1, visitor_time_data2, visitor_time_date1, visitor_time_date2;
+			let now = new Date();
+			visitor_time_date1 =  `${now.getMonth() + 1}월 ${now.getDate() - 1}일`;
+			visitor_time_date2 =  `${now.getMonth() + 1}월 ${now.getDate() - 2}일`;
 			if (data['analysis'][0] != undefined) {
 				visitor_time_data1 = data['analysis'][0]['today_time_visitor'];
 				visitor_time_date1 = data['analysis'][0]['date'];
@@ -308,7 +311,7 @@ function set_visitor_data() {
 			get_line("visitor_distribution",
 				[	// visitor date
 					visitor_time_date1,
-					visitor_time_date2 
+					visitor_time_date2
 				],
 				[	// visitor data
 					visitor_time_data_array1,
