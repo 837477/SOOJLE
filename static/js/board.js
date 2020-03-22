@@ -30,6 +30,9 @@ window.setTimeout(function() {
 function Goboard() {
 	window.location.href = "/board";
 }
+function GoHome() {
+	window.location.href = "/home";
+}
 // 초기 setting
 $(document).ready( function() {
 	auto_login();

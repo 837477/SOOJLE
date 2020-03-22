@@ -657,10 +657,8 @@ let search_option_open = false;
 
 // 검색 옵션========================================================================
 function Search_Option_on() {	// PC 라면 옵션 자동 On
-	if (!mobilecheck()) {
-		search_option_open = !search_option_open;
-		$("#search_option_container").removeClass("display_none");
-	}
+	search_option_open = !search_option_open;
+	$("#search_option_container").removeClass("display_none");
 }
 function Search_Option() {
 	if (search_option_open) {

@@ -78,6 +78,13 @@
 	.main_info_message_box {
 		margin-left: 10px;
 	}
+	.SJ_main_page1_menu_icons_box {
+		font-size: 14px;
+	}
+	.SJ_main_page1_menu_icon {
+		width: 26px;
+		height: 26px;
+	}
 }
 
 /*=============================================================================*/
