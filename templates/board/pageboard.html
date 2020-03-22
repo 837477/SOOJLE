@@ -96,9 +96,15 @@
 						<div class="board_mobile_login_bar"></div>
 					</div>
 				</div>
-				<div id="menu_realtime_searchwords" class="menu_realtime_searchwords">
-					<div id="menu_realtime_searchwords_wrapper" class="menu_realtime_searchwords_wrapper"></div>
-					<i class="fa fa-chevron-down menu_realtime_hover"></i>
+				<div class="realtime_searchwords_table_container">
+					<div class="menu_realtime_searchwords_title">
+						<i class="fas fa-chart-line"></i>
+						실시간 인기 키워드
+					</div>
+					<div id="menu_realtime_searchwords" class="menu_realtime_searchwords">
+						<div id="menu_realtime_searchwords_wrapper" class="menu_realtime_searchwords_wrapper"></div>
+						<i class="fa fa-chevron-down menu_realtime_hover"></i>
+					</div>
 				</div>
 				<div id="user_login" class="menu_container_button_small menu_container_login_accent pointer" onclick="Login_open()">로그인</div>
 				<div id="user_info" class="menu_container_button_small_info noselect display_none"></div>
@@ -107,7 +113,8 @@
 				<div class="menu_container_button_small pointer" onclick="pageUp()">검색</div>
 				<div id="realtime_searchwords_table" class="realtime_searchwords_table display_none">
 					<div class="realtime_searchwords_table_title noselect">실시간 인기 키워드</div>
-					<div id="realtime_searchwords_table_words">
+					<div id="realtime_searchwords_table_close" class="realtime_searchwords_table_close"><i class="far fa-times-circle"></i></div>
+					<div id="realtime_searchwords_table_words" class="realtime_searchwords_table_words">
 					</div>
 					<div id="realtime_searchwords_table_time" class="anlt_realtime_standard"></div>
 				</div>

@@ -435,7 +435,7 @@
 		padding-right: 10px;
 		margin-right: 0;
 		margin-left: 0px;
-		margin-bottom: 20px;
+		margin-bottom: 0px;
 		font-size: 16px;
 		line-height: 50px;
 	}
@@ -641,7 +641,7 @@
 	}
 	.post_block:active {
 		box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16) inset, -2px 0px 10px 0 rgba(0, 0, 0, 0.08) inset;
-		/*background-color: #f4f4f4;*/
+		background-color: #f4f4f4;
 	}
 	.post_block_img_cont {
 	    position: relative;
@@ -802,7 +802,7 @@
 		width: 100%;
 		display: inline-block;
 		float: left;
-		height: 50px;
+		height: auto;
 		min-height: 50px;
 		margin-top: 0;
 		margin-bottom: 0;
@@ -822,6 +822,64 @@
 		width: 700px;
 		margin-left: auto;
 		margin-right: auto;
+		margin-bottom: 0;
+	}
+	.realtime_searchwords_table {
+		margin-top: 0;
+		position: relative;
+		width: 100%;
+		max-width: 700px;
+		box-sizing: border-box;
+		z-index: 30;
+		border: none;
+		border-bottom: 2px solid #f2f2f2;
+		margin: auto;
+		margin-bottom: 20px;
+	}
+	.menu_realtime_searchwords {
+		position: relative;
+		float: initial;
+		margin-right: 0;
+		width: 50%;
+		box-sizing: border-box;
+	}
+	.realtime_searchwords_table_container {
+		position: relative;
+		width: 100%;
+		max-width: 700px;
+		height: 50px;
+		margin: auto;
+		box-sizing: border-box;
+	}
+	.menu_realtime_word {
+		text-align: left;
+	}
+	.realtime_searchwords_table_close {
+		position: relative;
+		display: inline-block;
+		width: 30px;
+		height: 30px;
+		float: right;
+		font-size: 20px;
+		line-height: 30px;
+		text-align: center;
+		border-radius: 50px;
+	}
+	.realtime_searchwords_table_close:active {
+		background-color: #f2f2f2;
+	}
+	.menu_realtime_searchwords_title {
+		display: inline-block;
+		position: relative;
+		float: left;
+		font-size: 18px;
+		width: 50%;
+		height: 40px;
+		box-sizing: border-box;
+		line-height: 40px;
+	}
+	.menu_realtime_searchwords_title > i {
+		color: #12b886;
 	}
 	.sr_title {
 		position: relative;
@@ -852,7 +910,7 @@
 	}
 	.sr_domain_ct:active {
 		background-color: #f4f4f4;
-		box-shadow: 0 2px 6px white;
+		box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16) inset, -2px 0px 10px 0 rgba(0, 0, 0, 0.08) inset;
 	}
 	.sr_domain_title {
 		position: relative;
@@ -1212,16 +1270,18 @@
 	}
 	.board_notice_cont {
 		max-width: 95%;
-		padding: 3px 20px;
+		padding: 3px 15px;
 		font-size: 16px;
 		line-height: 30px;
-		margin-left: 2%;
 	}
 	.board_notice_cont:hover {
 		box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16), -2px 0px 10px 0 rgba(0, 0, 0, 0.08);
 	}
 	.board_notice_cont:active {
 		box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16) inset, -2px 0px 10px 0 rgba(0, 0, 0, 0.08) inset;
+	}
+	.realtime_searchwords_table_words {
+		width: 50%;
 	}
 }
 /*=============================================================================*/
@@ -1514,9 +1574,6 @@
 		font-size: 12px;
 		line-height: 20px;
 	}
-	.board_notice_cont {
-		margin-left: 2%;
-	}
 }
 /*=============================================================================*/
 /*                                    450px                                    */
@@ -1659,7 +1716,7 @@
 		height: 50px;
 		padding: 0 8px;
 		margin-right: 0;
-		margin-bottom: 20px;
+		margin-bottom: 0;
 		font-size: 16px;
 		line-height: 50px;
 	}
@@ -1723,6 +1780,21 @@
 	.category_tabs {
 		border-bottom: 10px solid #f2f2f2;
 	}
+	.board_notice_cont {
+		margin-left: 2%;
+	}
+	.realtime_searchwords_table {
+		border-bottom: 30px solid #f2f2f2;
+	}
+	.realtime_searchwords_table_container {
+		padding: 0 2%;
+	}
+	.menu_realtime_searchwords_title, .menu_realtime_word {
+		font-size: 16px;
+	}
+	.realtime_searchwords_table_words {
+		width: 100%;
+	}
 }
 /*=============================================================================*/
 /*                                    350px                                    */
@@ -1753,28 +1825,10 @@
 	.post_block_cont {
 		height: 55px;
 	}
-}
-
-
-
-/* Because of Mobile Controller */
-@media screen and (max-width: 1200px) {
-	.snackbar_target {
-		width: 100%;
-		height: 40px;
-		bottom: 40px;
-	}
-	.snackbar {
-		width: 100%;
-		height: 20px;
-		line-height: 20px;
+	.menu_realtime_searchwords_title, .menu_realtime_word {
 		font-size: 14px;
-		border-radius: 0;
-		padding: 10px 0;
-		z-index: 50;
 	}
-}
-
-.menu_realtime_searchwords {
-	display: none;
+	.post_title {
+		font-size: 16px;
+	}
 }

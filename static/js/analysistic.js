@@ -648,7 +648,7 @@ function Detection_Device() {
 }
 
 let menu_realtime_init = 0;
-if (!mobilecheck()) menu_realtime_searchword();
+menu_realtime_searchword();
 function menu_realtime_searchword() {
 	let target = $("#menu_realtime_searchwords_wrapper");
 	let target2 = $("#realtime_searchwords_table_words");
@@ -731,14 +731,22 @@ function menu_realtime_moving(block_h) {
 
 $("#menu_realtime_searchwords").on({
 	"mouseenter": function() {	// 메뉴 인기 키워드 mouseenter
+		if (!mobilecheck()) $("#realtime_searchwords_table").removeClass("display_none");
+	},
+	"click": function() {
 		$("#realtime_searchwords_table").removeClass("display_none");
 	}
 });
 $("#realtime_searchwords_table").on({
 	"mouseleave": function() {	// 메뉴 인기 키워드 mouseleave
-		$("#realtime_searchwords_table").addClass("display_none");
+		if (!mobilecheck()) $("#realtime_searchwords_table").addClass("display_none");
 	}
 });
+$("#realtime_searchwords_table_close").on({
+	"click": function() {
+		$("#realtime_searchwords_table").addClass("display_none");
+	}
+})
 
 
 function number_unit(num, comma = false) {

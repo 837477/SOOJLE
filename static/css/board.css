@@ -2062,6 +2062,7 @@ span.selectbox_choose {
 }
 .realtime_searchwords_table_title {
 	position: relative;
+	display: inline-block;
 	font-size: 14px;
 	font-weight: bold;
 	margin-bottom: 20px;
@@ -2073,6 +2074,9 @@ span.selectbox_choose {
 	line-height: 24px;
 	margin-bottom: 10px;
 	font-size: 16px;
+}
+.realtime_searchwords_table_word:first-child > .realtime_searchwords_table_text  {
+	color: #12b886;
 }
 .realtime_searchwords_table_num {
 	position: absolute;
@@ -2737,5 +2741,15 @@ span.selectbox_choose {
 }
 .setting_info_message_box_editBtn {
 	position: relative;
-	width: 
+}
+.menu_realtime_searchwords_title {
+	display: none;
+}
+.realtime_searchwords_table_close {
+	display: none;
+}
+.realtime_searchwords_table_words {
+	position: relative;
+	width: 100%;
+	height: auto;
 }
