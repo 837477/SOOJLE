@@ -602,7 +602,7 @@
 		font-size: 16px;
 	}
 	.login_info > span {
-		font-size: 12px;
+		font-size: 14px;
 	}
 	.menu_container_button_ss_container {
 		margin-bottom: 50px;
@@ -1215,6 +1215,7 @@
 		padding: 3px 20px;
 		font-size: 16px;
 		line-height: 30px;
+		margin-left: 2%;
 	}
 	.board_notice_cont:hover {
 		box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.16), -2px 0px 10px 0 rgba(0, 0, 0, 0.08);

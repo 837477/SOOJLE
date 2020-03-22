@@ -1217,4 +1217,5 @@ ol { margin-left: 15px; }
 	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 	right: 250px;
 	transition: 1s ease-in-out;
+	word-break: keep-all;
 }
