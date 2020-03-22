@@ -643,7 +643,7 @@ html, body {
 	position: absolute;
 	width: 38px;
 	height: 38px;
-	opacity: 0.5;
+	opacity: 0.6;
 	left: 50%;
 	top: 30px;
 	transform: translate(-50%, 0);
@@ -1027,7 +1027,6 @@ html, body {
 .post_block:hover {
 	border: 2px solid black;
 	box-shadow: 0 2px 6px rgba(0,0,0,.16);
-	/*box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.08) inset, 0 2px 10px 0 rgba(0, 0, 0, 0.16) inset;*/
 }
 .post_block_img_cont {
 	position: relative;
@@ -1457,7 +1456,7 @@ html, body {
 	position: relative;
 	width: 100%;
 	height: auto;
-	margin-bottom: 40px;
+	margin-bottom: 80px;
 }
 .setting_title {
 	position: relative;
@@ -2063,6 +2062,7 @@ span.selectbox_choose {
 }
 .realtime_searchwords_table_title {
 	position: relative;
+	display: inline-block;
 	font-size: 14px;
 	font-weight: bold;
 	margin-bottom: 20px;
@@ -2074,6 +2074,9 @@ span.selectbox_choose {
 	line-height: 24px;
 	margin-bottom: 10px;
 	font-size: 16px;
+}
+.realtime_searchwords_table_word:first-child > .realtime_searchwords_table_text  {
+	color: #12b886;
 }
 .realtime_searchwords_table_num {
 	position: absolute;
@@ -2726,7 +2729,7 @@ span.selectbox_choose {
     line-height: 24px;
     padding: 10px;
     width: 200px;
-    height: 24px;
+    height: auto;
     color: white;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     resize: none;
@@ -2738,5 +2741,15 @@ span.selectbox_choose {
 }
 .setting_info_message_box_editBtn {
 	position: relative;
-	width: 
+}
+.menu_realtime_searchwords_title {
+	display: none;
+}
+.realtime_searchwords_table_close {
+	display: none;
+}
+.realtime_searchwords_table_words {
+	position: relative;
+	width: 100%;
+	height: auto;
 }
