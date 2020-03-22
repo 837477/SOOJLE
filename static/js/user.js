@@ -149,7 +149,6 @@ function Sign_in() {									// 로그인 완료 버튼
 }
 function SignIn_id_Check(tag) {							// 로그인 ID 검사
 	// ID 길이는 6~30자 사이
-	console.log($(tag).val());
 	if ($(tag).val().length >= 6
 	 && $(tag).val().length <= 30
 	 && ABORT_ID.indexOf($(tag).val().toLowerCase()) == -1
