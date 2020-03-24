@@ -236,7 +236,6 @@ function Menu_User_Info_Change(nickname) {
 	$("#user_info_mobile").text(nickname);
 }
 async function After_login() {
-	Snackbar("맞춤 서비스를 시작합니다.");
 	check_manager_qualification();
 	$("#sign_up_button").addClass("display_none");
 	$("#login_button").addClass("display_none");

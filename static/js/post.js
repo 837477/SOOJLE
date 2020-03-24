@@ -22,6 +22,11 @@ function click_recommend_posts() {
 	menu_modal_onoff();
 }
 function get_recommend_posts(is_first = 0) {
+	/* 비회원 문구 */
+	let token = sessionStorage.getItem('sj-state');
+    if (token == null || token == undefined || token == 'undefined') {
+    	Snackbar("로그인을 하면 맞춤서비스가 실행됩니다.");
+    }
 	menu_open = 0;
 	out_of_search();
 	window.scrollTo(0,0);

@@ -109,7 +109,7 @@ function Making_notice_block(posts) {
 		date = change_date_realative(post['date']['$date']);
 		activation = post['activation'];
 		if (activation == 1) {
-			activation = `<span class="notice_post_activation noselect">[활성화] </span>`;
+			activation = `<span class="notice_post_activation noselect">[공지] </span>`;
 		} else activation = ``;
 		tag =	`
 					<div class="notice_post_container pointer" data-id=${oid} onclick="Click_post($(this))">
@@ -167,7 +167,7 @@ function insert_notice_one(id) {
 				date = change_date_absolute(result['date']['$date']);
 				activation = result['activation'];
 				if (activation == 1) {
-					activation_tag = `<span class="notice_post_activation noselect">[활성화] </span>`;
+					activation_tag = `<span class="notice_post_activation noselect">[공지] </span>`;
 				}
 				tag =	`
 							<div id="notice_page_container" class="notice_page_container" data-id=${oid}>
@@ -241,7 +241,7 @@ function Notice_Edit() {
 				target.append(tag);
 				$("#notice_page_edit_title").val(result['title']);
 				$("#notice_page_edit_post").val(result['post']);
-				// 활성화 Check 유무
+				// 공지 Check 유무
 				if (result['activation'] == 1) {
 					$("#activation_toggle").prop("checked", true);
 				} else {
