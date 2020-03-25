@@ -2769,7 +2769,8 @@ span.selectbox_choose {
 }
 .guide_subtitle {
 	position: relative;
-	width: 100%;
+	width: 95%;
+	left: 2.5%;
 	height: auto;
 	font-size: 18px;
 	line-height: 24px;
