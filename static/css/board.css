@@ -2764,9 +2764,18 @@ span.selectbox_choose {
 	height: auto;
 	font-size: 30px;
 	line-height: 50px;
-	margin-bottom: 50px;
 	font-weight: bold;
 	text-align: center;
+}
+.guide_subtitle {
+	position: relative;
+	width: 100%;
+	height: auto;
+	font-size: 18px;
+	line-height: 24px;
+	margin-bottom: 50px;
+	text-align: center;
+	color: #2b2b2b;
 }
 .guide_body {
 	position: relative;
@@ -2832,6 +2841,32 @@ span.selectbox_choose {
 	width: 100%;
 	height: auto;
 }
+.guide_page_cont {
+	position: relative;
+	width: 100%;
+	height: auto;
+	padding: 50px 0;
+	margin: 50px 0;
+	border-top: 2px solid #dedede;
+	border-bottom: 2px solid #dedede;
+	text-align: center;
+}
+.guide_page_cont > a {
+	color: rgba(0,0,0,0);
+}
+.guide_page_icon {
+	position: relative;
+	display: inline-block;
+	width: 50px;
+	height: auto;
+	padding: 0 40px;
+	vertical-align: middle;
+	margin: 25px 0;
+}
+
+
+
+
 
 .guide_banner {
 	position: relative;
@@ -2840,7 +2875,6 @@ span.selectbox_choose {
 	margin: 50px 0;
 	text-align: center;
 }
-
 .circle-container {
   width: 400px;
   height: 200px;

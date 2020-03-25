@@ -1797,8 +1797,10 @@
 		width: 100%;
 	}
 
-	.guide_title {
+	.guide_subtitle {
 		margin-bottom: 30px;
+		font-size: 16px;
+		word-break: keep-all;
 	}
 	.guide_body {
 		margin-bottom: 50px;
@@ -1813,6 +1815,9 @@
 		display: block;
 		width: 100%;
 		margin-bottom: 0;
+	}
+	.guide_page_icon {
+		padding: 0 25px;
 	}
 }
 /*=============================================================================*/
@@ -1849,6 +1854,9 @@
 	}
 	.post_title {
 		font-size: 16px;
+	}
+	.guide_page_icon {
+		padding: 0 20px;
 	}
 
 }

@@ -25,6 +25,9 @@ function Insert_Sejong_Guide() {
 	let target = $("#posts_target");
 	let div = 	`
 					<div class="guide_title noselect">앱 설치하기</div>
+					<div class="guide_subtitle noselect">
+						세종대학교 통합 모바일 앱을 설치할 수 있습니다!
+					</div>
 					<div class="guide_body noselect">
 						<div class="guide_app_mobile_cont">
 							<img src="static/image/app_guide.png" class="guide_app_mobile wow animated fadeInLeft">
@@ -44,7 +47,23 @@ function Insert_Sejong_Guide() {
 							<div class="circle" style="background-color: #0071e3;"></div>
 						</div>
 					</div>
-					
+					<div class="guide_page_cont">
+						<a target="_blank" href="http://www.sejong.ac.kr/unilife/guide.html">
+							<img class="guide_page_icon" src="/static/image/logo_sejong.png">
+						</a>
+						<a target="_blank" href="https://www.youtube.com/user/channelsejongUCC">
+							<img class="guide_page_icon" src="/static/image/logo_youtube.png">
+						</a>
+						<a target="_blank" href="https://www.facebook.com/sejongpr">
+							<img class="guide_page_icon" src="/static/image/logo_facebook.png">
+						</a>
+						<a target="_blank" href="https://www.instagram.com/sejong_univ/">
+							<img class="guide_page_icon" src="/static/image/logo_instagram.png">
+						</a>
+						<a target="_blank" href="https://blog.naver.com/sejong_univ">
+							<img class="guide_page_icon" src="/static/image/logo_naverblog.png">
+						</a>
+					</div>
 				`;
 	// <div class="guide_title noselect">캠퍼스 안내도</div>
 	// 				<div class="guide_body noselect">
