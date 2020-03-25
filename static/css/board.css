@@ -2756,3 +2756,175 @@ span.selectbox_choose {
 	width: 100%;
 	height: auto;
 }
+
+
+.guide_title {
+	position: relative;
+	width: 100%;
+	height: auto;
+	font-size: 30px;
+	line-height: 50px;
+	margin-bottom: 50px;
+	font-weight: bold;
+	text-align: center;
+}
+.guide_body {
+	position: relative;
+	width: 100%;
+	height: auto;
+	margin-bottom: 100px;
+}
+.guide_app_mobile_cont {
+	position: relative;
+	display: inline-block;
+	width: 50%;
+	height: auto;
+	vertical-align: middle;
+	text-align: center;
+}
+.guide_app_mobile {
+	position: relative;
+	display: inline-block;
+	width: 50%;
+	height: auto;
+	max-width: 200px;
+	vertical-align: top;
+	transition: .2s ease-in-out;
+}
+.guide_app_container {
+	position: relative;
+	display: inline-block;
+	width: 50%;
+	height: auto;
+	margin-bottom: 80px;
+	text-align: center;
+}
+.guide_app_img {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	max-width: 100px;
+	height: auto;
+	margin: auto;
+}
+.guide_app_title {
+	position: relative;
+	font-size: 20px;
+	line-height: 24px;
+	padding: 10px;
+	text-align: center;
+}
+.guide_app_link_btn_apple {
+	position: relative;
+	display: inline-block;
+	width:135px;
+	height:40px;
+	padding: 10px;
+}
+.guide_app_link_btn_google {
+	position: relative;
+	display: inline-block;
+	width:155px;
+	height:auto;
+}
+.guide_campus_map {
+	position: relative;
+	width: 100%;
+	height: auto;
+}
+
+.guide_banner {
+	position: relative;
+	width: 100%;
+	height: 200px;
+	margin: 50px 0;
+	text-align: center;
+}
+
+.circle-container {
+  width: 400px;
+  height: 200px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.circle-container:after{
+  content: '';
+  width: 20px;
+  height: 5px;
+  position: absolute;
+  background: #000;
+  border-radius: 50%;
+  bottom: 0;
+  left: 50%;
+  opacity: 0.7;
+  filter: blur(1px);
+  animation: circle_shadow 2.5s linear infinite;
+}
+.circle-container:nth-child(2):after {
+  animation-delay: -.3s;
+}
+.circle-container:nth-child(3):after {
+  animation-delay: -.6s;
+}
+.circle{
+  width: 15px;
+  height: 15px;
+  background: #fff;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  animation: circle_butterfly 2.5s linear infinite;
+}
+.circle-container:nth-child(2) .circle{
+  animation-delay: -.3s;
+}
+.circle-container:nth-child(3) .circle{
+  animation-delay: -.6s;
+}
+@keyframes circle_butterfly {
+  0%{
+    transform-origin: 400% 50%;
+    transform: rotate(0);
+  }
+  50%{
+    transform-origin: 400% 50%;
+    transform: rotate(360deg);
+  }
+  50.1%{
+    transform-origin: -300% 50%;
+  }
+  100%{
+    transform-origin: -300% 50%;
+  }
+}
+
+@keyframes circle_shadow {
+  0%{}
+  12.5%{
+    transform: translate(50px) scale(0.6);
+  }
+  25%{
+    transform: translate(110px);
+  }
+  37.5%{
+    transform: translate(50px) scale(1.4);
+  }
+  50%{
+    transform: translate(0px);
+  }
+  62.5%{
+    transform: translate(-50px) scale(0.6);
+  }
+  75%{
+    transform: translate(-110px);
+  }
+  87.5%{
+    transform: translate(-50px) scale(1.4);
+  }
+  100%{
+    transform: translate(0px);
+  }
+}

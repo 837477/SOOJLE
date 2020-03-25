@@ -1574,6 +1574,7 @@
 		font-size: 12px;
 		line-height: 20px;
 	}
+
 }
 /*=============================================================================*/
 /*                                    450px                                    */
@@ -1795,6 +1796,24 @@
 	.realtime_searchwords_table_words {
 		width: 100%;
 	}
+
+	.guide_title {
+		margin-bottom: 30px;
+	}
+	.guide_body {
+		margin-bottom: 50px;
+	}
+	.guide_app_mobile_cont {
+		display: block;
+		width: 60%;
+		margin: auto;
+		margin-bottom: 30px;
+	}
+	.guide_app_container {
+		display: block;
+		width: 100%;
+		margin-bottom: 0;
+	}
 }
 /*=============================================================================*/
 /*                                    350px                                    */
@@ -1831,4 +1850,5 @@
 	.post_title {
 		font-size: 16px;
 	}
+
 }

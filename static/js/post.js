@@ -398,7 +398,7 @@ function change_date_realative(dt) {
 	let min = 60 * 1000;
 	let c = new Date()
 	let d = new Date(dt);
-	d.setHours(d.getHours() - 9);
+	d.setHours(d.getHours() - 9);	// 한국 시간 기준
 	let minsAgo = Math.floor((c - d) / (min));
 	let result = {
 		'raw': d.getFullYear() + '-' + 
@@ -437,6 +437,7 @@ function change_date_realative(dt) {
 }
 function change_date_absolute(dt) {
 	let d = new Date(dt);
+	d.setHours(d.getHours() - 9);	// 한국 시간 기준
 	let result = {
 		'raw': d.getFullYear() + '-' + 
 		(d.getMonth() + 1 > 9 ? '' : '0') + (d.getMonth() + 1) + '-' + 
