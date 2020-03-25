@@ -36,6 +36,7 @@ function Insert_Sejong_Guide() {
 							<a title="Play Store" target="_blank" class="sejongapp_btn" href='https://play.google.com/store/apps/details?id=kr.ac.sejong.smartcampus&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' class="guide_app_link_btn_google"></a>
 						</div>
 					</div>
+
 					<div class="guide_banner">
 						<div class="circle-container">
 					    	<div class="circle" style="background-color: #c30e2e;"></div>
@@ -66,6 +67,14 @@ function Insert_Sejong_Guide() {
 						<div class="guide_page_icon_span">
 							PC기준 책갈피, Mobile기준 우측하단 메뉴를 통해서 더 많은 사이트를 만날 수 있습니다.
 						</div>
+					</div>
+
+					<div class="guide_title noselect">캠퍼스 둘러보기</div>
+					<div class="guide_subtitle noselect">
+						세종대학교 캠퍼스 내 건물의 위치를 확인하세요!
+					</div>
+					<div class="guide_body noselect">
+						<img src="/static/image/sejong_campus.jpg" class="guide_campus_map wow animated zoomIn">
 					</div>
 				`;
 	// <div class="guide_title noselect">캠퍼스 안내도</div>

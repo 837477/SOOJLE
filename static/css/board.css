@@ -2799,6 +2799,7 @@ span.selectbox_choose {
 	max-width: 200px;
 	vertical-align: top;
 	transition: .2s ease-in-out;
+	box-shadow: 0 30px 20px -20px rgba(0,0,0,.2);
 }
 .guide_app_container {
 	position: relative;
@@ -2836,11 +2837,6 @@ span.selectbox_choose {
 	width:155px;
 	height:auto;
 }
-.guide_campus_map {
-	position: relative;
-	width: 100%;
-	height: auto;
-}
 .guide_page_cont {
 	position: relative;
 	width: 100%;
@@ -2873,7 +2869,16 @@ span.selectbox_choose {
 	padding-top: 10px;
 	color: #2b2b2b;
 }
-
+.guide_campus_map {
+	position: relative;
+	width: 95%;
+	left: 2.5%;
+	height: auto;
+	border-radius: 30px;
+	border: 10px solid #ddd;
+	box-sizing: border-box;
+	box-shadow: 0 40px 20px -20px rgba(0,0,0,.1);
+}
 
 
 
