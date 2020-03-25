@@ -55,6 +55,9 @@
 		border: none;
 		background-color: rgba(0,0,0,0);
 	}
+	.grid_modal_close_cont {
+		min-width: 100%;
+	}
 	.mobile_grid_icon {
 		position: absolute;
 		left: 50%;
@@ -1283,7 +1286,18 @@
 	.realtime_searchwords_table_words {
 		width: 50%;
 	}
+	.guide_page_cont {
+		padding: 30px 0;
+	}
 }
+
+
+
+
+
+
+
+
 /*=============================================================================*/
 /*                                    840px                                    */
 /*=============================================================================*/
@@ -1816,9 +1830,13 @@
 		width: 100%;
 		margin-bottom: 0;
 	}
+	.guide_page_cont {
+		padding: 10px 0;
+	}
 	.guide_page_icon {
 		padding: 0 25px;
 	}
+
 }
 /*=============================================================================*/
 /*                                    350px                                    */

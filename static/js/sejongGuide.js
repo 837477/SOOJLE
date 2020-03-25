@@ -63,6 +63,9 @@ function Insert_Sejong_Guide() {
 						<a target="_blank" href="https://blog.naver.com/sejong_univ">
 							<img class="guide_page_icon" src="/static/image/logo_naverblog.png">
 						</a>
+						<div class="guide_page_icon_span">
+							PC기준 책갈피, Mobile기준 우측하단 메뉴를 통해서 더 많은 사이트를 만날 수 있습니다.
+						</div>
 					</div>
 				`;
 	// <div class="guide_title noselect">캠퍼스 안내도</div>

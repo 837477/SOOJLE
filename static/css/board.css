@@ -2863,6 +2863,16 @@ span.selectbox_choose {
 	vertical-align: middle;
 	margin: 25px 0;
 }
+.guide_page_icon_span {
+	position: relative;
+	display: block;
+	width: 95%;
+	left: 2.5%;
+	font-size: 16px;
+	text-align: center;
+	padding-top: 10px;
+	color: #2b2b2b;
+}
 
 
 
