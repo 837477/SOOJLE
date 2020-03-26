@@ -1253,13 +1253,12 @@
 		width: 96%;
 		height: 60px;
 		margin: 20px 2% 30px 2%;
-		padding: 5px 0 5px 30px;
+		padding: 5px 0 5px 20px;
 		box-sizing: border-box;
 		border: none;
 		border-left: 5px solid #12b886;
-		font-size: 26px;
+		font-size: 2px;
 		line-height: 30px;
-		font-weight: bold;
 	}
 	.notice_page_edit_post {
 		height: 300px;
@@ -1838,6 +1837,56 @@
 	}
 	.guide_campus_map {
 		border: 5px solid #ddd;
+	}
+
+
+	.setting_feedback_type_cont {
+		display: block;
+		width: auto;
+		height: 40px;
+		margin-bottom: 20px;
+		overflow-x: scroll;
+		overflow-y: hidden;
+		white-space: nowrap;
+	}
+	.setting_feedback_box_none {
+		margin-top: 100px;
+	}
+	.setting_feedback_type_cont::-webkit-scrollbar {
+		display: none;
+	}
+	.setting_feeback_box_cont {
+		display: block;
+		width: 100%;
+		height: auto;
+		min-height: 500px;
+		padding: 0 2.5%;
+		border-left: none;
+		border-bottom: 40px solid #f2f2f2;
+	}
+	.setting_feeback_type {
+		display: inline-block;
+		width: auto;
+		height: 40px;
+		font-size: 16px;
+		line-height: 40px;
+		padding: 0 15px;
+	}
+	.setting_feeback_type:hover {
+		color: #12b886;
+		background-color: white;
+		border-bottom: 1px solid #ebebeb;
+	}
+	.setting_feeback_type:active {
+		color: white;
+		background-color: #12b886;
+		border-bottom: 1px solid rgba(0,0,0,0);
+	}
+	.setting_feedback_box {
+		width: 95%;
+		left: 2.5%;
+		font-size: 14px;
+		margin: 0 0 20px 0;
 	}
 }
 /*=============================================================================*/

@@ -56,19 +56,19 @@ function Insert_Sejong_Guide() {
 						</div>
 					</div>
 					<div class="guide_page_cont">
-						<a target="_blank" href="http://www.sejong.ac.kr/unilife/guide.html">
+						<a target="_blank" href="http://www.sejong.ac.kr/unilife/guide.html" title="새내기 가이드">
 							<img class="guide_page_icon" src="/static/image/logo_sejong.png">
 						</a>
-						<a target="_blank" href="https://www.youtube.com/user/channelsejongUCC">
+						<a target="_blank" href="https://www.youtube.com/user/channelsejongUCC" title="세종대학교 공식 유튜브">
 							<img class="guide_page_icon" src="/static/image/logo_youtube.png">
 						</a>
-						<a target="_blank" href="https://www.facebook.com/sejongpr">
+						<a target="_blank" href="https://www.facebook.com/sejongpr" title="세종대학교 공식 페이스북 페이지">
 							<img class="guide_page_icon" src="/static/image/logo_facebook.png">
 						</a>
-						<a target="_blank" href="https://www.instagram.com/sejong_univ/">
+						<a target="_blank" href="https://www.instagram.com/sejong_univ/" title="세종대학교 공식 인스타그램">
 							<img class="guide_page_icon" src="/static/image/logo_instagram.png">
 						</a>
-						<a target="_blank" href="https://blog.naver.com/sejong_univ">
+						<a target="_blank" href="https://blog.naver.com/sejong_univ" title="세종대학교 공식 블로그">
 							<img class="guide_page_icon" src="/static/image/logo_naverblog.png">
 						</a>
 						<div class="guide_page_icon_span">
@@ -81,17 +81,15 @@ function Insert_Sejong_Guide() {
 						세종대학교 캠퍼스 내 건물의 위치를 확인하세요!
 					</div>
 					<div class="guide_body noselect">
-						<a href="/static/image/sejong_campus.jpg" target="_blank">
+						<a href="/static/image/sejong_campus.jpg" target="_blank" title="크게 보기">
 							<img src="/static/image/sejong_campus.jpg" class="guide_campus_map wow animated zoomIn">
 						</a>
 					</div>
+					<div class="guide_line"></div>
+					<div class="guide_title noselect">자주묻는 질문</div>
+					<div class="guide_body noselect">
+					</div>
 				`;
-	// <div class="guide_title noselect">캠퍼스 안내도</div>
-	// 				<div class="guide_body noselect">
-	// 					<a target="_blank" href="static/image/sejong_campus.jpg" title="크게보기">
-	// 						<img src="/static/image/sejong_campus.jpg" class="guide_campus_map">
-	// 					</a>
-	// 				</div>
 	target.append(div);
 
 	$("#mobile_controller_none").addClass("display_none");
