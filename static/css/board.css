@@ -2797,6 +2797,9 @@ span.selectbox_choose {
 	position: relative;
 	width: 100%;
 	height: auto;
+	margin-bottom: 30px;
+}
+.guide_body_first{
 	margin-bottom: 100px;
 }
 .guide_app_mobile_cont {
@@ -2909,6 +2912,7 @@ span.selectbox_choose {
 	height: 40px;
 	margin: auto;
 	margin-top: 80px;
+	margin-bottom: 20px;
 	border: 2px solid #ddd;
 	border-radius: 25px;
 	box-sizing: border-box;
@@ -2945,7 +2949,26 @@ span.selectbox_choose {
 	transform: translate(-50%, -50%);
 	-webkit-transform: translate(-50%, -50%);
 }
-
+.guide_campus_search_result_cont {
+	position: relative;
+	width: 95%;
+	margin: auto;
+	height: auto;
+	min-height: 300px;
+	transition: .1s ease-in-out;
+}
+.guide_campus_search_result {
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	max-width: 300px;
+	height: auto;
+	font-size: 16px;
+	line-height: 20px;
+	color: #12b886;
+	padding: 10px 0 10px 20px;
+	word-break: keep-all;
+}
 
 
 .guide_banner {

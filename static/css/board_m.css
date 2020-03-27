@@ -1816,6 +1816,9 @@
 		word-break: keep-all;
 	}
 	.guide_body {
+		margin-bottom: 20px;
+	}
+	.guide_body_first {
 		margin-bottom: 50px;
 	}
 	.guide_app_mobile_cont {
@@ -1887,6 +1890,21 @@
 		left: 2.5%;
 		font-size: 14px;
 		margin: 0 0 20px 0;
+	}
+	.guide_campus_search_cont {
+		margin-top: 40px;
+		border-radius: 0;
+	}
+	.guide_campus_search {
+		width: 85%;
+		font-size: 16px;
+		padding: 0 15px;
+	}
+	.guide_campus_search_btn {
+		width: 15%;
+	}
+	.guide_campus_search_result {
+		width: 100%;
 	}
 }
 /*=============================================================================*/
