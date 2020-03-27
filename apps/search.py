@@ -29,131 +29,6 @@ def match_score(token1, token2):
 	MR = MC / len(token1)
 	return MC * (1 + MR + math.floor(MR))
 
-'''
-#priority_검색
-@BP.route('/priority_search/<int:num>', methods = ['POST'])
-@jwt_optional
-def priority_search(num):
-	#검색어 입력!
-	search_str = request.form['search']
-
-	#검색어로 시작되는 포스트들을 1차 regex 검색!
-	title_regex = find_title_regex(g.db, search_str, 0)
-	title_regex = list(title_regex)
-
-	#공백 제거 및 토크나이져 작업
-	del_space_list = search_str.split(' ')
-	tokenizer_list = tknizer.get_tk(search_str)
-
-	#FastText를 이용한 유사단어 추출
-	ft_similarity_list = []
-	for word in tokenizer_list:
-		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
-				ft_similarity_list.append(sim_word[0])
-			else: break	
-
-	#로그인 판단 여부 확인.
-	if get_jwt_identity():
-		#USER 정보를 호출.
-		USER = find_user(g.db, user_id=get_jwt_identity())
-
-		#잘못된 USER 정보(잘못된 Token)일 때
-		if USER is None: abort(401)
-
-		#logging! (메인 로깅)
-		insert_log(g.db, USER['user_id'], request.path)
-
-		#DB search 로깅!
-		search_logging(g.db, USER['user_id'], search_str, del_space_list, tokenizer_list, ft_similarity_list)
-
-		#해당 유저의 갱신시간 갱신
-		update_user_renewal(g.db, USER['user_id'])
-
-	else:
-		#logging! (메인 로깅)
-		insert_log(g.db, request.remote_addr, request.path)
-
-		#DB search 로깅!
-		search_logging(g.db, "unknown", search_str, del_space_list, tokenizer_list, ft_similarity_list)		
-
-	#토크나이져 처리된 리스트를 대상으로 검색하고, aggregate로 ids처리하여 posts 추출
-	aggregate_posts = find_aggregate(g.db, tokenizer_list, 0, SJ_PS_LIMIT)
-	aggregate_posts = list(aggregate_posts)
-
-	#regex와 aggregate로 뽑힌 포스트를 합친다.
-	aggregate_posts += title_regex
-
-	#현재 날짜 가져오기.
-	now_date = datetime.now()
-
-	#트랜드 스코어 적용 판별##############################################
-	#트랜드 스코어 적용일 시
-	if trendscore_discriminate(now_date):
-		#검색 키워드와 문서간의 유사도 측정! (트렌드 적용 for)
-		for post in aggregate_posts:
-			#FAS 작업
-			split_vector = FastText.get_doc_vector(del_space_list).tolist()
-			FAS = FastText.vec_sim(split_vector, post['ft_vector'])
-
-			T1 = match_score(del_space_list, post['title_token'])
-			
-			if tokenizer_list:
-				T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
-			else: T2 =0
-
-			if ft_similarity_list:
-				T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
-			else: T3 = 0
-
-			#트랜드 스코어 적용!
-			TREND = trendscore(post, now_date)
-
-			post['similarity'] = round((T1 + T2 + T3 + FAS + TREND), 1)
-			post['_id'] = str(post['_id'])
-
-			#필요없는 반환 값 삭제
-			del post['title_token']
-			del post['token']
-			del post['tag']
-			del post['popularity']
-
-	else:
-		#검색 키워드와 문서간의 유사도 측정! (트렌드 비적용)
-		for post in aggregate_posts:
-			#FAS 작업
-			split_vector = FastText.get_doc_vector(del_space_list).tolist()
-			FAS = FastText.vec_sim(split_vector, post['ft_vector'])
-
-			T1 = match_score(del_space_list, post['title_token'])
-			
-			if tokenizer_list:
-				T2 = match_score(tokenizer_list, set(post['token']+post['tag']))
-			else: T2 =0
-
-			if ft_similarity_list:
-				T3 = match_score(ft_similarity_list, set(post['token']+post['tag']))
-			else: T3 = 0
-
-			post['similarity'] = round((T1 + T2 + T3 + FAS), 1)
-			post['_id'] = str(post['_id'])
-
-			#필요없는 반환 값 삭제
-			del post['title_token']
-			del post['token']
-			del post['tag']
-			del post['popularity']
-
-	#구해진 similarity - date로 내림차순 정렬
-	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('date'), reverse=True)
-	aggregate_posts = sorted(aggregate_posts, key=operator.itemgetter('similarity'), reverse=True)
-
-	#데이터로 들어온 상위 num개만 반환
-	return jsonify(
-		result = "success",
-		search_result = aggregate_posts[:num])
-'''
-
 #search_logging 기록!
 @BP.route('/search_logging', methods=['POST'])
 @jwt_optional
@@ -204,7 +79,6 @@ def search_logging():
 	return jsonify(
 			result = "success"
 		)
-
 
 #category.ver2 검색
 @BP.route('/category_search/<string:category_name>/<int:num>', methods = ['POST'])
@@ -258,8 +132,13 @@ def category_search(category_name, num):
 	FIND_SEARCH_OF_CATEGORY_TIME_START = time.time()
 	###########################################################
 	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
-	POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], SJ_CS_LIMIT)
+	POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], 365, SJ_CS_LIMIT)
 	POST_LIST = list(POST_LIST)
+
+	#만약 1년 이내의 게시글이 1개도 안나왔을 경우, default_date를 0으로 설정
+	if POST_LIST == 0:
+		POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], 0, SJ_CS_LIMIT)
+		POST_LIST = list(POST_LIST)
 
 	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
 	FIND_SEARCH_OF_CATEGORY_TIME_END = time.time() - FIND_SEARCH_OF_CATEGORY_TIME_START

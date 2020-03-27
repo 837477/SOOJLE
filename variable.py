@@ -39,8 +39,6 @@ SJ_PS_LIMIT = 10000
 SJ_CS_LIMIT = 5000
 #Newsfeed of Topic limit(토픽별 뉴스피드 DB호출 최대 제한)
 SJ_NEWSFEED_TOPIC_LIMIT = 2000
-#Recommendation limit (추천뉴스피드 DB호출 최대 제한)
-SJ_RECOMMENDATION_LIMIT = 10000
 #No Token User Recommendation limit (비로그인 추천뉴스피드 DB호출 최대 제한)
 SJ_NO_TOKEN_RECOMMENDATION_LIMIT = 500
 #Log user limit number (사용자 로그 불러오기 최대 제한)
@@ -58,7 +56,7 @@ SJ_REALTIME_RETURN_LIMIT = 10
 SJ_DOMAIN_SIM_PERCENT = 0.8
 #User cold limit (유저 Cold 기준)
 SJ_USER_COLD_LIMIT = 20
-#Request length limit (사용자 전송 데이터 제한) (이상, 이하 제도)
+#Request length limit (사용자 전송 글자수 제한) (이상, 이하 제도)
 SJ_REQUEST_LENGTH_LIMIT = {
 	'search_max': 200,
 	'user_id_min': 6,
@@ -89,11 +87,21 @@ SJ_ADMIN = "SOOJLE"
 #####################################################
 SJ_TOS_WEIGHT = 1
 SJ_TAS_WEIGHT = 1
-SJ_FAS_WEIGHT = 1.5
-SJ_IS_WEIGHT = 1
-SJ_IS_FAV_WEIGHT = 0.75
-SJ_IS_VIEW_WEIGHT = 0.25
-SJ_RANDOM_WEIGHT = 1.5
+SJ_FAS_WEIGHT = 1
+#SJ_IS_WEIGHT = 1
+#SJ_IS_FAV_WEIGHT = 0.75
+#SJ_IS_VIEW_WEIGHT = 0.25
+SJ_RANDOM_WEIGHT = 1
+
+SJ_RECOMMENDATION_POST_NUM = 500
+SJ_RECOMMENDATION_POST_WEIGHT = 150
+SJ_RECOMMENDATION_POST_MINUS_WEIGHT = -75
+
+#추천뉴스피드의 디폴트 데이트
+SJ_RECOMMENDATION_DEFAULT_DATE = 60
+
+#각 카테고리를 지정된 갯수만큼 자르기
+SJ_RECOMMENDATION_CATEGORY_POST_NUM = [70, 28, 28, 28, 18]
 
 #Measurement Weight
 #####################################################
