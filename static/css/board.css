@@ -2902,6 +2902,49 @@ span.selectbox_choose {
 	background-color: #ccc;
 	margin-bottom: 50px;
 }
+.guide_campus_search_cont {
+	position: relative;
+	width: 95%;
+	max-width: 600px;
+	height: 40px;
+	margin: auto;
+	margin-top: 80px;
+	border: 2px solid #ddd;
+	border-radius: 25px;
+	box-sizing: border-box;
+	transition: .2s ease-in-out;
+}
+.guide_campus_search {
+	position: relative;
+	display: inline-block;
+	width: 90%;
+	height: 100%;
+	padding: 0 30px;
+	box-sizing: border-box;
+	font-size: 18px;
+	line-height: 40px;
+	border: none;
+	background-color: rgba(0,0,0,0);
+	vertical-align: top;
+}
+.guide_campus_search_btn {
+	position: relative;
+	display: inline-block;
+	width: 10%;
+	height: 100%;
+	box-sizing: border-box;
+	background-color: rgba(0,0,0,0);
+	vertical-align: top;
+}
+.guide_campus_search_icon {
+	position: relative;
+	width: 20px;
+	height: 20px;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+}
 
 
 

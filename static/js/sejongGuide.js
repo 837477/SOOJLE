@@ -84,13 +84,19 @@ function Insert_Sejong_Guide() {
 						<a href="/static/image/sejong_campus.jpg" target="_blank" title="크게 보기">
 							<img src="/static/image/sejong_campus.jpg" class="guide_campus_map wow animated zoomIn">
 						</a>
+						<div id="guide_campus_search_cont" class="guide_campus_search_cont">
+							<input type="text" id="guide_campus_search" class="guide_campus_search" placeholder="장소를 검색해주세요." maxlength="50"></input
+							><div class="guide_campus_search_btn pointer">
+								<img src="/static/icons/search.png" class="guide_campus_search_icon">
+							</div>
+						</div>
 					</div>
 					<div class="guide_line"></div>
-					<div class="guide_title noselect">자주묻는 질문</div>
-					<div class="guide_body noselect">
 					</div>
 				`;
 	target.append(div);
+
+	guide_campus_search_event();	// 캠퍼스 장소 검색 이벤트 바인딩
 
 	$("#mobile_controller_none").addClass("display_none");
 	$("#board_loading_modal").addClass("board_loading_modal_unvisible");
@@ -104,7 +110,13 @@ function Insert_Sejong_Guide() {
 
 
 
-
-function Guide_Move_1() {
-	$("html").animate({"scrollTop": $("#guide_app_container").offset().top - 100}, 400);
+function guide_campus_search_event() {
+	$("#guide_campus_search").on({
+		"focus": ()=> {
+			$("#guide_campus_search_cont").css("border", "2px solid #12b886");
+		},
+		"blur": ()=> {
+			$("#guide_campus_search_cont").removeAttr("style");
+		}
+	});
 }
