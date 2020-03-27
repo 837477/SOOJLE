@@ -2888,6 +2888,13 @@ span.selectbox_choose {
 	padding-top: 10px;
 	color: #2b2b2b;
 }
+.guide_page_icon_span > a {
+	text-decoration: none;
+	color: #0071e3;
+}
+.guide_page_icon_span > a:hover {
+	text-decoration: underline;
+}
 .guide_campus_map {
 	position: relative;
 	width: 95%;
@@ -2969,7 +2976,15 @@ span.selectbox_choose {
 	padding: 10px 0 10px 20px;
 	word-break: keep-all;
 }
-
+.guide_campus_search_none {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	opacity: .2;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
 
 .guide_banner {
 	position: relative;

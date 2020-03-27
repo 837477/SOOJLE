@@ -90,8 +90,10 @@ function Insert_Sejong_Guide() {
 								<img src="/static/icons/search.png" class="guide_campus_search_icon">
 							</div>
 						</div>
-						<div id="guide_campus_search_result_cont" class="guide_campus_search_result_cont">
-
+						<div id="guide_campus_search_result_cont" class="guide_campus_search_result_cont"></div>
+						<div class="guide_page_icon_span">
+							더 추가하실 장소가 있나요?
+							<a href="/board#feedback">피드백</a>을 해주세요!
 						</div>
 					</div>
 					<div class="guide_line"></div>
@@ -100,7 +102,7 @@ function Insert_Sejong_Guide() {
 	target.append(div);
 
 	guide_campus_search_event();	// 캠퍼스 장소 검색 이벤트 바인딩
-
+	guide_campus_search_input();	// 캠퍼스 장소 검색 결과 
 	$("#mobile_controller_none").addClass("display_none");
 	$("#board_loading_modal").addClass("board_loading_modal_unvisible");
 	$(".mobile_controller").removeAttr("style");
@@ -128,7 +130,7 @@ function guide_campus_search_input() {
 	let target = $("#guide_campus_search_result_cont");
 	let text = $("#guide_campus_search").val();
 	if (text == '') {
-		return;
+		target.append(`<img class="guide_campus_search_none noselect" src="/static/image/shortcut.jpg">`);
 	} else {
 		for (let spot in CAMPUS) {
 			if (spot.toUpperCase().match(text.toUpperCase())) {
@@ -151,6 +153,7 @@ function guide_campus_search_input() {
 }
 
 
+// 세종가이드 장소 목록
 const CAMPUS = {
 	'무방관': [],
 	'세종초등학교': [],
