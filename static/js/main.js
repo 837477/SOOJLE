@@ -332,6 +332,10 @@ Main_Info_Message_Btn_Making();
 
 
 function Drop_Main_Info_Message_Btn(tag) {
+	if ($(".msg_open").length == 0) {	// 아무것도 열려있지 않았을 때에는 반대로 OPEN
+		Main_Info_Message_Btn();
+		return;
+	}
 	$(tag).removeClass("msg_open");
 	$(tag).css("right", "225px");
 	setTimeout(function() {
