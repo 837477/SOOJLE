@@ -22,6 +22,8 @@ function Go_guide() {
 
 // 가이드 삽입
 function Insert_Sejong_Guide() {
+	// OFFICE 365
+	// 인터넷 증명서
 	let target = $("#posts_target");
 	let div = 	`
 					<div class="guide_title noselect">앱 설치하기</div>

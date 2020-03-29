@@ -1,1 +1,1 @@
-const host_ip = ""
+const host_ip = "https://soojle.sejong.ac.kr"
