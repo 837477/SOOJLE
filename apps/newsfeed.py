@@ -98,11 +98,11 @@ def get_newsfeed_of_topic(category_name):
 			#공모전&행사 뉴스피드 관심도 반영 시간 측정 (불러와서 리스트화 시킨 시간)###
 			GET_SIMILARITY_TIME_START = time.time()
 			###########################################################
+			
+			# 연산을 위해 미리 캐싱해둠
+			USER['norm'] = (norm(USER['topic']))
+			USER['tag_set'] = set(USER['tag'].keys())
 
-			#캐싱된 가장 높은 좋아요 수를 가져온다.
-			Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
-			#캐싱된 가장 높은 조회수를 가져온다.
-			Maxviews = find_variable(g.db, 'highest_view_cnt')
 
 			for POST in POST_LIST:
 				#simijlarity 구하기!
