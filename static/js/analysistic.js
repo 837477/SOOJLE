@@ -313,12 +313,12 @@ function set_visitor_data() {
 			}
 			get_line("visitor_distribution",
 				[	// visitor date
-					visitor_time_date1,
-					visitor_time_date2
+					visitor_time_date2,
+					visitor_time_date1
 				],
 				[	// visitor data
-					visitor_time_data_array1,
-					visitor_time_data_array2
+					visitor_time_data_array2,
+					visitor_time_data_array1
 				],
 			);
 		} else {

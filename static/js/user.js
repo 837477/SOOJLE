@@ -301,24 +301,8 @@ function SignUp_pw_Check(tag) {					// 회원가입 PW 검사
 	} else {
 		$("#pwleast").removeAttr("style");
 	}
-	// 문자와 숫자포함 확인
-	let pw_guideline = /(?=.*\d)(?=.*[a-z])/;
-	if (pw_guideline.test($(tag).val().toLowerCase())) {
-		check_num += 1;
-		$("#pwletternum").css("color", "#12b886");
-	} else {
-		$("#pwletternum").removeAttr("style");
-	}
-	// 특수기호 포함 확인
-	pw_guideline = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
-	if (pw_guideline.test($(tag).val().toLowerCase())) {
-		check_num += 1;
-		$("#pwsymbol").css("color", "#12b886");
-	} else {
-		$("#pwsymbol").removeAttr("style");
-	}
 	// 모든 조건 포함
-	if (check_num == 3) {
+	if (check_num == 1) {
 		$(tag).css("border", "2px solid #12b886");
 		$($(tag).next()[0]).css("color", "#12b886");
 		$($(tag).siblings(":last")[0]).empty();

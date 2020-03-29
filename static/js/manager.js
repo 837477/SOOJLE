@@ -3,7 +3,7 @@ function check_manager_qualification() {
 	// 관리자 Check API
 	Check_ManagerInfo(function() {
 		$('#AdminMenu').remove();
-		let menu =	`<div id="AdminMenu" class="menu_container_button pointer" onclick="Go_management()">
+		let menu =	`<div id="AdminMenu" class="menu_container_button pointer" onclick="CLick_management()">
 						<img src="/static/image/shortcut_mobile.png" class="menu_container_button_icon noselect">
 						<div class="menu_container_button_text noselect">관리자 도구</div>
 					</div>`;
@@ -30,10 +30,15 @@ function check_managet_qualification_reload(callback) {
 	}
 
 }
+
+// 관리자 도구 클릭
+function CLick_management() {
+  location.href = "/board#soojle";
+}
+
 // 관리자 도구 이동
 function Go_management() {
 	check_managet_qualification_reload(function() {
-		location.replace("/board#soojle");
 		out_of_search();
 		now_topic = "Admin";
 		where_topic = "Admin";
@@ -61,88 +66,10 @@ function insert_management() {
 	$("#posts_target").append(div);
 	$("#posts_creating_loading").addClass("display_none");
 
-  insert_message_div();  // 한줄메세지 생성
-	insert_wrting_div();   // 게시글작성 생성 
+  insert_message_div();           // 한줄메세지 생성
+  insert_feedback_monitoring();   // 피드백 생성
 }
 
-// 게시글 작성 Div 생성
-function insert_wrting_div() {
-	let pharagh_placeholder = 
-`내용을 입력해주세요.
-
-공지사항을 작성 시, 다음 규칙을 확인하고 올려주세요.
-
-[공지사항 작성 유의사항]
-1. 욕설, 비하, 음란물, 개인정보가 포함된 게시물 게시.
-2. 특정인이나 단체/지역을 비방하는 행위.
-3. 기타 현행법에 어긋나는 행위.
-`;
-	let target = $("#posts_target");
-	let div =	 `
-                <div class="setting_subtitle noselect">공지사항 작성</div>
-                <div class="setting_subtitle_info noselect">공지사항 및 일반 게시글을 작성합니다.</div>
-                <div id="setting_writing_post_wrapper" class="setting_writing_post_wrapper">
-                  <input type="text" id="setting_writing_post_title" class="setting_writing_post_title" placeholder="제목을 입력해주세요.">
-                  <textarea id="setting_writing_post_pharagh" class="setting_writing_post_pharagh" placeholder="${pharagh_placeholder}"></textarea>
-                  <div class="setting_writing_post_btn_ok pointer" onclick="writing_notice_admin()">작성하기</div>
-                </div>
-      			 `;
-	target.append(div);
-}
-
-function writing_notice_reset() {
-	$("#setting_writing_post_title").val("");
-	$("#setting_writing_post_pharagh").val("");
-}
-function writing_notice_admin() {
-	check_managet_qualification_reload(function() {
-		let title = $("#setting_writing_post_title").val();
-		if (title == "") {
-			Snackbar("제목을 입력해주세요.");
-			$("#setting_writing_post_title").focus();
-			return;
-		} else if (title.length > 50) {
-      Snackbar("제목 길이 한계를 초과하였습니다.");
-      $("#setting_writing_post_title").focus();
-      return;
-    }
-		let pharagh = $("#setting_writing_post_pharagh").val();
-		if (pharagh == "") {
-			Snackbar("내용을 입력해주세요.");
-			$("#setting_writing_post_pharagh").focus();
-			return;
-		} else if (pharagh.length > 1000) {
-      Snackbar("내용 길이 한계를 초과하였습니다.");
-      $("#setting_writing_post_pharagh").focus();
-      return;
-    }
-		let send_data = {
-							"title": title, 
-							"post": pharagh
-						};
-		$.when(A_JAX(host_ip+"/insert_notice", "POST", null, send_data))
-    .done(function(data) {
-			if (data["result"] == 'success') {
-				writing_notice_reset();
-				Snackbar("게시글이 정상적으로 업로드되었습니다.");
-			} else {
-				Snackbar("잠시 후 다시 시도해주세요.");
-			}
-		}).catch((data) => {
-      if (data.status == 400) {
-        Snackbar("잘못된 요청입니다.");
-        return false;
-     } else if (data.status == 403) {
-        Snackbar("권한이 없습니다.");
-        window.location.reload();
-        return false;
-      } else {
-        Snackbar("서버와의 연결이 원활하지 않습니다.");
-        return false;
-      }
-    });
-	});
-}
 
 
 // 한줄 메세지 작성 Div 생성
@@ -221,6 +148,184 @@ function Send_info_message_div() {
   });
 }
 
+// 피드백 캡슐화
+const feedback_msges = new Feedback_Messages();
+function Feedback_Messages() {
+  this.messages = {
+      'desktop': [],
+      'mobile': [],
+      'protection': [],
+      'design': [],
+      'service': [],
+      'etc': []
+  };
+  this.selection = 'desktop';
+  this.page = 1;
+
+  this.set = function() {
+    // 임시 데이터
+    this.messages['service'].push({'type': "기능 개선 아이디어", 'time': new Date(), 'post': "신희재 김형석 서정민 최고야", 'author': "jamesj0918"});
+    this.messages['design'].push({'type': "디자인 개선 아이디어", 'time': new Date(), 'post': "에브리타임 보고 사용해보고있는데요! 딱 원하던 서비스였어요~ 감사합니다. 다 좋은데, 상단에 수즐로고를 누르면 계속 게시판으로 넘어가던데 메인홈페이지로 돌아가려면 어떻게 해야하나요?", "author": "dmsgP112"});
+    return;
+    // 여기까지
+    $.when(A_JAX(host_ip+"/get_feedback", "GET", null, null))
+    .done((data) => {
+      if (data['result'] == "success") {
+        for (let msg in data['feedbacks']) {
+          if (msg['type'] == '데스크탑 버그 및 오류') {
+            this.messages['desktop'].append(msg);
+          } else if (msg['type'] == '모바일/태블릿 버그 및 오류') {
+            this.messages['mobile'].append(msg);
+          } else if (msg['type'] == '취약점 및 보안 개선') {
+            this.messages['protection'].append(msg);
+          } else if (msg['type'] == '디자인 개선 아이디어') {
+            this.messages['design'].append(msg);
+          } else if (msg['type'] == '기능 개선 아이디어') {
+            this.messages['service'].append(msg);
+          } else {
+            this.messages['etc'].append(msg);
+          }
+        }
+      } else {
+        Snackbar("잠시 후 다시 시도해주세요.");
+      }
+    }).catch((data) => {
+      Snackbar("서버와의 연결이 원활하지 않습니다.");
+    });
+  };
+
+  this.desktop = function() {
+    if (this.selection == 'desktop') {
+      this.page += 1;
+      return this.messages['desktop'].slice(this.page*10, (this.page+1)*10);
+    } else {
+      this.selection = 'desktop';
+      this.page = 0;
+      return this.messages['desktop'].slice(this.page*10, (this.page+1)*10);
+    }
+  };
+  this.mobile = function() {
+    if (this.selection == 'mobile') {
+      this.page += 1;
+      return this.messages['mobile'].slice(this.page*10, (this.page+1)*10);
+    } else {
+      this.selection = 'mobile';
+      this.page = 0;
+      return this.messages['mobile'].slice(this.page*10, (this.page+1)*10);
+    }
+  };
+  this.protection = function() {
+    if (this.selection == 'protection') {
+      this.page += 1;
+      return this.messages['protection'].slice(this.page*10, (this.page+1)*10);
+    } else {
+      this.selection = 'protection';
+      this.page = 0;
+      return this.messages['protection'].slice(this.page*10, (this.page+1)*10);
+    }
+  };
+  this.design = function() {
+    if (this.selection == 'design') {
+      this.page += 1;
+      return this.messages['design'].slice(this.page*10, (this.page+1)*10);
+    } else {
+      this.selection = 'design';
+      this.page = 0;
+      return this.messages['design'].slice(this.page*10, (this.page+1)*10);
+    }
+  };
+  this.service = function() {
+    if (this.selection == 'service') {
+      this.page += 1;
+      return this.messages['service'].slice(this.page*10, (this.page+1)*10);
+    } else {
+      this.selection = 'service';
+      this.page = 0;
+      return this.messages['service'].slice(this.page*10, (this.page+1)*10);
+    }
+  };
+  this.etc = function() {
+    if (this.selection == 'etc') {
+      this.page += 1;
+      return this.messages['etc'].slice(this.page*10, (this.page+1)*10);
+    } else {
+      this.selection = 'etc';
+      this.page = 0;
+      return this.messages['etc'].slice(this.page*10, (this.page+1)*10);
+    }
+  };
+};
+// 피드백 Div 생성
+function insert_feedback_monitoring() {
+  let target = $("#posts_target");
+  let div =   `
+              <div class="setting_subtitle noselect">피드백 모니터링</div>
+              <div class="setting_subtitle_info noselect" style="margin-bottom:30px">유저의 피드백을 확인할 수 있습니다.</div>
+              <div class="setting_feedback_type_cont noselect">
+                <div class="setting_feeback_type pointer setting_feeback_type_checkd">데스크탑 버그 및 오류</div
+                ><div class="setting_feeback_type pointer">모바일 버그 및 오류</div
+                ><div class="setting_feeback_type pointer">취약점 및 보안 개선</div
+                ><div class="setting_feeback_type pointer">디자인 개선 아이디어</div
+                ><div class="setting_feeback_type pointer">기능 개선 아이디어</div
+                ><div class="setting_feeback_type pointer">기타</div>
+              </div><div id="setting_feeback_box_cont" class="setting_feeback_box_cont">
+              </div>
+              `;
+  target.append(div);
+  binding_feedback_event();       // 피드백 버튼 이벤트 바인딩
+  feedback_msges.set();           // 피드백 AJAX 요청
+  setting_feedback_monitoring();  // 피드백 호출
+}
+// 피드백 받아오기
+function setting_feedback_monitoring() {
+  let target = $($(".setting_feeback_type_checkd")[0]).text();
+  if (target == "데스크탑 버그 및 오류") {
+    target = feedback_msges.desktop();
+  } else if (target == "모바일 버그 및 오류") {
+    target = feedback_msges.mobile();
+  } else if (target == "취약점 및 보안 개선") {
+    target = feedback_msges.protection();
+  } else if (target == "디자인 개선 아이디어") {
+    target = feedback_msges.design();
+  } else if (target == "기능 개선 아이디어") {
+    target = feedback_msges.service();
+  } else {
+    target = feedback_msges.etc();
+  }
+  if (target.length == 0) {
+    let div =   `
+                <div class="setting_feedback_box_none noselect">
+                  <img class="setting_feedback_box_none_img" src="/static/icons/message_black.png">
+                  피드백이 존재하지 않습니다.
+                </div>
+                `;
+    $("#setting_feeback_box_cont").append(div);
+  } else {
+    for (let fb_msg of target) {
+      let msg =   `
+                  <div class="setting_feedback_box wow animated fadeInRight">
+                    <p class="setting_feedback_box_author">${fb_msg['author']}</p>
+                    <p class="setting_Feedback_box_date">${change_date_absolute(fb_msg['time'])}</p>
+                    <span>${fb_msg['post']}</span>
+                  </div>
+                  `;
+      $("#setting_feeback_box_cont").append(msg);
+    }
+  }
+}
+function binding_feedback_event() {
+  $(".setting_feeback_type").on({
+    "click": (e) => {
+      if ($(e.target).hasClass("setting_feeback_type_checkd")) { return; }
+      else {
+        $("#setting_feeback_box_cont").empty();
+        $(".setting_feeback_type").removeClass("setting_feeback_type_checkd");
+        $(e.target).addClass("setting_feeback_type_checkd");
+        setting_feedback_monitoring();
+      }
+    }
+  });
+}
 
 // 축하 SVG 생성
 function Congratulations() {
