@@ -41,6 +41,8 @@ SJ_CS_LIMIT = 5000
 SJ_NEWSFEED_TOPIC_LIMIT = 2000
 #No Token User Recommendation limit (비로그인 추천뉴스피드 DB호출 최대 제한)
 SJ_NO_TOKEN_RECOMMENDATION_LIMIT = 500
+#Category Search Default Date (카테고리 디폴트 데이트 설정, 일 단위)
+SJ_CS_DEFAULT_DATE = 365
 #Log user limit number (사용자 로그 불러오기 최대 제한)
 SJ_USER_LOG_LIMIT = {
 	'view': 100,

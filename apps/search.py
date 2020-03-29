@@ -132,13 +132,168 @@ def category_search(category_name, num):
 	FIND_SEARCH_OF_CATEGORY_TIME_START = time.time()
 	###########################################################
 	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
-	POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], 365, SJ_CS_LIMIT)
+	POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], SJ_CS_DEFAULT_DATE, SJ_CS_LIMIT)
 	POST_LIST = list(POST_LIST)
 
 	#만약 1년 이내의 게시글이 1개도 안나왔을 경우, default_date를 0으로 설정
 	if POST_LIST == 0:
 		POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], 0, SJ_CS_LIMIT)
 		POST_LIST = list(POST_LIST)
+
+	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
+	FIND_SEARCH_OF_CATEGORY_TIME_END = time.time() - FIND_SEARCH_OF_CATEGORY_TIME_START
+	###########################################################
+
+	#현재 날짜 가져오기.
+	now_date = datetime.now()
+
+	#매치스코어 + 트랜드 반영/미반영 시간 측정##########################
+	MATCH_TREND_TIME_START = time.time()
+	###########################################################
+
+	#트랜드 스코어 적용 판별########################################
+	#트랜드 스코어 적용일 시
+	if trendscore_discriminate(now_date):
+		for POST in POST_LIST:
+			#FAS 작업
+			split_vector = FastText.get_doc_vector(del_space_str).tolist()
+			FAS = FastText.vec_sim(split_vector, POST['ft_vector'])
+
+			T1 = match_score(del_space_str, POST['title_token'])
+
+			if tokenizer_list:
+				T2 = match_score(tokenizer_list, set(POST['token']+POST['tag']))
+			else:
+				T2 =0
+
+			if ft_similarity_list:
+				T3 = match_score(ft_similarity_list, set(POST['token']+POST['tag']))
+			else:
+				T3 = 0
+
+			#트랜드 스코어 적용!
+			TREND = trendscore(POST)
+
+			POST['similarity'] = round((T1 + T2 + T3 + FAS + TREND), 1)
+			POST['_id'] = str(POST['_id'])
+
+			#필요없는 반환 값 삭제
+			del POST['title_token']
+			del POST['token']
+			del POST['tag']
+			del POST['popularity']
+	
+	#트랜드 스코어 적용 안할 시
+	else:
+		for POST in POST_LIST:
+			#FAS 작업
+			split_vector = FastText.get_doc_vector(del_space_str).tolist()
+			FAS = FastText.vec_sim(split_vector, POST['ft_vector'])
+
+			T1 = match_score(del_space_str, POST['title_token'])
+
+			if tokenizer_list:
+				T2 = match_score(tokenizer_list, set(POST['token']+POST['tag']))
+			else:
+				T2 =0
+
+			if ft_similarity_list:
+				T3 = match_score(ft_similarity_list, set(POST['token']+POST['tag']))
+			else:
+				T3 = 0
+
+			POST['similarity'] = round((T1 + T2 + T3 + FAS), 1)
+			POST['_id'] = str(POST['_id'])
+
+			#필요없는 반환 값 삭제
+			del POST['title_token']
+			del POST['token']
+			del POST['tag']
+			del POST['popularity']
+	
+	#매치스코어 + 트랜드 반영/미반영 시간 측정##########################
+	MATCH_TREND_TIME_END = time.time() - MATCH_TREND_TIME_START
+	###########################################################
+
+	#구해진 similarity - date로 내림차순 정렬
+	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('date'), reverse=True)
+	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
+
+	#총 시간 측정 종료#############################################
+	TOTAL_TIME_END = time.time() - TOTAL_TIME_START
+	###########################################################
+
+	SPEED_RESULT = {}
+	SPEED_RESULT['TOKENIZER_TIME'] = TOKENIZER_TIME_END
+	SPEED_RESULT['FASTTEXT_TIME'] = FASTTEXT_TIME_END
+	SPEED_RESULT['FIND_SEARCH_OF_CATEGORY_TIME'] = FIND_SEARCH_OF_CATEGORY_TIME_END
+	SPEED_RESULT['MATCH_TREND_TIME'] = MATCH_TREND_TIME_END
+	SPEED_RESULT['TOTAL_TIME'] = TOTAL_TIME_END
+	SPEED_RESULT['PROCESSING_POSTS_NUM'] = len(POST_LIST)
+	SPEED_RESULT['RETURN_NUM'] = num
+
+
+	#데이터로 들어온 상위 num개만 반환
+	return jsonify(
+			result = "success",
+			search_result = POST_LIST[:num],
+			speed_result = SPEED_RESULT
+		)
+
+#category_no_limit.ver2 검색
+@BP.route('/category_search_no_limit/<string:category_name>/<int:num>', methods = ['POST'])
+@jwt_optional
+def category_search_no_limit(category_name, num):
+	#총 시간 측정#################################################
+	TOTAL_TIME_START = time.time()
+	###########################################################
+	
+	#검색어 입력!
+	search_str = request.form['search']
+
+	#길이 체크
+	if len(search_str) > SJ_REQUEST_LENGTH_LIMIT['search_max']:
+		return jsonify(result = "long string")
+
+	#공백 제거
+	del_space_str = search_str.split(' ')
+
+	#토크나이저 시간 측정###########################################
+	TOKENIZER_TIME_START = time.time()
+	###########################################################
+	#토크나이져 작업
+	tokenizer_list = tknizer.get_tk(search_str)
+	#토크나이저 측정 종료###########################################
+	TOKENIZER_TIME_END = time.time() - TOKENIZER_TIME_START
+	###########################################################
+
+	#FT 유사 단어 추출 시간 측정#####################################
+	FASTTEXT_TIME_START = time.time()
+	###########################################################
+	#FastText를 이용한 유사단어 추출
+	ft_similarity_list = []
+	for word in tokenizer_list:
+		for sim_word in FastText.sim_words(word):
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
+				ft_similarity_list.append(sim_word[0])
+			else: break	
+	#FT 유사 단어 추출 시간 측정#####################################
+	FASTTEXT_TIME_END = time.time() - FASTTEXT_TIME_START
+	###########################################################
+
+
+	#카테고리 불러오기!
+	category_type = find_category_of_topic(g.db, category_name)
+
+	#최종 검색 키워드 리스트
+	final_search_keyword = list(set(ft_similarity_list + tokenizer_list + del_space_str))
+
+	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
+	FIND_SEARCH_OF_CATEGORY_TIME_START = time.time()
+	###########################################################
+	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
+	POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], 0, SJ_CS_LIMIT)
+	POST_LIST = list(POST_LIST)
 
 	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
 	FIND_SEARCH_OF_CATEGORY_TIME_END = time.time() - FIND_SEARCH_OF_CATEGORY_TIME_START
