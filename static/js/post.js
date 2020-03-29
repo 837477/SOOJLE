@@ -197,7 +197,6 @@ $(document).scroll(function() {
 			if (now_creating == 0) {
 				now_creating = 1;
 				$("#posts_creating_loading").removeClass("display_none");
-				//$("#board_container").addClass("board_container_fixed");
 				setTimeout(function() {
 					if (where_topic == "뉴스피드")
 						get_posts_more(now_state, $("#posts_target"));
