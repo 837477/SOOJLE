@@ -101,6 +101,99 @@ function Insert_Sejong_Guide() {
 					</div>
 					<div class="guide_line"></div>
 					</div>
+
+					<div class="guide_title noselect">학생식당 영업시간</div>
+					<div class="guide_subtitle noselect">
+						세종대학교 캠퍼스 내 학생식당의 영업시간을 알아보세요!
+					</div>
+					<div class="guide_restaurnat_box_cont noselect">
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">학생회관 푸드코트</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								토요일: 10:30 ~ 14:00<br>
+								(일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								토요일: 10:30 ~ 14:00<br>
+								(일요일, 공휴일 휴무)
+							</div>
+						</div>
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">군자키친</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+						</div>
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">진관키친</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 08:30 ~ 19:00<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 08:30 ~ 19:00<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+						</div>
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">우정당 푸드코트</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								토요일: 10:00 ~ 14:00<br>
+								(일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								휴무
+							</div>
+						</div>
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">군자의 밥상</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								점심: 11:30 ~ 14:00<br>
+								저녁: 17:00 ~ 18:30<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								점심: 11:30 ~ 13:30<br>
+								저녁: 17:00 ~ 18:00<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+						</div>
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">더큰도시락</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								토요일: 10:30 ~ 14:00<br>
+								(일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 08:00 ~ 20:00<br>
+								토요일: 08:00 ~ 20:00<br>
+								(일요일, 공휴일 휴무)
+							</div>
+						</div>
+					</div>
+					<div class="guide_line"></div>
+					</div>
 				`;
 	target.append(div);
 
@@ -172,12 +265,12 @@ const CAMPUS = {
 		],
 	'진관홀': 
 		[
-			'학식 [B1]',
+			'진관키친(학식) [B1]',
 			'매점 [B1]'
 		],
 	'우정당': 
 		[
-			'학식 [1F]',
+			'푸드코트(학식) [1F]',
 			'GS25편의점 [1F]',
 			'브리클린(카페) [1F]'
 		],
@@ -206,7 +299,7 @@ const CAMPUS = {
 	'군자관': 
 		[
 			'군자의밥상 [6F]',
-			'학식 [B1]',
+			'군자키친(학식) [B1]',
 			'매점 [B1]',
 			'대학서점 [1F]',
 			'복사실 [1F]',
@@ -322,7 +415,7 @@ const CAMPUS = {
 			'석관동떡볶이 [1F]',
 			'리얼후라이 [1F]',
 			'팬도로시(카페) [1F]',
-			'학식 [B1]',
+			'푸드코트(학식) [B1]',
 			'소공연장 [B1]',
 			'대공연장 [B1]',
 			'동아리연습실 [B2]',
@@ -344,7 +437,7 @@ const CAMPUS = {
 			'휴게실 [1F]',
 			'우편실 [1F]',
 			'무인택배보관실 [1F]',
-			'학식 [B1]',
+			'더큰도시락(학식) [B1]',
 			'샤워실 [B1]',
 			'주차장 [B1]',
 			'자전거보관소 [후문]',

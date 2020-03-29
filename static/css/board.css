@@ -2985,6 +2985,50 @@ span.selectbox_choose {
 	top: 50%;
 	transform: translate(-50%, -50%);
 }
+.guide_restaurnat_box_cont {
+	position: relative;
+	width: 100%;
+	height: auto;
+	text-align: center;
+}
+.guide_restaurnat_box {
+	position: relative;
+	display: inline-block;
+	width: 28%;
+	height: auto;
+	border-top: 2px solid rgba(0,0,0,0);
+	box-sizing: border-box;
+	margin: 10px;
+	transition: .1s ease-in-out;
+	text-align: center;
+	padding: 10px 0;
+	vertical-align: top;
+	margin-bottom: 30px;
+}
+.guide_restaurnat_box:hover {
+	border-top: 2px solid #12b886;
+}
+.guide_restaurnat_box_title {
+	position: relative;
+	font-size: 20px;
+	line-height: 20px;
+	color: #12b886;
+	word-break: keep-all;
+	margin-bottom: 10px;
+}
+.guide_restaurnat_box_type {
+	position: relative;
+	font-size: 14px;
+	line-height: 20px;
+	color: #0071e3;
+}
+.guide_restaurnat_box_post {
+	position: relative;
+	font-size: 14px;
+	line-height: 20px;
+	word-break: keep-all;
+}
+
 
 .guide_banner {
 	position: relative;
@@ -2994,7 +3038,7 @@ span.selectbox_choose {
 	text-align: center;
 }
 .circle-container {
-  width: 400px;
+  width: 300px;
   height: 200px;
   position: absolute;
   left: 50%;
