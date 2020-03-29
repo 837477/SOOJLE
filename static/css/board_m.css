@@ -1823,14 +1823,17 @@
 	}
 	.guide_app_mobile_cont {
 		display: block;
-		width: 60%;
+		width: 100%;
 		margin: auto;
 		margin-bottom: 30px;
+	}
+	.guide_app_mobile {
+		max-width: 100px;
 	}
 	.guide_app_container {
 		display: block;
 		width: 100%;
-		margin-bottom: 0;
+		margin-top: 40px;
 	}
 	.guide_page_cont {
 		padding: 10px 0;
