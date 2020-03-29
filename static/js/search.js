@@ -499,11 +499,14 @@ function more_posts(target_num, is_fav_cnt = 1) {
 	$("#menu_container").removeAttr("style");
 	$("#search_posts_target").empty();
 
-	save_posts = a_jax_posts[target_num];	///////////////////
-	let posts = save_posts.slice(0,30);		/*	 30개 분할   */
-	save_posts = save_posts.slice(30);		//////////////////
-	creating_post($("#search_posts_target"), posts, now_creating_state, is_fav_cnt);
-
+	if (a_jax_posts[target_num] == undefined) {
+		No_posts($("#search_posts_target"));
+	} else {
+		save_posts = a_jax_posts[target_num];	///////////////////
+		let posts = save_posts.slice(0,30);		/*	 30개 분할   */
+		save_posts = save_posts.slice(30);		//////////////////
+		creating_post($("#search_posts_target"), posts, now_creating_state, is_fav_cnt);
+	}
 	setTimeout(function() {
 		if (!mobilecheck()) {
 			$("#menu_container").removeAttr("style");//.removeClass("menu_container_searching");
@@ -571,6 +574,7 @@ function Create_trend_posts() {
 		target = 0;
 		max = 0;
 		for (let i = 1; i < a_jax_posts.length; i++) {
+			if (a_jax_posts[i] == undefined) continue;
 			if (a_jax_posts[i][index[i]] == undefined) continue;
 			if (a_jax_posts[i][index[i]]['similarity'] > max) {
 				target = i;
@@ -587,7 +591,8 @@ function Create_trend_posts() {
 function result_search_zero() {
 	let s = 0;
 	for (let a_jax_posts_one of a_jax_posts)
-		s += a_jax_posts_one.length;
+		if (a_jax_posts_one != undefined)
+			s += a_jax_posts_one.length;
 	if (s == 0) {
 		No_posts($("#search_posts_target"));
 	}

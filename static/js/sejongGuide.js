@@ -194,6 +194,11 @@ function Insert_Sejong_Guide() {
 					</div>
 					<div class="guide_line"></div>
 					</div>
+
+					<div class="guide_title noselect">Office 365 서비스</div>
+					<div class="guide_subtitle noselect">
+						Office 365를 통해서 각종 대학생 혜택을 누려보세요!
+					</div>
 				`;
 	target.append(div);
 
@@ -389,7 +394,7 @@ const CAMPUS = {
 		],
 	'운동장': 
 		[
-			'농구장'
+			'농구장 [야외]'
 		],
 	'아사달연못': [],
 	'학생회관': 
