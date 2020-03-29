@@ -1,1 +1,1 @@
-const host_ip = "http://192.168.0.38:5000"
+const host_ip = ""
