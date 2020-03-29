@@ -106,7 +106,7 @@ def get_newsfeed_of_topic(category_name):
 
 			for POST in POST_LIST:
 				#simijlarity 구하기!
-				result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
+				result = get_similarity(USER, POST)
 
 				#최종 similarity 적용!
 				POST['similarity'] = result
