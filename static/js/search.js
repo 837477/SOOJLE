@@ -172,7 +172,7 @@ let similarity_words;
 let domain_posts = [];
 let a_jax_posts = [];
 /*
-0: 최근 트렌드
+0: 종합 결과
 1: 대학교
 2: 동아리&모임
 3: 공모전&행사
@@ -214,7 +214,7 @@ function search_text(text) {
 	$("#board_info_board").text("SOOJLE 엔진");
 	let category_tabs = `<div class="category_tabs">
 							<div id="category0" class="category_tab pointer category_checked" onclick="category_select($(this))">통합 검색</div>\
-							<div id="category1" class="category_tab pointer" onclick="category_select($(this))">최근 트렌드</div>\
+							<div id="category1" class="category_tab pointer" onclick="category_select($(this))">종합 결과</div>\
 							<div id="category2" class="category_tab pointer" onclick="category_select($(this))">대학교</div>\
 							<div id="category3" class="category_tab pointer" onclick="category_select($(this))">동아리&모임</div>\
 							<div id="category4" class="category_tab pointer" onclick="category_select($(this))">공모전&행사</div>\
@@ -391,7 +391,7 @@ function insert_domain_post(posts, now_creating_state = "") {
 	}
 }
 /*
-0: 최근 트렌드
+0: 종합 결과
 1: 대학교
 2: 동아리&모임
 3: 공모전&행사
@@ -409,7 +409,7 @@ function insert_search_post(target_num, posts, now_creating_state = "", is_fav_c
 		posts = posts.slice(0,5); // 미리보기는 5개까지만 보여줌
 	}
 	let target = $("#search_posts_target"), target_name = target_num;
-	if (Number(target_name) == 0) {target_name = "최근 트렌드";}
+	if (Number(target_name) == 0) {target_name = "종합 결과";}
 	else if (Number(target_name) == 1) {target_name = "대학교";}
 	else if (Number(target_name) == 2) {target_name = "동아리&모임";}
 	else if (Number(target_name) == 3) {target_name = "공모전&행사";}
@@ -483,7 +483,7 @@ function more_posts(target_num, is_fav_cnt = 1) {
 	$(".category_checked").removeClass("category_checked");
 	$(`#category${target_num + 1}`).addClass("category_checked");
 	let target_name = target_num;
-	if (Number(target_name) == 0) {target_name = "최근 트렌드";}
+	if (Number(target_name) == 0) {target_name = "종합 결과";}
 	else if (Number(target_name) == 1) {target_name = "대학교";}
 	else if (Number(target_name) == 2) {target_name = "동아리&모임";}
 	else if (Number(target_name) == 3) {target_name = "공모전&행사";}
@@ -703,7 +703,7 @@ function Search_Option_Sort() {
 	// 변경된 순서 적용
 	if (target == "통합 검색") {
 		before_posts();
-	} else if (target == "최근 트렌드") {
+	} else if (target == "종합 결과") {
 		category_select($("#category1"));
 	} else if (target == "대학교") {
 		category_select($("#category2"));

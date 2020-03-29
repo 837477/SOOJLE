@@ -81,6 +81,10 @@ async function URL_Select() {
 		menu_open = 1;
 		Go_dvnote();
 	}
+	else if (url_target.startsWith("guide")) {
+		menu_open = 1;
+		Go_guide();
+	}
 	// Else : Nothing Do.
 }
 //----------------------------------------------------------------------------------

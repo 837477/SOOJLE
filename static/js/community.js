@@ -99,6 +99,7 @@ function insert_notice() {
 			No_posts($("#posts_target"));
 		}
 	});
+	Insert_Notice_Write_Btn();	// 작성 버튼 생성
 }
 function Making_notice_block(posts) {
 	let target = $("#posts_target");
@@ -109,7 +110,7 @@ function Making_notice_block(posts) {
 		date = change_date_realative(post['date']['$date']);
 		activation = post['activation'];
 		if (activation == 1) {
-			activation = `<span class="notice_post_activation noselect">[활성화] </span>`;
+			activation = `<span class="notice_post_activation noselect">[공지] </span>`;
 		} else activation = ``;
 		tag =	`
 					<div class="notice_post_container pointer" data-id=${oid} onclick="Click_post($(this))">
@@ -167,7 +168,7 @@ function insert_notice_one(id) {
 				date = change_date_absolute(result['date']['$date']);
 				activation = result['activation'];
 				if (activation == 1) {
-					activation_tag = `<span class="notice_post_activation noselect">[활성화] </span>`;
+					activation_tag = `<span class="notice_post_activation noselect">[공지] </span>`;
 				}
 				tag =	`
 							<div id="notice_page_container" class="notice_page_container" data-id=${oid}>
@@ -241,7 +242,7 @@ function Notice_Edit() {
 				target.append(tag);
 				$("#notice_page_edit_title").val(result['title']);
 				$("#notice_page_edit_post").val(result['post']);
-				// 활성화 Check 유무
+				// 공지 Check 유무
 				if (result['activation'] == 1) {
 					$("#activation_toggle").prop("checked", true);
 				} else {
@@ -341,4 +342,92 @@ function Notice_Edit_Done() {
 function Notice_Edit_Cancel() {
 	$("#notice_page_container").removeClass("display_none");
 	$("#notice_page_editor").addClass("display_none");
+}
+
+// 공지사항 작성 버튼 생성
+function Insert_Notice_Write_Btn() {
+	Check_ManagerInfo(() => {
+		let btn = `<div style="text-align:right"><div class="notice_write_btn pointer" onclick="Notice_Write()">새 글 작성</div></div>`;
+		$("#posts_target").prepend(btn);
+	});
+}
+function Notice_Write() {
+		let pharagh_placeholder = 
+`내용을 입력해주세요.
+
+공지사항을 작성 시, 다음 규칙을 확인하고 올려주세요.
+
+[공지사항 작성 유의사항]
+1. 욕설, 비하, 음란물, 개인정보가 포함된 게시물 게시.
+2. 특정인이나 단체/지역을 비방하는 행위.
+3. 기타 현행법에 어긋나는 행위.
+`;
+	$("#posts_target").empty();
+	tag = 	`
+			<div id="notice_page_editor" class="notice_page_editor">
+				<input id="notice_page_edit_title" class="notice_page_edit_title" placeholder="제목을 입력해주세요.">
+				<textarea id="notice_page_edit_post" class="notice_page_edit_post" placeholder="${pharagh_placeholder}"></textarea>
+				<div class="notice_page_controll_cont_edit">
+					<div id="notice_page_edit_done" class="notice_page_edit_done pointer" onclick="writing_notice_done()">완료</div>
+					<div id="notice_page_edit_cancel" class="notice_page_edit_cancel pointer" onclick="writing_notice_cancel()">취소</div>
+				</div>
+			</div>
+			`;
+	$("#posts_target").append(tag);
+}
+// 공지사항 작성 취소
+function writing_notice_cancel() {
+	menu_open = 1;
+	Go_dvnote();
+}
+// 공지사항 작성 완료
+function writing_notice_done() {
+	check_managet_qualification_reload(function() {
+		let title = $("#notice_page_edit_title").val();
+		if (title == "") {
+			Snackbar("제목을 입력해주세요.");
+			$("#notice_page_edit_title").focus();
+			return;
+		} else if (title.length > 50) {
+      Snackbar("제목 길이 한계를 초과하였습니다.");
+      $("#notice_page_edit_title").focus();
+      return;
+    }
+		let pharagh = $("#notice_page_edit_post").val();
+		if (pharagh == "") {
+			Snackbar("내용을 입력해주세요.");
+			$("#notice_page_edit_post").focus();
+			return;
+		} else if (pharagh.length > 1000) {
+      Snackbar("내용 길이 한계를 초과하였습니다.");
+      $("#notice_page_edit_post").focus();
+      return;
+    }
+		let send_data = {
+							"title": title, 
+							"post": pharagh
+						};
+		$.when(A_JAX(host_ip+"/insert_notice", "POST", null, send_data))
+    .done(function(data) {
+			if (data["result"] == 'success') {
+				Snackbar("게시글이 정상적으로 업로드되었습니다.");
+				menu_open = 1;
+				Go_dvnote();
+			} else {
+				Snackbar("잠시 후 다시 시도해주세요.");
+			}
+		}).catch((data) => {
+      if (data.status == 400) {
+        Snackbar("잘못된 요청입니다.");
+        return false;
+     } else if (data.status == 403) {
+        Snackbar("권한이 없습니다.");
+        window.location.reload();
+        return false;
+      } else {
+        Snackbar("서버와의 연결이 원활하지 않습니다.");
+        return false;
+      }
+    });
+	});
 }

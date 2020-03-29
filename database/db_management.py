@@ -771,23 +771,24 @@ def find_posts_of_category_default_date(db, info_num_list, now_date, default_dat
 		},
 		{
 			'_id': 1,
-			'title': 1,
-			'date': 1,
-			'img': 1,
-			'fav_cnt': 1,
-			'view': 1,
-			'url': 1,
-			'title_token': 1,
-			'info': 1,
-			'tag': 1,
-			'topic': 1,
-			'ft_vector': 1,
-			'end_date': 1
+            'title': 1,
+            'date': 1,
+            'img': 1,
+            'fav_cnt': 1,
+            #'view': 1,
+            'url': 1,
+            #'title_token': 1,
+            #'info': 1,
+            'tag': 1,
+            'topic': 1,
+            'ft_vector': 1,
+            'end_date': 1,
+            "popularity":1
 		}
 	).sort([('date', -1)]).limit(num).hint("info_num_1_end_date_-1_date_-1")
 	return result
 
-#추천 뉴스피드 포스트들 불러오기 (사용)
+#추천 뉴스피드 포스트들 불러오기 (미사용)
 def find_posts_of_recommendation(db, now_date, num):
 	result = db[SJ_DB_POST].find(
 		{
@@ -835,13 +836,14 @@ def find_popularity_newsfeed(db, default_date, num):
 	return result
 
 #카테고리 검색
-def find_search_of_category(db, search_list, info_num_list, num):
+def find_search_of_category(db, search_list, info_num_list, default_date, num):
 	result = db[SJ_DB_POST].find(
 		{
 			'$and':
 			[
 				{'token': {'$in': search_list}},
-				{'info_num': {'$in': info_num_list}}
+				{'info_num': {'$in': info_num_list}},
+				{'date': {'$gt': global_func.get_default_day(default_date)}}
 			]
 		},
 		{
@@ -946,9 +948,9 @@ def find_category_of_topic_list(db, category_list):
 				'category_name': {'$in': category_list}
 			}, 
 			{
-				'_id': 0,
-				'tag': 1,
-				'info_num': 1
+				"tag":1,
+				"category_name":1,
+				"info_num":1
 			}
 		)
 	return result
@@ -960,9 +962,9 @@ def find_category_of_topic(db, category_name):
 			'category_name': category_name
 		}, 
 		{
-			'_id': 0,
-			'tag': 1,
-			'info_num': 1
+			"tag": 1,
+			"category_name": 1,
+			"info_num": 1
 		}
 	)
 	return result

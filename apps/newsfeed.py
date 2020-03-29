@@ -6,6 +6,7 @@ from datetime import datetime
 from numpy import dot
 from numpy.linalg import norm
 import numpy
+import pandas
 import operator
 import time
 #####################################
@@ -141,26 +142,17 @@ def get_newsfeed_of_topic(category_name):
 			speed_result = SPEED_RESULT
 		)
 
-#추천 뉴스피드 (테스트 대상)
+#추천 뉴스피드 ver.3 
 @BP.route('/get_recommendation_newsfeed')
 @jwt_optional
 def get_recommendation_newsfeed():
-	#총 시간 측정#################################################
-	TOTAL_TIME_START = time.time()
-	###########################################################
-
 	#현재 날짜 가져오기.
 	now_date = datetime.now()
-	
-	#반환 할 포스트 초기화
-	POST_LIST = []
-	#반활 할 스피드 측정 초기화
-	SPEED_RESULT = {}
 
 	#회원일 때!
 	if get_jwt_identity():
 		#유저 정보 불러오기.
-		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, ft_vector=1, tag_sum=1, measurement_num=1)
+		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, ft_vector=1, measurement_num=1)
 
 		#유효한 토큰인지 확인.
 		if USER is None: abort(401)
@@ -173,12 +165,13 @@ def get_recommendation_newsfeed():
 		#회원 관심도가 cold 상태일 때!
 		if USER['measurement_num'] <= SJ_USER_COLD_LIMIT:
 			#비로그인 전용 추천뉴스피드 호출!
-			POST_LIST, SPEED_RESULT = get_recommendation_newsfeed_non_member(g.db, now_date)	
+			POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)	
+			POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
 
 		#관심도가 cold가 아닐 때!
 		else:
 			#로그인 전용 추천뉴스피드 호출!
-			POST_LIST, SPEED_RESULT = get_recommendation_newsfeed_member(g.db, USER, now_date)
+			POST_LIST = get_recommendation_newsfeed_member(g.db, USER, now_date)
 
 	#비회원일 때!
 	else:
@@ -188,22 +181,12 @@ def get_recommendation_newsfeed():
 		insert_today_visitor(g.db, request.remote_addr)		
 		
 		#비로그인 전용 추천뉴스피드 호출!
-		POST_LIST, SPEED_RESULT = get_recommendation_newsfeed_non_member(g.db, now_date)
-
-	#similarity를 기준으로 내림차순 정렬.
-	POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
-
-	#총 시간 측정 종료#############################################
-	TOTAL_TIME_END = time.time() - TOTAL_TIME_START
-	###########################################################
-	
-	SPEED_RESULT['TOTAL_TIME'] = TOTAL_TIME_END
-	SPEED_RESULT['RETURN_NUM'] = SJ_RETURN_NUM
+		POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)
+		POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
 
 	return jsonify(
 			result = "success",
-			newsfeed = dumps(POST_LIST[:SJ_RETURN_NUM]),
-			speed_result = SPEED_RESULT
+			newsfeed = dumps(POST_LIST)
 		)
 
 #인기 뉴스피드
@@ -238,39 +221,6 @@ def get_popularity_newsfeed():
 #함수들
 ###########################################################################
 ###########################################################################
-#similarity 측정 함수
-def get_similarity(USER, POST, Maxfav_cnt, Maxviews):
-	#TOS 작업
-	TOS = dot(USER['topic'], POST['topic']) / (norm(USER['topic']) * norm(POST['topic']))
-
-	#TAS 작업
-	USER_TAG = USER['tag'].keys()
-	TAG = USER_TAG & set(POST['tag'])
-	inter_sum = 0
-	for i in TAG:
-		inter_sum += USER['tag'][i]
-	TAS = inter_sum / USER['tag_sum']
-					
-	#FAS 작업
-	FAS = FastText.vec_sim(USER['ft_vector'], POST['ft_vector'])
-
-	#IS 작업
-	IS = (((POST['fav_cnt']/Maxfav_cnt)*SJ_IS_FAV_WEIGHT) + ((POST['view']/Maxviews)*SJ_IS_VIEW_WEIGHT))
-					
-	#RANDOM 작업
-	RANDOM = numpy.random.random()
-
-	#가중치 작업
-	TOS *= SJ_TOS_WEIGHT
-	TAS *= SJ_TAS_WEIGHT
-	FAS *= SJ_FAS_WEIGHT
-	IS *= SJ_IS_WEIGHT
-	RANDOM *= SJ_RANDOM_WEIGHT
-
-	#최종 값 저장
-	result = TOS + TAS + FAS + RANDOM
-
-	return result
 
 #트랜드 스코어 판별 함수
 def trendscore_discriminate(now_date):
@@ -310,59 +260,88 @@ def trendscore(POST, now_date):
 	else: 
 		return 0
 
-#회원 전용 추천 뉴스피드.ver2
+#Similarity 측정 함수
+def get_similarity(USER, POST, avg_popular = 20):
+	#TOS
+	TOS = (dot(USER['topic'], POST['topic']) / 
+			(USER['norm']) * norm(POST['topic']))
+	#TAS
+	TAS = len(set(POST['tag']) & USER['tag_set']) / 5
+	if TAS > 1: TAS = 1	
+	#FAS
+	FAS = FastText.vec_sim(USER['ft_vector'], POST['ft_vector'])
+	result = (TOS*SJ_TOS_WEIGHT) + (TAS*SJ_TAS_WEIGHT) + (FAS*SJ_FAS_WEIGHT) 
+	# IS
+	# week_count = ((datetime.now() - POST['date']) / 7).days + 1
+	# if avg_popular < (POST['popularity'] / week_count):
+	# 	result *= 1.3
+	# Random
+	result += np.random.random() * SJ_RANDOM_WEIGHT
+	
+	return result
+	# return result, {"TAS":TAS, 
+	# 				'FAS':FAS,"TOS":TOS, 
+	# 				"random":result-FAS-TOS-TAS,
+	# 				"TOS_set":set(POST['tag']) & USER['tag_set']}
+
+#회원 전용 추천 뉴스피드.ver3
 def get_recommendation_newsfeed_member(db, USER, now_date):
-	#추쳔 뉴스피드를 위한 포스트들을 불러오는 시간 측정 시작#################
-	FIND_ALL_POSTS_TIME_START = time.time()
-	###########################################################
-	#게시글들을 불러온다.
-	POST_LIST = find_posts_of_recommendation(g.db, now_date, num=SJ_RECOMMENDATION_LIMIT)
-	POST_LIST = list(POST_LIST)
-	#추쳔 뉴스피드를 위한 포스트들을 불러오는 시간 측정 종료#################
-	FIND_ALL_POSTS_TIME_END = time.time() - FIND_ALL_POSTS_TIME_START
-	###########################################################
+	#Tag sim process
+	######################################################################
+	if USER['tag'] in [None, []]:
+		return None
 
+	# 사용자 태그로 사용자 태그 벡터 구하기
+	# 원래 이미 캐싱되어 있어야 함 (중요*)
+	user_tags = []
+	for key,value in USER['tag'].items():
+		user_tags += [key] * value
+	user_vec = FastText.get_doc_vector(user_tags)
 
-	#캐싱된 가장 높은 좋아요 수를 가져온다.
-	Maxfav_cnt = find_variable(g.db, 'highest_fav_cnt')
-	#캐싱된 가장 높은 조회수를 가져온다.
-	Maxviews = find_variable(g.db, 'highest_view_cnt')
+	cate_list = find_category_of_topic_list(db, list(SJ_CATEGORY_OF_TOPIC_SET))
+	cate_list = list(cate_list)
 
+	# 사용자와 카테고리간 의미 유사도 분석하기
+	# 카테고리도 마찬가지로 원래 이미 캐싱되어 있어야 함 (중요*)
+	cate_vec = []
+	for cate in cate_list:
+		vec = FastText.vec_sim(user_vec, FastText.get_doc_vector(cate['tag']))
+		cate_vec += [(cate['category_name'],vec,cate['info_num'])]
+	cate_vec = sorted(cate_vec, key=itemgetter(1), reverse = True)
+	######################################################################
 
+	POST_LIST = []
+	POST_NUM = SJ_RECOMMENDATION_POST_NUM
+	POST_WEIGHT = SJ_RECOMMENDATION_POST_WEIGHT
+	MINUS_WEIGHT = SJ_RECOMMENDATION_POST_MINUS_WEIGHT
 
-	#관심도 및 트랜드 스코어 반영하는 시간 측정 시작######################
-	SIM_TREND_TIME_START = time.time()
-	###########################################################
-	#트랜드 스코어 적용
-	if trendscore_discriminate(now_date):
-		for POST in POST_LIST:				
-			#트랜드 스코어 적용!
-			TREND = trendscore(POST, now_date)
-			
-			#simijlarity 구하기!
-			result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
+	# 카테고리를 순회하며 POST_LIST에 총 데이터 축적
+	# 각 카테고리별 유사도에 따라 가져오는 개수가 달라짐
+	for cate in cate_vec:
+		temp = find_posts_of_category_default_date(db, cate[2], now_date, SJ_RECOMMENDATION_DEFAULT_DATE, int(POST_NUM + POST_WEIGHT))
+		temp = list(temp)
+		
+		POST_LIST += [temp]
+		POST_WEIGHT += MINUS_WEIGHT
 
-			#최종 similarity 적용!
-			POST['similarity'] = result + TREND
-					
-	#트랜드 스코어 미적용
-	else:
-		for POST in POST_LIST:
-			#simijlarity 구하기!
-			result = get_similarity(USER, POST, Maxfav_cnt, Maxviews)
-					
-			#최종 similarity 적용!
-			POST['similarity'] = result
-	#관심도 및 트랜드 스코어 반영하는 시간 측정 종료######################
-	SIM_TREND_TIME_END = time.time() - SIM_TREND_TIME_START
-	###########################################################
+	# 연산을 위해 미리 캐싱해둠
+	USER['norm'] = (norm(USER['topic']))
+	USER['tag_set'] = set(USER['tag'].keys())
 
-	SPEED_RESULT = {}
-	SPEED_RESULT['MEMBER_FIND_ALL_POSTS_TIME'] = FIND_ALL_POSTS_TIME_END
-	SPEED_RESULT['MEMBER_SIM_TREND_TIME'] = SIM_TREND_TIME_END
-	SPEED_RESULT['MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
+	# 관심도 구하기 + 벡터 삭제 + 정렬 후 반환
+	for idx, posts in enumerate(POST_LIST):
+		for post in posts:
+			post['topic'] = get_similarity(USER, post)
+			#post['topic'],post['test'] = get_sim(user, post)
+			del post['ft_vector']
+			del post['tag']
+		POST_LIST[idx] = sorted(POST_LIST[idx], 
+			key=operator.itemgetter('topic'), reverse=True)
+	
+	for idx, _ in enumerate(POST_LIST):
+		POST_LIST[idx] = POST_LIST[idx][:SJ_RECOMMENDATION_CATEGORY_POST_NUM[idx]]
 
-	return POST_LIST, SPEED_RESULT
+	return POST_LIST
 
 #비회원 전용 추천 뉴스피드.ver2
 def get_recommendation_newsfeed_non_member(db, now_date):
@@ -382,8 +361,6 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 	#각각의 카테고리의 포스트들을 불러오는 시간 측정 종료###################
 	FIND_POSTS_OF_CATEGORY_TIME_END = time.time() - FIND_POSTS_OF_CATEGORY_TIME_START
 	###########################################################
-
-
 
 	#트랜드 스코어 반영하는 시간 측정 시작##############################
 	TREND_TIME_START = time.time()
@@ -413,4 +390,7 @@ def get_recommendation_newsfeed_non_member(db, now_date):
 	SPEED_RESULT['NON_MEMBER_TREND_TIME'] = TREND_TIME_END
 	SPEED_RESULT['NON_MEMBER_PROCESSING_POSTS_NUM'] = len(POST_LIST)
 
-	return POST_LIST, SPEED_RESULT
+	return POST_LIST
+
+##################################################################
+##################################################################
