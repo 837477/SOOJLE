@@ -195,11 +195,12 @@ function Insert_Sejong_Guide() {
 					<div class="guide_line"></div>
 					</div>
 
-					<div class="guide_title noselect">Office 365 서비스</div>
-					<div class="guide_subtitle noselect">
-						Office 365를 통해서 각종 대학생 혜택을 누려보세요!
-					</div>
+					
 				`;
+	// <div class="guide_title noselect">Office 365 서비스</div>
+	// 				<div class="guide_subtitle noselect">
+	// 					Office 365를 통해서 각종 대학생 혜택을 누려보세요!
+	// 				</div>
 	target.append(div);
 
 	guide_campus_search_event();	// 캠퍼스 장소 검색 이벤트 바인딩
