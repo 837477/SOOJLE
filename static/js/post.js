@@ -22,7 +22,6 @@ function click_recommend_posts() {
 	menu_modal_onoff();
 }
 function get_recommend_posts(is_first = 0) {
-	/* 비회원 문구 */
 	let token = sessionStorage.getItem('sj-state');
     if (token == null || token == undefined || token == 'undefined') {
     	Snackbar("로그인을 하면 맞춤서비스가 실행됩니다.");
@@ -34,7 +33,6 @@ function get_recommend_posts(is_first = 0) {
 	where_topic = "뉴스피드";
 	posts_update = 0;
 	now_state = now_topic;	// now state changing
-	//location.replace("/board#recommend");
 	// 좌측 메뉴 버그 수정 fixed
 	$("#menu_container").addClass("menu_container_fixed");
 	$("#posts_creating_loading").removeClass("display_none");
@@ -57,9 +55,20 @@ function get_recommend_posts(is_first = 0) {
 			let output = JSON.parse(data["newsfeed"]);
 			if (output.length == 0)
 				No_posts($("#posts_target"));
-			save_posts = output.slice(30);
-			output = output.slice(0, 30);
-			creating_post($("#posts_target"), output, "추천");
+			if (token == null || token == undefined || token == 'undefined') {
+		    	save_posts = output.slice(30);
+				output = output.slice(0, 30);
+		    	creating_post($("#posts_target"), output, "추천");
+		    } else {
+		    	let newsfeed = []
+		    	for (let i of output){
+		    		newsfeed = newsfeed.concat(i);
+		    	}
+		    	shuffle(newsfeed);
+		    	save_posts = newsfeed.slice(30);
+				newsfeed = newsfeed.slice(0, 30);
+		    	creating_post($("#posts_target"), newsfeed, "추천");
+		    }
 			$("html, body").animate({scrollTop: 0}, 400);
 		} else {
 			Snackbar("다시 접속해주세요!");
@@ -877,4 +886,15 @@ function Insert_Notice_Posts() {
 			}
 		}
 	});
+}
+
+// 배열 shuffle 함수
+function shuffle(a) {
+    let j, x, i;
+    for (i = a.length; i; i -= 1) {
+        j = Math.floor(Math.random() * i);
+        x = a[i - 1];
+        a[i - 1] = a[j];
+        a[j] = x;
+    }
 }
