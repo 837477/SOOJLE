@@ -43,7 +43,7 @@ def main_app(test_config = None):
 	#DB초기화
 	init_db()
 	#백그라운드 작업
-	#measurement_run()
+	measurement_run()
 	schedule_init()
 	#페이지들!
 	application.register_blueprint(main.BP)
