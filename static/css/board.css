@@ -1456,7 +1456,7 @@ html, body {
 	position: relative;
 	width: 100%;
 	height: auto;
-	margin-bottom: 80px;
+	margin-bottom: 160px;
 }
 .setting_title {
 	position: relative;
@@ -2825,7 +2825,7 @@ span.selectbox_choose {
 	display: inline-block;
 	width: 50%;
 	height: auto;
-	margin-bottom: 80px;
+	margin-top: 60px;
 	text-align: center;
 }
 .guide_app_img {
@@ -2985,6 +2985,50 @@ span.selectbox_choose {
 	top: 50%;
 	transform: translate(-50%, -50%);
 }
+.guide_restaurnat_box_cont {
+	position: relative;
+	width: 100%;
+	height: auto;
+	text-align: center;
+}
+.guide_restaurnat_box {
+	position: relative;
+	display: inline-block;
+	width: 28%;
+	height: auto;
+	border-top: 2px solid rgba(0,0,0,0);
+	box-sizing: border-box;
+	margin: 10px;
+	transition: .1s ease-in-out;
+	text-align: center;
+	padding: 10px 0;
+	vertical-align: top;
+	margin-bottom: 30px;
+}
+.guide_restaurnat_box:hover {
+	border-top: 2px solid #12b886;
+}
+.guide_restaurnat_box_title {
+	position: relative;
+	font-size: 20px;
+	line-height: 20px;
+	color: #12b886;
+	word-break: keep-all;
+	margin-bottom: 10px;
+}
+.guide_restaurnat_box_type {
+	position: relative;
+	font-size: 14px;
+	line-height: 20px;
+	color: #0071e3;
+}
+.guide_restaurnat_box_post {
+	position: relative;
+	font-size: 14px;
+	line-height: 20px;
+	word-break: keep-all;
+}
+
 
 .guide_banner {
 	position: relative;
@@ -2994,7 +3038,7 @@ span.selectbox_choose {
 	text-align: center;
 }
 .circle-container {
-  width: 400px;
+  width: 300px;
   height: 200px;
   position: absolute;
   left: 50%;
@@ -3169,4 +3213,48 @@ span.selectbox_choose {
 .setting_Feedback_box_date {
 	font-size: 12px;
 	line-height: 12px;
+}
+
+
+
+
+
+
+.stop_search_box {
+	position: relative;
+	width: 95%;
+	max-width: 700px;
+	margin: auto;
+	height: auto;
+	border-radius: 10px;
+	border: 2px solid #c30e2e;
+	padding: 20px 0;
+	margin-top: 60px;
+}
+.stop_search_title {
+	position: relative;
+	text-align: center;
+	width: 100%;
+	font-size: 20px;
+	line-height: 40px;
+	color: #c30e2e;
+}
+.stop_search_subtitle {
+	position: relative;
+	width: 95%;
+	font-size: 16px;
+	line-height: 30px;
+	color: #222;
+	margin: auto;
+}
+.stop_search_post {
+	position: relative;
+	width: 95%;
+	margin: auto;
+	color: #222;
+	font-size: 16px;
+	margin-top: 20px;
+	padding: 20px 0;
+	border-top: 1px solid #e2e2e2;
+	word-break: keep-all;
 }

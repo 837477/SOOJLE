@@ -1456,7 +1456,7 @@
 		margin-top: 10px;
 	}
 	.setting_subject_wrap:nth-child(n+2) {
-		margin-top: 60px;
+		margin-top: 80px;
 	}
 	.setting_title {
 		position: relative;
@@ -1823,14 +1823,17 @@
 	}
 	.guide_app_mobile_cont {
 		display: block;
-		width: 60%;
+		width: 100%;
 		margin: auto;
 		margin-bottom: 30px;
+	}
+	.guide_app_mobile {
+		max-width: 100px;
 	}
 	.guide_app_container {
 		display: block;
 		width: 100%;
-		margin-bottom: 0;
+		margin-top: 40px;
 	}
 	.guide_page_cont {
 		padding: 10px 0;
@@ -1906,6 +1909,11 @@
 	.guide_campus_search_result {
 		width: 100%;
 	}
+	.guide_restaurnat_box {
+		width: 40%;
+		border-top: 2px solid #12b886;
+		margin-bottom: 20px;
+	}
 }
 /*=============================================================================*/
 /*                                    350px                                    */
@@ -1945,5 +1953,47 @@
 	.guide_page_icon {
 		padding: 0 20px;
 	}
+	.guide_restaurnat_box {
+		width: 95%;
+		margin: 0;
+		margin-bottom: 10px;
+		margin-left: 2.5%;
+	}
+}
 
+
+
+
+
+
+
+
+
+
+/*Snack bar*/
+@media screen and (max-width: 1200px) {
+	.snackbar_target {
+		width: 300px;
+		height: 40px;
+		bottom: 40px;
+	}
+	.snackbar {
+		width: 280px;
+		height: 20px;
+		line-height: 20px;
+		font-size: 14px;
+		border-radius: 0;
+		padding: 10px 0;
+		z-index: 50;
+	}
+}
+@media screen and (max-width: 450px) {
+	.snackbar_target {
+		width: 100%;
+		height: 40px;
+		bottom: 40px;
+	}
+	.snackbar {
+		width: 100%;
+	}
 }

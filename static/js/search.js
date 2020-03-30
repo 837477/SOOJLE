@@ -244,6 +244,17 @@ function search_text(text) {
 	send_data["opiton"] = {
 		"sort": 'trend'
 	}
+	/*////////////////////////////////////*/
+	/*////////////////////////////////////*/
+	/*////////////////////////////////////*/
+	/*////////////////////////////////////*/
+	Search_Option_on();
+	stop_search();	// 서버 임시점검 예외코드
+	return;
+	/*////////////////////////////////////*/
+	/*////////////////////////////////////*/
+	/*////////////////////////////////////*/
+	/*////////////////////////////////////*/
 	Search_logging(send_data["search"]);				// 검색 Logging API 호출
 	Get_Search_Posts(send_data, now_creating_state);	// 검색 API 호출
 	Search_Option_on();									// 검색 옵션 오픈
@@ -499,11 +510,14 @@ function more_posts(target_num, is_fav_cnt = 1) {
 	$("#menu_container").removeAttr("style");
 	$("#search_posts_target").empty();
 
-	save_posts = a_jax_posts[target_num];	///////////////////
-	let posts = save_posts.slice(0,30);		/*	 30개 분할   */
-	save_posts = save_posts.slice(30);		//////////////////
-	creating_post($("#search_posts_target"), posts, now_creating_state, is_fav_cnt);
-
+	if (a_jax_posts[target_num] == undefined) {
+		No_posts($("#search_posts_target"));
+	} else {
+		save_posts = a_jax_posts[target_num];	///////////////////
+		let posts = save_posts.slice(0,30);		/*	 30개 분할   */
+		save_posts = save_posts.slice(30);		//////////////////
+		creating_post($("#search_posts_target"), posts, now_creating_state, is_fav_cnt);
+	}
 	setTimeout(function() {
 		if (!mobilecheck()) {
 			$("#menu_container").removeAttr("style");//.removeClass("menu_container_searching");
@@ -571,6 +585,7 @@ function Create_trend_posts() {
 		target = 0;
 		max = 0;
 		for (let i = 1; i < a_jax_posts.length; i++) {
+			if (a_jax_posts[i] == undefined) continue;
 			if (a_jax_posts[i][index[i]] == undefined) continue;
 			if (a_jax_posts[i][index[i]]['similarity'] > max) {
 				target = i;
@@ -587,7 +602,8 @@ function Create_trend_posts() {
 function result_search_zero() {
 	let s = 0;
 	for (let a_jax_posts_one of a_jax_posts)
-		s += a_jax_posts_one.length;
+		if (a_jax_posts_one != undefined)
+			s += a_jax_posts_one.length;
 	if (s == 0) {
 		No_posts($("#search_posts_target"));
 	}
@@ -718,4 +734,30 @@ function Search_Option_Sort() {
 	} else if (target == "일반") {
 		category_select($("#category7"));
 	} 
+}
+
+
+// 검색 임시점검
+function stop_search() {
+	let target = $("#search_posts_target");
+	let div = 	`
+				<div class="stop_search_box noselect">
+					<div class="stop_search_title">
+						<i class="fas fa-exclamation-circle"></i>
+						임시점검
+					</div>
+					<div class="stop_search_subtitle">
+						<span style="font-weight: bold">내용 : </span>
+						검색기능 임시 중지
+					</div>
+					<div class="stop_search_post">
+						현재 더 나은 서비스를 위해서 코드를 수정하는 도중 검색과 관련한 기능이 마비되었습니다.<br><br>
+						당일 오전 1시 50분에 문제점을 확인하였으며, 최대한 빠르게 수정하고 있습니다.<br><br>
+						수정을 위해서 임시적으로 검색 기능을 중지하게된 점 정말 죄송합니다.
+					</div>
+				</div>
+				`;
+	target.append(div);
+	$("#posts_creating_loading").addClass("display_none");
+	is_searching = 0;
 }
