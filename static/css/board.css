@@ -3214,3 +3214,47 @@ span.selectbox_choose {
 	font-size: 12px;
 	line-height: 12px;
 }
+
+
+
+
+
+
+.stop_search_box {
+	position: relative;
+	width: 95%;
+	max-width: 700px;
+	margin: auto;
+	height: auto;
+	border-radius: 10px;
+	border: 2px solid #c30e2e;
+	padding: 20px 0;
+	margin-top: 60px;
+}
+.stop_search_title {
+	position: relative;
+	text-align: center;
+	width: 100%;
+	font-size: 20px;
+	line-height: 40px;
+	color: #c30e2e;
+}
+.stop_search_subtitle {
+	position: relative;
+	width: 95%;
+	font-size: 16px;
+	line-height: 30px;
+	color: #222;
+	margin: auto;
+}
+.stop_search_post {
+	position: relative;
+	width: 95%;
+	margin: auto;
+	color: #222;
+	font-size: 16px;
+	margin-top: 20px;
+	padding: 20px 0;
+	border-top: 1px solid #e2e2e2;
+	word-break: keep-all;
+}
