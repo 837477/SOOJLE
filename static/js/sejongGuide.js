@@ -28,21 +28,22 @@ function Insert_Sejong_Guide() {
 	let div = 	`
 					<div class="guide_title noselect">앱 설치하기</div>
 					<div class="guide_subtitle noselect">
-						세종대학교 통합 모바일 앱과 UCheck 앱을 설치할 수 있습니다!
+						세종대학교 필수 어플! 통합 모바일 앱과 UCheck 앱을 설치할 수 있습니다.
 					</div>
 					<div class="guide_body guide_body_first noselect">
 						<div class="guide_app_mobile_cont">
 							<img src="static/image/app_guide.png" class="guide_app_mobile wow animated fadeInLeft">
-						</div><div id="guide_app_container" class="guide_app_container">
-							<a title="App Store" target="_blank" href="https://apps.apple.com/kr/app/%EC%84%B8%EC%A2%85%EB%8C%80%ED%95%99%EA%B5%90-%ED%86%B5%ED%95%A9-%EB%AA%A8%EB%B0%94%EC%9D%BC-%EC%95%B1/id1465703023?mt=8" style="overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2019-08-29&kind=iossoftware&bubble=apple_music) no-repeat center;" class="guide_app_link_btn_apple"></a>
-							<a title="Play Store" target="_blank" class="sejongapp_btn" href='https://play.google.com/store/apps/details?id=kr.ac.sejong.smartcampus&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' class="guide_app_link_btn_google"></a>
-						</div>
-						<div style="position: relative; width:100%; height:50px;"></div>
-						<div class="guide_app_mobile_cont">
-							<img src="static/image/ucheck_guide.png" class="guide_app_mobile wow animated fadeInLeft">
-						</div><div id="guide_app_container" class="guide_app_container">
-							<a title="App Store" target="_blank" href="https://apps.apple.com/us/app/ucheck-plus/id1139582817?mt=8" style="overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2019-08-29&kind=iossoftware&bubble=apple_music) no-repeat center;" class="guide_app_link_btn_apple"></a>
-							<a title="Play Store" target="_blank" class="sejongapp_btn" href='https://play.google.com/store/apps/details?id=com.libeka.attendance.ucheckplusstud'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' class="guide_app_link_btn_google"></a>
+							<div id="guide_app_container" class="guide_app_container">
+								<a title="App Store" target="_blank" href="https://apps.apple.com/kr/app/%EC%84%B8%EC%A2%85%EB%8C%80%ED%95%99%EA%B5%90-%ED%86%B5%ED%95%A9-%EB%AA%A8%EB%B0%94%EC%9D%BC-%EC%95%B1/id1465703023?mt=8" style="overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2019-08-29&kind=iossoftware&bubble=apple_music) no-repeat center;" class="guide_app_link_btn_apple"></a>
+								<a title="Play Store" target="_blank" class="sejongapp_btn" href='https://play.google.com/store/apps/details?id=kr.ac.sejong.smartcampus&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' class="guide_app_link_btn_google"></a>
+							</div>
+						</div
+						><div class="guide_app_mobile_cont">
+							<img src="static/image/ucheck_guide.png" class="guide_app_mobile wow animated fadeInRight">
+							<div id="guide_app_container" class="guide_app_container">
+								<a title="App Store" target="_blank" href="https://apps.apple.com/us/app/ucheck-plus/id1139582817?mt=8" style="overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-us/badge-lrg.svg?releaseDate=2019-08-29&kind=iossoftware&bubble=apple_music) no-repeat center;" class="guide_app_link_btn_apple"></a>
+								<a title="Play Store" target="_blank" class="sejongapp_btn" href='https://play.google.com/store/apps/details?id=com.libeka.attendance.ucheckplusstud'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' class="guide_app_link_btn_google"></a>
+							</div>
 						</div>
 					</div>
 
@@ -100,7 +101,106 @@ function Insert_Sejong_Guide() {
 					</div>
 					<div class="guide_line"></div>
 					</div>
+
+					<div class="guide_title noselect">학생식당 영업시간</div>
+					<div class="guide_subtitle noselect">
+						세종대학교 캠퍼스 내 학생식당의 영업시간을 알아보세요!
+					</div>
+					<div class="guide_restaurnat_box_cont noselect">
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">학생회관 푸드코트</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								토요일: 10:30 ~ 14:00<br>
+								(일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								토요일: 10:30 ~ 14:00<br>
+								(일요일, 공휴일 휴무)
+							</div>
+						</div>
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">군자키친</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+						</div>
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">진관키친</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 08:30 ~ 19:00<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 08:30 ~ 19:00<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+						</div>
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">우정당 푸드코트</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								토요일: 10:00 ~ 14:00<br>
+								(일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								휴무
+							</div>
+						</div>
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">군자의 밥상</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								점심: 11:30 ~ 14:00<br>
+								저녁: 17:00 ~ 18:30<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								점심: 11:30 ~ 13:30<br>
+								저녁: 17:00 ~ 18:00<br>
+								(토,일요일, 공휴일 휴무)
+							</div>
+						</div>
+						<div class="guide_restaurnat_box">
+							<div class="guide_restaurnat_box_title">더큰도시락</div>
+							<div class="guide_restaurnat_box_type">학기중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 09:00 ~ 19:00<br>
+								토요일: 10:30 ~ 14:00<br>
+								(일요일, 공휴일 휴무)
+							</div>
+							<div class="guide_restaurnat_box_type">방학중</div>
+							<div class="guide_restaurnat_box_post">
+								평일: 08:00 ~ 20:00<br>
+								토요일: 08:00 ~ 20:00<br>
+								(일요일, 공휴일 휴무)
+							</div>
+						</div>
+					</div>
+					<div class="guide_line"></div>
+					</div>
+
+					
 				`;
+	// <div class="guide_title noselect">Office 365 서비스</div>
+	// 				<div class="guide_subtitle noselect">
+	// 					Office 365를 통해서 각종 대학생 혜택을 누려보세요!
+	// 				</div>
 	target.append(div);
 
 	guide_campus_search_event();	// 캠퍼스 장소 검색 이벤트 바인딩
@@ -171,12 +271,12 @@ const CAMPUS = {
 		],
 	'진관홀': 
 		[
-			'학식 [B1]',
+			'진관키친(학식) [B1]',
 			'매점 [B1]'
 		],
 	'우정당': 
 		[
-			'학식 [1F]',
+			'푸드코트(학식) [1F]',
 			'GS25편의점 [1F]',
 			'브리클린(카페) [1F]'
 		],
@@ -205,7 +305,7 @@ const CAMPUS = {
 	'군자관': 
 		[
 			'군자의밥상 [6F]',
-			'학식 [B1]',
+			'군자키친(학식) [B1]',
 			'매점 [B1]',
 			'대학서점 [1F]',
 			'복사실 [1F]',
@@ -260,7 +360,8 @@ const CAMPUS = {
 			'빅베어8 [2F]',
 			'게스트하우스 [9F~11F]',
 			'회의실 [12F]',
-			'샤워실 [B2]'
+			'샤워실 [B2]',
+			'약국 [1F]'
 		],
 	'모짜르트홀': [],
 	'대양홀': 
@@ -294,7 +395,7 @@ const CAMPUS = {
 		],
 	'운동장': 
 		[
-			'농구장'
+			'농구장 [야외]'
 		],
 	'아사달연못': [],
 	'학생회관': 
@@ -320,7 +421,7 @@ const CAMPUS = {
 			'석관동떡볶이 [1F]',
 			'리얼후라이 [1F]',
 			'팬도로시(카페) [1F]',
-			'학식 [B1]',
+			'푸드코트(학식) [B1]',
 			'소공연장 [B1]',
 			'대공연장 [B1]',
 			'동아리연습실 [B2]',
@@ -342,7 +443,7 @@ const CAMPUS = {
 			'휴게실 [1F]',
 			'우편실 [1F]',
 			'무인택배보관실 [1F]',
-			'학식 [B1]',
+			'더큰도시락(학식) [B1]',
 			'샤워실 [B1]',
 			'주차장 [B1]',
 			'자전거보관소 [후문]',
