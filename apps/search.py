@@ -232,7 +232,6 @@ def category_search(category_name, num):
 	SPEED_RESULT['PROCESSING_POSTS_NUM'] = len(POST_LIST)
 	SPEED_RESULT['RETURN_NUM'] = num
 
-
 	#데이터로 들어온 상위 num개만 반환
 	return jsonify(
 			result = "success",
