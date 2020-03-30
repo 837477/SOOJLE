@@ -250,6 +250,7 @@ function search_text(text) {
 	/*////////////////////////////////////*/
 	Search_Option_on();
 	stop_search();	// 서버 임시점검 예외코드
+	Get_Search_Posts_none(send_data, now_creating_state);	// 검색 API 호출
 	return;
 	/*////////////////////////////////////*/
 	/*////////////////////////////////////*/
@@ -753,11 +754,64 @@ function stop_search() {
 					<div class="stop_search_post">
 						현재 더 나은 서비스를 위해서 코드를 수정하는 도중 검색과 관련한 기능이 마비되었습니다.<br><br>
 						당일 오전 1시 50분에 문제점을 확인하였으며, 최대한 빠르게 수정하고 있습니다.<br><br>
-						수정을 위해서 임시적으로 검색 기능을 중지하게된 점 정말 죄송합니다.
+						수정을 위해서 임시적으로 검색 기능을 중지하게 된 점, 정말 죄송합니다.
 					</div>
 				</div>
 				`;
 	target.append(div);
 	$("#posts_creating_loading").addClass("display_none");
 	is_searching = 0;
+}
+
+function Get_Search_Posts_none(sendData, now_creating_state) {
+	a_jax_posts[0] = [];
+	$.when(A_JAX(host_ip+"/domain_search", "POST", null, sendData))
+	.done(function (data) {
+		if (data['result'] == 'success') {
+		}
+	});
+	$.when(
+		$.when(A_JAX(host_ip+"/category_search/대학교/200", "POST", null, sendData))
+		.done((data) => {
+			if (data['result'] == "success") {
+			}
+		}).catch((e) => {
+			// Ajax fail
+		}),
+		$.when(A_JAX(host_ip+"/category_search/동아리&모임/200", "POST", null, sendData))
+		.done(function (data) {
+			if (data['result'] == "success") {
+			}
+		}).catch((e) => {
+			// Ajax fail
+		}),
+		$.when(A_JAX(host_ip+"/category_search/공모전&행사/200", "POST", null, sendData))
+		.done(function (data) {
+			if (data['result'] == "success") {
+			}
+		}).catch((e) => {
+			// Ajax fail
+		}),
+		$.when(A_JAX(host_ip+"/category_search/진로&구인/200", "POST", null, sendData))
+		.done(function (data) {
+			if (data['result'] == "success") {
+			}
+		}).catch((e) => {
+			// Ajax fail
+		}),
+		$.when(A_JAX(host_ip+"/category_search/자유/200", "POST", null, sendData))
+		.done(function (data) {
+			if (data['result'] == "success") {
+			}
+		}).catch((e) => {
+			// Ajax fail
+		}),
+		$.when(A_JAX(host_ip+"/category_search/예외/200", "POST", null, sendData))
+		.done(function (data) {
+			if (data['result'] == "success") {
+			}
+		}).catch((e) => {
+			// Ajax fail
+		})
+	);
 }
