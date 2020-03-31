@@ -242,4 +242,3 @@ def get_user_lately_search(num):
 		result = "success",
 		lately_search_list = result
 	)
-

@@ -32,7 +32,7 @@ SJ_DB_FEEDBACK = "SJ_FEEDBACK"
 #FASTTEXT Similarity percent (FT 유사도 비율)
 SJ_FASTTEXT_SIM_PERCENT = 0.7
 #ALL post return number (모든 포스트 반환 최대 제한)
-SJ_RETURN_NUM = 300
+SJ_RETURN_NUM = 150
 #Priority Search limit number (일반 서치 DB호출 최대 제한)
 SJ_PS_LIMIT = 10000
 #Category Search limit number (카테고리 서치 DB호출 최대 제한)
@@ -40,7 +40,7 @@ SJ_CS_LIMIT = 5000
 #Newsfeed of Topic limit(토픽별 뉴스피드 DB호출 최대 제한)
 SJ_NEWSFEED_TOPIC_LIMIT = 2000
 #No Token User Recommendation limit (비로그인 추천뉴스피드 DB호출 최대 제한)
-SJ_NO_TOKEN_RECOMMENDATION_LIMIT = 500
+SJ_NO_TOKEN_RECOMMENDATION_LIMIT = 250
 #Category Search Default Date (카테고리 디폴트 데이트 설정, 일 단위)
 SJ_CS_DEFAULT_DATE = 365
 #Log user limit number (사용자 로그 불러오기 최대 제한)
@@ -103,7 +103,7 @@ SJ_RECOMMENDATION_POST_MINUS_WEIGHT = -75
 SJ_RECOMMENDATION_DEFAULT_DATE = 60
 
 #각 카테고리를 지정된 갯수만큼 자르기
-SJ_RECOMMENDATION_CATEGORY_POST_NUM = [70, 28, 28, 28, 18]
+SJ_RECOMMENDATION_CATEGORY_POST_NUM = [60, 33, 33, 33, 18]
 
 #Measurement Weight
 #####################################################
