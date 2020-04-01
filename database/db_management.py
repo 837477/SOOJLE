@@ -4,10 +4,9 @@ from datetime import datetime, timedelta
 import numpy
 ######################################################
 import global_func
+import LDA
+import FastText
 from variable import *
-
-
-
 
 #SJ_DB_USER 관련#######################################
 ######################################################
@@ -94,10 +93,10 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto
 
 #유저 생성 (사용)
 def insert_user(db, user_id, user_pw, user_nickname):
-	topic_temp = numpy.ones(26)
+	topic_temp = numpy.ones(LDA.NUM_TOPICS)
 	topic = (topic_temp / topic_temp.sum()).tolist()
 
-	ft_vector = (numpy.zeros(30)).tolist()
+	ft_vector = (numpy.zeros(FastText.VEC_SIZE)).tolist()
 	tag = {}
 	tag_sum = 1
 	fav_list = []
@@ -132,10 +131,10 @@ def insert_user(db, user_id, user_pw, user_nickname):
 
 #유저 관심도 초기화 (사용)
 def update_user_measurement_reset(db, user_id):
-	topic_temp = numpy.ones(26)
+	topic_temp = numpy.ones(LDA.NUM_TOPICS)
 	topic = (topic_temp / topic_temp.sum()).tolist()
 
-	ft_vector = (numpy.zeros(30)).tolist()
+	ft_vector = (numpy.zeros(FastText.VEC_SIZE)).tolist()
 	tag = {}
 	tag_sum = 1
 	fav_list = []
@@ -901,7 +900,7 @@ def check_dummy_post(db):
 
 #좋아요/조회수 초기 셋팅용 더비 포스트 생성
 def insert_dummy_post(db):
-	topic_temp = numpy.ones(26)
+	topic_temp = numpy.ones(LDA.NUM_TOPICS)
 	topic = (topic_temp / topic_temp.sum()).tolist()
 	db[SJ_DB_POST].insert(
 		{
@@ -920,7 +919,7 @@ def insert_dummy_post(db):
 			'login': 0,
 			'learn': 1,
 			'popularity': 0,
-			'fav_vector': (numpy.zeros(30)).tolist(),
+			'fav_vector': (numpy.zeros(FastText.VEC_SIZE)).tolist(),
 			'topic': topic
 		}
 	)
