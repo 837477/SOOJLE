@@ -199,27 +199,29 @@ function Insert_Sejong_Guide() {
 					<div class="guide_subtitle noselect">
 						Office 365를 통해서 학교 업무와 각종 대학생 혜택을 누려보세요!
 					</div>
-					<div class="guide_office365_svg animated wow slideInLeft">${Mail_Svg}</div>
-					<div class="guide_office365_btn_cont noselect">
-						<a target="_blank" href="http://o365.sejong.ac.kr/mysql/User/intro.jsp"><div class="guide_office365_btn pointer"><i class="fas fa-info-circle"></i> 안내</div></a>
-						<a target="_blank" href="https://o365.sejong.ac.kr/mysql/User/login.jsp"><div class="guide_office365_btn pointer"><i class="fas fa-paper-plane"></i> 신청</div></a>
 					</div>
-					<div class="guide_office365_intro_cont">
-						<div class="guide_office365_intro_title noselect">주요 기능</div>
-						<div class="guide_office365_intro_post"><span class="guide_office365_color">1. </span> 세종인을 위한 메일 계정 제공</div>
-						<div class="guide_office365_intro_post"><span class="guide_office365_color">2. </span> 50GB의 메일 사서함 제공</div>
-						<div class="guide_office365_intro_post"><span class="guide_office365_color">3. </span> One Drive: 1TB의 개인용 스토리지</div>
-						<div class="guide_office365_intro_post"><span class="guide_office365_color">4. </span> 최신 Office를 설치하여 사용 가능</div>
-						<div class="guide_office365_intro_post"><span class="guide_office365_color">5. </span> 학생인증 필요서비스 사용 가능</div>						
-					</div
-					><div class="guide_office365_intro_cont">
-						<div class="guide_office365_intro_title noselect" style="color:#c30e2e">이용 안내</div>
-						<div class="guide_office365_intro_post"><span class="guide_office365_color">1. </span> 본 학교 신분이 아닐 시, 해당 학기 마지막일에 자동 탈퇴</div>
-						<div class="guide_office365_intro_post"><span class="guide_office365_color">2. </span> 자동 탈퇴 처리 전에 백업을 완료해주십시오.</div>
-						<div class="guide_office365_intro_post"><span class="guide_office365_color">3. </span> 패스워드: 8자이상 권장(영문+숫자+특수문자)</div>				
+						<div class="guide_office365_svg animated wow slideInLeft">${Mail_Svg}</div>
+						<div class="guide_office365_btn_cont noselect">
+							<a target="_blank" href="http://o365.sejong.ac.kr/mysql/User/intro.jsp"><div class="guide_office365_btn pointer"><i class="fas fa-info-circle"></i> 안내</div></a>
+							<a target="_blank" href="https://o365.sejong.ac.kr/mysql/User/login.jsp"><div class="guide_office365_btn pointer"><i class="fas fa-paper-plane"></i> 신청</div></a>
+						</div>
+						<div class="guide_office365_intro_cont">
+							<div class="guide_office365_intro_title noselect">주요 기능</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color">1. </span> 세종인을 위한 메일 계정 제공</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color">2. </span> 50GB의 메일 사서함 제공</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color">3. </span> One Drive: 1TB의 개인용 스토리지</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color">4. </span> 최신 Office를 설치하여 사용 가능</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color">5. </span> 학생인증 필요서비스 사용 가능</div>						
+						</div
+						><div class="guide_office365_intro_cont">
+							<div class="guide_office365_intro_title noselect" style="color:#c30e2e">이용 안내</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color">1. </span> 본 학교 신분이 아닐 시, 해당 학기 마지막일에 자동 탈퇴</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color">2. </span> 자동 탈퇴 처리 전에 백업을 완료해주십시오.</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color">3. </span> 패스워드: 8자이상 권장(영문+숫자+특수문자)</div>				
+						</div>
 					</div>
 					<div class="guide_line" style="margin-top:30px"></div>
-					</div>
+					
 				`;
 	
 	target.append(div);
@@ -474,8 +476,7 @@ const CAMPUS = {
 	'캠퍼스타운': [],
 	'흡연장': []
 }
-
-
+// 메일 SVG
 const Mail_Svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 513 222">
   <g id="그룹_15" data-name="그룹 15" transform="translate(-3029 2716)">
     <g id="그룹_14" data-name="그룹 14" transform="translate(388 -40)">
