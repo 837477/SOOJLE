@@ -1291,6 +1291,9 @@
 	.guide_library_link > a {
 		color: inherit;
 	}
+	.guide_page_icon_span > a {
+		color: #0071e3;
+	}
 }
 
 
@@ -1900,7 +1903,13 @@
 	.guide_library_info {
 		font-size: 16px;
 	}
-
+	.guide_tip_cont {
+		width: 95%;
+		margin: auto;
+	}
+	.guide_tip {
+		width: 100%;
+	}
 
 	.setting_feedback_type_cont {
 		display: block;

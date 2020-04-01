@@ -205,17 +205,17 @@ function Insert_Sejong_Guide() {
 						</div>
 						<div class="guide_office365_intro_cont">
 							<div class="guide_office365_intro_title noselect">주요 기능</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">1. </span> 세종인을 위한 메일 계정 제공</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">2. </span> 50GB의 메일 사서함 제공</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">3. </span> One Drive: 1TB의 개인용 스토리지</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">4. </span> 최신 Office를 설치하여 사용 가능</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">5. </span> 학생인증 필요서비스 사용 가능</div>						
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">1. </span> 세종인을 위한 메일 계정 제공</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">2. </span> 50GB의 메일 사서함 제공</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">3. </span> One Drive: 1TB의 개인용 스토리지</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">4. </span> 최신 Office를 설치하여 사용 가능</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">5. </span> 학생인증 필요서비스 사용 가능</div>						
 						</div
 						><div class="guide_office365_intro_cont">
 							<div class="guide_office365_intro_title noselect" style="color:#c30e2e">이용 안내</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">1. </span> 본 학교 신분이 아닐 시, 해당 학기 마지막일에 자동 탈퇴</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">2. </span> 자동 탈퇴 처리 전에 백업을 완료해주십시오.</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">3. </span> 패스워드: 8자이상 권장(영문+숫자+특수문자)</div>				
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">1. </span> 본 학교 신분이 아닐 시, 해당 학기 마지막일에 자동 탈퇴</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">2. </span> 자동 탈퇴 처리 전에 백업을 완료해주십시오.</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">3. </span> 패스워드: 8자이상 권장(영문+숫자+특수문자)</div>				
 						</div>
 					</div>
 					<div class="guide_line"></div>
@@ -267,6 +267,26 @@ function Insert_Sejong_Guide() {
 						><div class="guide_library_link"><a target="_blank" href="https://library.sejong.ac.kr/bbs/Detail.ax?bbsID=3&articleID=19">스터디룸 이용 FAQ</a></div>
 					</div>
 					<div class="guide_line"></div>
+
+					<div class="guide_title noselect">꿀팁 팔계명</div>
+					<div class="guide_subtitle noselect">
+						SOOJLE이 추천하는 대학 생활 꿀팁 8가지를 소개합니다!
+					</div>
+					<div class="guide_tip_cont">
+						<div class="guide_tip"><span class="guide_library_color_green noselect">1. </span>일찍 일어나는 새(오전수업)가 성적을 잘 딴다.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">2. </span>고전독서는 최대한 빨리 끝내버리자.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">3. </span>소기코, 컴기코는 1학년 때 끝내는 것이 속 편하다.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">4. </span>따로 계획이 없다면 군대는 빨리 가자.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">5. </span>졸업 가능 요건 충족은 빠를 수록 좋다.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">6. </span>아싸는 학생회비 내도 할 거 없다. 그리고 나는 아싸다..</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">7. </span>영어는 졸업 직전까지 함께한다.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">8. </span>SOOJLE을 잘 활용하자! :)</div>
+					</div>
+					<div class="guide_line"></div>
+
+					<div class="guide_page_icon_span noselect">
+						본 페이지의 모든 정보는 언제든지 변경될 수 있으며, 만약 잘못된 정보는 <a href="/board#feedback">피드백</a>을 통해서 알려주세요!
+					</div>
 				`;
 	
 	target.append(div);

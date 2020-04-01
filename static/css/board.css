@@ -3092,17 +3092,12 @@ span.selectbox_choose {
 	padding-bottom: 20px;
 	word-break: keep-all;
 }
-.guide_office365_color {
-	color: #0071e3;
-	font-style: italic;
-	font-weight: bold;
-}
 .guide_library_cont {
 	position: relative;
 	display: block;
 	width: 100%;
 	height: auto;
-	margin-bottom: 60px;
+	margin-bottom: 30px;
 	padding: 10px 0;
 }
 .guide_library_title {
@@ -3155,6 +3150,10 @@ span.selectbox_choose {
 	text-decoration: none;
 	color: #0071e3;
 }
+.guide_library_info > a:hover {
+	text-decoration: underline;
+	text-underline-position: under;
+}
 .guide_library_link_cont {
 	position: relative;
 	width: 100%;
@@ -3189,6 +3188,16 @@ span.selectbox_choose {
 	font-style: italic;
 	font-weight: bold;
 }
+.guide_library_color_green {
+	color: #12b886;
+	font-style: italic;
+	font-weight: bold;
+}
+.guide_library_color_blue {
+	color: #0071e3;
+	font-style: italic;
+	font-weight: bold;
+}
 .guide_library_answer_box_cont {
 	position: relative;
 	width: 100%;
@@ -3216,6 +3225,22 @@ span.selectbox_choose {
 	line-height: 30px;
 	color: #12b886;
 	margin-bottom: 10px;
+}
+.guide_tip_cont {
+	position: relative;
+	width: 100%;
+	height: auto;
+	text-align: center;
+	margin-bottom: 60px;
+}
+.guide_tip {
+	position: relative;
+	width: 400px;
+	font-size: 18px;
+	line-height: 24px;
+	padding-bottom: 15px;
+	text-align: left;
+	margin: auto;
 }
 
 
