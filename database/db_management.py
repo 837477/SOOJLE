@@ -142,6 +142,7 @@ def update_user_measurement_reset(db, user_id):
 	newsfeed_list = []
 	search_list = []
 	renewal = datetime.now()
+	measurement_num = 0
 
 	db[SJ_DB_USER].update(
 		{
@@ -158,7 +159,8 @@ def update_user_measurement_reset(db, user_id):
 				'view_list': view_list,
 				'newsfeed_list': newsfeed_list,
 				'search_list': search_list,
-				'renewal': renewal
+				'renewal': renewal,
+				'measurement_num': measurement_num
 			}
 		}
 	)
