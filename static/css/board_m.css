@@ -1294,6 +1294,10 @@
 	.guide_page_icon_span > a {
 		color: #0071e3;
 	}
+
+	.search_option_sort {
+		padding: 0 10px;
+	}
 }
 
 
@@ -1601,7 +1605,7 @@
 	.guide_library_cont {
 		width: 95%;
 		margin: auto;
-		margin-bottom: 30px;
+		margin-bottom: 40px;
 	}
 }
 /*=============================================================================*/
@@ -1906,11 +1910,14 @@
 	.guide_tip_cont {
 		width: 95%;
 		margin: auto;
+		margin-bottom: 60px;
 	}
 	.guide_tip {
 		width: 100%;
 	}
-
+	.guide_tip:nth-child(2n) {
+		background-color: rgba(0,0,0,0);
+	}
 	.setting_feedback_type_cont {
 		display: block;
 		width: auto;

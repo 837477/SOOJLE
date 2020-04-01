@@ -3097,7 +3097,7 @@ span.selectbox_choose {
 	display: block;
 	width: 100%;
 	height: auto;
-	margin-bottom: 30px;
+	margin-bottom: 80px;
 	padding: 10px 0;
 }
 .guide_library_title {
@@ -3238,11 +3238,14 @@ span.selectbox_choose {
 	width: 400px;
 	font-size: 18px;
 	line-height: 24px;
-	padding-bottom: 15px;
 	text-align: left;
 	margin: auto;
+	margin-bottom: 5px;
+	padding: 5px 0;
 }
-
+.guide_tip:nth-child(2n) {
+	background-color: #f2f2f2;
+}
 
 
 .guide_banner {
@@ -3412,6 +3415,9 @@ span.selectbox_choose {
 	box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 	box-sizing: border-box;
 	word-break: keep-all;
+}
+.setting_feedback_box:hover {
+	box-shadow: 0 0 0 rgba(0,0,0,0);
 }
 .setting_feedback_box > *::selection {
 	background-color: #12b886;
