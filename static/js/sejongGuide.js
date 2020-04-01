@@ -199,7 +199,7 @@ function Insert_Sejong_Guide() {
 					<div class="guide_subtitle noselect">
 						Office 365를 통해서 학교 업무와 각종 대학생 혜택을 누려보세요!
 					</div>
-					</div>
+					<div class="guide_office365_cont">
 						<div class="guide_office365_svg animated wow slideInLeft">${Mail_Svg}</div>
 						<div class="guide_office365_btn_cont noselect">
 							<a target="_blank" href="http://o365.sejong.ac.kr/mysql/User/intro.jsp"><div class="guide_office365_btn pointer"><i class="fas fa-info-circle"></i> 안내</div></a>
@@ -207,21 +207,47 @@ function Insert_Sejong_Guide() {
 						</div>
 						<div class="guide_office365_intro_cont">
 							<div class="guide_office365_intro_title noselect">주요 기능</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color">1. </span> 세종인을 위한 메일 계정 제공</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color">2. </span> 50GB의 메일 사서함 제공</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color">3. </span> One Drive: 1TB의 개인용 스토리지</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color">4. </span> 최신 Office를 설치하여 사용 가능</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color">5. </span> 학생인증 필요서비스 사용 가능</div>						
+							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">1. </span> 세종인을 위한 메일 계정 제공</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">2. </span> 50GB의 메일 사서함 제공</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">3. </span> One Drive: 1TB의 개인용 스토리지</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">4. </span> 최신 Office를 설치하여 사용 가능</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">5. </span> 학생인증 필요서비스 사용 가능</div>						
 						</div
 						><div class="guide_office365_intro_cont">
 							<div class="guide_office365_intro_title noselect" style="color:#c30e2e">이용 안내</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color">1. </span> 본 학교 신분이 아닐 시, 해당 학기 마지막일에 자동 탈퇴</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color">2. </span> 자동 탈퇴 처리 전에 백업을 완료해주십시오.</div>
-							<div class="guide_office365_intro_post"><span class="guide_office365_color">3. </span> 패스워드: 8자이상 권장(영문+숫자+특수문자)</div>				
+							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">1. </span> 본 학교 신분이 아닐 시, 해당 학기 마지막일에 자동 탈퇴</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">2. </span> 자동 탈퇴 처리 전에 백업을 완료해주십시오.</div>
+							<div class="guide_office365_intro_post"><span class="guide_office365_color noselect">3. </span> 패스워드: 8자이상 권장(영문+숫자+특수문자)</div>				
 						</div>
 					</div>
-					<div class="guide_line" style="margin-top:30px"></div>
+					<div class="guide_line"></div>
 					
+					<div class="guide_title noselect">학술정보원 이용 안내</div>
+					<div class="guide_subtitle noselect">
+						학술정보원을 처음 이용하는 세종인을 위한 안내입니다.
+					</div>
+					<div class="guide_library_cont">
+						<div class="guide_library_title noselect">대출/스터디룸 이용 전</div>
+						<div class="guide_library_img_cont">
+							<img class="guide_library_img" src="/static/image/logo_sejonglib.png">
+							<div class="guide_library_info"><span class="guide_library_color_black noselect">1. </span><a target="_blank" href="guide_library_link">학술정보원 페이지</a>에 접속을 해줍니다.</div>
+						</div
+						><div class="guide_library_img_cont">
+							<img class="guide_library_img" src="/static/image/btn_sejonglib.png">
+							<div class="guide_library_info"><span class="guide_library_color_black noselect">2. </span>위 버튼을 찾아 클릭 후, 영상을 이수해주세요.</div>
+						</div>
+					</div>
+					<div class="guide_library_cont">
+						<div class="guide_library_title noselect" style="color:#c30e2e">자유열람실 이용제한</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">1. </span>제적,정학,자퇴,면직,학점교류 학생일 시, 이용불가</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">2. </span>대리발권 적발 시, 30일 이용불가</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">3. </span>열람실 미반납 3회 확인 시, 5일 이용불가</div>
+					</div>
+					<div class="guide_library_link_cont">
+						<div class="guide_library_link"><a target="_blank" href="https://library.sejong.ac.kr/bbs/Detail.ax?bbsID=3&articleID=16">이용자 교육 FAQ</a></div
+						><div class="guide_library_link"><a target="_blank" href="https://library.sejong.ac.kr/bbs/Detail.ax?bbsID=3&articleID=19">스터디룸 이용 FAQ</a></div>
+					</div>
+					<div class="guide_line"></div>
 				`;
 	
 	target.append(div);

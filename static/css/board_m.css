@@ -1587,7 +1587,16 @@
 		font-size: 12px;
 		line-height: 20px;
 	}
-
+	.guide_office365_cont {
+		width: 95%;
+		margin: auto;
+		margin-bottom: 30px;
+	}
+	.guide_library_cont {
+		width: 95%;
+		margin: auto;
+		margin-bottom: 30px;
+	}
 }
 /*=============================================================================*/
 /*                                    450px                                    */
@@ -1810,6 +1819,11 @@
 		width: 100%;
 	}
 
+
+	.guide_line {
+		height: 40px;
+		background-color: #f2f2f2;
+	}
 	.guide_subtitle {
 		margin-bottom: 30px;
 		font-size: 16px;
@@ -1860,6 +1874,24 @@
 	.guide_office365_intro_post {
 		font-size: 16px;
 		padding-bottom: 10px;
+	}
+	.guide_library_cont {
+		width: 95%;
+		display: block;
+		padding: 20px 0 0 0;
+	}
+	.guide_library_link_cont {
+		width: 95%;
+		margin: auto;
+		margin-bottom: 30px;
+	}
+	.guide_library_title {
+		border-bottom: 2px solid;
+		font-size: 20px;
+		line-height: 40px;
+	}
+	.guide_library_info {
+		font-size: 16px;
 	}
 
 

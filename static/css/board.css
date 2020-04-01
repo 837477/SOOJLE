@@ -3059,6 +3059,13 @@ span.selectbox_choose {
 .guide_office365_btn:hover {
 	background-color: #005fbf;
 }
+.guide_office365_cont {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: auto;
+	margin-bottom: 30px;
+}
 .guide_office365_intro_cont {
 	position: relative;
 	display: inline-block;
@@ -3090,6 +3097,84 @@ span.selectbox_choose {
 	font-style: italic;
 	font-weight: bold;
 }
+.guide_library_cont {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: auto;
+	margin-bottom: 60px;
+	padding: 10px 0;
+	text-align: center;
+}
+.guide_library_title {
+	position: relative;
+	font-size: 24px;
+	line-height: 40px;
+	color: #12b886;
+	margin-bottom: 20px;
+	font-weight: bold;
+}
+.guide_library_img_cont {
+	position: relative;
+	display: inline-block;
+	width: 50%;
+	text-align: center;
+	height: auto;
+	margin: auto;
+	vertical-align: top;
+}
+.guide_library_img {
+	position: relative;
+	height: 150px;
+	width: auto;
+}
+.guide_library_info {
+	position: relative;
+	width: 100%;
+	height: auto;
+	font-size: 16px;
+	line-height: 20px;
+	text-align: center;
+	word-break: keep-all;
+	padding: 10px 0;
+}
+.guide_library_info > a {
+	text-decoration: none;
+	color: #0071e3;
+}
+.guide_library_link_cont {
+	position: relative;
+	width: 100%;
+	height: auto;
+	margin-bottom: 40px;
+}
+.guide_library_link {
+	position: relative;
+	display: inline-block;
+	width: 50%;
+	height: auto;
+	font-size: 16px;
+	line-height: 20px;
+	text-align: center;
+	word-break: keep-all;
+	color: #0071e3;
+}
+.guide_library_link > a {
+	text-underline-position: under;
+	color: inherit;
+}
+.guide_library_color_black {
+	font-style: italic;
+	font-weight: bold;
+}
+.guide_library_color_red {
+	color: #c30e2e;
+	font-style: italic;
+	font-weight: bold;
+}
+
+
+
 
 
 .guide_banner {
