@@ -3028,6 +3028,68 @@ span.selectbox_choose {
 	line-height: 20px;
 	word-break: keep-all;
 }
+.guide_office365_svg {
+	position: relative;
+	width: 50%;
+	max-width: 240px;
+	min-width: 200px;
+	height: auto;
+	margin: auto;
+	opacity: .9;
+}
+.guide_office365_btn_cont {
+	position: relative;
+	width: 100%;
+	height: auto;
+	text-align: center;
+	margin-top: 40px;
+}
+.guide_office365_btn {
+	position: relative;
+	display: inline-block;
+	width: 200px;
+	height: 40px;
+	font-size: 16px;
+	line-height: 40px;
+	color: white;
+	background-color: #0071e3;
+	margin: 20px;
+	transition: .1s ease-in-out;
+}
+.guide_office365_btn:hover {
+	background-color: #005fbf;
+}
+.guide_office365_intro_cont {
+	position: relative;
+	display: inline-block;
+	width: 50%;
+	height: auto;
+	margin: auto;
+	padding: 20px 0;
+	vertical-align: top;
+}
+.guide_office365_intro_title {
+	position: relative;
+	font-size: 24px;
+	line-height: 40px;
+	color: #12b886;
+	margin-bottom: 20px;
+	font-weight: bold;
+}
+.guide_office365_intro_post {
+	position: relative;
+	width: 100%;
+	height: auto;
+	font-size: 18px;
+	line-height: 20px;
+	padding-bottom: 20px;
+	word-break: keep-all;
+}
+.guide_office365_color {
+	color: #0071e3;
+	font-style: italic;
+	font-weight: bold;
+}
 
 
 .guide_banner {

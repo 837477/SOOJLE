@@ -1844,6 +1844,23 @@
 	.guide_campus_map {
 		border: 5px solid #ddd;
 	}
+	.guide_office365_btn {
+		margin: 10px;
+	}
+	.guide_office365_intro_cont {
+		width: 95%;
+		display: block;
+		padding: 20px 0 0 0;
+	}
+	.guide_office365_intro_title {
+		border-bottom: 2px solid;
+		font-size: 20px;
+		line-height: 40px;
+	}
+	.guide_office365_intro_post {
+		font-size: 16px;
+		padding-bottom: 10px;
+	}
 
 
 	.setting_feedback_type_cont {

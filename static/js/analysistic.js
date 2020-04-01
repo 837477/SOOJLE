@@ -11,7 +11,9 @@ const time_event = {
 					'815': `<span style="font-weight:bold">광복절.</span> 대한민국 독립일`,
 					'103': `단군이 고조선을 처음 건국한 날입니다.`,
 					'109': `한국어는 자랑스러운 <span style="color:red">대한민국</span>의 언어입니다.`,
-					'314': `달콤한 <span color="green">사탕</span>.. 저도 먹고싶네요!`
+					'314': `달콤한 <span color="green">사탕</span>.. 저도 먹고싶네요!`,
+					'41': `애인 생겼음.`,
+					'42': `사실 솔로임.`
 				}
 
 function Click_analysistic() {
