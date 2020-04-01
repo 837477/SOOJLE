@@ -3087,7 +3087,7 @@ span.selectbox_choose {
 	position: relative;
 	width: 100%;
 	height: auto;
-	font-size: 18px;
+	font-size: 16px;
 	line-height: 20px;
 	padding-bottom: 20px;
 	word-break: keep-all;
@@ -3104,15 +3104,26 @@ span.selectbox_choose {
 	height: auto;
 	margin-bottom: 60px;
 	padding: 10px 0;
-	text-align: center;
 }
 .guide_library_title {
 	position: relative;
 	font-size: 24px;
 	line-height: 40px;
-	color: #12b886;
 	margin-bottom: 20px;
 	font-weight: bold;
+}
+.guide_library_subtitle {
+	position: relative;
+	color:#c30e2e;
+	line-height: 40px;
+	margin-bottom: 10px;
+	font-size:20px;
+	font-weight: bold;
+}
+.guide_library_title_QnA {
+	font-size: 30px;
+	line-height: 40px;
+	color: #12b886;
 }
 .guide_library_img_cont {
 	position: relative;
@@ -3127,6 +3138,8 @@ span.selectbox_choose {
 	position: relative;
 	height: 150px;
 	width: auto;
+	border-radius: 15px;
+	border: 5px solid #ddd;
 }
 .guide_library_info {
 	position: relative;
@@ -3160,8 +3173,12 @@ span.selectbox_choose {
 	color: #0071e3;
 }
 .guide_library_link > a {
-	text-underline-position: under;
+	text-decoration: none;
 	color: inherit;
+}
+.guide_library_link > a:hover {
+	text-decoration: underline;
+	text-underline-position: under;
 }
 .guide_library_color_black {
 	font-style: italic;
@@ -3172,8 +3189,34 @@ span.selectbox_choose {
 	font-style: italic;
 	font-weight: bold;
 }
-
-
+.guide_library_answer_box_cont {
+	position: relative;
+	width: 100%;
+	height: auto;
+	text-align: center;
+}
+.guide_library_answer_box {
+	position: relative;
+	display: inline-block;
+	width: 200px;
+	height: auto;
+	vertical-align: top;
+	text-align: center;
+	padding-top: 10px;
+	margin: 0 20px 40px 20px;
+	transition: .1s ease-in-out;
+	border-top: 2px solid rgba(0,0,0,0);
+}
+.guide_library_answer_box:hover {
+	border-top: 2px solid #12b886;
+}
+.guide_library_answer_box_title {
+	position: relative;
+	font-size: 20px;
+	line-height: 30px;
+	color: #12b886;
+	margin-bottom: 10px;
+}
 
 
 

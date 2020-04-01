@@ -22,8 +22,6 @@ function Go_guide() {
 
 // 가이드 삽입
 function Insert_Sejong_Guide() {
-	// OFFICE 365
-	// 인터넷 증명서
 	let target = $("#posts_target");
 	let div = 	`
 					<div class="guide_title noselect">앱 설치하기</div>
@@ -226,22 +224,43 @@ function Insert_Sejong_Guide() {
 					<div class="guide_subtitle noselect">
 						학술정보원을 처음 이용하는 세종인을 위한 안내입니다.
 					</div>
-					<div class="guide_library_cont">
-						<div class="guide_library_title noselect">대출/스터디룸 이용 전</div>
+					<div class="guide_library_cont wow animated fadeInUp">
+						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>신입생인데 열람실을 사용할 수 없어요.</div>
 						<div class="guide_library_img_cont">
 							<img class="guide_library_img" src="/static/image/logo_sejonglib.png">
-							<div class="guide_library_info"><span class="guide_library_color_black noselect">1. </span><a target="_blank" href="guide_library_link">학술정보원 페이지</a>에 접속을 해줍니다.</div>
+							<div class="guide_library_info"><span class="guide_library_color_black noselect">1. </span><a target="_blank" href="https://library.sejong.ac.kr/index.ax">학술정보원 페이지</a>에 접속을 해줍니다.</div>
 						</div
 						><div class="guide_library_img_cont">
 							<img class="guide_library_img" src="/static/image/btn_sejonglib.png">
-							<div class="guide_library_info"><span class="guide_library_color_black noselect">2. </span>위 버튼을 찾아 클릭 후, 영상을 이수해주세요.</div>
+							<div class="guide_library_info"><span class="guide_library_color_black noselect">2. </span>위 버튼을 찾아 클릭 후, 영상을 먼저 이수해주세요.</div>
 						</div>
 					</div>
-					<div class="guide_library_cont">
-						<div class="guide_library_title noselect" style="color:#c30e2e">자유열람실 이용제한</div>
-						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">1. </span>제적,정학,자퇴,면직,학점교류 학생일 시, 이용불가</div>
-						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">2. </span>대리발권 적발 시, 30일 이용불가</div>
-						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">3. </span>열람실 미반납 3회 확인 시, 5일 이용불가</div>
+					<div class="guide_library_cont wow animated fadeInUp">
+						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>자유열람실 이용제한은 어떻게 되나요?</div>
+						<div class="guide_library_subtitle noselect">자유열람실 이용제한</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">1. </span>제적,정학,자퇴,면직,학점교류 학생일 시, 이용 불가</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">2. </span>대리발권 적발 시, 30일 이용 불가</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">3. </span>열람실 미반납 3회 확인 시, 5일 이용 불가</div>
+					</div>
+					<div class="guide_library_cont wow animated fadeInUp">
+						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>학술정보원 사용시간은 어떻게 되나요?</div>
+						<div class="guide_library_answer_box_cont noselect">
+							<div class="guide_library_answer_box">
+								<div class="guide_restaurnat_box_title">대출실 및 자료실</div>
+								<div class="guide_restaurnat_box_type">학기중</div>
+								<div class="guide_restaurnat_box_post">평일: 09:00 ~ 22:00<br>
+								토요일: 09:00 ~ 17:00</div>
+								<div class="guide_restaurnat_box_type">방학중</div>
+								<div class="guide_restaurnat_box_post">09:00 ~ 17:00</div>
+							</div
+							><div class="guide_library_answer_box">
+								<div class="guide_restaurnat_box_title">자유열람실</div>
+								<div class="guide_restaurnat_box_type">학기중</div>
+								<div class="guide_restaurnat_box_post">24시간</div>
+								<div class="guide_restaurnat_box_type">방학중</div>
+								<div class="guide_restaurnat_box_post">24시간</div>
+							</div>
+						</div>
 					</div>
 					<div class="guide_library_link_cont">
 						<div class="guide_library_link"><a target="_blank" href="https://library.sejong.ac.kr/bbs/Detail.ax?bbsID=3&articleID=16">이용자 교육 FAQ</a></div
