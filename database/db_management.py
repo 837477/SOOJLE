@@ -1311,11 +1311,9 @@ def update_notice(db, notice_obi, title, post, activation):
 			{
 				'title': title,
 				'post': post,
-				'activation': activation,
-				'date': datetime.now()
+				'activation': activation
 			}	
-		}
-		
+		}	
 	)
 
 	return "success"
@@ -1368,14 +1366,53 @@ def update_notice_view(db, notice_obi):
 #SJ_DB_FEEDBACK 관련###################################
 ######################################################
 #피드백 입력
-def insert_user_feedback(db, feedback):
+def insert_user_feedback(db, type_, post, date, author, activation):
 	db[SJ_DB_FEEDBACK].insert(
-    	feedback
+		{
+			'type': type_,
+			'post': post,
+			'date': datetime.now(),
+			'author': author,
+			'activation': 1
+		}
    	)
 	return "success"
 
+#피드백 전체 반환
+def find_all_feedback(db):
+	result = db[SJ_DB_FEEDBACK].find(
+		{
+			'activation': 1
+		}
+	).sort([('date', -1)])
 
+	return result
 
+#피드백 단일 반환
+def find_feedback(db, feedback_obi):
+	result = db[SJ_DB_FEEDBACK].find_one(
+		{
+			'_id': ObjectId(feedback_obi)
+		}
+	)
+
+	return result
+
+#피드백 활성화 변경
+def update_feedback_activation(db, feedback_obi, activation):
+	db[SJ_DB_FEEDBACK].update(
+		{
+			'_id': ObjectId(feedback_obi)
+		},
+		{
+			'$set':
+			{
+				'activation': activation
+			}	
+		}	
+	)
+
+	return "success"
 
 #SJ_DB_VARIABLE 관련###################################
 ######################################################
