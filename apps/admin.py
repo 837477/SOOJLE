@@ -201,5 +201,26 @@ def get_main_info():
 		main_info = result
 	)
 
+#모든 회원 관심도 초기화
+@BP.route('/all_reset_user_measurement')
+@jwt_required
+def all_reset_user_measurement():
+	ADMIN = find_user(g.db, user_id=get_jwt_identity())
+
+	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
+	if ADMIN is None or ADMIN['user_id'] != SJ_ADMIN: abort(403)
+
+	USER_LIST = find_all_user(g.db, user_id=1)
+	USER_LIST = list(USER_LIST)
+
+	for USER in USER_LIST:
+		#회원 관심도 초기화!
+		result = update_user_measurement_reset(g.db, USER['user_id'])
+
+	return jsonify(
+		result = "success"
+	)
+
+
 #############################################################################
 #############################################################################
