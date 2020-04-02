@@ -2352,6 +2352,8 @@ span.selectbox_choose {
 	font-size: 16px;
 	border-bottom: 1px solid #ebebeb;
 	margin-bottom: 15px;
+	overflow-y: hidden;
+	overflow-x: auto;
 }
 .search_option_title {
 	position: relative;

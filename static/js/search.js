@@ -235,6 +235,15 @@ function search_text(text) {
 										<div class="search_option_round"></div>
 										<span>관련도순</span>
 									</div>
+									<div class="search_option_title noselect">검색기간</div>
+									<div id="search_option_in_year" class="search_option_sort pointer search_option_select" onclick="Search_Option_Period(0)">
+										<div class="search_option_round"></div>
+										<span>1년이내</span>
+									</div>
+									<div id="search_option_out_year" class="search_option_sort pointer" onclick="Search_Option_Period(1)">
+										<div class="search_option_round"></div>
+										<span>전체</span>
+									</div>
 								</div>
 							`;
 	$("#posts_target").append(search_option_div);
@@ -319,6 +328,82 @@ function Get_Search_Posts(sendData, now_creating_state) {
 			// Ajax fail
 		}),
 		$.when(A_JAX(host_ip+"/category_search/예외/200", "POST", null, sendData))
+		.done(function (data) {
+			if (data['result'] == "success") {
+				let output = remove_duplicated(6, data["search_result"]);
+				a_jax_posts[6] = output;
+			}
+		}).catch((e) => {
+			// Ajax fail
+		})
+	).then(() => {
+		// 각 카테고리 게시물에서 similarity가 가장 높은 200개 Trend로 선정
+		Create_trend_posts();
+		check_search_results_sort();
+	}).then(() => {
+		$("#posts_creating_loading").addClass("display_none");
+		Do_Like_Sign();			// 좋아요 표시
+		result_search_zero();	// 검색결과 0개일경우
+		
+	});
+}
+// 검색 API 호출 : 날짜 제한 없음
+function Get_Search_Posts_Nolimit(sendData, now_creating_state) {
+	a_jax_posts[0] = [];
+	$.when(A_JAX(host_ip+"/domain_search", "POST", null, sendData))
+	.done(function (data) {
+		if (data['result'] == 'success') {
+			domain_posts = data["search_result"];
+			insert_domain_post(data["search_result"], now_creating_state);
+		}
+	});
+	$.when(
+		$.when(A_JAX(host_ip+"/category_search_no_limit/대학교/200", "POST", null, sendData))
+		.done((data) => {
+			if (data['result'] == "success") {
+				let output = remove_duplicated(1, data["search_result"]);
+				a_jax_posts[1] = output;
+			}
+		}).catch((e) => {
+			// Ajax fail
+		}),
+		$.when(A_JAX(host_ip+"/category_search_no_limit/동아리&모임/200", "POST", null, sendData))
+		.done(function (data) {
+			if (data['result'] == "success") {
+				let output = remove_duplicated(2, data["search_result"]);
+				a_jax_posts[2] = output;
+			}
+		}).catch((e) => {
+			// Ajax fail
+		}),
+		$.when(A_JAX(host_ip+"/category_search_no_limit/공모전&행사/200", "POST", null, sendData))
+		.done(function (data) {
+			if (data['result'] == "success") {
+				let output = remove_duplicated(3, data["search_result"]);
+				a_jax_posts[3] = output;
+			}
+		}).catch((e) => {
+			// Ajax fail
+		}),
+		$.when(A_JAX(host_ip+"/category_search_no_limit/진로&구인/200", "POST", null, sendData))
+		.done(function (data) {
+			if (data['result'] == "success") {
+				let output = remove_duplicated(4, data["search_result"]);
+				a_jax_posts[4] = output;
+			}
+		}).catch((e) => {
+			// Ajax fail
+		}),
+		$.when(A_JAX(host_ip+"/category_search_no_limit/자유/200", "POST", null, sendData))
+		.done(function (data) {
+			if (data['result'] == "success") {
+				let output = remove_duplicated(5, data["search_result"]);
+				a_jax_posts[5] = output;
+			}
+		}).catch((e) => {
+			// Ajax fail
+		}),
+		$.when(A_JAX(host_ip+"/category_search_no_limit/예외/200", "POST", null, sendData))
 		.done(function (data) {
 			if (data['result'] == "success") {
 				let output = remove_duplicated(6, data["search_result"]);
@@ -723,4 +808,36 @@ function Search_Option_Sort() {
 	} else if (target == "일반") {
 		category_select($("#category7"));
 	} 
+}
+
+
+// 검색 기간 분류
+function Search_Option_Period(num) {
+	if (num == 0) {		// 검색 기간 1년 이내
+		if ($("#search_option_in_year").hasClass('search_option_select')) {
+			return;
+		} else {
+			$("#search_option_in_year").addClass('search_option_select');
+			$("#search_option_out_year").removeClass('search_option_select');
+			let send_data = {};
+			send_data["search"] = now_state.trim().toLowerCase();
+			$("#search_posts_target").empty();
+			$("#search_option_sort_relevance").addClass('search_option_select');
+			$("#search_option_sort_date").removeClass('search_option_select');
+			Get_Search_Posts(send_data, now_state);	// 검색 API 호출
+		}
+	} else {			// 검색 기간 전체
+		if ($("#search_option_out_year").hasClass('search_option_select')) {
+			return;
+		} else {
+			$("#search_option_out_year").addClass('search_option_select');
+			$("#search_option_in_year").removeClass('search_option_select');
+			let send_data = {};
+			send_data["search"] = now_state.trim().toLowerCase();
+			$("#search_posts_target").empty();
+			$("#search_option_sort_relevance").addClass('search_option_select');
+			$("#search_option_sort_date").removeClass('search_option_select');
+			Get_Search_Posts_Nolimit(send_data, now_state);	// 검색 API 호출 : No limit
+		}
+	}
 }
