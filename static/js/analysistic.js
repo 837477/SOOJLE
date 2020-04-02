@@ -283,13 +283,18 @@ function insert_visitor_div() {
 						</div>\
 					</div>
 				`;
+				/*		<div class="anlt_visitor_chart_box">
+							<div class="anlt_visitor_box_title_big noselect">일별 방문자수 분석</div>
+							<canvas id="visitor_distribution_month" class="anlt_visitor_chart_element" width="auto" height="auto"></canvas>
+						</div>\
+				*/
 	$("#posts_target").append(div);
 	set_visitor_data();
 }
 function set_visitor_data() {
 	let visitor_time_data, visitor_number_data, vistior_time;
 	$.when(A_JAX(host_ip+"/get_everyday_analysis_days_ago/"+2, "GET", null, null))
-	.done(function (data) {
+	.done((data) => {
 		if (data['result'] == 'success') {
 			let visitor_time_data_array1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]; 
 			let visitor_time_data_array2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,];
@@ -327,6 +332,25 @@ function set_visitor_data() {
 			Snackbar("방문자 데이터를 가져오지 못하였습니다.");
 		}
 	});
+	return;
+	$.when(A_JAX(host_ip+"/<일별 방문자수 분석>/"+30, "GET", null, null))
+	.done((data) => {
+		if (data['result'] == 'success') {
+			let visitor_time_table = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+			let visitor_time_table_label = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
+			let show_month = (new Date()).getMonth();
+			if (data['analysis'] != undefined) {
+				vistior_time_table = data['analysis']['visitors'];
+				vistior_time_table_label = data['analysis']['date'];
+			}
+			get_line("visitor_distribution_month",
+				[visitor_time_table_label],
+				[visitor_time_table]
+			);
+		} else {
+			Snackbar("방문자 데이터를 가져오지 못하였습니다.");
+		}
+	})
 }
 
 // 게시글 분석 div Insert------------------------------------------------
