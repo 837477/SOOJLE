@@ -2354,6 +2354,11 @@ span.selectbox_choose {
 	margin-bottom: 15px;
 	overflow-y: hidden;
 	overflow-x: auto;
+	white-space: nowrap;
+}
+.search_option_container::-webkit-scrollbar {
+	display: none;
+	background: transparent;  /* Optional: just make scrollbar invisible */
 }
 .search_option_title {
 	position: relative;
