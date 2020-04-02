@@ -2368,6 +2368,10 @@ span.selectbox_choose {
 	height: 20px;
 	padding: 0 10px;
 	font-weight: bold;
+	font-size: 16px;
+}
+.search_option_title:nth-child(n+2) {
+	margin-left: 20px;
 }
 .search_option_sort {
 	position: relative;
@@ -2375,8 +2379,9 @@ span.selectbox_choose {
 	box-sizing: border-box;
 	width: auto;
 	height: 20px;
-	padding: 0 20px;
+	padding: 0 10px;
 	color: #bbb;
+	font-size: 16px;
 }
 .search_option_round {
 	position: relative;

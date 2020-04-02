@@ -1031,7 +1031,6 @@
 		overflow-x: scroll;
 		white-space:nowrap;
 		border-bottom: 1px solid #ebebeb;
-		margin-top: 10px;
 		margin-bottom: 15px;
 	}
 	.category_tab_last{
@@ -1810,12 +1809,17 @@
 		margin-top: 20px;
 		margin-bottom: 10px;
 	}
+	.category_tabs {
+		border-bottom: 10px solid #f2f2f2;
+		margin-bottom: 10px;
+	}
 	.search_option_container {
 		width: auto;
 		overflow-x: scroll;
+		height: 30px;
 	}
-	.category_tabs {
-		border-bottom: 10px solid #f2f2f2;
+	.search_option_title:nth-child(n+2) {
+		margin-left: 10px;
 	}
 	.board_notice_cont {
 		margin-left: 2%;
@@ -1832,7 +1836,12 @@
 	.realtime_searchwords_table_words {
 		width: 100%;
 	}
-
+	.search_option_title {
+		font-size: 14px;
+	}
+	.search_option_sort {
+		font-size: 14px;
+	}
 
 	.guide_line {
 		height: 40px;
