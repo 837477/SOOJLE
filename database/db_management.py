@@ -836,8 +836,37 @@ def find_popularity_newsfeed(db, default_date, num):
 		).sort([('popularity', -1)]).limit(num)
 	return result
 
-#카테고리 검색
-def find_search_of_category(db, search_list, info_num_list, default_date, num):
+#카테고리 검색 (디폴트 데이트도 적용된 쿼리) (사용)
+def find_search_of_category(db, search_list, info_num_list, num):
+	result = db[SJ_DB_POST].find(
+		{
+			'$and':
+			[
+				{'token': {'$in': search_list}},
+				{'info_num': {'$in': info_num_list}}
+			]
+		},
+		{
+			'_id':1, 
+			'title':1,
+			'date':1,
+			'end_date':1,
+			'img': 1,
+			'url': 1,
+			'fav_cnt': 1,
+			'info': 1,
+			###############
+			'title_token':1,
+			'token':1,
+			'tag':1,
+			'popularity':1,
+			'ft_vector': 1
+		}
+		).sort([('date', -1)]).limit(num)
+	return result
+
+#카테고리 검색 (디폴트 데이트도 적용된 쿼리) (사용)
+def find_search_of_category_default_date(db, search_list, info_num_list, default_date, num):
 	result = db[SJ_DB_POST].find(
 		{
 			'$and':
@@ -1311,11 +1340,9 @@ def update_notice(db, notice_obi, title, post, activation):
 			{
 				'title': title,
 				'post': post,
-				'activation': activation,
-				'date': datetime.now()
+				'activation': activation
 			}	
-		}
-		
+		}	
 	)
 
 	return "success"
@@ -1368,14 +1395,53 @@ def update_notice_view(db, notice_obi):
 #SJ_DB_FEEDBACK 관련###################################
 ######################################################
 #피드백 입력
-def insert_user_feedback(db, feedback):
+def insert_user_feedback(db, type_, post, date, author, activation):
 	db[SJ_DB_FEEDBACK].insert(
-    	feedback
+		{
+			'type': type_,
+			'post': post,
+			'date': datetime.now(),
+			'author': author,
+			'activation': 1
+		}
    	)
 	return "success"
 
+#피드백 전체 반환
+def find_all_feedback(db):
+	result = db[SJ_DB_FEEDBACK].find(
+		{
+			'activation': 1
+		}
+	).sort([('date', -1)])
 
+	return result
 
+#피드백 단일 반환
+def find_feedback(db, feedback_obi):
+	result = db[SJ_DB_FEEDBACK].find_one(
+		{
+			'_id': ObjectId(feedback_obi)
+		}
+	)
+
+	return result
+
+#피드백 활성화 변경
+def update_feedback_activation(db, feedback_obi, activation):
+	db[SJ_DB_FEEDBACK].update(
+		{
+			'_id': ObjectId(feedback_obi)
+		},
+		{
+			'$set':
+			{
+				'activation': activation
+			}	
+		}	
+	)
+
+	return "success"
 
 #SJ_DB_VARIABLE 관련###################################
 ######################################################
