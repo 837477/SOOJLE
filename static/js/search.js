@@ -654,10 +654,10 @@ function Create_trend_posts() {
 	a_jax_posts[0] = [];
 	let index = [0], max = 0, cnt = 0;
 	for (let i = 1; i < a_jax_posts.length; i++)
-		index.push(0)
+		index.push(0);
 	while (cnt < 200) {
 		target = 0;
-		max = 0;
+		max = -100;
 		for (let i = 1; i < a_jax_posts.length; i++) {
 			if (a_jax_posts[i] == undefined) continue;
 			if (a_jax_posts[i][index[i]] == undefined) continue;
