@@ -24,7 +24,7 @@ function check_managet_qualification_reload(callback) {
 			if (typeof(callback) == "function") {
 				callback();
 			}
-		})
+		});
 	} else {
 		location.replace("/board#recommend");
 	}
@@ -159,38 +159,40 @@ function Feedback_Messages() {
       'service': [],
       'etc': []
   };
-  this.selection = 'desktop';
+  this.selection = '';
   this.page = 1;
 
   this.set = function() {
-    // 임시 데이터
-    this.messages['service'].push({'type': "기능 개선 아이디어", 'time': new Date(), 'post': "신희재 김형석 서정민 최고야", 'author': "jamesj0918"});
-    this.messages['design'].push({'type': "디자인 개선 아이디어", 'time': new Date(), 'post': "에브리타임 보고 사용해보고있는데요! 딱 원하던 서비스였어요~ 감사합니다. 다 좋은데, 상단에 수즐로고를 누르면 계속 게시판으로 넘어가던데 메인홈페이지로 돌아가려면 어떻게 해야하나요?", "author": "dmsgP112"});
-    return;
-    // 여기까지
-    $.when(A_JAX(host_ip+"/get_feedback", "GET", null, null))
+    $.when(A_JAX(host_ip+"/get_all_feedback", "GET", null, null))
     .done((data) => {
       if (data['result'] == "success") {
-        for (let msg in data['feedbacks']) {
+      data['feedback_list'] = JSON.parse(data['feedback_list']);
+        for (let msg of data['feedback_list']) {
           if (msg['type'] == '데스크탑 버그 및 오류') {
-            this.messages['desktop'].append(msg);
+            this.messages['desktop'].push(msg);
           } else if (msg['type'] == '모바일/태블릿 버그 및 오류') {
-            this.messages['mobile'].append(msg);
+            this.messages['mobile'].push(msg);
           } else if (msg['type'] == '취약점 및 보안 개선') {
-            this.messages['protection'].append(msg);
+            this.messages['protection'].push(msg);
           } else if (msg['type'] == '디자인 개선 아이디어') {
-            this.messages['design'].append(msg);
+            this.messages['design'].push(msg);
           } else if (msg['type'] == '기능 개선 아이디어') {
-            this.messages['service'].append(msg);
+            this.messages['service'].push(msg);
           } else {
-            this.messages['etc'].append(msg);
+            this.messages['etc'].push(msg);
           }
         }
+        setting_feedback_monitoring();  // 피드백 호출
       } else {
         Snackbar("잠시 후 다시 시도해주세요.");
       }
     }).catch((data) => {
-      Snackbar("서버와의 연결이 원활하지 않습니다.");
+      if (data.statue == 403) {
+        Snackbar("권한이 없습니다.");
+        window.location.reload();
+      } else {
+        Snackbar("서버와의 연결이 원활하지 않습니다.");
+      }
     });
   };
 
@@ -274,7 +276,6 @@ function insert_feedback_monitoring() {
   target.append(div);
   binding_feedback_event();       // 피드백 버튼 이벤트 바인딩
   feedback_msges.set();           // 피드백 AJAX 요청
-  setting_feedback_monitoring();  // 피드백 호출
 }
 // 피드백 받아오기
 function setting_feedback_monitoring() {
@@ -303,9 +304,9 @@ function setting_feedback_monitoring() {
   } else {
     for (let fb_msg of target) {
       let msg =   `
-                  <div class="setting_feedback_box wow animated fadeInRight">
+                  <div class="setting_feedback_box wow animated fadeInRight pointer" f-id="${fb_msg['_id']['$oid']}" onclick="Checkout_feedback(this)">
                     <p class="setting_feedback_box_author">${fb_msg['author']}</p>
-                    <p class="setting_Feedback_box_date">${change_date_absolute(fb_msg['time'])}</p>
+                    <p class="setting_Feedback_box_date">${change_date_absolute(fb_msg['date']['$date'])}</p>
                     <span>${fb_msg['post']}</span>
                   </div>
                   `;
@@ -324,6 +325,32 @@ function binding_feedback_event() {
         setting_feedback_monitoring();
       }
     }
+  });
+}
+function Checkout_feedback(tag) {
+  if (confirm("해당 피드백을 처리하겠습니까?")) {
+  } else {
+    return;
+  }
+  tag = $(tag);
+  let id = tag.attr('f-id');
+  Check_ManagerInfo(function() {
+    $.when(A_JAX(host_ip+"/update_feedback_activation/"+id+"/"+0, "GET", null, null))
+    .done((data) => {
+      if (data['result'] == "success") {
+        alert("피드백이 성공적으로 처리되었습니다!");
+        tag.remove();
+      } else {
+        Snackbar("잠시 후 다시 시도해주세요.");
+      }
+    }).catch((data)=> {
+      if (data.statue == 403) {
+        Snackbar("권한이 없습니다.");
+        window.location.reload();
+      } else {
+        Snackbar("서버와의 연결이 원활하지 않습니다.");
+      }
+    })
   });
 }
 
@@ -490,7 +517,7 @@ function Congratulations() {
             <div class="text">
               <h1 class="noselect">${congratulations_text}</h1>
               <p>Are You Ready to <span style="color: red; font-weight:bold;">2020</span> Year?</p>
-              <p style="font-style: italic;">#축하도 컴공스럽게  #촛불하나</p>
+              <p style="font-style: italic;">#수즐 #생일을 축하해요!</p>
             </div></div>`;
     cake_div_container += cake_div + `</div>`;
     $("body").css("overflow", "hidden");

@@ -22,8 +22,6 @@ function Go_guide() {
 
 // 가이드 삽입
 function Insert_Sejong_Guide() {
-	// OFFICE 365
-	// 인터넷 증명서
 	let target = $("#posts_target");
 	let div = 	`
 					<div class="guide_title noselect">앱 설치하기</div>
@@ -195,12 +193,102 @@ function Insert_Sejong_Guide() {
 					<div class="guide_line"></div>
 					</div>
 
+					<div class="guide_title noselect">Office 365 서비스</div>
+					<div class="guide_subtitle noselect">
+						Office 365를 통해서 학교 업무와 각종 대학생 혜택을 누려보세요!
+					</div>
+					<div class="guide_office365_cont">
+						<div class="guide_office365_svg animated wow slideInLeft">${Mail_Svg}</div>
+						<div class="guide_office365_btn_cont noselect">
+							<a target="_blank" href="http://o365.sejong.ac.kr/mysql/User/intro.jsp"><div class="guide_office365_btn pointer"><i class="fas fa-info-circle"></i> 안내</div></a>
+							<a target="_blank" href="https://o365.sejong.ac.kr/mysql/User/login.jsp"><div class="guide_office365_btn pointer"><i class="fas fa-paper-plane"></i> 신청</div></a>
+						</div>
+						<div class="guide_office365_intro_cont">
+							<div class="guide_office365_intro_title noselect">주요 기능</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">1. </span> 세종인을 위한 메일 계정 제공</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">2. </span> 50GB의 메일 사서함 제공</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">3. </span> One Drive: 1TB의 개인용 스토리지</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">4. </span> 최신 Office를 설치하여 사용 가능</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">5. </span> 학생인증 필요서비스 사용 가능</div>						
+						</div
+						><div class="guide_office365_intro_cont">
+							<div class="guide_office365_intro_title noselect" style="color:#c30e2e">이용 안내</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">1. </span> 본 학교 신분이 아닐 시, 해당 학기 마지막일에 자동 탈퇴</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">2. </span> 자동 탈퇴 처리 전에 백업을 완료해주십시오.</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">3. </span> 패스워드: 8자이상 권장(영문+숫자+특수문자)</div>				
+						</div>
+					</div>
+					<div class="guide_line"></div>
 					
+					<div class="guide_title noselect">학술정보원 이용 안내</div>
+					<div class="guide_subtitle noselect">
+						학술정보원을 처음 이용하는 세종인을 위한 안내입니다.
+					</div>
+					<div class="guide_library_cont wow animated fadeInUp">
+						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>신입생인데 열람실을 사용할 수 없어요.</div>
+						<div class="guide_library_img_cont">
+							<img class="guide_library_img" src="/static/image/logo_sejonglib.png">
+							<div class="guide_library_info"><span class="guide_library_color_black noselect">1. </span><a target="_blank" href="https://library.sejong.ac.kr/index.ax">학술정보원 페이지</a>에 접속을 해줍니다.</div>
+						</div
+						><div class="guide_library_img_cont">
+							<img class="guide_library_img" src="/static/image/btn_sejonglib.png">
+							<div class="guide_library_info"><span class="guide_library_color_black noselect">2. </span>위 버튼을 찾아 클릭 후, 영상을 먼저 이수해주세요.</div>
+						</div>
+					</div>
+					<div class="guide_library_cont wow animated fadeInUp">
+						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>자유열람실 이용제한은 어떻게 되나요?</div>
+						<div class="guide_library_subtitle noselect">자유열람실 이용제한</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">1. </span>제적,정학,자퇴,면직,학점교류 학생일 시, 이용 불가</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">2. </span>대리발권 적발 시, 30일 이용 불가</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">3. </span>열람실 미반납 3회 확인 시, 5일 이용 불가</div>
+					</div>
+					<div class="guide_library_cont wow animated fadeInUp">
+						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>학술정보원 사용시간은 어떻게 되나요?</div>
+						<div class="guide_library_answer_box_cont noselect">
+							<div class="guide_library_answer_box">
+								<div class="guide_restaurnat_box_title">대출실 및 자료실</div>
+								<div class="guide_restaurnat_box_type">학기중</div>
+								<div class="guide_restaurnat_box_post">평일: 09:00 ~ 22:00<br>
+								토요일: 09:00 ~ 17:00</div>
+								<div class="guide_restaurnat_box_type">방학중</div>
+								<div class="guide_restaurnat_box_post">09:00 ~ 17:00</div>
+							</div
+							><div class="guide_library_answer_box">
+								<div class="guide_restaurnat_box_title">자유열람실</div>
+								<div class="guide_restaurnat_box_type">학기중</div>
+								<div class="guide_restaurnat_box_post">24시간</div>
+								<div class="guide_restaurnat_box_type">방학중</div>
+								<div class="guide_restaurnat_box_post">24시간</div>
+							</div>
+						</div>
+					</div>
+					<div class="guide_library_link_cont">
+						<div class="guide_library_link"><a target="_blank" href="https://library.sejong.ac.kr/bbs/Detail.ax?bbsID=3&articleID=16">이용자 교육 FAQ</a></div
+						><div class="guide_library_link"><a target="_blank" href="https://library.sejong.ac.kr/bbs/Detail.ax?bbsID=3&articleID=19">스터디룸 이용 FAQ</a></div>
+					</div>
+					<div class="guide_line"></div>
+
+					<div class="guide_title noselect">꿀팁 팔계명</div>
+					<div class="guide_subtitle noselect">
+						SOOJLE이 추천하는 대학 생활 꿀팁 8가지를 소개합니다!
+					</div>
+					<div class="guide_tip_cont">
+						<div class="guide_tip"><span class="guide_library_color_green noselect">1. </span>일찍 일어나는 새(오전수업)가 성적을 잘 딴다.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">2. </span>고전독서는 최대한 빨리 끝내버리자.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">3. </span>소기코, 컴기코는 1학년 때 끝내는 것이 속 편하다.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">4. </span>따로 계획이 없다면 군대는 빨리 가자.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">5. </span>졸업 가능 요건 충족은 빠를 수록 좋다.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">6. </span>아싸는 학생회비 내도 할 거 없다. 그리고 나는 아싸다..</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">7. </span>영어는 졸업 직전까지 함께한다.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">8. </span>SOOJLE을 잘 활용하자! :)</div>
+					</div>
+					<div class="guide_line"></div>
+
+					<div class="guide_page_icon_span noselect">
+						본 페이지의 모든 정보는 언제든지 변경될 수 있으며, 만약 잘못된 정보는 <a href="/board#feedback">피드백</a>을 통해서 알려주세요!
+					</div>
 				`;
-	// <div class="guide_title noselect">Office 365 서비스</div>
-	// 				<div class="guide_subtitle noselect">
-	// 					Office 365를 통해서 각종 대학생 혜택을 누려보세요!
-	// 				</div>
+	
 	target.append(div);
 
 	guide_campus_search_event();	// 캠퍼스 장소 검색 이벤트 바인딩
@@ -453,3 +541,54 @@ const CAMPUS = {
 	'캠퍼스타운': [],
 	'흡연장': []
 }
+// 메일 SVG
+const Mail_Svg = `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 513 222">
+  <g id="그룹_15" data-name="그룹 15" transform="translate(-3029 2716)">
+    <g id="그룹_14" data-name="그룹 14" transform="translate(388 -40)">
+      <g id="빼기_1" data-name="빼기 1" transform="translate(2803.849 -2763.172)" fill="none">
+        <path d="M238.152,285.172h-222a16,16,0,0,1-16-16v-137a16,16,0,0,1,16-16h2c.09.093.183.187.277.281l97.531,91.587c4.819,4.819,8.66,6.969,12.452,6.969,3.75,0,7.572-2.149,12.391-6.969l89.555-85.782a21.987,21.987,0,0,0,4.306-6.086h3.484a16,16,0,0,1,16,16v137a16,16,0,0,1-16,16Z" stroke="none"/>
+        <path d="M 238.1516876220703 277.1722412109375 C 240.2883911132813 277.1722412109375 242.2971801757813 276.3401489257813 243.8079681396484 274.8293151855469 C 245.3188934326172 273.3183288574219 246.1510162353516 271.3091735839844 246.1510162353516 269.1719970703125 L 246.1510162353516 132.1722412109375 C 246.1510162353516 130.0353240966797 245.3188934326172 128.0262908935547 243.8079376220703 126.5152053833008 C 242.5344390869141 125.2416458129883 240.9072113037109 124.450325012207 239.1480255126953 124.2330551147461 C 238.1883239746094 125.5596237182617 237.1067352294922 126.8255081176758 235.8960571289063 128.0350799560547 L 146.4636383056641 213.6963653564453 C 142.1281890869141 218.0317840576172 136.1587677001953 223.0082092285156 128.4156036376953 223.0082092285156 C 120.6181411743164 223.0082092285156 114.6417694091797 218.0317840576172 110.4868469238281 213.8712921142578 L 15.07556438446045 124.2432708740234 C 13.34668159484863 124.4743041992188 11.74904441833496 125.2609329223633 10.49460029602051 126.5154113769531 C 8.983433723449707 128.0265350341797 8.151183128356934 130.0355377197266 8.151183128356934 132.1722412109375 L 8.151183128356934 269.1719970703125 C 8.151183128356934 271.3089599609375 8.983391761779785 273.3180236816406 10.49447536468506 274.8290710449219 C 12.00555896759033 276.340087890625 14.01455879211426 277.1722412109375 16.15143394470215 277.1722412109375 L 238.1516876220703 277.1722412109375 M 238.1516876220703 285.1722412109375 L 16.15143394470215 285.1722412109375 C 11.87768363952637 285.1722412109375 7.859766960144043 283.5079650878906 4.837725162506104 280.4860229492188 C 1.815558433532715 277.4639587402344 0.1511834859848022 273.4459228515625 0.1511834859848022 269.1719970703125 L 0.1511834859848022 132.1722412109375 C 0.1511834859848022 127.8986206054688 1.815558433532715 123.8806991577148 4.837725162506104 120.8585357666016 C 7.859891891479492 117.8363723754883 11.87780857086182 116.1719970703125 16.15143394470215 116.1719970703125 L 18.155517578125 116.1719970703125 C 18.24568367004395 116.2648696899414 18.33843421936035 116.3592834472656 18.43201637268066 116.4528274536133 L 115.9631805419922 208.0394897460938 C 120.7826385498047 212.8589477539063 124.6231384277344 215.0082092285156 128.4156036376953 215.0082092285156 C 132.1657257080078 215.0082092285156 135.9873046875 212.8589477539063 140.8068084716797 208.0394897460938 L 230.3622283935547 122.2578277587891 C 232.1398010253906 120.4800338745117 233.5884399414063 118.4324951171875 234.6678009033203 116.1719970703125 L 238.1516876220703 116.1719970703125 C 242.4252319335938 116.1719970703125 246.4430236816406 117.8363723754883 249.4649810791016 120.8585357666016 C 252.4868011474609 123.8806228637695 254.1510162353516 127.8985748291016 254.1510162353516 132.1722412109375 L 254.1510162353516 269.1719970703125 C 254.1510162353516 273.446044921875 252.4868011474609 277.4640502929688 249.4649810791016 280.4860229492188 C 246.4431457519531 283.5079650878906 242.4253540039063 285.1722412109375 238.1516876220703 285.1722412109375 Z" stroke="none" fill="#12b886"/>
+      </g>
+      <line id="선_12" data-name="선 12" x2="220" transform="translate(2819.5 -2643)" fill="none" stroke="#12b886" stroke-linecap="round" stroke-width="8"/>
+    </g>
+    <line id="선_13" data-name="선 13" x2="86" transform="translate(3094.5 -2649.5)" fill="none" stroke="#12b886" stroke-linecap="round" stroke-width="5"/>
+    <line id="선_14" data-name="선 14" x2="132" transform="translate(3048.5 -2609.5)" fill="none" stroke="#12b886" stroke-linecap="round" stroke-width="5"/>
+    <line id="선_15" data-name="선 15" x2="84" transform="translate(3096.5 -2565.5)" fill="none" stroke="#12b886" stroke-linecap="round" stroke-width="5"/>
+    <g id="타원_7" data-name="타원 7" transform="translate(3488 -2716)" fill="none" stroke="#0071e3" stroke-width="5">
+      <circle cx="10" cy="10" r="10" stroke="none"/>
+      <circle cx="10" cy="10" r="7.5" fill="none"/>
+    </g>
+    <g id="타원_10" data-name="타원 10" transform="translate(3482 -2609)" fill="none" stroke="#c30e2e" stroke-width="5">
+      <circle cx="10" cy="10" r="10" stroke="none"/>
+      <circle cx="10" cy="10" r="7.5" fill="none"/>
+    </g>
+    <g id="타원_11" data-name="타원 11" transform="translate(3468 -2675)" fill="none" stroke="#c30e2e" stroke-width="5">
+      <circle cx="10" cy="10" r="10" stroke="none"/>
+      <circle cx="10" cy="10" r="7.5" fill="none"/>
+    </g>
+    <g id="타원_13" data-name="타원 13" transform="translate(3075 -2659)" fill="none" stroke="#12b886" stroke-width="5">
+      <circle cx="10" cy="10" r="10" stroke="none"/>
+      <circle cx="10" cy="10" r="7.5" fill="none"/>
+    </g>
+    <g id="타원_14" data-name="타원 14" transform="translate(3029 -2619)" fill="none" stroke="#12b886" stroke-width="5">
+      <circle cx="10" cy="10" r="10" stroke="none"/>
+      <circle cx="10" cy="10" r="7.5" fill="none"/>
+    </g>
+    <g id="타원_15" data-name="타원 15" transform="translate(3076 -2575)" fill="none" stroke="#12b886" stroke-width="5">
+      <circle cx="10" cy="10" r="10" stroke="none"/>
+      <circle cx="10" cy="10" r="7.5" fill="none"/>
+    </g>
+    <g id="타원_12" data-name="타원 12" transform="translate(3517 -2557)" fill="none" stroke="#c30e2e" stroke-width="5">
+      <circle cx="10" cy="10" r="10" stroke="none"/>
+      <circle cx="10" cy="10" r="7.5" fill="none"/>
+    </g>
+    <g id="타원_8" data-name="타원 8" transform="translate(3522 -2629)" fill="none" stroke="#0071e3" stroke-width="5">
+      <circle cx="10" cy="10" r="10" stroke="none"/>
+      <circle cx="10" cy="10" r="7.5" fill="none"/>
+    </g>
+    <g id="타원_9" data-name="타원 9" transform="translate(3468 -2514)" fill="none" stroke="#0071e3" stroke-width="5">
+      <circle cx="10" cy="10" r="10" stroke="none"/>
+      <circle cx="10" cy="10" r="7.5" fill="none"/>
+    </g>
+  </g>
+</svg>`;

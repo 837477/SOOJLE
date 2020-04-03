@@ -1031,7 +1031,6 @@
 		overflow-x: scroll;
 		white-space:nowrap;
 		border-bottom: 1px solid #ebebeb;
-		margin-top: 10px;
 		margin-bottom: 15px;
 	}
 	.category_tab_last{
@@ -1287,6 +1286,16 @@
 	}
 	.guide_page_cont {
 		padding: 30px 0;
+	}
+	.guide_library_link > a {
+		color: inherit;
+	}
+	.guide_page_icon_span > a {
+		color: #0071e3;
+	}
+
+	.search_option_sort {
+		padding: 0 10px;
 	}
 }
 
@@ -1587,7 +1596,16 @@
 		font-size: 12px;
 		line-height: 20px;
 	}
-
+	.guide_office365_cont {
+		width: 95%;
+		margin: auto;
+		margin-bottom: 30px;
+	}
+	.guide_library_cont {
+		width: 95%;
+		margin: auto;
+		margin-bottom: 40px;
+	}
 }
 /*=============================================================================*/
 /*                                    450px                                    */
@@ -1770,6 +1788,7 @@
 		width: 96%;
 		margin-right: 10px;
 		text-align: center;
+		margin-top: 10px;
 	}
 	.sr_line {
 		position: relative;
@@ -1793,6 +1812,15 @@
 	}
 	.category_tabs {
 		border-bottom: 10px solid #f2f2f2;
+		margin-bottom: 10px;
+	}
+	.search_option_container {
+		width: auto;
+		overflow-x: scroll;
+		height: 30px;
+	}
+	.search_option_title:nth-child(n+2) {
+		margin-left: 10px;
 	}
 	.board_notice_cont {
 		margin-left: 2%;
@@ -1809,7 +1837,17 @@
 	.realtime_searchwords_table_words {
 		width: 100%;
 	}
+	.search_option_title {
+		font-size: 14px;
+	}
+	.search_option_sort {
+		font-size: 14px;
+	}
 
+	.guide_line {
+		height: 40px;
+		background-color: #f2f2f2;
+	}
 	.guide_subtitle {
 		margin-bottom: 30px;
 		font-size: 16px;
@@ -1837,6 +1875,8 @@
 	}
 	.guide_page_cont {
 		padding: 10px 0;
+		border-top: 40px solid #f2f2f2;
+		border-bottom: 40px solid #f2f2f2;
 	}
 	.guide_page_icon {
 		padding: 0 25px;
@@ -1844,8 +1884,54 @@
 	.guide_campus_map {
 		border: 5px solid #ddd;
 	}
-
-
+	.guide_office365_btn {
+		margin: 10px;
+	}
+	.guide_office365_intro_cont {
+		width: 95%;
+		display: block;
+		padding: 20px 0 0 0;
+	}
+	.guide_office365_intro_title {
+		border-bottom: 2px solid;
+		font-size: 20px;
+		line-height: 40px;
+	}
+	.guide_office365_intro_post {
+		font-size: 16px;
+		padding-bottom: 10px;
+	}
+	.guide_library_cont {
+		width: 95%;
+		display: block;
+		padding: 20px 0 0 0;
+	}
+	.guide_library_link_cont {
+		width: 95%;
+		margin: auto;
+		margin-bottom: 30px;
+	}
+	.guide_library_title {
+		font-size: 20px;
+		line-height: 24px;
+	}
+	.guide_library_subtitle {
+		font-size: 18px;
+	}
+	.guide_library_info {
+		font-size: 16px;
+	}
+	.guide_tip_cont {
+		width: 95%;
+		margin: auto;
+		margin-bottom: 60px;
+	}
+	.guide_tip {
+		width: 100%;
+	}
+	.guide_tip:nth-child(2n) {
+		background-color: rgba(0,0,0,0);
+	}
 	.setting_feedback_type_cont {
 		display: block;
 		width: auto;
@@ -1914,6 +2000,10 @@
 		border-top: 2px solid #12b886;
 		margin-bottom: 20px;
 	}
+	.guide_library_answer_box {
+		width: 150px;
+		margin: 0 10px 40px 10px;
+	}
 }
 /*=============================================================================*/
 /*                                    350px                                    */
@@ -1958,6 +2048,9 @@
 		margin: 0;
 		margin-bottom: 10px;
 		margin-left: 2.5%;
+	}
+	.guide_library_img {
+		height: 130px;
 	}
 }
 
