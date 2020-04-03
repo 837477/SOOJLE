@@ -13,7 +13,8 @@ const time_event = {
 					'109': `한국어는 자랑스러운 <span style="color:red">대한민국</span>의 언어입니다.`,
 					'314': `달콤한 <span color="green">사탕</span>.. 저도 먹고싶네요!`,
 					'41': `애인 생겼음.`,
-					'42': `사실 솔로임.`
+					'42': `사실 솔로임.`,
+					'43': `4.3 희생자를 <span style="color:green">추모</span>합니다.`
 				}
 
 function Click_analysistic() {
