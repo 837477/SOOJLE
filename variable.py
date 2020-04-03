@@ -57,7 +57,7 @@ SJ_REALTIME_RETURN_LIMIT = 10
 #Domain search similarity percent
 SJ_DOMAIN_SIM_PERCENT = 0.8
 #User cold limit (유저 Cold 기준)
-SJ_USER_COLD_LIMIT = 13
+SJ_USER_COLD_LIMIT = 10
 #Request length limit (사용자 전송 글자수 제한) (이상, 이하 제도)
 SJ_REQUEST_LENGTH_LIMIT = {
 	'search_max': 200,
