@@ -43,7 +43,7 @@ def schedule_init():
 	scheduler.add_job(real_time_insert, trigger = "interval", minutes = SJ_REALTIME_TIME, timezone = t_zone)
 
 	#사용자 관심도 측정
-	#scheduler.add_job(measurement_run, trigger = "interval", hours = SJ_MEASUREMENT_TIME, timezone = t_zone)
+	scheduler.add_job(measurement_run, trigger = "interval", hours = SJ_MEASUREMENT_TIME, timezone = t_zone)
 
 	#특정 시간에 실행 ##################################################
 

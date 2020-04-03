@@ -107,7 +107,7 @@ def update_notice_(notice_obi):
 	#길이 검증 실패!, Bad request 핸들러 반환
 	if (len(NEW_TITLE) < SJ_REQUEST_LENGTH_LIMIT['notice_title_min'] and len(NEW_TITLE) > SJ_REQUEST_LENGTH_LIMIT['notice_title_max']) or (len(NEW_POST) < SJ_REQUEST_LENGTH_LIMIT['notice_post_min'] and len(NEW_POST) > SJ_REQUEST_LENGTH_LIMIT['notice_post_max']): abort(400)
 
-	result = update_notice(g.db, notice_obi, NEW_TITLE, NEW_POST, NEW_ACTIVATION)
+	result = update_notice(g.db, notice_obi, NEW_TITLE, NEW_POST, int(NEW_ACTIVATION))
 
 	return jsonify(
 		result = result
@@ -144,21 +144,76 @@ def send_feedback():
 
 	FEEDBACK_TYPE = request.form['type']
 	FEEDBACK_POST = request.form['post']
-	FEEDBACK_TIME = datetime.now()
+	FEEDBACK_DATE = datetime.now()
 	FEEDBACK_AUTHOR = USER['user_id']
+	FEEDBACK_ACTIVATION = 1
 
 	#길이 검증 실패!, Bad request 핸들러 반환
 	if len(FEEDBACK_POST) > SJ_REQUEST_LENGTH_LIMIT['feedback_max']: abort(400)
 
-	feedback_data = {
-    	'type': FEEDBACK_TYPE,
-    	'time': FEEDBACK_TIME,
-    	'post': FEEDBACK_POST,
-    	'author': FEEDBACK_AUTHOR
-	}
+	result = insert_user_feedback(g.db, FEEDBACK_TYPE, FEEDBACK_POST, FEEDBACK_DATE, FEEDBACK_AUTHOR, FEEDBACK_ACTIVATION)
 
-	result = insert_user_feedback(g.db, feedback_data)
+	return jsonify(
+		result = result
+	)
 
+#피드백 전체 반환
+@BP.route('/get_all_feedback')
+@jwt_required
+def get_all_feedback():
+	ADMIN = find_user(g.db, user_id=get_jwt_identity())
+
+	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
+	if ADMIN is None or ADMIN['user_id'] != SJ_ADMIN: abort(403)
+
+	result = find_all_feedback(g.db)
+	result = dumps(result)
+
+	return jsonify(
+		result = "success",
+		feedback_list = result
+	)
+
+#피드백 단일 반환
+@BP.route('/get_feedback/<string:feedback_obi>')
+@jwt_required
+def get_feedback(feedback_obi):
+	ADMIN = find_user(g.db, user_id=get_jwt_identity())
+
+	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
+	if ADMIN is None or ADMIN['user_id'] != SJ_ADMIN: abort(403)
+	
+	result = find_feedback(g.db, feedback_obi)
+
+	#잘못된 요청을 보냈음!, Bad request 핸들러 반환
+	if result is None: abort(400)
+
+	result = dumps(result)
+	
+	return jsonify(
+		result = "success",
+		feedback = result
+	)
+
+#피드백 활성화 변경
+@BP.route('/update_feedback_activation/<string:feedback_obi>/<int:activation>')
+@jwt_required
+def SJ_update_feedback_activation(feedback_obi, activation):
+	ADMIN = find_user(g.db, user_id=get_jwt_identity())
+
+	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
+	if ADMIN is None or ADMIN['user_id'] != SJ_ADMIN: abort(403)
+	
+	check_feedback = find_feedback(g.db, feedback_obi)
+
+	#잘못된 요청을 보냈음!, Bad request 핸들러 반환
+	if check_feedback is None: abort(400)
+
+	#잘못된 요청을 보냈음!, Bad request 핸들러 반환
+	if activation > 1 or activation < 0: abort(400)
+
+	result = update_feedback_activation(g.db, feedback_obi, activation)
+	
 	return jsonify(
 		result = result
 	)
