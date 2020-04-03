@@ -836,8 +836,37 @@ def find_popularity_newsfeed(db, default_date, num):
 		).sort([('popularity', -1)]).limit(num)
 	return result
 
-#카테고리 검색
-def find_search_of_category(db, search_list, info_num_list, default_date, num):
+#카테고리 검색 (디폴트 데이트도 적용된 쿼리) (사용)
+def find_search_of_category(db, search_list, info_num_list, num):
+	result = db[SJ_DB_POST].find(
+		{
+			'$and':
+			[
+				{'token': {'$in': search_list}},
+				{'info_num': {'$in': info_num_list}}
+			]
+		},
+		{
+			'_id':1, 
+			'title':1,
+			'date':1,
+			'end_date':1,
+			'img': 1,
+			'url': 1,
+			'fav_cnt': 1,
+			'info': 1,
+			###############
+			'title_token':1,
+			'token':1,
+			'tag':1,
+			'popularity':1,
+			'ft_vector': 1
+		}
+		).sort([('date', -1)]).limit(num)
+	return result
+
+#카테고리 검색 (디폴트 데이트도 적용된 쿼리) (사용)
+def find_search_of_category_default_date(db, search_list, info_num_list, default_date, num):
 	result = db[SJ_DB_POST].find(
 		{
 			'$and':

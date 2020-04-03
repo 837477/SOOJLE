@@ -132,12 +132,12 @@ def category_search(category_name, num):
 	FIND_SEARCH_OF_CATEGORY_TIME_START = time.time()
 	###########################################################
 	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
-	POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], SJ_CS_DEFAULT_DATE, SJ_CS_LIMIT)
+	POST_LIST = find_search_of_category_default_date(g.db, final_search_keyword, category_type['info_num'], SJ_CS_DEFAULT_DATE, SJ_CS_LIMIT)
 	POST_LIST = list(POST_LIST)
 
 	#만약 1년 이내의 게시글이 1개도 안나왔을 경우, default_date를 0으로 설정
 	if POST_LIST == 0:
-		POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], 0, SJ_CS_LIMIT)
+		POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], SJ_CS_LIMIT)
 		POST_LIST = list(POST_LIST)
 
 	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
@@ -291,7 +291,7 @@ def category_search_no_limit(category_name, num):
 	FIND_SEARCH_OF_CATEGORY_TIME_START = time.time()
 	###########################################################
 	#해당 카테고리에서 검색어와 관련된 포스트 불러오기!
-	POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], 0, SJ_CS_LIMIT)
+	POST_LIST = find_search_of_category(g.db, final_search_keyword, category_type['info_num'], SJ_CS_LIMIT)
 	POST_LIST = list(POST_LIST)
 
 	#find_search_of_category 시간 측정 (불러와서 리스트화 시킨 시간)####
@@ -385,7 +385,6 @@ def category_search_no_limit(category_name, num):
 	SPEED_RESULT['TOTAL_TIME'] = TOTAL_TIME_END
 	SPEED_RESULT['PROCESSING_POSTS_NUM'] = len(POST_LIST)
 	SPEED_RESULT['RETURN_NUM'] = num
-
 
 	#데이터로 들어온 상위 num개만 반환
 	return jsonify(
