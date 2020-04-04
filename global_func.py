@@ -135,30 +135,25 @@ def real_time_keywords(search_input):
 
 #실시간 검색어 캐싱 함수
 def real_time_insert():
-	print("[백그라운드] 실시간 검색어 캐싱중 ...")
+	print(datetime.datetime(), "[백그라운드] 실시간 검색어 캐싱중 ...")
 
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
-	#최근 하루 이전의 검색 기록들을 가져온다.
 	search_log_list = find_search_log(db)
 	search_log_list = list(search_log_list)
 
-	#검색기록들을 통하여 실시간 검색어를 추출한다.
 	real_time_keywords_temp = real_time_keywords(search_log_list)
 
-	#욕 필터링을 거친다.
+	#욕 필터링
 	realtime_result = []
 	for keyword in real_time_keywords_temp:
-		#욕 필터링 걸리면 넘어감!
 		if keyword in SJ_BAD_LANGUAGE:
 			continue
 		
-		#10자 이상 삭제
 		elif len(keyword) > 10:
 			continue
 
-		#최종 실시간 검색어 결과 반환
 		realtime_result.append(keyword)
 
 	if len(realtime_result) < SJ_REALTIME_LIMIT:
@@ -195,17 +190,16 @@ def real_time_insert():
 	if db_client is not None:
 		db_client.close()
 	
-	print("[백그라운드] 실시간 검색어 캐싱 끝 ...")
+	print(datetime.datetime(), "[백그라운드] 실시간 검색어 캐싱 끝 ...")
 
 #관심도 측정.ver2
 def measurement_run():
-	print("[백그라운드] 관심도 측정중 ...")
+	print(datetime.datetime(), "[백그라운드] 관심도 측정중 ...")
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
 	renewal_time = find_variable(db, 'renewal')
 
-	#리뉴얼 시간보다 이상인 사람만 측정! (관심도 측정이 될 지표의 변동이 생겼다는 뜻!)
 	USER_list = find_user_renewal(db, renewal_time)
 	USER_list = list(USER_list)
 
@@ -217,7 +211,7 @@ def measurement_run():
 		#뉴스피드 관심사는 미슈얼 넘버에 포함되지 않기 때문에,
 		#혹시 뉴스피드 이동으로만 리뉴얼이 되버린 유저들을 걸러낸다.
 		#즉, 좋아요/조회수가 하나도 없는 회원은 측정 안함.
-		if len(USER['fav_list']) == 0 and len(USER['view_list']) == 0):
+		if (len(USER['fav_list']) == 0) and (len(USER['view_list']) == 0):
 			continue
 
 		#사용자 로그 액션 먼저 개수 백업처리.
@@ -323,49 +317,37 @@ def measurement_run():
 		TAG_RESULT = {}
 
 		if len(tag_dict) >= 50:
-			#최소값이 1이면 2로 강제 변환
 			if tag_dict[0][1] == 1:
 				tag_dict[0][1] = 2
 
-			#첫 번째 값은 우선 무조건 결과에 넣음.
 			TAG_RESULT[tag_dict[0][0]] = tag_dict[0][1]
 
-			#두 번째 값부터 시작
 			for i in range(1, 50):
 				tag_dict[i] = list(tag_dict[i])
 	
-				#만약 바로 전 태그의 빈도 수 * 1.5 보다 현재 빈도수가 더 크면?
 				if (tag_dict[i-1][1] * 1.5) < tag_dict[i][1]:
-					#현재 빈도수를 전 빈도수의 int(1.5배)로 맞춤
 					tag_dict[i][1] = int(tag_dict[i-1][1] * 1.5)
 				
 				TAG_RESULT[tag_dict[i][0]] = tag_dict[i][1]
 		
 		elif len(tag_dict) > 0:
-			#최소값이 1이면 2로 강제 변환
 			if tag_dict[0][1] == 1:
 				tag_dict[0][1] = 2
 
-			#첫 번째 값은 우선 무조건 결과에 넣음.
 			TAG_RESULT[tag_dict[0][0]] = tag_dict[0][1]
 
-			#두 번째 값부터 시작
 			for i in range(1, len(tag_dict)):
 				tag_dict[i] = list(tag_dict[i])
 
-				#만약 바로 전 태그의 빈도 수 * 1.5 보다 현재 빈도수가 더 크면?
 				if (tag_dict[i-1][1] * 1.5) < tag_dict[i][1]:
-					#현재 빈도수를 전 빈도수의 int(1.5배)로 맞춤
 					tag_dict[i][1] = int(tag_dict[i-1][1] * 1.5)
 
 				TAG_RESULT[tag_dict[i][0]] = tag_dict[i][1]
 
 		USER_TAG_SUM = sum(TAG_RESULT.values())
 
-		#1.5배 증가
 		USER_TAG_SUM *= SJ_TAG_SUM_WEIGHT
 
-		#만약 TAG_SUM 이 0이면 1로 설정.
 		if USER_TAG_SUM == 0:
 			USER_TAG_SUM = 1
 
@@ -377,7 +359,7 @@ def measurement_run():
 	if db_client is not None:
 		db_client.close()
 
-	print("[백그라운드] 관심도 측정 끝 ...")
+	print(datetime.datetime(), "[백그라운드] 관심도 측정 끝 ...")
 
 #사용자 로그 액션 백업
 def user_log_backup(db, USER):
@@ -411,7 +393,7 @@ def user_log_backup(db, USER):
 
 #variable 가장 높은 좋아요/조회수 갱신
 def update_posts_highest():
-	print("[백그라운드] Highest Fav/View 갱신중 ...")
+	print(datetime.datetime(), "[백그라운드] Highest Fav/View 갱신중 ...")
 
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
@@ -426,11 +408,11 @@ def update_posts_highest():
 	if db_client is not None:
 		db_client.close()
 
-	print("[백그라운드] Highest Fav/View 갱신 끝 ...")
+	print(datetime.datetime(), "[백그라운드] Highest Fav/View 갱신 끝 ...")
 
 #워드클라우드 생성
 def create_word_cloud():
-	print("[백그라운드] 워드클라우드 생성중 ...")
+	print(datetime.datetime(), "[백그라운드] 워드클라우드 생성중 ...")
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
@@ -442,12 +424,10 @@ def create_word_cloud():
 
 	result = []
 
-	#실시간 검색어 전부 가져와서 검색어만 추출
 	for realtime in db_realtime:
 		for word in realtime['real_time']:
 			result.append(word[0])
 
-	#DB의 전체 POST들의 title_token 과 token만 전체 추출
 	for post in db_posts:
 		result += post['title_token']
 		result += post['token']
@@ -461,7 +441,6 @@ def create_word_cloud():
 
 	necessary_str = ['SOOJLE', 'IML', '세종대']
 
-	#최 상단 필수 워드클라우드 작성!
 	for necessary in necessary_str:
 		data = "0%s,%d\n" %(necessary, 500)
 		file.write(data)
@@ -484,11 +463,11 @@ def create_word_cloud():
 	if db_client is not None:
 		db_client.close()
 	
-	print("[백그라운드] 워드클라우드 생성 끝 ...")
+	print(datetime.datetime(), "[백그라운드] 워드클라우드 생성 끝 ...")
 
 #하루 통계 작업 (하루마다!) (테스트 대상)
 def visitor_analysis_work():
-	print("[백그라운드] 하루 통계 기록중 ...")
+	print(datetime.datetime(), "[백그라운드] 하루 통계 기록중 ...")
 
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
@@ -585,21 +564,18 @@ def visitor_analysis_work():
 	if db_client is not None:
 		db_client.close()
 	
-	print("[백그라운드] 하루 통계 기록 끝 ...")
+	print(datetime.datetime(), "[백그라운드] 하루 통계 기록 끝 ...")
 
 #매 시간별 방문자 수 기록! 
 def time_visitor_analysis_work():
-	print("[백그라운드] 매 시간별 방문자 수 기록중 ...")
+	print(datetime.datetime(), "[백그라운드] 매 시간별 방문자 수 기록중 ...")
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
-	#한시간 전 시간 가져오기
 	time = datetime.now() - timedelta(minutes = 59)
 
-	#(현재시간-1시간) ~ 현재시간 의 방문자 수 가져오기
 	visitor_cnt = find_today_time_visitor(db, time)
 
-	#시간별 방문자 오브젝트 생성!
 	hour_visitor_obj = {}
 	if datetime.now().hour == 0:
 		hour_visitor_obj['time'] = 24
@@ -608,12 +584,11 @@ def time_visitor_analysis_work():
 	
 	hour_visitor_obj['visitor'] = visitor_cnt
 
-	#시간별 방문자 수 기록!
 	push_today_time_visitor(db, hour_visitor_obj)
 
 	if db_client is not None:
 		db_client.close()
-	print("[백그라운드] 매 시간별 방문자 수 기록 끝 ...")
+	print(datetime.datetime(), "[백그라운드] 매 시간별 방문자 수 기록 끝 ...")
 
 ############################################################
 '''
