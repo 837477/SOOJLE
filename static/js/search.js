@@ -247,6 +247,7 @@ function search_text(text) {
 								</div>
 							`;
 	$("#posts_target").append(search_option_div);
+	Insert_Post_View_Option($("#posts_target"));
 	$("#posts_target").append(`<div id="search_posts_target"></div>`);
 	let send_data = {};
 	send_data["search"] = text.trim().toLowerCase();
@@ -501,7 +502,7 @@ function insert_search_post(target_num, posts, now_creating_state = "", is_fav_c
 	else if (Number(target_name) == 4) {target_name = "진로&구인";}
 	else if (Number(target_name) == 5) {target_name = "자유";}
 	else {target_name = "일반";}
-	let target_tag = `<div class="sr_title noselect">${target_name}</div>`;
+	let target_tag = `<div id=${'category-title-'+target_num} class="sr_title noselect">${target_name}</div>`;
 	creating_post($("#search_posts_target"), posts, now_creating_state, is_fav_cnt, function(tag_str) {
 		let line = `<div class="sr_line"></div>`;
 		let more;
@@ -725,7 +726,7 @@ function check_search_results_sort() {
 function category_select(tag) {
 	let id = tag.attr('id');
 	if (id == 'category0') {
-		if (tag.hasClass('category_checkd')) return;
+		if (tag.hasClass('category_checked')) return;
 		else before_posts();
 	} else {
 		if (more_posts(Number(id.slice(8)) - 1) == false) {
