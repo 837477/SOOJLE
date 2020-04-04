@@ -49,6 +49,7 @@ function get_recommend_posts(is_first = 0) {
 	// 공지사항 삽입하기
 	$("#posts_target").empty();
 	Insert_Notice_Posts();
+	Insert_Post_View_Option();	// 게시글 뷰 옵션 삽입
 	$.when(A_JAX(host_ip+"/get_recommendation_newsfeed", "GET", null, null)).done(function (data) {
 		if (now_topic != "추천") { return; }
 		if (data['result'] == 'success') {
@@ -105,6 +106,7 @@ function get_popularity_posts() {
 	// 공지사항 삽입하기
 	$("#posts_target").empty();
 	Insert_Notice_Posts();
+	Insert_Post_View_Option();	// 게시글 뷰 옵션 삽입
 	$.when(A_JAX(host_ip+"/get_popularity_newsfeed", "GET", null, null))
 	.done(function (data) {
 		if (now_topic != "인기") { return; }
@@ -152,6 +154,7 @@ function get_topic_posts(tag) {
 	// 공지사항 삽입하기
 	$("#posts_target").empty();
 	Insert_Notice_Posts();
+	Insert_Post_View_Option();	// 게시글 뷰 옵션 삽입
 	$.when(A_JAX(host_ip+"/get_newsfeed_of_topic/"+topic, "GET", null, null))
 	.done(function (data) {
 		if (where_topic != "뉴스피드") { return; }
@@ -496,6 +499,8 @@ function creating_post(target_tag, posts, now_creating_state = "", is_fav_cnt = 
 			}
 		}
 	}).then(() => {
+		Checking_Post_View_Option();
+
 		$("#mobile_controller_none").addClass("display_none");
 		$("#board_loading_modal").addClass("board_loading_modal_unvisible");
 		$(".mobile_controller").removeAttr("style");
@@ -738,7 +743,7 @@ function Do_Like_Sign() {
 	}
 }
 function check_image(tag) {
-	let onerror = `./static/image/shortcut_black_mobile.png`;
+	let onerror = `./static/image/shortcut_black.jpg`;
 	if ($(tag).find("div.post_block_img_cont") == undefined) return false;
 	if ($(tag).find("div.post_block_img_cont").css("background-image") == undefined) return false;
 	let img_url = $(tag).find("div.post_block_img_cont").css("background-image").slice(5, -2);
@@ -886,6 +891,83 @@ function Insert_Notice_Posts() {
 		}
 	});
 }
+
+// 게시글 뷰 옵션 추가하기
+function Insert_Post_View_Option() {
+	$(".post_view_select_cont").remove();
+	let target = $('#posts_target');
+	let post_view_div = '';
+	if (Check_Post_View_Default() == 'post') {
+		post_view_div = `<div class="post_view_select_cont">
+							<div class="post_view_title noselect">View</div>
+							<img id="post_view_type_card" src="/static/icons/card_view.png" class="post_view_type pointer noselect" title="카드뷰">
+							<img id="post_view_type_post" src="/static/icons/post_view.png" class="post_view_type post_view_type_selected pointer noselect" title="포스트뷰">
+						</div>`;
+	} else {						//card
+		post_view_div = `<div class="post_view_select_cont">
+							<div class="post_view_title noselect">View</div>
+							<img id="post_view_type_card" src="/static/icons/card_view.png" class="post_view_type post_view_type_selected pointer noselect" title="카드뷰">
+							<img id="post_view_type_post" src="/static/icons/post_view.png" class="post_view_type pointer noselect" title="포스트뷰">
+						</div>`;
+	}
+	target.append(post_view_div);
+	EventBinding_Post_View_Option();
+}
+// 게시글 뷰 옵션 이벤트 바인딩
+function EventBinding_Post_View_Option() {
+	$("#post_view_type_card").on({ "click": ()=> { Change_Post_View_Card(); } });
+	$("#post_view_type_post").on({ "click": ()=> { Change_Post_View_Post(); } });
+}
+function Checking_Post_View_Option() {
+	if ($("#post_view_type_card").hasClass("post_view_type_selected")) {
+		Change_Post_View_Card(1);
+	} else {
+		Change_Post_View_Post(1);
+	}
+}
+function Change_Post_View_Card(checking = 0) {
+	if ($("#post_view_type_card").hasClass("post_view_type_selected ") && checking == 0) {
+		return;
+	}
+	localStorage.setItem('sj-view', 'card');
+	$("#post_view_type_card").addClass("post_view_type_selected");
+	$("#post_view_type_post").removeClass("post_view_type_selected");
+	let blocks = $(".post_block");
+	for (let block of blocks) {
+		$(block).addClass("post_view_card_block");
+		$(block).find('.post_block_img_cont').addClass("post_view_card_img");
+		$(block).find('.post_title_cont').addClass("post_view_card_element");
+		$(block).find('.post_block_cont').addClass("post_view_card_element");
+		$(block).find('.post_block_set_cont ').addClass("post_view_card_element");
+	}
+}
+function Change_Post_View_Post(checking = 0) {
+	if ($("#post_view_type_post").hasClass("post_view_type_selected ") && checking == 0) {
+		return;
+	}
+	localStorage.setItem('sj-view', 'post');
+	$("#post_view_type_post").addClass("post_view_type_selected");
+	$("#post_view_type_card").removeClass("post_view_type_selected");
+	let blocks = $(".post_block");
+	for (let block of blocks) {
+		$(block).removeClass("post_view_card_block");
+		$(block).find('.post_block_img_cont').removeClass("post_view_card_img");
+		$(block).find('.post_title_cont ').removeClass("post_view_card_element");
+		$(block).find('.post_block_cont').removeClass("post_view_card_element");
+		$(block).find('.post_block_set_cont ').removeClass("post_view_card_element");
+	}
+}
+// 포스트뷰 타입 디폴트 설정 및 반환
+function Check_Post_View_Default() {
+	let post_view_type = localStorage.getItem('sj-view');
+	console.log(post_view_type);
+	if (post_view_type == null || post_view_type == undefined || post_view_type == 'undefined') {
+		localStorage.setItem('sj-view', 'post');
+		post_view_type = 'post';
+	}
+	return post_view_type;
+}
+Check_Post_View_Default();
 
 // 배열 shuffle 함수
 function shuffle(a) {
