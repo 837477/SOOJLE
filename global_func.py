@@ -213,6 +213,13 @@ def measurement_run():
 	ACTION_DAY_CHECK = get_default_day(SJ_USER_ACTION_DAY_CHECK)
 
 	for USER in USER_list:
+		#리뉴얼 시간으로 관심도 측정 대상자만 불러오긴 했지만,
+		#뉴스피드 관심사는 미슈얼 넘버에 포함되지 않기 때문에,
+		#혹시 뉴스피드 이동으로만 리뉴얼이 되버린 유저들을 걸러낸다.
+		#즉, 좋아요/조회수가 하나도 없는 회원은 측정 안함.
+		if len(USER['fav_list']) == 0 and len(USER['view_list']) == 0):
+			continue
+
 		#사용자 로그 액션 먼저 개수 백업처리.
 		user_log_backup(db, USER)
 
@@ -363,7 +370,7 @@ def measurement_run():
 			USER_TAG_SUM = 1
 
 		#해당 USER 관심도 갱신!
-		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR, len(USER['fav_list']) + len(USER['view_list']) + len(USER['search_list']) + len(USER['newsfeed_list']))
+		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR, len(USER['fav_list']) + len(USER['view_list']) + len(USER['search_list']))
 
 	update_variable(db, 'renewal', datetime.now())
 
