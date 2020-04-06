@@ -41,7 +41,7 @@ function Fail_notice_postOne() {
 }
 // 공지사항 단일 포스트 반환 API
 function Get_notice_postOne(id, callback) {
-	$.when(A_JAX(host_ip+"/get_notice/"+id, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/admin/notice/one/"+id, "GET", null, null))
 	.done(function (data) {
 		if (data['result'] == 'success') {
 			output =  JSON.parse(data['notice']);
@@ -66,7 +66,7 @@ function Get_notice_postOne(id, callback) {
 }
 // 공지사항 포스트 요청 API
 function Get_notice_posts(callback) {
-	$.when(A_JAX(host_ip+"/get_all_notice", "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/admin/notice/all", "GET", null, null))
 	.done(function (data) {
 		if (data['result'] == 'success') {
 			// 콜백함수, 인자로 User Information을 넣어준다.
@@ -257,7 +257,7 @@ function Notice_Delete() {
 	Check_ManagerInfo(function() {
 		if (confirm("해당 게시글을 삭제하시겠습니까?")) {
 			let id = $("#notice_page_container").attr("data-id");
-			$.when(A_JAX(host_ip+"/remove_notice/"+id, "GET", null, null))
+			$.when(A_JAX(host_ip+"/api/v1/admin/notice/remove/"+id, "GET", null, null))
 			.done(function(data) {
 				if (data['result'] == "success") {
 					alert("삭제 완료하였습니다.");
@@ -314,7 +314,7 @@ function Notice_Edit_Done() {
 			'post': post,
 			'activation': actiavation_check
 		};
-		$.when(A_JAX(host_ip+"/update_notice/"+id, "POST", null, sendData))
+		$.when(A_JAX(host_ip+"/api/v1/admin/notice/update/"+id, "POST", null, sendData))
 		.done(function(data) {
 			if (data['result'] == "success") {
 				alert("수정 완료하였습니다.");
@@ -407,7 +407,7 @@ function writing_notice_done() {
 							"title": title, 
 							"post": pharagh
 						};
-		$.when(A_JAX(host_ip+"/insert_notice", "POST", null, send_data))
+		$.when(A_JAX(host_ip+"/api/v1/admin/notice/insert", "POST", null, send_data))
     .done(function(data) {
 			if (data["result"] == 'success') {
 				Snackbar("게시글이 정상적으로 업로드되었습니다.");

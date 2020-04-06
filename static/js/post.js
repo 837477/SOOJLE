@@ -50,7 +50,7 @@ function get_recommend_posts(is_first = 0) {
 	$("#posts_target").empty();
 	Insert_Notice_Posts();
 	Insert_Post_View_Option($("#posts_target"));	// 게시글 뷰 옵션 삽입
-	$.when(A_JAX(host_ip+"/get_recommendation_newsfeed", "GET", null, null)).done(function (data) {
+	$.when(A_JAX(host_ip+"/api/v1/newsfeed/recommendation", "GET", null, null)).done(function (data) {
 		if (now_topic != "추천") { return; }
 		if (data['result'] == 'success') {
 			let output = JSON.parse(data["newsfeed"]);
@@ -107,7 +107,7 @@ function get_popularity_posts() {
 	$("#posts_target").empty();
 	Insert_Notice_Posts();
 	Insert_Post_View_Option($("#posts_target"));	// 게시글 뷰 옵션 삽입
-	$.when(A_JAX(host_ip+"/get_popularity_newsfeed", "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/newsfeed/popularity", "GET", null, null))
 	.done(function (data) {
 		if (now_topic != "인기") { return; }
 		if (data['result'] == 'success') {
@@ -155,7 +155,7 @@ function get_topic_posts(tag) {
 	$("#posts_target").empty();
 	Insert_Notice_Posts();
 	Insert_Post_View_Option($("#posts_target"));	// 게시글 뷰 옵션 삽입
-	$.when(A_JAX(host_ip+"/get_newsfeed_of_topic/"+topic, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/newsfeed/topic/"+topic, "GET", null, null))
 	.done(function (data) {
 		if (where_topic != "뉴스피드") { return; }
 		if (data['result'] == 'success') {
@@ -271,7 +271,7 @@ function post_url_copy(tag) {
 	output.remove();
 	post_menu_close();
 	// API 호출
-	A_JAX(host_ip+"/post_view/"+id, "GET", null, null);
+	A_JAX(host_ip+"/api/v1/post/view/"+id, "GET", null, null);
 }
 // 포스트 페이스북 공유
 function Share_facebook(tag) {
@@ -325,7 +325,7 @@ function post_like(id, tag) {
 		Snackbar("로그인이 필요합니다.");
 		return;
 	}
-	$.when(A_JAX(host_ip+"/post_like/"+id, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/post/like/"+id, "GET", null, null))
 	.done((data) => {
 		if (data['result'] == 'success') {
 			tag.css("color", "#f00730");
@@ -355,7 +355,7 @@ function post_dislike(id, tag) {
 		Snackbar("로그인이 필요합니다.");
 		return;
 	}
-	$.when(A_JAX(host_ip+"/post_unlike/"+id, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/post/unlike/"+id, "GET", null, null))
 	.done((data) => {
 		if (data['result'] == 'success') {
 			tag.removeAttr("style");
@@ -399,7 +399,7 @@ function post_view(tag) {
 		let id = tag.parent('a').parent('div').attr("p-id");
 		let e = mouse_which;
 		if (e == 1 || e == 2) {
-			A_JAX(host_ip+"/post_view/"+id, "GET", null, null);
+			A_JAX(host_ip+"/api/v1/post/view/"+id, "GET", null, null);
 		}
 	}, 400);
 }

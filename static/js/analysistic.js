@@ -40,7 +40,7 @@ function Go_analysistic() {
 }
 
 function set_analysistic() {
-	$.when(A_JAX(host_ip+"/get_analysis", "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/analysis/all", "GET", null, null))
 	.done(function(data) {
 		if (data['result'] == 'success') {
 			analysis_data = data['analysis'];
@@ -178,7 +178,7 @@ function insert_realtimesearch_div() {
 }
 function set_realtimesearch() {
 	let realtime_words_list;
-	$.when(A_JAX(host_ip+"/get_search_realtime", "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/analysis/realtime_keyword", "GET", null, null))
 	.done(function (data) {
 		if (data['result'] == 'success') {
 			realtime_words_list = data['search_realtime'];
@@ -438,7 +438,7 @@ function insert_device_div() {
 	set_device_data();
 }
 function set_device_data() {
-	$.when(A_JAX(host_ip+"/get_device", "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/analysis/get_device", "GET", null, null))
 	.done(function(data) {
 		if (data['result'] == 'success'){
 			get_doughnut("anlt_user_device_distribution",
@@ -763,7 +763,7 @@ function Detection_Device() {
 		device = "device_tablet";
 	}
 	if (Check_Visite_Today()) {
-		A_JAX(host_ip+"/insert_device/"+device, "GET", null, null);
+		A_JAX(host_ip+"/api/v1/analysis/insert_device/"+device, "GET", null, null);
 	}
 }
 
@@ -776,7 +776,7 @@ function menu_realtime_searchword() {
 	target.css("top", "0");
 	setTimeout(function() {
 		menu_realtime_init = 0;
-		$.when(A_JAX(host_ip+"/get_search_realtime", "GET", null, null))
+		$.when(A_JAX(host_ip+"/api/v1/analysis/realtime_keyword", "GET", null, null))
 		.done(function (data) {
 			if (data['result'] == 'success') {
 				target.empty();
