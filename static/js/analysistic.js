@@ -282,13 +282,12 @@ function insert_visitor_div() {
 							<div class="anlt_visitor_box_title_big noselect">사용 시간대 분석</div>
 							<canvas id="visitor_distribution" class="anlt_visitor_chart_element" width="auto" height="auto"></canvas>
 						</div>\
-					</div>
-				`;
-				/*		<div class="anlt_visitor_chart_box">
+						<div class="anlt_visitor_chart_box">
 							<div class="anlt_visitor_box_title_big noselect">일별 방문자수 분석</div>
 							<canvas id="visitor_distribution_month" class="anlt_visitor_chart_element" width="auto" height="auto"></canvas>
 						</div>\
-				*/
+					</div>
+				`;
 	$("#posts_target").append(div);
 	set_visitor_data();
 }
@@ -328,25 +327,37 @@ function set_visitor_data() {
 					visitor_time_data_array2,
 					visitor_time_data_array1
 				],
+				['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
 			);
 		} else {
 			Snackbar("방문자 데이터를 가져오지 못하였습니다.");
 		}
 	});
-	return;
-	$.when(A_JAX(host_ip+"/<일별 방문자수 분석>/"+30, "GET", null, null))
+	//$.when(A_JAX(host_ip+"/api/v1/analysis/lastdays/"+30, "GET", null, null))
+	$.when(A_JAX(host_ip+"/get_everyday_analysis_days_ago/"+30, "GET", null, null))
 	.done((data) => {
+		console.log(data);
+		let under_label = [];
+		let visitor_time_table_label = [];
+		let now_time = new Date();
+		for (let i = 0; i < 30; i++) {
+			now_time.setDate(now_time.getDate() - 1);
+			under_label.unshift(now_time.getDate() - 1);
+			visitor_time_table_label.unshift((now_time.getMonth() + 1 + ".")+ (now_time.getDate() - 1));
+		}
 		if (data['result'] == 'success') {
-			let visitor_time_table = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-			let visitor_time_table_label = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30];
+			let visitor_time_table = [18,4,7,6,8,20,19,18,127,61,31,16,17,20,22,21,13,14,8,11,22,71,32,6,8,20,14,12,18,31];
 			let show_month = (new Date()).getMonth();
 			if (data['analysis'] != undefined) {
-				vistior_time_table = data['analysis']['visitors'];
-				vistior_time_table_label = data['analysis']['date'];
+				vistior_time_table = data['analysis'];
 			}
-			get_line("visitor_distribution_month",
-				[visitor_time_table_label],
-				[visitor_time_table]
+			console.log(visitor_time_table_label);
+			console.log(vistior_time_table);
+			console.log(under_label);
+			get_line_only("visitor_distribution_month",
+				visitor_time_table_label,
+				visitor_time_table,
+				under_label
 			);
 		} else {
 			Snackbar("방문자 데이터를 가져오지 못하였습니다.");
@@ -440,24 +451,25 @@ function set_device_data() {
 
 
 // Chart JS : Line Type---------------------------------------------------**
-function get_line(id_, labels_, datas_) {
+function get_line(id_, labels_, datas_, under_label) {
 	let ctx = document.getElementById(id_);
 	let myLineChart  = new Chart(ctx, {
 		type: 'line',
 		data: {
-			labels: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'],
+			labels: under_label,
 			datasets: [{
 				label: labels_[0],
 				data: datas_[0],
-				borderColor: "#03adfc",
-				backgroundColor: "#03adfc",
+				borderColor: "#12db9f",
+				backgroundColor: "#12db9f",
 				lineTension: 0,
 				fill: false
-			}, {
+			},
+			{
 				label: labels_[1],
 				data: datas_[1],
-				borderColor: "#1ad904",
-				backgroundColor: "#1ad904",
+				borderColor: "#03adfc",
+				backgroundColor: "#03adfc",
 				lineTension: 0,
 				fill: false
 			}]
@@ -466,8 +478,8 @@ function get_line(id_, labels_, datas_) {
 			response: true,
 			layout: {
         		padding: {
-                    left: 20,
-                    right: 20,
+                    left: 0,
+                    right: 10,
                     top: 0,
                     bottom: 0
                 },
@@ -477,16 +489,16 @@ function get_line(id_, labels_, datas_) {
         	},
 			tooltips: {
 				xPadding: 20,
-				ypadding: 15,
+				ypadding: 20,
 				titleFontColor: "rgba(0,0,0,0)",
 				titleFontSize: 0,
 				titleSpacing: 0,
 				bodyFontSize: 16,
-				bodySpacing: 5,
+				bodySpacing: 10,
 				mode: 'index',
 				intersect: false,
 				cornerRadius: 3,
-				caretPadding : 20,
+				caretPadding : 40,
 				opacity: 0.7,
 				footer: ' ',
 				footerFontColor: "rgba(0,0,0,0)",
@@ -496,6 +508,75 @@ function get_line(id_, labels_, datas_) {
 			},
 			legend: {
         		display: true,
+        		align: 'end'
+        	},
+        	title: {
+        		display: false
+        	},
+			scales: {
+				xAxes: [{
+					display: true
+				}],
+				yAxes: [{
+					display: true
+				}]
+			},
+			hover: {
+				mode: 'index',
+				axis: 'x',
+				intersect: false
+			}
+		}
+	});
+}
+function get_line_only(id_, labels_, datas_, under_label) {
+	let ctx = document.getElementById(id_);
+	let myLineChart  = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: labels_,
+			datasets: [{
+				label: ' 방문자수',
+				data: datas_,
+				borderColor: "#12db9f",
+				backgroundColor: "#12db9f",
+				lineTension: 0,
+				fill: false
+			}]
+		},
+		options: {
+			response: true,
+			layout: {
+        		padding: {
+                    left: 0,
+                    right: 10,
+                    top: 0,
+                    bottom: 0
+                },
+                labels: {
+                	fontSize: 20
+                }
+        	},
+			tooltips: {
+				xPadding: 20,
+				ypadding: 20,
+				titleFontColor: "rgba(255,255,255,1)",
+				titleFontSize: 18,
+				bodyFontSize: 16,
+				bodySpacing: 10,
+				mode: 'index',
+				intersect: false,
+				cornerRadius: 3,
+				caretPadding : 40,
+				opacity: 0.7,
+				footer: ' ',
+				footerFontColor: "rgba(0,0,0,0)",
+				footerFontSize: 10,
+				footerSpacing: 5,
+				footerMarginTop: 10
+			},
+			legend: {
+        		display: false,
         		align: 'end'
         	},
         	title: {
@@ -755,7 +836,7 @@ function menu_realtime_moving(block_h) {
 	}, 3000);
 }
 
-
+// 이벤트 바인딩
 $("#menu_realtime_searchwords").on({
 	"mouseenter": function() {	// 메뉴 인기 키워드 mouseenter
 		if (!mobilecheck()) $("#realtime_searchwords_table").removeClass("display_none");
@@ -775,7 +856,7 @@ $("#realtime_searchwords_table_close").on({
 	}
 })
 
-
+// 숫자가 커질 시, k 또는 m 으로 치환
 function number_unit(num, comma = false) {
 	if (comma == true) {
 		return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -791,6 +872,7 @@ function number_unit(num, comma = false) {
 		}
 	}
 }
+// 3자리마다 , 찍어주기
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
