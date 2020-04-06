@@ -29,10 +29,10 @@ def match_score(token1, token2):
 	MR = MC / len(token1)
 	return MC * (1 + MR + math.floor(MR))
 
-#search_logging 기록!
-@BP.route('/search_logging', methods=['POST'])
+#검색 로깅 (작동중)
+@BP.route('/api/v1/search/logging', methods=['POST'])
 @jwt_optional
-def search_logging():
+def SJ_api_v1_search__logging():
 	#검색어 입력!
 	search_str = request.form['search']
 
@@ -80,10 +80,10 @@ def search_logging():
 			result = "success"
 		)
 
-#category.ver2 검색
-@BP.route('/category_search/<string:category_name>/<int:num>', methods = ['POST'])
+#category (작동중)
+@BP.route('/api/v1/search/category/<string:category_name>/<int:num>', methods = ['POST'])
 @jwt_optional
-def category_search(category_name, num):
+def SJ_api_v1_search__category(category_name, num):
 	#총 시간 측정#################################################
 	TOTAL_TIME_START = time.time()
 	###########################################################
@@ -239,10 +239,10 @@ def category_search(category_name, num):
 			speed_result = SPEED_RESULT
 		)
 
-#category_no_limit.ver2 검색
-@BP.route('/category_search_no_limit/<string:category_name>/<int:num>', methods = ['POST'])
+#category (작동중)
+@BP.route('/api/v1/search/category_no_limit/<string:category_name>/<int:num>', methods = ['POST'])
 @jwt_optional
-def category_search_no_limit(category_name, num):
+def SJ_api_v1_search__category_no_limit(category_name, num):
 	#총 시간 측정#################################################
 	TOTAL_TIME_START = time.time()
 	###########################################################
@@ -393,10 +393,10 @@ def category_search_no_limit(category_name, num):
 			speed_result = SPEED_RESULT
 		)
 
-#domain_검색
-@BP.route('/domain_search', methods = ['POST'])
+#domain (작동중)
+@BP.route('/api/v1/search/domain', methods = ['POST'])
 @jwt_optional
-def domain_search():
+def SJ_api_v1_search__domain():
 	search_str = request.form['search']
 
 	#검색어 스플릿
@@ -430,6 +430,31 @@ def domain_search():
 	return jsonify(
 		result = "success",
 		search_result = result)
+
+#입력된 str을 fasttext로 유사한 단어를 추출 해주는 API (연관검색어) (보류)
+@BP.route('/api/v1/search/similarity_words', methods = ['POST'])
+def simulation_fastext():
+	input_str = request.form['search']
+
+	tokenizer_list = tknizer.get_tk(input_str)
+	
+	result = {}
+	for word in tokenizer_list:
+		similarity_list = []
+		for sim_word in FastText.sim_words(word):
+			temp = {}
+			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
+				temp[sim_word[0]] = sim_word[1]
+				similarity_list.append(temp)
+			else: break	
+		result[word] = similarity_list
+
+	return jsonify(
+		result = "success",
+		similarity_words = result)
+
+###############################################################################################
+###############################################################################################
 
 #트랜드 스코어 판별 함수
 def trendscore_discriminate(now_date):
@@ -468,6 +493,3 @@ def trendscore(POST, now_date):
 	#아니면?!
 	else: 
 		return 0
-
-###############################################################################################
-###############################################################################################

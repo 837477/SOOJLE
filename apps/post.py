@@ -15,10 +15,10 @@ from variable import *
 BP = Blueprint('post', __name__)
 
 
-#포스트 좋아요 (사용자가 관심기능 수행한 게시물 모듈 포함)
-@BP.route('/post_like/<string:post_obi>')
+#포스트 좋아요 (사용자가 관심기능 수행한 게시물 모듈 포함) (작동중)
+@BP.route('/api/v1/post/like/<string:post_obi>')
 @jwt_required
-def post_like(post_obi):	
+def SJ_api_v1_post__like(post_obi):	
 	#USER 정보 불러오기
 	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
 	
@@ -66,10 +66,10 @@ def post_like(post_obi):
 		result = result
 	)
 
-#포스트 좋아요 취소 (사용자가 관심기능 수행한 게시물 모듈 포함)
-@BP.route('/post_unlike/<string:post_obi>')
+#포스트 좋아요 취소 (사용자가 관심기능 수행한 게시물 모듈 포함) (작동중)
+@BP.route('/api/v1/post/unlike/<string:post_obi>')
 @jwt_required
-def post_unlike(post_obi):
+def SJ_api_v1_post__unlike(post_obi):
 	#USER 정보 불러오기
 	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
 
@@ -105,10 +105,10 @@ def post_unlike(post_obi):
 		result = result
 	)
 
-#포스트 조회수
-@BP.route('/post_view/<string:post_obi>')
+#포스트 조회수 (작동중)
+@BP.route('/api/v1/post/view/<string:post_obi>')
 @jwt_optional
-def post_view(post_obi):
+def SJ_api_v1_post__view(post_obi):
 	POST = find_post(g.db, post_obi, _id=1, topic=1, token=1, tag=1, fav_cnt=1, view=1, date=1, title=1, url=1, img=1)
 
 	result = update_post_view(g.db, post_obi)
