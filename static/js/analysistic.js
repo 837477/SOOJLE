@@ -293,8 +293,9 @@ function insert_visitor_div() {
 }
 function set_visitor_data() {
 	let visitor_time_data, visitor_number_data, vistior_time;
-	$.when(A_JAX(host_ip+"/api/v1/analysis/lastdays/"+3, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/analysis/lastdays/"+2, "GET", null, null))
 	.done((data) => {
+		console.log(data);
 		if (data['result'] == 'success') {
 			let visitor_time_data_array1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]; 
 			let visitor_time_data_array2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,];
@@ -333,8 +334,9 @@ function set_visitor_data() {
 			Snackbar("방문자 데이터를 가져오지 못하였습니다.");
 		}
 	});
-	$.when(A_JAX(host_ip+"/api/v1/analysis/lastdays/"+31, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/analysis/lastdays/"+30, "GET", null, null))
 	.done((data) => {
+		console.log(data);
 		let under_label = [];
 		let visitor_time_table_label = [];
 		let now_time = new Date();
