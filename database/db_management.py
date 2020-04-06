@@ -1281,8 +1281,8 @@ def insert_everyday_analysis(db, analysis_obj):
 	)
 	return "success"
 
-#매일 통계에서 특정 날짜 이후 통계 반환
-def find_everyday_analysis_days(db, date):
+#SJ_ANAYSIS에서 지난 날 기록들 반환
+def SJ_DB_ANALYSIS_find_lastdays(db, date):
 	result = db[SJ_DB_ANALYSIS].find(
 		{
 			'date': 
