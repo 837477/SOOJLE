@@ -20,10 +20,10 @@ from variable import *
 BP = Blueprint('newsfeed', __name__)
 
 
-#토픽별 뉴스피드.ver2 (테스트 대상)
-@BP.route('/get_newsfeed_of_topic/<string:category_name>')
+#토픽별 뉴스피드 (작동중)
+@BP.route('/api/v1/newsfeed/topic/<string:category_name>')
 @jwt_optional
-def get_newsfeed_of_topic(category_name):
+def SJ_api_v1_newsfeed__topic(category_name):
 	#총 시간 측정#################################################
 	TOTAL_TIME_START = time.time()
 	###########################################################
@@ -142,10 +142,10 @@ def get_newsfeed_of_topic(category_name):
 			speed_result = SPEED_RESULT
 		)
 
-#추천 뉴스피드 ver.3 
-@BP.route('/get_recommendation_newsfeed')
+#추천 뉴스피드 (작동중)
+@BP.route('/api/v1/newsfeed/recommendation')
 @jwt_optional
-def get_recommendation_newsfeed():
+def SJ_api_v1_newsfeed__recommendation():
 	#현재 날짜 가져오기.
 	now_date = datetime.now()
 
@@ -189,10 +189,10 @@ def get_recommendation_newsfeed():
 			newsfeed = dumps(POST_LIST)
 		)
 
-#인기 뉴스피드
-@BP.route('/get_popularity_newsfeed')
+#인기 뉴스피드 (작동중)
+@BP.route('/api/v1/newsfeed/popularity')
 @jwt_optional
-def get_popularity_newsfeed():
+def SJ_api_v1_newsfeed__popularity():
 	#logging! (메인 로그)
 	if get_jwt_identity():
 		#유저 확인

@@ -40,9 +40,9 @@ def admin_remove_user(user_id):
 
 	return jsonify(result = result)
 
-#공지사항 전체 반환
-@BP.route('/get_all_notice')
-def get_all_notice():
+#공지사항 전체 반환 (작동중)
+@BP.route('/api/v1/admin/notice/all')
+def SJ_api_v1_admin_notice__all():
 	result = find_all_notice(g.db)
 	result = dumps(result)
 
@@ -51,9 +51,9 @@ def get_all_notice():
 		notice_list = result
 	)
 
-#공지사항 단일 반환
-@BP.route('/get_notice/<string:notice_obi>')
-def get_notice(notice_obi):
+#공지사항 단일 반환 (작동중)
+@BP.route('/api/v1/admin/notice/one/<string:notice_obi>')
+def SJ_api_v1_admin_notice__one(notice_obi):
 	#조회수 증가!
 	update_notice_view(g.db, notice_obi)
 	
@@ -69,10 +69,10 @@ def get_notice(notice_obi):
 		notice = result
 	)
 
-#공지사항 입력
-@BP.route('/insert_notice', methods=['POST'])
+#공지사항 입력 (작동중)
+@BP.route('/api/v1/admin/notice/insert', methods=['POST'])
 @jwt_required
-def insert_notice_():
+def SJ_api_v1_admin_notice__insert():
 	NEW_TITLE = request.form['title']
 	NEW_POST = request.form['post']
 
@@ -91,10 +91,10 @@ def insert_notice_():
 		result = result
 	)
 
-#공지사항 수정
-@BP.route('/update_notice/<string:notice_obi>', methods=['POST'])
+#공지사항 수정 (작동중)
+@BP.route('/api/v1/admin/notice/update/<string:notice_obi>', methods=['POST'])
 @jwt_required
-def update_notice_(notice_obi):
+def SJ_api_v1_admin_notice__update(notice_obi):
 	NEW_TITLE = request.form['title']
 	NEW_POST = request.form['post']
 	NEW_ACTIVATION = request.form['activation']
@@ -113,10 +113,10 @@ def update_notice_(notice_obi):
 		result = result
 	)
 
-#공지사항 삭제
-@BP.route('/remove_notice/<string:notice_obi>')
+#공지사항 삭제 (작동중)
+@BP.route('/api/v1/admin/notice/remove/<string:notice_obi>')
 @jwt_required
-def remove_notice_(notice_obi):
+def SJ_api_v1_admin_notice__remove(notice_obi):
 	ADMIN = find_user(g.db, user_id=get_jwt_identity())
 
 	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
@@ -133,10 +133,10 @@ def remove_notice_(notice_obi):
 		result = result
 	)
 
-#피드백 전송
-@BP.route('/send_feedback', methods=['POST'])
+#피드백 전송 (작동중)
+@BP.route('/api/v1/admin/feedback/send', methods=['POST'])
 @jwt_required
-def send_feedback():
+def SJ_api_v1_admin_feedback__send():
 	USER = find_user(g.db, user_id=get_jwt_identity())
 
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
@@ -157,10 +157,10 @@ def send_feedback():
 		result = result
 	)
 
-#피드백 전체 반환
-@BP.route('/get_all_feedback')
+#피드백 전체 반환 (작동중)
+@BP.route('/api/v1/admin/feedback/all')
 @jwt_required
-def get_all_feedback():
+def SJ_api_v1_admin_feedback__all():
 	ADMIN = find_user(g.db, user_id=get_jwt_identity())
 
 	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
@@ -174,10 +174,10 @@ def get_all_feedback():
 		feedback_list = result
 	)
 
-#피드백 단일 반환
-@BP.route('/get_feedback/<string:feedback_obi>')
+#피드백 단일 반환 (작동중)
+@BP.route('/api/v1/admin/feedback/one/<string:feedback_obi>')
 @jwt_required
-def get_feedback(feedback_obi):
+def SJ_api_v1_admin_feedback__one(feedback_obi):
 	ADMIN = find_user(g.db, user_id=get_jwt_identity())
 
 	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
@@ -195,10 +195,10 @@ def get_feedback(feedback_obi):
 		feedback = result
 	)
 
-#피드백 활성화 변경
-@BP.route('/update_feedback_activation/<string:feedback_obi>/<int:activation>')
+#피드백 활성화 변경 (작동중)
+@BP.route('/api/v1/admin/feedback/activation/<string:feedback_obi>/<int:activation>')
 @jwt_required
-def SJ_update_feedback_activation(feedback_obi, activation):
+def SJ_api_v1_admin_feedback__activation(feedback_obi, activation):
 	ADMIN = find_user(g.db, user_id=get_jwt_identity())
 
 	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
@@ -218,10 +218,10 @@ def SJ_update_feedback_activation(feedback_obi, activation):
 		result = result
 	)
 
-#메인 Info 메시지 수정
-@BP.route('/update_main_info', methods=['POST'])
+#메인 Info 메시지 수정 (작동중)
+@BP.route('/api/v1/admin/message/update', methods=['POST'])
 @jwt_required
-def update_main_info():
+def SJ_api_v1_admin_message__update():
 	ADMIN = find_user(g.db, user_id=get_jwt_identity())
 
 	#잘못된 ADMIN 토큰!, Admin only 핸들러 반환
@@ -240,9 +240,9 @@ def update_main_info():
 		result = result
 	)
 
-#메인 Info 메시지 반환
-@BP.route('/get_main_info')
-def get_main_info():
+#메인 Info 메시지 반환 (작동중)
+@BP.route('/api/v1/admin/message/all')
+def SJ_api_v1_admin_message__all():
 	main_info_1 = find_variable(g.db, 'main_info_1')
 	main_info_2 = find_variable(g.db, 'main_info_2')
 	
@@ -256,7 +256,7 @@ def get_main_info():
 		main_info = result
 	)
 
-#모든 회원 관심도 초기화
+#모든 회원 관심도 초기화 (보류)
 @BP.route('/all_reset_user_measurement')
 @jwt_required
 def all_reset_user_measurement():

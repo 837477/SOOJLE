@@ -7,13 +7,15 @@ from db_management import *
 ###########################################
 from variable import *
 
+#/api/v1/analysis/lastdays/<int:days>
+#SJ_api_v1_analysis_lastdays(days):
 
 #BluePrint
 BP = Blueprint('auth', __name__)
 
-#회원가입
-@BP.route('/sign_up', methods = ['POST'])
-def sign_up():
+#회원가입 (작동중)
+@BP.route('/api/v1/auth/sign_up', methods = ['POST'])
+def SJ_api_v1_auth__sign_up():
 	USER_ID = request.form['id']
 	USER_PW = request.form['pw']
 	USER_PW_CHECK = request.form['pw_check']
@@ -52,9 +54,9 @@ def sign_up():
 	#실패!, Fail 핸들러 반환
 	else: abort(500)
 
-#로그인
-@BP.route('/sign_in', methods = ['POST'])
-def sign_in():
+#로그인 (작동중)
+@BP.route('/api/v1/auth/sign_in', methods = ['POST'])
+def SJ_api_v1_auth__sign_in():
 	USER_ID = request.form['id']
 	USER_PW = request.form['pw']
 
@@ -75,10 +77,10 @@ def sign_in():
 	else:
 		return jsonify(result = "Incorrect pw")
 
-#닉네임 변경
-@BP.route('/change_nickname', methods = ['POST'])
+#닉네임 변경 (작동중)
+@BP.route('/api/v1/auth/change_nickname', methods = ['POST'])
 @jwt_required
-def change_nickname():
+def SJ_api_v1_auth__change_nickname():
 	NEW_NICKNAME = request.form['new_nickname']
 
 	USER = find_user(g.db, user_id=get_jwt_identity())
@@ -95,10 +97,10 @@ def change_nickname():
 		result = result
 	)
 
-#회원정보 반환
-@BP.route('/get_userinfo')
+#회원정보 반환 (작동중)
+@BP.route('/api/v1/auth/get_userinfo')
 @jwt_required
-def get_user_info():
+def SJ_api_v1_auth__get_userinfo():
 	USER = find_user(g.db, user_id=get_jwt_identity(), auto_login=1, user_nickname=1, fav_list=1, privacy=1)
 
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
@@ -124,10 +126,10 @@ def get_user_info():
 		return_object
 	)
 
-#자동로그인 유무 변경
-@BP.route('/update_auto_login/<int:auto_login>')
+#자동로그인 유무 변경 (작동중)
+@BP.route('/api/v1/auth/change_autologin/<int:auto_login>')
 @jwt_required
-def update_auto_login(auto_login):
+def SJ_api_v1_auth__change_autologin(auto_login):
 	USER = find_user(g.db, user_id=get_jwt_identity())
 
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
@@ -166,10 +168,10 @@ def update_privacy(privacy):
 		result = result
 	)
 
-#회원정보 특정 필드 반환
-@BP.route('/get_specific_userinfo/<int:type_num>')
+#회원정보 특정 필드 반환 (작동중)
+@BP.route('/api/v1/auth/get_specific_userinfo/<int:type_num>')
 @jwt_required
-def get_specific_userinfo(type_num=None):
+def SJ_api_v1_auth__get_specific_userinfo(type_num=None):
 	USER = find_user(g.db, user_id=get_jwt_identity())
 
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
@@ -191,10 +193,10 @@ def get_specific_userinfo(type_num=None):
 		user = dumps(USER)
 	)
 
-#회원탈퇴
-@BP.route('/delete_user')
+#회원탈퇴 (작동중)
+@BP.route('/api/v1/auth/delete_user')
 @jwt_required
-def remove_mine():
+def SJ_api_v1_auth__delete_user():
 	USER = find_user(g.db, _id=1, user_id=get_jwt_identity())
 
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
@@ -205,10 +207,10 @@ def remove_mine():
 
 	return jsonify(result = result)
 	
-#회원 관심도 초기화
-@BP.route('/reset_user_measurement')
+#회원 관심도 초기화 (작동중)
+@BP.route('/api/v1/auth/reset_measurement')
 @jwt_required
-def reset_user_measurement():
+def SJ_api_v1_auth__reset_measurement():
 	USER = find_user(g.db, user_id=get_jwt_identity())
 
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
@@ -224,10 +226,10 @@ def reset_user_measurement():
 		result = result
 	)
 
-#회원 최근 검색어 반환
-@BP.route('/get_user_lately_search/<int:num>')
+#회원 최근 검색어 반환 (작동중)
+@BP.route('/api/v1/auth/get_lately_search/<int:num>')
 @jwt_required
-def get_user_lately_search(num):
+def SJ_api_v1_auth__get_lately_search(num):
 	USER = find_user(g.db, user_id=get_jwt_identity())
 
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
