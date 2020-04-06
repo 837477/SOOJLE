@@ -152,7 +152,7 @@ def get_recommendation_newsfeed():
 	#회원일 때!
 	if get_jwt_identity():
 		#유저 정보 불러오기.
-		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, ft_vector=1, measurement_num=1)
+		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, ft_vector=1, measurement_num=1, view_list=1, fav_list=1)
 
 		#유효한 토큰인지 확인.
 		if USER is None: abort(401)
@@ -163,7 +163,7 @@ def get_recommendation_newsfeed():
 		insert_today_visitor(g.db, USER['user_id'])
 
 		#회원 관심도가 cold 상태일 때!
-		if USER['measurement_num'] <= SJ_USER_COLD_LIMIT:
+		if (USER['measurement_num'] <= SJ_USER_COLD_LIMIT):
 			#비로그인 전용 추천뉴스피드 호출!
 			POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)	
 			POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)

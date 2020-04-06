@@ -1443,6 +1443,9 @@ def update_feedback_activation(db, feedback_obi, activation):
 
 	return "success"
 
+
+
+
 #SJ_DB_VARIABLE 관련###################################
 ######################################################
 #정적 테이블 변수 불러오기
@@ -1497,7 +1500,6 @@ def push_today_time_visitor(db, hour_visitor_obj):
 	)
 
 	return "success"
-
 
 
 
