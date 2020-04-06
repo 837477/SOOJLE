@@ -293,7 +293,7 @@ function insert_visitor_div() {
 }
 function set_visitor_data() {
 	let visitor_time_data, visitor_number_data, vistior_time;
-	$.when(A_JAX(host_ip+"/get_everyday_analysis_days_ago/"+2, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/analysis/lastdays/"+3, "GET", null, null))
 	.done((data) => {
 		if (data['result'] == 'success') {
 			let visitor_time_data_array1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]; 
@@ -333,10 +333,8 @@ function set_visitor_data() {
 			Snackbar("방문자 데이터를 가져오지 못하였습니다.");
 		}
 	});
-	//$.when(A_JAX(host_ip+"/api/v1/analysis/lastdays/"+30, "GET", null, null))
-	$.when(A_JAX(host_ip+"/get_everyday_analysis_days_ago/"+30, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/analysis/lastdays/"+31, "GET", null, null))
 	.done((data) => {
-		console.log(data);
 		let under_label = [];
 		let visitor_time_table_label = [];
 		let now_time = new Date();
@@ -349,11 +347,14 @@ function set_visitor_data() {
 			let visitor_time_table = [18,4,7,6,8,20,19,18,127,61,31,16,17,20,22,21,13,14,8,11,22,71,32,6,8,20,14,12,18,31];
 			let show_month = (new Date()).getMonth();
 			if (data['analysis'] != undefined) {
-				vistior_time_table = data['analysis'];
+				visitor_time_table = [];
+				for (let i of data['analysis']) {
+					visitor_time_table.push(i['today_visitor']);
+				}
+				while(visitor_time_table.length < 30) {
+					visitor_time_table.unshift(0);
+				}
 			}
-			console.log(visitor_time_table_label);
-			console.log(vistior_time_table);
-			console.log(under_label);
 			get_line_only("visitor_distribution_month",
 				visitor_time_table_label,
 				visitor_time_table,
@@ -490,9 +491,9 @@ function get_line(id_, labels_, datas_, under_label) {
 			tooltips: {
 				xPadding: 20,
 				ypadding: 20,
-				titleFontColor: "rgba(0,0,0,0)",
-				titleFontSize: 0,
-				titleSpacing: 0,
+				titleFontColor: "rgba(255,255,255,1)",
+				titleFontSize: 16,
+				titleSpacing: 10,
 				bodyFontSize: 16,
 				bodySpacing: 10,
 				mode: 'index',
@@ -504,7 +505,12 @@ function get_line(id_, labels_, datas_, under_label) {
 				footerFontColor: "rgba(0,0,0,0)",
 				footerFontSize: 10,
 				footerSpacing: 0,
-				footerMarginTop: 10
+				footerMarginTop: 10,
+				callbacks: {
+					title: function(tooltipItems, data) {
+						return tooltipItems[0].xLabel + ' 시';
+					}
+				}
 			},
 			legend: {
         		display: true,
@@ -561,7 +567,8 @@ function get_line_only(id_, labels_, datas_, under_label) {
 				xPadding: 20,
 				ypadding: 20,
 				titleFontColor: "rgba(255,255,255,1)",
-				titleFontSize: 18,
+				titleFontSize: 16,
+				titleSpacing: 10,
 				bodyFontSize: 16,
 				bodySpacing: 10,
 				mode: 'index',
@@ -573,7 +580,12 @@ function get_line_only(id_, labels_, datas_, under_label) {
 				footerFontColor: "rgba(0,0,0,0)",
 				footerFontSize: 10,
 				footerSpacing: 5,
-				footerMarginTop: 10
+				footerMarginTop: 10,
+				callbacks: {
+					title: function(tooltipItems, data) {
+						return tooltipItems[0].xLabel.split('.')[0] + '월 ' + tooltipItems[0].xLabel.split('.')[1] + '일';
+					}
+				}
 			},
 			legend: {
         		display: false,
