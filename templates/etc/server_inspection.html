@@ -12,7 +12,7 @@
 	<!--Open Graph tag-->
 	<meta property="og:title" content="SOOJLE">
 	<meta property="og:description" content="세종대학교의 정보를 체계화하여 모두가 편리하게 이용할 수 있도록 합니다.">
-	<meta property="og:image" content="/static/image/shortcut_mobile.png">
+	<meta property="og:image" content="../../static/image/shortcut_mobile.png">
 	<!-- 모바일 브라우저 상태바 컬러 -->
     <meta name="theme-color" content="#fff">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -21,8 +21,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
 	<!-- shortcut 아이콘 -->
-	<link rel="icon" type="image/png" href="/static/image/shortcut_mobile.png">
-	<link rel="apple-touch-icon-precomposed" type="image/png" href="/static/image/shortcut.jpg">
+	<link rel="icon" type="image/png" href="../../static/image/shortcut_mobile.png">
+	<link rel="apple-touch-icon-precomposed" type="image/png" href="../../static/image/shortcut.jpg">
 	<!-- 아이콘 -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 	<!-- Main CSS -->
@@ -30,17 +30,17 @@
 		/*AppleSandleNeo Font*/
 		@font-face {
 			font-family: 'AppleSdNeo';
-			src: url('../fonts/AppleSdNeo/AppleSDGothicNeoUL.ttf') format('truetype');
+			src: url('../../static/fonts/AppleSdNeo/AppleSDGothicNeoUL.ttf') format('truetype');
 			font-weight: 300;
 		}
 		@font-face { 
 			font-family: 'AppleSdNeo';
-			src: url('../fonts/AppleSdNeo/AppleSDGothicNeoR.ttf') format('truetype');
+			src: url('../../static/fonts/AppleSdNeo/AppleSDGothicNeoR.ttf') format('truetype');
 			font-weight: 500;
 		}
 		@font-face { 
 			font-family: 'AppleSdNeo';
-			src: url('../fonts/AppleSdNeo/AppleSDGothicNeoB.ttf') format('truetype');
+			src: url('../../static/fonts/AppleSdNeo/AppleSDGothicNeoB.ttf') format('truetype');
 			font-weight: 800;
 		}
 
@@ -181,13 +181,165 @@
 				margin-top: 40px;
 			}
 		}
+		#flowers {position:absolute;top:-50px;width:100%;text-align: right;}
+
+		#flowers i {
+		    display: inline-block;
+		    width: 50%;
+		    height: 200px;
+		    background: linear-gradient(to bottom right, #ffdbd9, #ffdbd9);
+		    transform: skew(20deg);
+		    border-radius: 5% 40% 70%;
+		    z-index: 1;
+		    -webkit-animation: falling 5s 0s infinite;
+		    margin-right: 40px;
+		}
+		@media screen and (max-width: 800px) {
+			#flowers i {
+				margin-right: 20px;
+			}
+		}
+		@media screen and (max-width: 450px) {
+			#flowers i {
+				margin-right: 0;
+			}
+		}
+
+		#flowers i:nth-of-type(2n) { -webkit-animation: falling2 5s 0s infinite; }
+		#flowers i:nth-of-type(3n) { -webkit-animation: falling3 5s 0s infinite; }
+
+		#flowers i:before {
+		  position: absolute;
+		  content: '';
+		  top: 117px;
+		  right: 9px;
+		  height: 27px;
+		  width: 32px;
+		  transform: rotate(49deg);
+		  border-radius: 0% 15% 15% 0%;
+		  background: linear-gradient(to right, rgba(180,0,0,1), #ffdbd9);
+		  z-index: 1;
+		}
+
+		#flowers i:after {
+		  content: '';
+		  height: 125px;
+		  width: 10px;
+		  background: linear-gradient(to right, rgba(225,225,222,.15), rgba(225,225,222,0));
+		  display: block;
+		  transform: rotate(125deg);
+		  position: absolute;
+		  left: 85px;
+		  border-radius:50%;
+		}
+
+
+		#flowers i:nth-of-type(n)    { height:23px; width:30px; }
+		#flowers i:nth-of-type(n):before { width:7px; height:5px; top:17px; right:1px; }
+		#flowers i:nth-of-type(n):after { width:2px; height:17px; left: 12px; top:0px; }
+
+		#flowers i:nth-of-type(2n+1)    { height:11px; width:16px; }
+		#flowers i:nth-of-type(2n+1):before { width:4px; height:3px; top:7px; right:0px; }
+		#flowers i:nth-of-type(2n+1):after { width:2px; height:6px; left: 5px; top:1px; }
+
+		#flowers i:nth-of-type(3n+2)  { height:17px; width:23px; }
+		#flowers i:nth-of-type(3n+2):before  { height:4px; width:4px; top:12px; right:1px; }
+		#flowers i:nth-of-type(3n+2):after  { height:10px; width:2px; top:1px; left:8px; }
+
+		#flowers i:nth-of-type(n)   { -webkit-animation-delay: 1.9s;}
+		#flowers i:nth-of-type(2n)  { -webkit-animation-delay: 3.9s;}
+		#flowers i:nth-of-type(3n)  { -webkit-animation-delay: 2.3s;}
+		#flowers i:nth-of-type(4n)  { -webkit-animation-delay: 4.4s;}
+		#flowers i:nth-of-type(5n)  { -webkit-animation-delay: 5s;  }
+		#flowers i:nth-of-type(6n)  { -webkit-animation-delay: 3.5s;}
+		#flowers i:nth-of-type(7n)  { -webkit-animation-delay: 2.8s;}
+		#flowers i:nth-of-type(8n)  { -webkit-animation-delay: 1.5s;}
+		#flowers i:nth-of-type(9n)  { -webkit-animation-delay: 3.3s;}
+		#flowers i:nth-of-type(10n) { -webkit-animation-delay: 2.5s;}
+		#flowers i:nth-of-type(11n) { -webkit-animation-delay: 1.2s;}
+		#flowers i:nth-of-type(12n) { -webkit-animation-delay: 4.1s;}
+		#flowers i:nth-of-type(13n) { -webkit-animation-delay: 1s;  }
+		#flowers i:nth-of-type(14n) { -webkit-animation-delay: 4.7s;}
+		#flowers i:nth-of-type(15n) { -webkit-animation-delay: 3s;  }
+
+		#flowers i:nth-of-type(n)    { background: #ffdbd9; }
+		#flowers i:nth-of-type(2n+2)  { background: #ffdbd9; }
+		#flowers i:nth-of-type(4n+1)  { background: #ffdbd9; }
+
+		#flowers i:nth-of-type(n)    { opacity: .7;}
+		#flowers i:nth-of-type(2n+1)  { opacity: .5;}
+		#flowers i:nth-of-type(3n+1)  { opacity: .4;}
+
+		#flowers i:nth-of-type(n)    {transform: rotate(180deg);}
+
+
+		#flowers i:nth-of-type(n) { -webkit-animation-timing-function:ease-in-out;}
+
+		@-webkit-keyframes falling {
+		    0% {
+		        -webkit-transform:
+		            translate3d(300,0,0)
+		            rotate(0deg);
+		    }  
+		    100% {
+		        -webkit-transform:
+		            translate3d(-350px,700px,0)
+		            rotate(90deg);
+		        opacity: 0;
+		    }
+		}
+		@-webkit-keyframes falling2 {
+		     0% {
+		        -webkit-transform:
+		            translate3d(0,0,0)
+		            rotate(90deg);
+		    }
+		    100% {
+		        -webkit-transform:
+		            translate3d(-400px,680px,0)
+		            rotate(0deg);
+		        opacity: 0;
+		    }
+		}
+		@-webkit-keyframes falling3 {
+		     0% {
+		        -webkit-transform:
+		            translate3d(0,0,0)
+		            rotate(-20deg);
+		    }
+		    100% {
+		        -webkit-transform:
+		            translate3d(-230px,640px,0)
+		            rotate(-70deg);
+		        opacity: 0;
+		    }
+		}
+
+
 	</style>
 </head>
 <body>
-	<div class="logo_cont noselect">
-		<img src="/static/image/SOOJLE_LOGO_BIG_mobile.png" class="logo_img">
+	<div id="flowers">
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
+		<i></i>
 	</div>
-	<img class="error_img" src="/static/image/server_inspection.png">
+	<div class="logo_cont noselect">
+		<img src="../../static/image/SOOJLE_LOGO_BIG_mobile.png" class="logo_img">
+	</div>
+	<img class="error_img" src="../../static/image/server_inspection.png">
 	<div class="error_comment noselect">SOOJLE을 수리 중 입니다.</div>
 	<div class="info_cont">
 		<div class="info_type_cont noselect">
@@ -224,11 +376,7 @@
 		</div>
 	</div>
 </body>
-<!-- Test Host JS -->
-<script src="/static/js/host.js"></script>
 <!-- JQuery JS -->
-<script src="/static/js/jquery/jquery.min.js"></script>
-<script src="/static/js/jquery/jquery.ajax-cross-origin.min.js"></script>
-<!-- Ajax JS -->
-<script src="/static/js/ajax.js"></script>
+<script src="../../static/js/jquery/jquery.min.js"></script>
+<script src="../../static/js/jquery/jquery.ajax-cross-origin.min.js"></script>
 </html>
