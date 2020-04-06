@@ -239,3 +239,4 @@ uwsgi.params
 wsgi.ini
 soojle.conf
 default.bak
+server_inspection.html
