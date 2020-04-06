@@ -238,7 +238,7 @@ function Insert_user_recently_searchword(target) {
 		target.prepend(div);
 	}
 	if (output.length == 0) {
-		$.when(A_JAX(host_ip+"/get_search_realtime", "GET", null, null)).done(function(data) {
+		$.when(A_JAX(host_ip+"/api/v1/analysis/realtime_keyword", "GET", null, null)).done(function(data) {
 			if (data['result'] == 'success') {
 				realtime_words_list = data['search_realtime'].splice(0, 5).reverse();
 				for (i = 1; i <= realtime_words_list.length; i++) {
@@ -308,7 +308,7 @@ function Main_Info_Message_Btn() {
 // 메인 페이지 소개 메세지 버튼 제작
 function Main_Info_Message_Btn_Making() {
 	Message_animating = !Message_animating;
-	$.when(A_JAX(host_ip+"/get_main_info", "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/admin/message/all", "GET", null, null))
 	.done((data) => {
 		target = $("#main_info_message_area");
 		messages = data['main_info'];

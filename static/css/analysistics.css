@@ -2,7 +2,7 @@
 	position: relative;
 	display: inline-block;
 	width: 100%;
-	height: 120px;
+	height: auto;
 	margin: none;
 	border : none;
 }
@@ -11,6 +11,7 @@
 	float: left;
 	width: 90%;
 	height: 100%;
+	background-color: white;
 }
 .anlt_time_yymmdd {
 	position: relative;
@@ -19,14 +20,16 @@
 }
 .anlt_time_hhmmss {
 	position: relative;
-	float: left;
+	display: inline-block;
+	vertical-align: top;
 	width: auto;
 	font-size: 48px;
 	margin-left: 15px;
 }
 .anlt_time_ampm {
 	position: relative;
-	float: left;
+	display: inline-block;
+	vertical-align: top;
 	font-size: 30px;
 	line-height: 52px;
 }

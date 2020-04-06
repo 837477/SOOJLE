@@ -102,7 +102,7 @@ function Binding_message_height() {
 }
 // 한줄 메세지 Setting
 function Setting_info_message_div() {
-  $.when(A_JAX(host_ip+"/get_main_info", "GET", null, null))
+  $.when(A_JAX(host_ip+"/api/v1/admin/message/all", "GET", null, null))
   .done((data) => {
     if (data['result'] == 'success') {
       $("#setting_info_message_box_input1").val(data.main_info[0]);
@@ -129,7 +129,7 @@ function Send_info_message_div() {
   }
   send_data['new_info_1'] = $("#setting_info_message_box_input1").val();
   send_data['new_info_2'] = $("#setting_info_message_box_input2").val();
-   $.when(A_JAX(host_ip+"/update_main_info", "POST", null, send_data))
+   $.when(A_JAX(host_ip+"/api/v1/admin/message/update", "POST", null, send_data))
   .done((data) => {
     if (data['result'] == 'success') {
       Snackbar("성공적으로 변경하였습니다.");
@@ -163,7 +163,7 @@ function Feedback_Messages() {
   this.page = 1;
 
   this.set = function() {
-    $.when(A_JAX(host_ip+"/get_all_feedback", "GET", null, null))
+    $.when(A_JAX(host_ip+"/api/v1/admin/feedback/all", "GET", null, null))
     .done((data) => {
       if (data['result'] == "success") {
       data['feedback_list'] = JSON.parse(data['feedback_list']);
@@ -335,7 +335,7 @@ function Checkout_feedback(tag) {
   tag = $(tag);
   let id = tag.attr('f-id');
   Check_ManagerInfo(function() {
-    $.when(A_JAX(host_ip+"/update_feedback_activation/"+id+"/"+0, "GET", null, null))
+    $.when(A_JAX(host_ip+"/api/v1/admin/feedback/activation/"+id+"/"+0, "GET", null, null))
     .done((data) => {
       if (data['result'] == "success") {
         alert("피드백이 성공적으로 처리되었습니다!");
