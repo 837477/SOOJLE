@@ -26,7 +26,162 @@
 	<!-- 아이콘 -->
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 	<!-- Main CSS -->
-	<link rel="stylesheet" href="/static/css/inspection.css">
+	<style type="text/css">
+		/*AppleSandleNeo Font*/
+		@font-face {
+			font-family: 'AppleSdNeo';
+			src: url('../fonts/AppleSdNeo/AppleSDGothicNeoUL.ttf') format('truetype');
+			font-weight: 300;
+		}
+		@font-face { 
+			font-family: 'AppleSdNeo';
+			src: url('../fonts/AppleSdNeo/AppleSDGothicNeoR.ttf') format('truetype');
+			font-weight: 500;
+		}
+		@font-face { 
+			font-family: 'AppleSdNeo';
+			src: url('../fonts/AppleSdNeo/AppleSDGothicNeoB.ttf') format('truetype');
+			font-weight: 800;
+		}
+
+		* {
+			font-family: 'AppleSdNeo', 'sans-serif';
+			-webkit-overflow-scrolling: touch;
+			z-index: inherit;
+			margin: 0;
+			padding: 0;
+		}
+		html, body {
+			width: 100%;
+			scroll-behavior: smooth;
+			 -webkit-overflow-scrolling: touch;
+		}
+
+
+
+		.logo_cont {
+			position: relative;
+			width: 100%;
+			height: 40px;
+			text-align: center;
+			padding: 10px 0;
+		}
+		.logo_img {
+			position: relative;
+			display: inline-block;
+			height: 40px;
+		}
+		.error_img {
+			position: relative;
+			display: block;
+			width: 300px;
+			height: auto;
+			margin: auto;
+			margin-top: 140px;
+		}
+		.error_comment {
+			position: relative;
+			display: block;
+			width: auto;
+			height: 30px;
+			font-size: 20px;
+			color: #222;
+			font-weight: bold;
+			text-align: center;
+			margin-top: 30px;
+		}
+		.noselect {
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-selecti: none;
+		}
+		.info_cont {
+			position: relative;
+			width: 600px;
+			height: auto;
+			padding: 20px;
+			border-radius: 10px;
+			margin: 60px auto;
+			box-shadow: 0 6px 12px rgba(0,0,0,.2);
+		}
+		.info_type_cont {
+			position: relative;
+			width: 95%;
+			height: auto;
+			margin: auto;
+			padding-bottom: 10px;
+			border-bottom: 2px solid #c30e2e;
+			margin-bottom: 20px;
+			text-align: center;
+		}
+		.info_icon {
+			position: relative;
+			width: 22px;
+			height: 22px;
+			transform: rotate(180deg);
+			padding-right: 5px;
+		}
+		.info_type {
+			position: relative;
+			display: inline-block;
+			width: auto;
+			height: 24px;
+			font-size: 20px;
+			line-height: 24px;
+			color: #c30e2e;
+			vertical-align: top;
+			font-weight: bold;
+		}
+		.info_title_cont {
+			position: relative;
+			width: 95%;
+			height: auto;
+			margin: auto;
+			margin-bottom: 10px;
+		}
+		.info_text {
+			position: relative;
+			display: inline-block;
+			width: auto;
+			height: auto;
+			vertical-align: top;
+			word-break: keep-all;
+			white-space: pre-wrap;
+		}
+		.info_date {
+			color: #12b886;
+		}
+
+
+		@media screen and (max-width: 450px) {
+			.error_img {
+				width: 200px;
+				margin-top: 80px;
+			}
+			.info_cont {
+				width: 95%;
+				box-sizing: border-box;
+				padding: 10px;
+				margin: auto;
+				margin-top: 40px;
+			}
+			.info_title_cont {
+				font-size: 14px;
+			}
+			.info_type_cont {
+				padding-bottom: 5px;
+			}
+		}
+		@media screen and (max-width: 350px) {
+			.error_img {
+				width: 160px;
+				margin-top: 40px;
+			}
+		}
+	</style>
 </head>
 <body>
 	<div class="logo_cont noselect">
@@ -76,6 +231,4 @@
 <script src="/static/js/jquery/jquery.ajax-cross-origin.min.js"></script>
 <!-- Ajax JS -->
 <script src="/static/js/ajax.js"></script>
-<!-- Main JS -->
-<script src="/static/js/inspection.js"></script>
 </html>
