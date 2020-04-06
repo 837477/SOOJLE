@@ -45,7 +45,7 @@ function service_like_button(tag) {
 		output = number_plus_comma(num);
 		$(tag).find(".lab_service_choice_number").text(output);
 		/*$.when(
-			A_JAX(host_ip+"/post_like/"+id, "GET", null, null)
+			A_JAX(host_ip+"/api/v1/lab/like/"+id, "GET", null, null)
 		).done(function(data) {
 			if (data.responseJSON['result'] == 'success') {
 

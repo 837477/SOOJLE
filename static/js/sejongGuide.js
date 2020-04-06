@@ -213,9 +213,9 @@ function Insert_Sejong_Guide() {
 						</div
 						><div class="guide_office365_intro_cont">
 							<div class="guide_office365_intro_title noselect" style="color:#c30e2e">이용 안내</div>
-							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">1. </span> 본 학교 신분이 아닐 시, 해당 학기 마지막일에 자동 탈퇴</div>
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">1. </span> 본 학교 신분이 아닐 시, 해당 학기 마지막일에 자동 탈퇴됩니다.</div>
 							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">2. </span> 자동 탈퇴 처리 전에 백업을 완료해주십시오.</div>
-							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">3. </span> 패스워드: 8자이상 권장(영문+숫자+특수문자)</div>				
+							<div class="guide_office365_intro_post"><span class="guide_library_color_blue noselect">3. </span> 패스워드는 8자이상 권장합니다.(영문+숫자+특수문자)</div>				
 						</div>
 					</div>
 					<div class="guide_line"></div>
@@ -225,7 +225,7 @@ function Insert_Sejong_Guide() {
 						학술정보원을 처음 이용하는 세종인을 위한 안내입니다.
 					</div>
 					<div class="guide_library_cont wow animated fadeInUp">
-						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>신입생인데 열람실을 사용할 수 없어요.</div>
+						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>신입생인데 어떻게 열람실을 사용하나요?</div>
 						<div class="guide_library_img_cont">
 							<img class="guide_library_img" src="/static/image/logo_sejonglib.png">
 							<div class="guide_library_info"><span class="guide_library_color_black noselect">1. </span><a target="_blank" href="https://library.sejong.ac.kr/index.ax">학술정보원 페이지</a>에 접속을 해줍니다.</div>
@@ -238,9 +238,9 @@ function Insert_Sejong_Guide() {
 					<div class="guide_library_cont wow animated fadeInUp">
 						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>자유열람실 이용제한은 어떻게 되나요?</div>
 						<div class="guide_library_subtitle noselect">자유열람실 이용제한</div>
-						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">1. </span>제적,정학,자퇴,면직,학점교류 학생일 시, 이용 불가</div>
-						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">2. </span>대리발권 적발 시, 30일 이용 불가</div>
-						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">3. </span>열람실 미반납 3회 확인 시, 5일 이용 불가</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">1. </span>제적, 정학, 자퇴, 면직, 학점교류 학생일 시, 이용 불가합니다.</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">2. </span>대리발권 적발 시, 30일 이용 불가합니다.</div>
+						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">3. </span>열람실 미반납 3회 확인 시, 5일 이용 불가합니다.</div>
 					</div>
 					<div class="guide_library_cont wow animated fadeInUp">
 						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>학술정보원 사용시간은 어떻게 되나요?</div>
@@ -268,9 +268,8 @@ function Insert_Sejong_Guide() {
 					</div>
 					<div class="guide_line"></div>
 
-					<div class="guide_title noselect">꿀팁 팔계명</div>
+					<div class="guide_title noselect">꿀팁 8계명</div>
 					<div class="guide_subtitle noselect">
-						SOOJLE이 추천하는 대학 생활 꿀팁 8가지를 소개합니다!
 					</div>
 					<div class="guide_tip_cont">
 						<div class="guide_tip"><span class="guide_library_color_green noselect">1. </span>일찍 일어나는 새(오전수업)가 성적을 잘 딴다.</div>
@@ -278,8 +277,8 @@ function Insert_Sejong_Guide() {
 						<div class="guide_tip"><span class="guide_library_color_green noselect">3. </span>소기코, 컴기코는 1학년 때 끝내는 것이 속 편하다.</div>
 						<div class="guide_tip"><span class="guide_library_color_green noselect">4. </span>따로 계획이 없다면 군대는 빨리 가자.</div>
 						<div class="guide_tip"><span class="guide_library_color_green noselect">5. </span>졸업 가능 요건 충족은 빠를 수록 좋다.</div>
-						<div class="guide_tip"><span class="guide_library_color_green noselect">6. </span>아싸는 학생회비 내도 할 거 없다. 그리고 나는 아싸다..</div>
-						<div class="guide_tip"><span class="guide_library_color_green noselect">7. </span>영어는 졸업 직전까지 함께한다.</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">6. </span>봉사를 한다면 한번에 확실하게 끝내자!</div>
+						<div class="guide_tip"><span class="guide_library_color_green noselect">7. </span>영어는 졸업 직전까지 함께한다..</div>
 						<div class="guide_tip"><span class="guide_library_color_green noselect">8. </span>SOOJLE을 잘 활용하자! :)</div>
 					</div>
 					<div class="guide_line"></div>
@@ -288,7 +287,6 @@ function Insert_Sejong_Guide() {
 						본 페이지의 모든 정보는 언제든지 변경될 수 있으며, 만약 잘못된 정보는 <a href="/board#feedback">피드백</a>을 통해서 알려주세요!
 					</div>
 				`;
-	
 	target.append(div);
 
 	guide_campus_search_event();	// 캠퍼스 장소 검색 이벤트 바인딩
@@ -349,7 +347,10 @@ const CAMPUS = {
 	'세종초등학교': [],
 	'홍진구조실험센터': [],
 	'평생교육원 별관': [],
-	'용덕관': [],
+	'용덕관': 
+		[
+			'다용도체육관 [4F]'
+		],
 	'영실관': [],
 	'주차빌딩': [],
 	'충무관': 
@@ -405,6 +406,7 @@ const CAMPUS = {
 		],
 	'집현관': 
 		[
+			'총장실 [10F]',
 			'비서실 [10F]',
 			'법무감사실 [3F]',
 			'홍보실 [2F]',
@@ -425,7 +427,9 @@ const CAMPUS = {
 		],
 	'애지헌': 
 		[
-			'교목실 [B1]'
+			'교목실 [B1]',
+			'예배실 [1F]',
+			'성가대실 [2F]'
 		],
 	'박물관': 
 		[
@@ -474,12 +478,15 @@ const CAMPUS = {
 			'노트북전용석 [3F]',
 			'특정반스터디룸 [3F]',
 			'대출실 [2F]',
-			'전자정보실 [2F]',
+			'전산정보실 [2F]',
 			'학술정보실 [2F]',
+			'멀티미디어실 [2F]',
 			'A/B/C자유열람실 [1F]',
 			'카페드림(카페) [1F]',
 			'D자유열람실 [B1]',
-			'보존서고 [B2]'
+			'보존서고 [B2]',
+			'남학생휴게실 [B1]',
+			'여학생휴게실 [7F]'
 		],
 	'운동장': 
 		[

@@ -107,7 +107,7 @@ function Sign_in() {									// 로그인 완료 버튼
 		let user_pw = $("#user_pw").val();
 		let send_data = {id: user_id, pw: user_pw};
 		$("#loading_modal").removeClass("loading_modal_unvisible");
-		$.when(A_JAX(host_ip+"/sign_in", "POST", null, send_data))
+		$.when(A_JAX(host_ip+"/api/v1/auth/sign_in", "POST", null, send_data))
 		.done(function (data) {
 			$("#loading_modal").addClass("loading_modal_unvisible");
 			if (data['result'] == 'success') {
@@ -389,7 +389,7 @@ function Sign_Up_Send() {	// 회원가입 API 호출
 	sendData['nickname'] = $("#signup_nickname").val();
 	sendData['pw'] = $("#signup_pw").val();
 	sendData['pw_check'] = $("#signup_pw_check").val();
-	$.when(A_JAX(host_ip+"/sign_up", "POST", null, sendData)).done(function (data) {
+	$.when(A_JAX(host_ip+"/api/v1/auth/sign_up", "POST", null, sendData)).done(function (data) {
 		if (data['result'] == 'success') {
 			let token = data['access_token'];
 			sessionStorage.setItem('sj-state', token);
@@ -435,7 +435,7 @@ function Get_UserInfo(callback) {
     	return false;
     }
     let output = {};
-	$.when(A_JAX(host_ip+"/get_userinfo", "GET", null, null)).done(function (data) {
+	$.when(A_JAX(host_ip+"/api/v1/auth/get_userinfo", "GET", null, null)).done(function (data) {
 		if (data['result'] == 'success') {
 			if (typeof(callback) == 'function') {
 				callback(data);
@@ -471,7 +471,7 @@ function Check_ManagerInfo(callback) {
 }
 // 최근 본 게시글 반환 (callback(<userdata>))
 function Get_Recently_View_Post(callback) {
-	$.when(A_JAX(host_ip+"/get_specific_userinfo/"+2, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/auth/get_specific_userinfo/"+2, "GET", null, null))
 	.done(function (data) {
 		let output = [];
 		if (data['result'] == 'success') {
@@ -498,7 +498,7 @@ function Get_Recently_View_Post(callback) {
 }
 // 좋아요 게시글 반환 (callback(<userdata>))
 function Get_Like_Post(callback) {
-	$.when(A_JAX(host_ip+"/get_specific_userinfo/"+1, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/auth/get_specific_userinfo/"+1, "GET", null, null))
 	.done(function (data) {
 		let output = [];
 		if (data['result'] == 'success') {
@@ -533,7 +533,7 @@ function Get_recently_searchword(callback) {
 		}
 		return;
 	};
-	$.when(A_JAX(host_ip+"/get_user_lately_search/"+10, "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/auth/get_lately_search/"+10, "GET", null, null))
 	.done(function(data) {
 		if (data['result'] == "success") {
 			if (typeof(callback) == 'function') {

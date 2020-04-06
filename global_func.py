@@ -26,6 +26,7 @@ import FastText
 #######################################################
 from variable import *
 
+
 # BackgroundScheduler Initialize
 def schedule_init():
 	t_zone = get_localzone()
@@ -48,10 +49,10 @@ def schedule_init():
 	#특정 시간에 실행 ##################################################
 
 	#방문자 통계
-	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="23", minute="59", timezone = t_zone)
+	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="23", minute="57", timezone = t_zone)
 
 	#매 시간별 방문자 측정
-	scheduler.add_job(time_visitor_analysis_work, trigger = 'cron', minute="59", timezone = t_zone)
+	scheduler.add_job(time_visitor_analysis_work, trigger = 'cron', minute="57", timezone = t_zone)
 	
 
 	# weeks, days, hours, minutes, seconds
@@ -135,7 +136,7 @@ def real_time_keywords(search_input):
 
 #실시간 검색어 캐싱 함수
 def real_time_insert():
-	print(datetime.datetime(), "[백그라운드] 실시간 검색어 캐싱중 ...")
+	print(datetime.now(), "[백그라운드] 실시간 검색어 캐싱중 ...")
 
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
@@ -190,11 +191,11 @@ def real_time_insert():
 	if db_client is not None:
 		db_client.close()
 	
-	print(datetime.datetime(), "[백그라운드] 실시간 검색어 캐싱 끝 ...")
+	print(datetime.now(), "[백그라운드] 실시간 검색어 캐싱 끝 ...")
 
 #관심도 측정.ver2
 def measurement_run():
-	print(datetime.datetime(), "[백그라운드] 관심도 측정중 ...")
+	print(datetime.now(), "[백그라운드] 관심도 측정중 ...")
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
@@ -359,7 +360,7 @@ def measurement_run():
 	if db_client is not None:
 		db_client.close()
 
-	print(datetime.datetime(), "[백그라운드] 관심도 측정 끝 ...")
+	print(datetime.now(), "[백그라운드] 관심도 측정 끝 ...")
 
 #사용자 로그 액션 백업
 def user_log_backup(db, USER):
@@ -393,7 +394,7 @@ def user_log_backup(db, USER):
 
 #variable 가장 높은 좋아요/조회수 갱신
 def update_posts_highest():
-	print(datetime.datetime(), "[백그라운드] Highest Fav/View 갱신중 ...")
+	print(datetime.now(), "[백그라운드] Highest Fav/View 갱신중 ...")
 
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
@@ -408,11 +409,11 @@ def update_posts_highest():
 	if db_client is not None:
 		db_client.close()
 
-	print(datetime.datetime(), "[백그라운드] Highest Fav/View 갱신 끝 ...")
+	print(datetime.now(), "[백그라운드] Highest Fav/View 갱신 끝 ...")
 
 #워드클라우드 생성
 def create_word_cloud():
-	print(datetime.datetime(), "[백그라운드] 워드클라우드 생성중 ...")
+	print(datetime.now(), "[백그라운드] 워드클라우드 생성중 ...")
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
@@ -463,11 +464,11 @@ def create_word_cloud():
 	if db_client is not None:
 		db_client.close()
 	
-	print(datetime.datetime(), "[백그라운드] 워드클라우드 생성 끝 ...")
+	print(datetime.now(), "[백그라운드] 워드클라우드 생성 끝 ...")
 
 #하루 통계 작업 (하루마다!) (테스트 대상)
 def visitor_analysis_work():
-	print(datetime.datetime(), "[백그라운드] 하루 통계 기록중 ...")
+	print(datetime.now(), "[백그라운드] 하루 통계 기록중 ...")
 
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
@@ -564,11 +565,11 @@ def visitor_analysis_work():
 	if db_client is not None:
 		db_client.close()
 	
-	print(datetime.datetime(), "[백그라운드] 하루 통계 기록 끝 ...")
+	print(datetime.now(), "[백그라운드] 하루 통계 기록 끝 ...")
 
 #매 시간별 방문자 수 기록! 
 def time_visitor_analysis_work():
-	print(datetime.datetime(), "[백그라운드] 매 시간별 방문자 수 기록중 ...")
+	print(datetime.now(), "[백그라운드] 매 시간별 방문자 수 기록중 ...")
 	db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
 	db = db_client["soojle"]
 
@@ -588,7 +589,7 @@ def time_visitor_analysis_work():
 
 	if db_client is not None:
 		db_client.close()
-	print(datetime.datetime(), "[백그라운드] 매 시간별 방문자 수 기록 끝 ...")
+	print(datetime.now(), "[백그라운드] 매 시간별 방문자 수 기록 끝 ...")
 
 ############################################################
 '''

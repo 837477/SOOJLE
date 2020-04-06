@@ -143,7 +143,7 @@ function insert_user_information_setting() {
 function change_autologin_st(){
 	if($("#autologin_toggle").is(":checked")) {
 		localStorage.setItem("sj-state", sessionStorage.getItem('sj-state'));
-		$.when(A_JAX(host_ip+"/update_auto_login/" + 1, "GET", null, null))
+		$.when(A_JAX(host_ip+"/api/v1/auth/change_autologin/" + 1, "GET", null, null))
 		.done((data) => {})
 		.catch((data) => {
 			if (data.status == 400) {
@@ -156,7 +156,7 @@ function change_autologin_st(){
 		});
 	} else {
 		localStorage.removeItem('sj-state');
-		$.when(A_JAX(host_ip+"/update_auto_login/" + 0, "GET", null, null))
+		$.when(A_JAX(host_ip+"/api/v1/auth/change_autologin/" + 0, "GET", null, null))
 		.done((data) => {})
 		.catch((data) => {
 			if (data.status == 400) {
@@ -196,7 +196,7 @@ function Change_nickname() {
 	}
 	let sendData = {};
 	sendData['new_nickname'] = nickname;
-	$.when(a_jax = A_JAX(host_ip+"/change_nickname", "POST", null, sendData)).done(function (data) {
+	$.when(a_jax = A_JAX(host_ip+"/api/v1/auth/change_nickname", "POST", null, sendData)).done(function (data) {
 		if (data['result'] == 'success') {
 			$("#setting_nickname_guideline").text(nickname);
 			Menu_User_Info_Change(nickname);
@@ -252,7 +252,7 @@ function user_data_reset_button_ok() {
 		$("#user_data_delete_input").focus();
 		return;
 	}
-	$.when(A_JAX(host_ip+"/reset_user_measurement", "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/auth/reset_measurement", "GET", null, null))
 	.done((data) => {
 		if(data['result'] == 'success') {
 			Snackbar("관심도가 초기화 되었습니다.");
@@ -289,7 +289,7 @@ function user_data_delete_button_ok() {
 		$("#user_data_delete_input").focus();
 		return;
 	}
-	$.when(A_JAX(host_ip+"/delete_user", "GET", null, null))
+	$.when(A_JAX(host_ip+"/api/v1/auth/delete_user", "GET", null, null))
 	.done((data) => {
 		if(data['result'] == 'success') {
 			Snackbar("계정이 삭제되었습니다.");

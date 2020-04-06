@@ -46,7 +46,7 @@ function insert_feedback_div() {
 							<li id="feedback_hack">취약점 및 보안 개선</li>
 							<li id="feedback_design">디자인 개선 아이디어</li>
 							<li id="feedback_function">기능 개선 아이디어</li>
-							<li id="feedback_function">기타</li>
+							<li id="feedback_else">기타</li>
 						</ul>
 					</div>
 				</div>
@@ -82,7 +82,7 @@ function selectbox_action() {
 		else if (selectbox_input == "feedback_hack") selectbox_input = "취약점 및 보안 개선";
 		else if (selectbox_input == "feedback_design") selectbox_input = "디자인 개선 아이디어";
 		else if (selectbox_input == "feedback_function") selectbox_input = "기능 개선 아이디어";
-		else if (selectbox_input == "feedback_function") selectbox_input = "기타";
+		else if (selectbox_input == "feedback_else") selectbox_input = "기타";
 		else selectbox_input = "Abnormal approach:404";
 	});
 }
@@ -106,7 +106,7 @@ function feedback_send() {
 	send_data["type"] = selectbox_input;
 	send_data["post"] = phragh;
 	
-	$.when(A_JAX(host_ip+"/send_feedback", "POST", null, send_data))
+	$.when(A_JAX(host_ip+"/api/v1/admin/feedback/send", "POST", null, send_data))
 	.done(function (data) {
 		if (data['result'] = 'success') {
 			Snackbar("피드백을 전송하였습니다.");
