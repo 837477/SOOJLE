@@ -49,10 +49,10 @@ def schedule_init():
 	#특정 시간에 실행 ##################################################
 
 	#방문자 통계
-	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="23", minute="57", timezone = t_zone)
+	scheduler.add_job(visitor_analysis_work, trigger = 'cron', hour="23", minute="59", timezone = t_zone)
 
 	#매 시간별 방문자 측정
-	scheduler.add_job(time_visitor_analysis_work, trigger = 'cron', minute="57", timezone = t_zone)
+	scheduler.add_job(time_visitor_analysis_work, trigger = 'cron', minute="56", timezone = t_zone)
 	
 
 	# weeks, days, hours, minutes, seconds
