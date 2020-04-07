@@ -218,6 +218,7 @@ function realtime_word_search(tag) {
 	let text = tag.text().trim().slice(4);
 	//search_text(text);
 	window.location.href = `/board#search?${text}/`;
+	$("#realtime_searchwords_table").addClass("display_none");
 }
 
 // 명예의 전당 div Insert-------------------------------------------------

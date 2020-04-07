@@ -960,8 +960,8 @@ function Change_Post_View_Post(checking = 0) {
 function Check_Post_View_Default() {
 	let post_view_type = localStorage.getItem('sj-view');
 	if (post_view_type == null || post_view_type == undefined || post_view_type == 'undefined') {
-		localStorage.setItem('sj-view', 'post');
-		post_view_type = 'post';
+		localStorage.setItem('sj-view', 'card');
+		post_view_type = 'card';
 	}
 	return post_view_type;
 }

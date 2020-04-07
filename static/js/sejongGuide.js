@@ -45,17 +45,6 @@ function Insert_Sejong_Guide() {
 						</div>
 					</div>
 
-					<div class="guide_banner">
-						<div class="circle-container">
-					    	<div class="circle" style="background-color: #c30e2e;"></div>
-						</div>
-						<div class="circle-container">
-							<div class="circle" style="background-color: #12b886;"></div>
-						</div>
-						<div class="circle-container">
-							<div class="circle" style="background-color: #0071e3;"></div>
-						</div>
-					</div>
 					<div class="guide_page_cont">
 						<a target="_blank" href="http://www.sejong.ac.kr/unilife/guide.html" title="새내기 가이드">
 							<img class="guide_page_icon" src="/static/image/logo_sejong.png">
@@ -283,6 +272,17 @@ function Insert_Sejong_Guide() {
 					</div>
 					<div class="guide_line"></div>
 
+					<div class="guide_banner">
+						<div class="circle-container">
+					    	<div class="circle" style="background-color: #c30e2e;"></div>
+						</div>
+						<div class="circle-container">
+							<div class="circle" style="background-color: #12b886;"></div>
+						</div>
+						<div class="circle-container">
+							<div class="circle" style="background-color: #0071e3;"></div>
+						</div>
+					</div>
 					<div class="guide_page_icon_span noselect">
 						본 페이지의 모든 정보는 언제든지 변경될 수 있으며, 만약 잘못된 정보는 <a href="/board#feedback">피드백</a>을 통해서 알려주세요!
 					</div>
