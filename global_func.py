@@ -352,8 +352,14 @@ def measurement_run():
 		if USER_TAG_SUM == 0:
 			USER_TAG_SUM = 1
 
+		# 사용자 태그로 사용자 태그 벡터 구하기
+		USER_TAGS = []
+		for key,value in TAG_RESULT.items():
+			USER_TAGS += [key] * value
+		TAG_VECTOR = FastText.get_doc_vector(USER_TAGS).tolist()
+
 		#해당 USER 관심도 갱신!
-		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, USER_VERCTOR, len(USER['fav_list']) + len(USER['view_list']) + len(USER['search_list']))
+		update_user_measurement(db, USER['_id'], list(TOPIC_RESULT), TAG_RESULT, USER_TAG_SUM, TAG_VECTOR, USER_VERCTOR, len(USER['fav_list']) + len(USER['view_list']) + len(USER['search_list']))
 
 	update_variable(db, 'renewal', datetime.now())
 

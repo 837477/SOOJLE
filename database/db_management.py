@@ -11,7 +11,7 @@ from variable import *
 #SJ_DB_USER 관련#######################################
 ######################################################
 #전체 유저 목록 반환 (미사용)
-def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None, measurement_num=None):
+def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, tag_vector=None, newsfeed_list=None, privacy=None, measurement_num=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None: 
@@ -42,13 +42,15 @@ def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=Non
 		show_dict['privacy'] = 1
 	if measurement_num is not None:
 		show_dict['measurement_num'] = 1
+	if tag_vector is not None:
+		show_dict['tag_vector'] = 1
 
 	result = db[SJ_DB_USER].find({}, show_dict)
 
 	return result
 
 #특정 유저 반환 (사용)
-def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, newsfeed_list=None, privacy=None, measurement_num=None):
+def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, tag_vector=None, newsfeed_list=None, privacy=None, measurement_num=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None:
@@ -81,7 +83,8 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto
 		show_dict['privacy'] = 1
 	if measurement_num is not None:
 		show_dict['measurement_num'] = 1
-
+	if tag_vector is not None:
+		show_dict['tag_vector'] = 1
 
 	result = db[SJ_DB_USER].find_one(
 		{
@@ -99,6 +102,7 @@ def insert_user(db, user_id, user_pw, user_nickname):
 	ft_vector = (numpy.zeros(FastText.VEC_SIZE)).tolist()
 	tag = {}
 	tag_sum = 1
+	tag_vector = (numpy.zeros(FastText.VEC_SIZE)).tolist()
 	fav_list = []
 	view_list = []
 	newsfeed_list = []
@@ -116,6 +120,7 @@ def insert_user(db, user_id, user_pw, user_nickname):
 			'ft_vector': ft_vector,
 			'tag': tag,
 			'tag_sum': tag_sum,
+			'tag_vector': tag_vector,
 			'topic': topic,
 			'fav_list': fav_list,
 			'view_list': view_list,
@@ -137,6 +142,7 @@ def update_user_measurement_reset(db, user_id):
 	ft_vector = (numpy.zeros(FastText.VEC_SIZE)).tolist()
 	tag = {}
 	tag_sum = 1
+	tag_vector = (numpy.zeros(FastText.VEC_SIZE)).tolist()
 	fav_list = []
 	view_list = []
 	newsfeed_list = []
@@ -154,6 +160,7 @@ def update_user_measurement_reset(db, user_id):
 				'ft_vector': ft_vector,
 				'tag': tag,
 				'tag_sum': tag_sum,
+				'tag_vector': tag_vector,
 				'topic': topic,
 				'fav_list': fav_list,
 				'view_list': view_list,
@@ -360,7 +367,7 @@ def update_user_newsfeed_list_push(db, _id, newsfeed_obj):
 	return "success"
 
 #유저 관심도 갱신.
-def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector, measurement_num):
+def update_user_measurement(db, _id, topic, tag, tag_sum, tag_vector, ft_vector, measurement_num):
 	db[SJ_DB_USER].update({'_id': _id}, 
 		{
 			'$set': 
@@ -368,6 +375,7 @@ def update_user_measurement(db, _id, topic, tag, tag_sum, ft_vector, measurement
 				'topic': topic, 
 				'tag': tag, 
 				'tag_sum': tag_sum,
+				'tag_vector': tag_vector,
 				'ft_vector': ft_vector,
 				'measurement_num': measurement_num
 			}
@@ -980,7 +988,8 @@ def find_category_of_topic_list(db, category_list):
 			{
 				"tag":1,
 				"category_name":1,
-				"info_num":1
+				"info_num":1,
+				"tag_vector": 1
 			}
 		)
 	return result
@@ -992,9 +1001,10 @@ def find_category_of_topic(db, category_name):
 			'category_name': category_name
 		}, 
 		{
-			"tag": 1,
-			"category_name": 1,
-			"info_num": 1
+			"tag":1,
+			"category_name":1,
+			"info_num":1,
+			"tag_vector": 1
 		}
 	)
 	return result
