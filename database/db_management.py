@@ -918,18 +918,18 @@ def find_highest_fav_cnt(db):
 			'fav_cnt': 1
 		}
 	).sort([('fav_cnt', -1)]).limit(1)
-	return result['fav_cnt']
+	return result[0]['fav_cnt']
 
 #제일 높은 조회수 반환
 def find_highest_view_cnt(db):
-	result = db[SJ_DB_POST].find_one(
+	result = db[SJ_DB_POST].find(
 		{},
 		{
 			'_id': 0,
 			'view': 1
 		}
 	).sort([('view', -1)]).limit(1)
-	return result['view']
+	return result[0]['view']
 
 #더미 포스트 체크(있는지 확인용)
 def check_dummy_post(db):
