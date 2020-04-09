@@ -53,7 +53,7 @@ def SJ_api_v1_newsfeed__topic(category_name):
 
 	elif category_name == "공모전&행사":
 		#해당 카테고리에 관련된 게시글들을 불러온다.
-		POST_LIST = find_posts_of_category(g.db, category['info_num'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = find_posts_of_category_default_date(g.db, category['info_num'], now_date, 90, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 
 	elif category_name == "진로&구인":
@@ -152,7 +152,7 @@ def SJ_api_v1_newsfeed__recommendation():
 	#회원일 때!
 	if get_jwt_identity():
 		#유저 정보 불러오기.
-		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, ft_vector=1, measurement_num=1, view_list=1, fav_list=1)
+		USER = find_user(g.db, user_id=get_jwt_identity(), topic=1, tag=1, tag_vector=1, ft_vector=1, measurement_num=1, view_list=1, fav_list=1)
 
 		#유효한 토큰인지 확인.
 		if USER is None: abort(401)
@@ -291,21 +291,12 @@ def get_recommendation_newsfeed_member(db, USER, now_date):
 	if USER['tag'] in [None, []]:
 		return None
 
-	# 사용자 태그로 사용자 태그 벡터 구하기
-	# 원래 이미 캐싱되어 있어야 함 (중요*)
-	user_tags = []
-	for key,value in USER['tag'].items():
-		user_tags += [key] * value
-	user_vec = FastText.get_doc_vector(user_tags)
-
 	cate_list = find_category_of_topic_list(db, list(SJ_CATEGORY_OF_TOPIC_SET))
 	cate_list = list(cate_list)
 
-	# 사용자와 카테고리간 의미 유사도 분석하기
-	# 카테고리도 마찬가지로 원래 이미 캐싱되어 있어야 함 (중요*)
 	cate_vec = []
 	for cate in cate_list:
-		vec = FastText.vec_sim(user_vec, FastText.get_doc_vector(cate['tag']))
+		vec = FastText.vec_sim(USER['tag_vector'], cate['tag_vector'])
 		cate_vec += [(cate['category_name'],vec,cate['info_num'])]
 	cate_vec = sorted(cate_vec, key=itemgetter(1), reverse = True)
 	######################################################################
