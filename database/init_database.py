@@ -1,9 +1,17 @@
+import sys
+sys.path.insert(0,'../')
+sys.path.insert(0,'../IML_Tokenizer/src/')
+sys.path.insert(0,'../SJ_AI/src')
+sys.path.insert(0,'./database/')
 from pymongo import *
 from flask import g
 from datetime import datetime, timedelta
 from db_info import *
 from variable import *
-
+import numpy as np
+from tknizer import get_tk
+import LDA
+import FastText
 
 
 def get_db():
@@ -37,6 +45,7 @@ def init_db():
 	if 'SJ_CATEGORY' not in db_collections:
 		create_category_of_topic(db)
 		create_category_of_topic_info_num(db)
+		create_category_of_topic_tag_vector(db)
 
 	if 'SJ_VARIABLE' not in db_collections:
 		create_variable(db)
@@ -202,6 +211,35 @@ def create_category_of_topic_info_num(db):
 				'$set':
 				{
 					'info_num': category_temp_info_num_list
+				}
+			}
+		)
+
+#카테고리 컬럼의 tag_vector 추가!
+def create_category_of_topic_tag_vector(db):
+	#category_of_topic 전체 호출
+	category_of_topic_list = db[SJ_DB_CATEGORY].find(
+		{
+			'category_name': {'$in': list(SJ_CATEGORY_OF_TOPIC_SET)}
+		},
+		{
+			'_id': 0
+		}
+	)
+	category_of_topic_list = list(category_of_topic_list)
+
+	for category in category_of_topic_list:
+		category_tag_vector = FastText.get_doc_vector(category['tag']).tolist()
+
+		#category_of_topic 콜렉션에 tag_vectort 추가!
+		db[SJ_DB_CATEGORY].update(
+			{
+				'category_name': category['category_name']
+			},
+			{
+				'$set':
+				{
+					'tag_vectort': category_tag_vector
 				}
 			}
 		)
