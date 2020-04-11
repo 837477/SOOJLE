@@ -411,13 +411,17 @@ function Run_Auth_Check() {
 			Close_Auth_Modal();
 			alert("인증이 완료되었습니다!");
 			location.reload();
+		} else if (data.result == "No Sejong Student") {
+			Snackbar("인증에 실패하였습니다.");
+		} else if (data.result == "Blacklist id") {
+			Snackbar("블랙리스트에 등록된 사용자입니다.");
 		} else {
 			Snackbar("잠시 후 다시 시도해주세요.");
 		}
 	})
 	.catch((data) => {
 		if (data.status == 400) {
-			Snackbar("잘못된 요청입니다.");
+			Snackbar("이미 인증된 계정입니다.");
 		} else if (data.status == 401) {
 			Snackbar("다시 로그인 해주세요.");
 		} else {

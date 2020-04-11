@@ -1,3 +1,7 @@
+:root {
+	--NBnote-color: #12b886;
+}
+
 * {
 	outline: none;
 }

@@ -103,10 +103,14 @@ function insert_notice() {
 }
 function Making_notice_block(posts) {
 	let target = $("#posts_target");
+	let hidden_phara = `<div id="hidden_phara" class="display_none"></div>`;
+	$("body").append(hidden_phara);
 	for (let post of posts) {
 		oid = post['_id']['$oid'];
 		title = post['title'];
 		phara = post['post'];
+		$("#hidden_phara").html(phara);
+		phara_text = $("#hidden_phara").text();
 		date = change_date_realative(post['date']['$date']);
 		activation = post['activation'];
 		if (activation == 1) {
@@ -119,11 +123,13 @@ function Making_notice_block(posts) {
 							<div class="notice_post_title">${activation}${title}</div>
 						</div>
 						<div class="notice_post_date"><i class="far fa-clock"></i> ${date}</div>
-						<div class="notice_post_post">${phara}</div>
+						<div class="notice_post_post">${phara_text}</div>
 					</div>
 				`;
 		target.append(tag);
 	}
+	$("#hidden_phara").remove();
+
 	$("#mobile_controller_none").addClass("display_none");
 	$("#board_loading_modal").addClass("board_loading_modal_unvisible");
 	$(".mobile_controller").removeAttr("style");
@@ -181,7 +187,7 @@ function insert_notice_one(id) {
 								</div>
 								<div class="notice_page_view noselect">
 								VIEW ${view}</div>
-								<div id="notice_page_post" class="notice_page_post"><span style="font-weight:bold; font-size:22px;">${title}</span>\n\n${phara}</div>
+								<div id="notice_page_post" class="notice_page_post NB_NoteBoard"><div style="font-weight:bold; font-size:22px;">${title}\n\n</div>${phara}</div>
 								<div class="notice_menu_btn pointer" onclick="Notice_menu_btn()"><i class="fas fa-bars"></i> 목록보기</div>
 							</div>
 							<div id="notice_page_editor" class="notice_page_editor display_none"></div>
@@ -224,8 +230,7 @@ function Notice_Edit() {
 		Get_notice_postOne(id, function(result) {
 			if (result) {
 				tag = 	`
-							<input id="notice_page_edit_title" class="notice_page_edit_title" placeholder="제목을 입력해주세요.">
-							<textarea id="notice_page_edit_post" class="notice_page_edit_post" placeholder="${NOTICE_PLACEHOLDER}"></textarea>
+							<div id="NB-texteditor"></div>
 							<div class="notice_page_controll_cont">
 								<span class="activation_title noselect">공지 </span>
 								<input type="checkbox" id="activation_toggle" name="activation_toggle">
@@ -238,7 +243,6 @@ function Notice_Edit() {
 								<div id="notice_page_edit_done" class="notice_page_edit_done pointer" onclick="Notice_Edit_Done()">완료</div>
 								<div id="notice_page_edit_cancel" class="notice_page_edit_cancel pointer" onclick="Notice_Edit_Cancel()">취소</div>
 							</div>
-							<div id="NB-texteditor"></div>
 						`;
 				target.append(tag);
 				// NoteBoard Library Import
@@ -250,8 +254,7 @@ function Notice_Edit() {
 				);
 				$("#NB_te_title_input").val(result['title']);
 				$("#NB_te_post_cont").append(result['post']);
-				$("#notice_page_edit_title").val(result['title']);
-				$("#notice_page_edit_post").val(result['post']);
+				$("#NB-texteditor").val(result['post']);
 				// 공지 Check 유무
 				if (result['activation'] == 1) {
 					$("#activation_toggle").prop("checked", true);
@@ -296,27 +299,27 @@ function Notice_Delete() {
 function Notice_Edit_Done() {
 	Check_ManagerInfo(function() {
 		let id = $("#notice_page_container").attr('data-id');
-		let title = $("#notice_page_edit_title").val();
-		let post = $("#notice_page_edit_post").val();
+		let title = $("#NB_te_title_input").val();
+		let post = $("#NB_te_post_cont").html();
 		let actiavation_check = 0
 		if ($("#activation_toggle").is(":checked"))
 			actiavation_check = 1;
 		if (title.length == 0) {
 			Snackbar("제목을 입력해주세요.");
-			$("#notice_page_edit_title").focus();
+			$("#NB_te_title_input").focus();
 			return;
 		} else if (title.length > 50) {
 			Snackbar("제목 길이 한계를 초과하였습니다.");
-			$("#notice_page_edit_title").focus();
+			$("#NB_te_title_input").focus();
 			return;
 		}
 		if (post.length == 0) {
 			Snackbar("내용을 입력해주세요.");
-			$("#notice_page_edit_post").focus();
+			$("#NB-texteditor").focus();
 			return;
 		} else if (post.length > 1000) {
 			Snackbar("내용 길이 한계를 초과하였습니다.");
-			$("#notice_page_edit_post").focus();
+			$("#NB-texteditor").focus();
 			return;
 		}
 		let sendData = {
@@ -375,8 +378,7 @@ function Notice_Write() {
 	$("#posts_target").empty();
 	tag = 	`
 			<div id="notice_page_editor" class="notice_page_editor">
-				<input id="notice_page_edit_title" class="notice_page_edit_title" placeholder="제목을 입력해주세요.">
-				<textarea id="notice_page_edit_post" class="notice_page_edit_post" placeholder="${pharagh_placeholder}"></textarea>
+				<div id="NB-texteditor"></div>
 				<div class="notice_page_controll_cont_edit">
 					<div id="notice_page_edit_done" class="notice_page_edit_done pointer" onclick="writing_notice_done()">완료</div>
 					<div id="notice_page_edit_cancel" class="notice_page_edit_cancel pointer" onclick="writing_notice_cancel()">취소</div>
@@ -384,6 +386,12 @@ function Notice_Write() {
 			</div>
 			`;
 	$("#posts_target").append(tag);
+	NBnote(
+		color='#12b886',
+		link=true,
+		image=false,
+		eng=false
+	);
 }
 // 공지사항 작성 취소
 function writing_notice_cancel() {
@@ -393,26 +401,26 @@ function writing_notice_cancel() {
 // 공지사항 작성 완료
 function writing_notice_done() {
 	check_managet_qualification_reload(function() {
-		let title = $("#notice_page_edit_title").val();
+		let title = $("#NB_te_title_input").val();
 		if (title == "") {
 			Snackbar("제목을 입력해주세요.");
-			$("#notice_page_edit_title").focus();
+			$("#NB_te_title_input").focus();
 			return;
 		} else if (title.length > 50) {
-      Snackbar("제목 길이 한계를 초과하였습니다.");
-      $("#notice_page_edit_title").focus();
-      return;
-    }
-		let pharagh = $("#notice_page_edit_post").val();
+    		Snackbar("제목 길이 한계를 초과하였습니다.");
+    		$("#NB_te_title_input").focus();
+    		return;
+    	}
+		let pharagh = $("#NB_te_post_cont").html();
 		if (pharagh == "") {
 			Snackbar("내용을 입력해주세요.");
-			$("#notice_page_edit_post").focus();
+			$("#NB-texteditor").focus();
 			return;
 		} else if (pharagh.length > 1000) {
-      Snackbar("내용 길이 한계를 초과하였습니다.");
-      $("#notice_page_edit_post").focus();
-      return;
-    }
+    		Snackbar("내용 길이 한계를 초과하였습니다.");
+    		$("#NB-texteditor").focus();
+    		return;
+    	}
 		let send_data = {
 							"title": title, 
 							"post": pharagh
