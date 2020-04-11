@@ -6,6 +6,7 @@ from pprint import pprint
 from db_management import *
 ###########################################
 from variable import *
+from sj_auth import dosejong_api, sjlms_api, uis_api
 
 #/api/v1/analysis/lastdays/<int:days>
 #SJ_api_v1_analysis_lastdays(days):
@@ -83,13 +84,21 @@ def SJ_api_v1_auth__sign_in():
 def SJ_api_v1_auth__change_nickname():
 	NEW_NICKNAME = request.form['new_nickname']
 
-	USER = find_user(g.db, user_id=get_jwt_identity())
+	USER = find_user(g.db, user_id=get_jwt_identity(), user_nickname=1)
 
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
 	if USER is None: abort(401)
 
 	#길이 검증 실패!, Bad request 핸들러 반환
 	if len(NEW_NICKNAME) < SJ_REQUEST_LENGTH_LIMIT['user_nickname_min'] and len(NEW_NICKNAME) > SJ_REQUEST_LENGTH_LIMIT['user_nickname_max']: abort(400)
+
+	idx = 0
+	for i in range(len(USER['user_nickname'])-1, -1, -1):
+		if USER['user_nickname'][i] == '#':
+			idx = i
+			break
+	
+	NEW_NICKNAME += USER['user_nickname'][idx:]
 
 	result = update_nickname(g.db, USER['user_id'], NEW_NICKNAME)
 
@@ -101,7 +110,7 @@ def SJ_api_v1_auth__change_nickname():
 @BP.route('/api/v1/auth/get_userinfo')
 @jwt_required
 def SJ_api_v1_auth__get_userinfo():
-	USER = find_user(g.db, user_id=get_jwt_identity(), auto_login=1, user_nickname=1, fav_list=1, privacy=1)
+	USER = find_user(g.db, user_id=get_jwt_identity(), auto_login=1, user_nickname=1, fav_list=1, privacy=1, authorize=1, student_id_hash=1)
 
 	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
 	if USER is None: abort(401)
@@ -113,8 +122,12 @@ def SJ_api_v1_auth__get_userinfo():
 	return_object['user_nickname'] = USER['user_nickname']
 	return_object['user_fav_list'] = USER['fav_list']
 	return_object['auto_login'] = USER['auto_login']
-	return_object['auto_login'] = USER['auto_login']
 	return_object['privacy'] = USER['privacy']
+	return_object['authorize'] = USER['authorize']
+	if USER['student_id_hash']:
+		return_object['student_id_hash'] = True
+	else:
+		return_object['student_id_hash'] = False
 
 	#들어온 토큰이 ADMIN 토큰인지 확인!
 	if USER['user_id'] == SJ_ADMIN:
@@ -244,3 +257,60 @@ def SJ_api_v1_auth__get_lately_search(num):
 		result = "success",
 		lately_search_list = result
 	)
+
+#SJ_AUTH 세종인 인증 API
+@BP.route('/api/v1/auth/sj_auth', methods=['POST'])
+@jwt_required
+def SJ_api_v1_auth__sj_auth():
+	SJ_ID = request.form['sj_id']
+	SJ_PW = request.form['sj_pw']
+
+	USER = find_user(g.db, user_id=get_jwt_identity(), user_nickname=1, student_id_hash=1)
+
+	#잘못된 토큰으로 유저 조회 불가!, Bad token 핸들러 반환
+	if USER is None: abort(401)
+
+	#이미 인증 됨!, Bad request 핸들러 반환
+	if USER['student_id_hash']: abort(400)
+
+	#두드림 인증 - 1차
+	api_result = dosejong_api(SJ_ID, SJ_PW)
+	student_id = None
+	if api_result['result']:
+		student_id = api_result['id']
+	
+	if student_id is None:
+		#세종lms 인증 - 2차
+		api_result = sjlms_api(SJ_ID, SJ_PW)
+		if api_result['result']:
+			student_id = api_result['id']
+	
+	if student_id is None:
+		#세종UIS 인증 - 3차
+		api_result = uis_api(SJ_ID, SJ_PW)
+		if api_result['result']:
+			student_id = api_result['id']
+
+	if student_id is None:
+		return jsonify(
+			result = "No Sejong Student"
+		)
+	
+	#학번 해쉬화
+	student_id_hash = generate_password_hash(student_id)
+	update_user_student_id_hash(g.db, USER['user_id'], student_id_hash)
+
+	#과거의 블랙리스트 기록이 있는지 확인
+	blacklist = find_variable(g.db, 'sj_auth_blacklist')
+	blacklist = list(blacklist)
+	if student_id_hash in blacklist:
+		return jsonify(
+			result = "Blacklist id"
+		)
+	#블랙리스트가 아니면
+	else:
+		update_user_authorize(g.db, USER['user_id'], 1)
+		return jsonify(
+			result = "success"
+		)
+	
