@@ -43,6 +43,7 @@ function Go_setting() {
 				}
 				// 닉네임 Setting
 				Set_nickname(result['user_nickname']+'');
+				Insert_Auth_Open_Btn(result['student_id_hash']);
 			}
 		})
 	}
@@ -117,7 +118,7 @@ function insert_user_information_setting() {
 
 									<div>
 										<div class="setting_subtitle noselect">${st_4}</div>
-										<div id="user_data_reset" class="setting_btn_positive" onclick="">인증하기</div>
+										<div id="user_auth_btn"></div>
 										<div class="setting_subtitle_info noselect">${st_info_4}</div>
 									</div>
 
@@ -182,6 +183,7 @@ function change_autologin_st(){
 // 사용자 개인정보 설정 관련================================================================
 // 사용자 닉네임 표시
 function Set_nickname(nickname) {
+	nickname = nickname.slice(0, nickname.lastIndexOf("#"));
 	$("#setting_nickname_guideline").text(nickname);
 }
 // 사용자 닉네임 변경준비
@@ -318,7 +320,7 @@ function user_data_delete_button_ok() {
 			Snackbar("서버와의 연결이 원활하지 않습니다.");
 			return false;
 		}
-	});;
+	});
 }
 // 사용자 정보 모달 취소 버튼
 function user_data_modal_cancel() {
@@ -337,3 +339,93 @@ $("#user_data_delete_input").on({	// 회원가입 폼 선택
 		}
 	}
 });
+
+function Insert_Auth_Open_Btn(result) {
+	let btn_div = ``;
+	if (result) {
+		$("#user_auth_btn").addClass("setting_btn_negative noselect");
+		$("#user_auth_btn").text("인증완료");
+	} else {
+		$("#user_auth_btn").addClass("setting_btn_positive");
+		$("#user_auth_btn").text("인증하기");
+		$("#user_auth_btn").on({
+			"click": ()=> {
+				Open_Auth_Modal();
+			}
+		});
+	}
+}
+function Open_Auth_Modal() {
+	let modal_div =	`
+				<div id="user_auth_modal" class="post_menu_modal_container">
+					<div class="user_data_delete_container noselect">
+						<div class="setting_auth_info">세종대학교 <span style="color: #c30e2e">구성원 인증</span>을 위해서 학번과 비밀번호를 입력해주세요.</div>
+						<div class="setting_auth_input_cont">
+							<span>학번/ID</span>
+							<input id="auth_input_id" type="text" class="setting_auth_input">
+						</div>
+						<div class="setting_auth_input_cont">
+							<span>비밀번호/PW</span>
+							<input id="auth_input_pw" type="password" class="setting_auth_input">
+						</div>
+						<div class="setting_auth_btn_cont"></div>
+							<div id="auth_enter" class="setting_auth_btn pointer">확인</div
+							><div id="auth_cancel" class="setting_auth_btn pointer">취소</div>
+						</div>
+					</div>
+				</div>
+				`;
+	$("#snackbar_target").before(modal_div);
+	$("#auth_input_id").focus();
+	$("body").css("overflow", "hidden");
+	$("#auth_enter").on({
+		"click": ()=> {Run_Auth_Check();}
+	});
+	$("#auth_cancel").on({
+		"click": ()=>{Close_Auth_Modal();}
+	});
+}
+function Close_Auth_Modal() {
+	$("body").removeAttr("style");
+	$("#user_auth_modal").remove();
+}
+function Run_Auth_Check() {
+	let id = $("#auth_input_id").val();
+	let pw = $("#auth_input_pw").val();
+	if (id.lenght == 0) {
+		Snackbar("학번을 입력해주세요.");
+		$("#auth_input_id").focus();
+		return;
+	}
+	if (pw.lenght == 0) {
+		Snackbar("비밀번호를 입력해주세요.");
+		$("#auth_input_pw").focus();
+		return;
+	}
+	let sendData = {};
+	sendData['sj_id'] = id;
+	sendData['sj_pw'] = pw;
+	$.when(A_JAX(host_ip+"/api/v1/auth/sj_auth", "POST", null, sendData))
+	.done((data) => {
+		if (data.result == "success") {
+			Close_Auth_Modal();
+			alert("인증이 완료되었습니다!");
+			location.reload();
+		} else if (data.result == "No Sejong Student") {
+			Snackbar("인증에 실패하였습니다.");
+		} else if (data.result == "Blacklist id") {
+			Snackbar("블랙리스트에 등록된 사용자입니다.");
+		} else {
+			Snackbar("잠시 후 다시 시도해주세요.");
+		}
+	})
+	.catch((data) => {
+		if (data.status == 400) {
+			Snackbar("이미 인증된 계정입니다.");
+		} else if (data.status == 401) {
+			Snackbar("다시 로그인 해주세요.");
+		} else {
+			Snackbar("서버와의 연결이 원활하지 않습니다.");
+		}
+	});
+}
