@@ -974,7 +974,10 @@ def find_all_category_of_topic(db):
 	result = db[SJ_DB_CATEGORY].find(
 		{},
 		{
-			'_id': 0
+			"tag":1,
+			"category_name":1,
+			"info_num":1,
+			"tag_vector": 1
 		}
 	)
 	return result
