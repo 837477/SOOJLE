@@ -177,7 +177,7 @@ let a_jax_posts = [];
 2: 동아리&모임
 3: 공모전&행사
 4: 진로&구인
-5: 자유
+5: 커뮤니티
 6: 예외
 */
 function search_text(text) {
@@ -219,7 +219,7 @@ function search_text(text) {
 							<div id="category3" class="category_tab pointer" onclick="category_select($(this))">동아리&모임</div>\
 							<div id="category4" class="category_tab pointer" onclick="category_select($(this))">공모전&행사</div>\
 							<div id="category5" class="category_tab pointer" onclick="category_select($(this))">진로&구인</div>\
-							<div id="category6" class="category_tab pointer" onclick="category_select($(this))">자유</div>\
+							<div id="category6" class="category_tab pointer" onclick="category_select($(this))">커뮤니티</div>\
 							<div id="category7" class="category_tab category_tab_last pointer" onclick="category_select($(this))">일반</div>\
 							<div class="search_option_btn pointer" onclick="Search_Option()"><i class="fas fa-ellipsis-h"></i></div>\
 						</div>`;
@@ -319,7 +319,7 @@ function Get_Search_Posts(sendData, now_creating_state) {
 		}).catch((e) => {
 			// Ajax fail
 		}),
-		$.when(A_JAX(host_ip+"/api/v1/search/category/자유/200", "POST", null, sendData))
+		$.when(A_JAX(host_ip+"/api/v1/search/category/커뮤니티/200", "POST", null, sendData))
 		.done(function (data) {
 			if (data['result'] == "success") {
 				let output = remove_duplicated(5, data["search_result"]);
@@ -395,7 +395,7 @@ function Get_Search_Posts_Nolimit(sendData, now_creating_state) {
 		}).catch((e) => {
 			// Ajax fail
 		}),
-		$.when(A_JAX(host_ip+"/api/v1/search/category_no_limit/자유/200", "POST", null, sendData))
+		$.when(A_JAX(host_ip+"/api/v1/search/category_no_limit/커뮤니티/200", "POST", null, sendData))
 		.done(function (data) {
 			if (data['result'] == "success") {
 				let output = remove_duplicated(5, data["search_result"]);
@@ -482,7 +482,7 @@ function insert_domain_post(posts, now_creating_state = "") {
 2: 동아리&모임
 3: 공모전&행사
 4: 진로&구인
-5: 자유
+5: 커뮤니티
 6: 예외
 */
 // 검색 결과를 해당 div에 넣어줌
@@ -500,7 +500,7 @@ function insert_search_post(target_num, posts, now_creating_state = "", is_fav_c
 	else if (Number(target_name) == 2) {target_name = "동아리&모임";}
 	else if (Number(target_name) == 3) {target_name = "공모전&행사";}
 	else if (Number(target_name) == 4) {target_name = "진로&구인";}
-	else if (Number(target_name) == 5) {target_name = "자유";}
+	else if (Number(target_name) == 5) {target_name = "커뮤니티";}
 	else {target_name = "일반";}
 	let target_tag = `<div id=${'category-title-'+target_num} class="sr_title noselect">${target_name}</div>`;
 	creating_post($("#search_posts_target"), posts, now_creating_state, is_fav_cnt, function(tag_str) {
@@ -574,7 +574,7 @@ function more_posts(target_num, is_fav_cnt = 1) {
 	else if (Number(target_name) == 2) {target_name = "동아리&모임";}
 	else if (Number(target_name) == 3) {target_name = "공모전&행사";}
 	else if (Number(target_name) == 4) {target_name = "진로&구인";}
-	else if (Number(target_name) == 5) {target_name = "자유";}
+	else if (Number(target_name) == 5) {target_name = "커뮤니티";}
 	else {target_name = "일반";}
 	let more_left_tag = `<img src="/static/icons/back.png" class="sr_more_to_before noselect" onclick="Click_before_posts_pc()">${target_name}`;
 	$("#board_info_text").empty();
@@ -804,7 +804,7 @@ function Search_Option_Sort() {
 		category_select($("#category4"));
 	} else if (target == "진로&구인") {
 		category_select($("#category5"));
-	} else if (target == "자유") {
+	} else if (target == "커뮤니티") {
 		category_select($("#category6"));
 	} else if (target == "일반") {
 		category_select($("#category7"));

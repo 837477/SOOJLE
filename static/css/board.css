@@ -1827,7 +1827,7 @@ input[type="checkbox"]:checked ~ .setting_toggle_red label::after{
 	position: relative;
 	display: inline-block;
 	width: auto;
-	padding: 0 10px 5px 10px;
+	padding: 0 9px 5px 9px;
 	font-size: 18px;
 	line-height: 30px;
 	border-bottom: 2px solid rgba(0,0,0,0);
@@ -2260,8 +2260,7 @@ span.selectbox_choose {
 	width: 120px;
 	margin-top: 6px;
 	background-color: #c30e2e;
-	border-radius: 5px;
-	box-shadow: 0 0 2px rgba(43,43,43,1);
+	border-radius: 30px;
 	color: white;
 	text-align: center;
 	font-size: 16px;
@@ -2274,6 +2273,27 @@ span.selectbox_choose {
 .setting_btn:hover {
 	box-shadow: none;
 	background-color: #a10822;
+}
+.setting_btn_positive {
+	position: relative;
+	float: right;
+	height: 30px;
+	width: 120px;
+	margin-top: 6px;
+	background-color: #12b886;
+	border-radius: 30px;
+	color: white;
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 30px;
+	cursor: pointer;
+	transition: .1s ease-in-out;
+	-webkit-transition: .1s ease-in-out;
+}
+.setting_btn_positive:hover {
+	box-shadow: none;
+	background-color: #119970;
 }
 
 .setting_nickname_container {
