@@ -84,7 +84,7 @@ def SJ_api_v1_newsfeed__topic(category_name):
 		#접근한 뉴스피드 기록을 위한 obj 생성!
 		newsfeed_obj = {}
 		newsfeed_obj['newsfeed_name'] = category_name
-		newsfeed_obj['tag'] = category['tag']
+		#newsfeed_obj['tag'] = category['tag']
 		newsfeed_obj['date'] = datetime.now()
 		
 		#접근한 뉴스피드 기록!
@@ -167,6 +167,7 @@ def SJ_api_v1_newsfeed__recommendation():
 			#비로그인 전용 추천뉴스피드 호출!
 			POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)	
 			POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
+			POST_LIST = POST_LIST[:SJ_RETURN_NUM]
 
 		#관심도가 cold가 아닐 때!
 		else:
@@ -183,6 +184,7 @@ def SJ_api_v1_newsfeed__recommendation():
 		#비로그인 전용 추천뉴스피드 호출!
 		POST_LIST = get_recommendation_newsfeed_non_member(g.db, now_date)
 		POST_LIST = sorted(POST_LIST, key=operator.itemgetter('similarity'), reverse=True)
+		POST_LIST = POST_LIST[:SJ_RETURN_NUM]
 
 	return jsonify(
 			result = "success",

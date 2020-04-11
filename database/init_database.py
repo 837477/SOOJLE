@@ -239,7 +239,7 @@ def create_category_of_topic_tag_vector(db):
 			{
 				'$set':
 				{
-					'tag_vectort': category_tag_vector
+					'tag_vector': category_tag_vector
 				}
 			}
 		)
