@@ -300,9 +300,11 @@
 		left: 0;
 		width: 100%;
 		height: 40px;
-		border-top: 1.5px solid #c30e2e;
+		border-top: 1.5px solid black;
+		box-shadow: 0 -2px 20px 2px rgba(0,0,0,.2);
 		background-color: white;
-		z-index: 200;
+z		z-index: 200;
+		text-align: center;
 	}
 	.mobile_controller_content {
 		position: relative;
@@ -326,7 +328,7 @@
 	    width: 19px;
 	    height: 19px;
 	    opacity: .8;
-	    top: 8px;
+	    top: 10px;
 	}
 	.mobile_controller_content_text {
 		position: relative;

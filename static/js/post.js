@@ -195,7 +195,7 @@ $(document).scroll(function() {
 		|| (where_topic == "SOOJLE 엔진" && $("#board_info_text").text() != "검색 결과입니다!")
 		|| where_topic == "개발자노트"){
 
-		if ($(window).scrollTop() + $(window).height() >= $(document).height() - 200){
+		if ($(window).scrollTop() + $(window).height() >= $(document).height() - $(document).height()/10*2){
 			if (save_posts.length == 0) return;
 			if (now_creating == 0) {
 				now_creating = 1;
