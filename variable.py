@@ -1,16 +1,3 @@
-#백그라운드 시간
-#####################################################
-#Measurement_run Time (hours)
-SJ_MEASUREMENT_TIME = 2
-#Create_Wordcloud_run TIME (days)
-SJ_CREATE_WORDCLOUD_TIME = 30
-#Realtime_run Time (minutes)
-SJ_REALTIME_TIME = 5
-#Update_highest_fav_view (day)
-SJ_UPDATE_HIGHEST_FAV_VIEW_TIME = 1
-#Update_today_time_visitor (hour)
-SJ_TIME_VISITOR_ANALYSIS_WORK_TIME = 1
-
 #DB콜렉션 명
 #####################################################
 #DB_POST Collection name (현재 포스트 디비 이름)
@@ -119,5 +106,8 @@ SJ_TOPIC_RESULT_DIV = SJ_FAV_TOPIC_WEIGHT + SJ_VIEW_TOPIC_WEIGHT + SJ_SEARCH_TOP
 
 SJ_TAG_SUM_WEIGHT = 1.5
 
+#사용자 관심도 측정에 최소한 아래의 퍼센트는 돼있어야함.
+#아래 퍼샌트보다 낮은 개수를 가지고 있으면 그냥 가지고 있는 인자들로 사용하고,
+#높은 개수를 가지고 있으면 시간으로 자른다.
 SJ_USER_ACTION_NUM_CHECK_PERCENT = 0.15
 SJ_USER_ACTION_DAY_CHECK = 30
