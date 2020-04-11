@@ -142,12 +142,12 @@ def create_category_of_topic(db):
 					'포트폴리오', '이력', '이력서', '자소서', '자기소개서', '급여', '연봉', '아르바이트', '파트타임', '사무직', '현장직', '시급', '근무', '근무지', '자격증', '일일직', '노동', '근로', '업종'
 				]
 			},
-			#자유
+			#커뮤니티
 			{
-				'category_name': '자유',
+				'category_name': '커뮤니티',
 				'info': 
 				[
-					'sj20_sejong_dc', 'sj30_sejongstation_notice', 'sj30_sejongstation_news', 'sj30_sejongstation_free', 'sj30_sejongstation_secret', 'sj30_sejongstation_qna', 'sj30_sejongstation_tip', 'sj30_sejongstation_graduation', 'sj30_sejongstation_job', 'sj30_sejongstation_activity', 'sj30_sejongstation_club', 'sj30_sejongstation_study', 'sj30_sejongstation_food', 'sj30_sejongstation_trade'
+					'sj20_sejong_dc', 'sj30_sejongstation_notice', 'sj30_sejongstation_news', 'sj30_sejongstation_free', 'sj30_sejongstation_secret', 'sj30_sejongstation_qna', 'sj30_sejongstation_tip', 'sj30_sejongstation_graduation', 'sj30_sejongstation_job', 'sj30_sejongstation_activity', 'sj30_sejongstation_club', 'sj30_sejongstation_study', 'sj30_sejongstation_food', 'sj30_sejongstation_trade', 'community'
 				],
 				'tag': 
 				[
@@ -214,6 +214,28 @@ def create_category_of_topic_info_num(db):
 				}
 			}
 		)
+
+	#수동 info들은 아래의 셋으로 생성
+	#manual info set
+	manual_info_set = {}
+	#-1 = community
+	manual_info_set['커뮤니티'] = [-1]
+
+	db[SJ_DB_CATEGORY].update(
+		{
+			'category_name': '커뮤니티'
+		},
+		{
+			'$push':
+			{
+				'info_num':
+				{
+					'$each': manual_info_set['커뮤니티'],
+					'$position': 0
+				}
+			}
+		}
+	)
 
 #카테고리 컬럼의 tag_vector 추가!
 def create_category_of_topic_tag_vector(db):
@@ -328,6 +350,10 @@ def create_variable(db):
 				'key': 'main_info_2',
 				'value': "안녕하세요! SOOJLE입니다."
 			},
+			{
+				'key': 'all_tags',
+				'value': []
+			}
 		]
 	)
 
