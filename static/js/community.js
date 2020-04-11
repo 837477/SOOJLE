@@ -318,6 +318,7 @@ function Notice_Edit_Done() {
 			$("#NB-texteditor").focus();
 			return;
 		} else if (post.length > 1000) {
+			console.log(post, post.length);
 			Snackbar("내용 길이 한계를 초과하였습니다.");
 			$("#NB-texteditor").focus();
 			return;
