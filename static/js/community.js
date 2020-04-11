@@ -238,8 +238,18 @@ function Notice_Edit() {
 								<div id="notice_page_edit_done" class="notice_page_edit_done pointer" onclick="Notice_Edit_Done()">완료</div>
 								<div id="notice_page_edit_cancel" class="notice_page_edit_cancel pointer" onclick="Notice_Edit_Cancel()">취소</div>
 							</div>
+							<div id="NB-texteditor"></div>
 						`;
 				target.append(tag);
+				// NoteBoard Library Import
+				NBnote(
+					color='#12b886',
+					link=true,
+					image=false,
+					eng=false
+				);
+				$("#NB_te_title_input").val(result['title']);
+				$("#NB_te_post_cont").append(result['post']);
 				$("#notice_page_edit_title").val(result['title']);
 				$("#notice_page_edit_post").val(result['post']);
 				// 공지 Check 유무

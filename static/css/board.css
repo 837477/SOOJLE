@@ -5,6 +5,7 @@ html {
 	background-color: white;
 }
 html, body {
+	position: initial;
 	scroll-behavior: auto;
 }
 .header_up {
@@ -2295,6 +2296,22 @@ span.selectbox_choose {
 	box-shadow: none;
 	background-color: #119970;
 }
+.setting_btn_negative {
+	position: relative;
+	float: right;
+	height: 30px;
+	width: 120px;
+	margin-top: 6px;
+	background-color: #aaa;
+	border-radius: 30px;
+	color: white;
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 30px;
+	transition: .1s ease-in-out;
+	-webkit-transition: .1s ease-in-out;
+}
 
 .setting_nickname_container {
 	position: relative;
@@ -3571,4 +3588,69 @@ span.selectbox_choose {
 .post_view_card_element {
 	padding-left: 15px;
 	width: 98%;
+}
+
+.setting_auth_info {
+	position: relative;
+	margin: auto;
+	font-size: 18px;
+	line-height: 30px;
+	padding: 40px 40px 10px 40px;
+	text-align: center;
+	word-break: keep-all;
+}
+.setting_auth_input_cont {
+	position: relative;
+	width: 100%;
+	height: auto;
+	padding: 0 40px;
+	box-sizing: border-box;
+	margin-top: 15px;
+}
+.setting_auth_input_cont > span {
+	font-size: 16px;
+	line-height: 30px;
+}
+.setting_auth_input {
+	position: relative;
+	display: inline-block;
+	float: right;
+	width: 60%;
+	height: 30px;
+	font-size: 16px;
+	line-height: 30px;
+	border: none;
+	padding: 0 10px;
+	border-bottom: 2px solid #12b886;
+	transition: .1s ease-in-out;
+}
+.setting_auth_btn_cont {
+	position: relative;
+	width: 100%;
+	height: auto;
+}
+.setting_auth_btn {
+	position: relative;
+	display: inline-block;
+	width: 50%;
+	height: 50px;
+	border: none;
+	text-align: center;
+	font-weight: bold;
+	box-sizing: border-box;
+	font-size: 20px;
+	line-height: 50px;
+	margin-top: 20px;
+	transition: .1s ease-in-out;
+}
+.setting_auth_btn:nth-child(2n - 1) {
+	left: 0;
+	color: #12b886;
+}
+.setting_auth_btn:nth-child(2n) {
+	right: 0;
+}
+.setting_auth_btn:hover {
+	text-decoration: underline;
+	text-underline-position: under;
 }
