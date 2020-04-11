@@ -6,12 +6,13 @@ import numpy
 import global_func
 import LDA
 import FastText
+import hashlib
 from variable import *
 
 #SJ_DB_USER 관련#######################################
 ######################################################
 #전체 유저 목록 반환 (미사용)
-def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, tag_vector=None, newsfeed_list=None, privacy=None, measurement_num=None):
+def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, tag_vector=None, newsfeed_list=None, privacy=None, measurement_num=None, authorize=None, student_id_hash=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None: 
@@ -44,13 +45,17 @@ def find_all_user(db, _id=None, user_id=None, user_nickname=None, auto_login=Non
 		show_dict['measurement_num'] = 1
 	if tag_vector is not None:
 		show_dict['tag_vector'] = 1
+	if authorize is not None:
+		show_dict['authorize'] = 1
+	if student_id_hash is not None:
+		show_dict['student_id_hash'] = 1
 
 	result = db[SJ_DB_USER].find({}, show_dict)
 
 	return result
 
 #특정 유저 반환 (사용)
-def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, tag_vector=None, newsfeed_list=None, privacy=None, measurement_num=None):
+def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto_login=None, topic=None, tag=None, fav_list=None, view_list=None, search_list=None, ft_vector=None, tag_sum=None, tag_vector=None, newsfeed_list=None, privacy=None, measurement_num=None, authorize=None, student_id_hash=None):
 	
 	show_dict = {'_id': 0}
 	if _id is not None:
@@ -85,7 +90,11 @@ def find_user(db, _id=None, user_id=None, user_pw=None, user_nickname=None, auto
 		show_dict['measurement_num'] = 1
 	if tag_vector is not None:
 		show_dict['tag_vector'] = 1
-
+	if authorize is not None:
+		show_dict['authorize'] = 1
+	if student_id_hash is not None:
+		show_dict['student_id_hash'] = 1
+	
 	result = db[SJ_DB_USER].find_one(
 		{
 			'user_id': user_id
@@ -99,6 +108,7 @@ def insert_user(db, user_id, user_pw, user_nickname):
 	topic_temp = numpy.ones(LDA.NUM_TOPICS)
 	topic = (topic_temp / topic_temp.sum()).tolist()
 
+	user_nickname_tag = str(int(hashlib.sha256(user_id.encode('utf-8')).hexdigest(), 16) % 10**5)
 	ft_vector = (numpy.zeros(FastText.VEC_SIZE)).tolist()
 	tag = {}
 	tag_sum = 1
@@ -111,12 +121,14 @@ def insert_user(db, user_id, user_pw, user_nickname):
 	renewal = datetime.now()
 	privacy = 0
 	measurement_num = 0
+	authorize = 0
+	student_id_hash = None
 
 	result = db[SJ_DB_USER].insert(
 		{
 			'user_id': user_id,
 			'user_pw': user_pw,
-			'user_nickname': user_nickname,
+			'user_nickname': user_nickname + "#" + user_nickname_tag,
 			'ft_vector': ft_vector,
 			'tag': tag,
 			'tag_sum': tag_sum,
@@ -129,7 +141,9 @@ def insert_user(db, user_id, user_pw, user_nickname):
 			'auto_login': auto_login,
 			'renewal': renewal,
 			'privacy': privacy,
-			'measurement_num': measurement_num
+			'measurement_num': measurement_num,
+			'authorize': authorize,
+			'student_id_hash': student_id_hash
 		})
 
 	return "success"
@@ -228,14 +242,26 @@ def update_user_auto_login(db, user_id, value):
 	)
 	return "success"
 
-#개인정보처리방침 동의현황 변경 (미사용)
-def update_user_privacy(db, user_id, value):
+#유저 세종대 승인 여부 변경 (사용)
+def update_user_authorize(db, user_id, value):
 	db[SJ_DB_USER].update(
 		{
 			'user_id': user_id
-		},
+		}, 
 		{
-			'$set': {'privacy': value}
+			'$set': {'authorize': value}
+		}
+	)
+	return "success"
+
+#유저 세종대 학번 해시값 등록 (사용)
+def update_user_student_id_hash(db, user_id, student_id_hash):
+	db[SJ_DB_USER].update(
+		{
+			'user_id': user_id
+		}, 
+		{
+			'$set': {'student_id_hash': student_id_hash}
 		}
 	)
 	return "success"
