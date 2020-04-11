@@ -92,6 +92,8 @@ function insert_user_information_setting() {
 	let st_info_2 = "사용자의 모든 기록을 삭제하여, 사용자 관심도를 초기화합니다.";
 	let st_3 = "닉네임 변경";
 	let st_info_3 = "사용자의 닉네임을 변경합니다.";
+	let st_4 = "학생 인증";
+	let st_info_4 = "세종대학교 구성원 인증을 할 수 있습니다.";
 
 	// 로그인이 되어있지 않으면 return
 	if (token == null || token == undefined || token == 'undefined' || token == 'null') return;
@@ -111,6 +113,12 @@ function insert_user_information_setting() {
 											<div id="setting_nickname_guideline" class="setting_nickname_guideline noselect"></div>
 											<input type="text" id="setting_nickname_edit_guideline" class="setting_nickname_guideline_input display_none">
 										</div>
+									</div>
+
+									<div>
+										<div class="setting_subtitle noselect">${st_4}</div>
+										<div id="user_data_reset" class="setting_btn_positive" onclick="">인증하기</div>
+										<div class="setting_subtitle_info noselect">${st_info_4}</div>
 									</div>
 
 									<div>
