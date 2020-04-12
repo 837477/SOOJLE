@@ -96,86 +96,98 @@ function Insert_Sejong_Guide() {
 					<div class="guide_restaurnat_box_cont noselect">
 						<div class="guide_restaurnat_box">
 							<div class="guide_restaurnat_box_title">학생회관 푸드코트</div>
-							<div class="guide_restaurnat_box_type">학기중</div>
-							<div class="guide_restaurnat_box_post">
-								평일: 09:00 ~ 19:00<br>
-								토요일: 10:30 ~ 14:00<br>
-								(일요일, 공휴일 휴무)
-							</div>
-							<div class="guide_restaurnat_box_type">방학중</div>
-							<div class="guide_restaurnat_box_post">
-								평일: 09:00 ~ 19:00<br>
-								토요일: 10:30 ~ 14:00<br>
-								(일요일, 공휴일 휴무)
+							<div style="height: 0px;">
+								<div class="guide_restaurnat_box_type">학기중</div>
+								<div class="guide_restaurnat_box_post">
+									평일: 09:00 ~ 19:00<br>
+									토요일: 10:30 ~ 14:00<br>
+									(일요일, 공휴일 휴무)
+								</div>
+								<div class="guide_restaurnat_box_type">방학중</div>
+								<div class="guide_restaurnat_box_post">
+									평일: 09:00 ~ 19:00<br>
+									토요일: 10:30 ~ 14:00<br>
+									(일요일, 공휴일 휴무)
+								</div>
 							</div>
 						</div>
 						<div class="guide_restaurnat_box">
 							<div class="guide_restaurnat_box_title">군자키친</div>
-							<div class="guide_restaurnat_box_type">학기중</div>
-							<div class="guide_restaurnat_box_post">
-								평일: 09:00 ~ 19:00<br>
-								(토,일요일, 공휴일 휴무)
-							</div>
-							<div class="guide_restaurnat_box_type">방학중</div>
-							<div class="guide_restaurnat_box_post">
-								평일: 09:00 ~ 19:00<br>
-								(토,일요일, 공휴일 휴무)
+							<div style="height: 0px;">
+								<div class="guide_restaurnat_box_type">학기중</div>
+								<div class="guide_restaurnat_box_post">
+									평일: 09:00 ~ 19:00<br>
+									(토,일요일, 공휴일 휴무)
+								</div>
+								<div class="guide_restaurnat_box_type">방학중</div>
+								<div class="guide_restaurnat_box_post">
+									평일: 09:00 ~ 19:00<br>
+									(토,일요일, 공휴일 휴무)
+								</div>
 							</div>
 						</div>
 						<div class="guide_restaurnat_box">
 							<div class="guide_restaurnat_box_title">진관키친</div>
-							<div class="guide_restaurnat_box_type">학기중</div>
-							<div class="guide_restaurnat_box_post">
-								평일: 08:30 ~ 19:00<br>
-								(토,일요일, 공휴일 휴무)
-							</div>
-							<div class="guide_restaurnat_box_type">방학중</div>
-							<div class="guide_restaurnat_box_post">
-								평일: 08:30 ~ 19:00<br>
-								(토,일요일, 공휴일 휴무)
+							<div style="height: 0px;">	
+								<div class="guide_restaurnat_box_type">학기중</div>
+								<div class="guide_restaurnat_box_post">
+									평일: 08:30 ~ 19:00<br>
+									(토,일요일, 공휴일 휴무)
+								</div>
+								<div class="guide_restaurnat_box_type">방학중</div>
+								<div class="guide_restaurnat_box_post">
+									평일: 08:30 ~ 19:00<br>
+									(토,일요일, 공휴일 휴무)
+								</div>
 							</div>
 						</div>
 						<div class="guide_restaurnat_box">
 							<div class="guide_restaurnat_box_title">우정당 푸드코트</div>
-							<div class="guide_restaurnat_box_type">학기중</div>
-							<div class="guide_restaurnat_box_post">
-								평일: 09:00 ~ 19:00<br>
-								토요일: 10:00 ~ 14:00<br>
-								(일요일, 공휴일 휴무)
-							</div>
-							<div class="guide_restaurnat_box_type">방학중</div>
-							<div class="guide_restaurnat_box_post">
-								휴무
+							<div style="height: 0px;">
+								<div class="guide_restaurnat_box_type">학기중</div>
+								<div class="guide_restaurnat_box_post">
+									평일: 09:00 ~ 19:00<br>
+									토요일: 10:00 ~ 14:00<br>
+									(일요일, 공휴일 휴무)
+								</div>
+								<div class="guide_restaurnat_box_type">방학중</div>
+								<div class="guide_restaurnat_box_post">
+									휴무
+								</div>
 							</div>
 						</div>
 						<div class="guide_restaurnat_box">
 							<div class="guide_restaurnat_box_title">군자의 밥상</div>
-							<div class="guide_restaurnat_box_type">학기중</div>
-							<div class="guide_restaurnat_box_post">
-								점심: 11:30 ~ 14:00<br>
-								저녁: 17:00 ~ 18:30<br>
-								(토,일요일, 공휴일 휴무)
-							</div>
-							<div class="guide_restaurnat_box_type">방학중</div>
-							<div class="guide_restaurnat_box_post">
-								점심: 11:30 ~ 13:30<br>
-								저녁: 17:00 ~ 18:00<br>
-								(토,일요일, 공휴일 휴무)
+							<div style="height: 0px;">
+								<div class="guide_restaurnat_box_type">학기중</div>
+								<div class="guide_restaurnat_box_post">
+									점심: 11:30 ~ 14:00<br>
+									저녁: 17:00 ~ 18:30<br>
+									(토,일요일, 공휴일 휴무)
+								</div>
+								<div class="guide_restaurnat_box_type">방학중</div>
+								<div class="guide_restaurnat_box_post">
+									점심: 11:30 ~ 13:30<br>
+									저녁: 17:00 ~ 18:00<br>
+									(토,일요일, 공휴일 휴무)
+								</div>
 							</div>
 						</div>
 						<div class="guide_restaurnat_box">
 							<div class="guide_restaurnat_box_title">더큰도시락</div>
-							<div class="guide_restaurnat_box_type">학기중</div>
-							<div class="guide_restaurnat_box_post">
-								평일: 09:00 ~ 19:00<br>
-								토요일: 10:30 ~ 14:00<br>
-								(일요일, 공휴일 휴무)
-							</div>
-							<div class="guide_restaurnat_box_type">방학중</div>
-							<div class="guide_restaurnat_box_post">
-								평일: 08:00 ~ 20:00<br>
-								토요일: 08:00 ~ 20:00<br>
-								(일요일, 공휴일 휴무)
+							<div style="height: 0px;">
+								<div class="guide_restaurnat_box_type">학기중</div>
+								<div class="guide_restaurnat_box_post">
+									평일: 09:00 ~ 19:00<br>
+									토요일: 10:30 ~ 14:00<br>
+									(일요일, 공휴일 휴무)
+								</div>
+								<div class="guide_restaurnat_box_type">방학중</div>
+								<div class="guide_restaurnat_box_post">
+									평일: 08:00 ~ 20:00<br>
+									토요일: 08:00 ~ 20:00<br>
+									(일요일, 공휴일 휴무)
+								</div>
 							</div>
 						</div>
 					</div>
@@ -227,9 +239,9 @@ function Insert_Sejong_Guide() {
 					<div class="guide_library_cont wow animated fadeInUp">
 						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>자유열람실 이용제한은 어떻게 되나요?</div>
 						<div class="guide_library_subtitle noselect">자유열람실 이용제한</div>
-						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">1. </span>제적, 정학, 자퇴, 면직, 학점교류 학생일 시, 이용 불가합니다.</div>
-						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">2. </span>대리발권 적발 시, 30일 이용 불가합니다.</div>
-						<div class="guide_office365_intro_post"><span class="guide_library_color_red noselect">3. </span>열람실 미반납 3회 확인 시, 5일 이용 불가합니다.</div>
+						<div class="guide_library_text"><span class="guide_library_color_red noselect">1. </span>제적, 정학, 자퇴, 면직, 학점교류 학생일 시, 이용 불가합니다.</div>
+						<div class="guide_library_text"><span class="guide_library_color_red noselect">2. </span>대리발권 적발 시, 30일 이용 불가합니다.</div>
+						<div class="guide_library_text"><span class="guide_library_color_red noselect">3. </span>열람실 미반납 3회 확인 시, 5일 이용 불가합니다.</div>
 					</div>
 					<div class="guide_library_cont wow animated fadeInUp">
 						<div class="guide_library_title noselect"><span class="guide_library_title_QnA">Q. </span>학술정보원 사용시간은 어떻게 되나요?</div>
@@ -254,6 +266,16 @@ function Insert_Sejong_Guide() {
 					<div class="guide_library_link_cont">
 						<div class="guide_library_link"><a target="_blank" href="https://library.sejong.ac.kr/bbs/Detail.ax?bbsID=3&articleID=16">이용자 교육 FAQ</a></div
 						><div class="guide_library_link"><a target="_blank" href="https://library.sejong.ac.kr/bbs/Detail.ax?bbsID=3&articleID=19">스터디룸 이용 FAQ</a></div>
+					</div>
+					<div class="guide_line"></div>
+
+					<div class="guide_title noselect">2020 새내기 자료집</div>
+					<div class="guide_subtitle noselect">
+						타겟 총학생회가 제작한 2020년 세종대학교 새내기 대학생활 자료집입니다.
+					</div>
+					<img class="guide_2020target_img" src="/static/saves/2020sejongguide.jpg">
+					<div id="guide_2020target_download" class="guide_2020target_download">PDF 다운로드
+						<i class="far fa-arrow-alt-circle-down donwload_icon"></i>
 					</div>
 					<div class="guide_line"></div>
 
@@ -309,6 +331,29 @@ function guide_campus_search_event() {
 		},
 		"blur": ()=> {
 			$("#guide_campus_search_cont").removeAttr("style");
+		}
+	});
+	if (mobilecheck() && screen.width < 500) {
+		for (let i = 0; i < 6; i++) {
+			$($(".guide_restaurnat_box_title")[i]).on({
+				"click": ()=> {
+					let Node = $($(".guide_restaurnat_box_title")[i]);
+					if (Node.next('div').height() > 0) {
+						Node.next('div').css('height', 0);
+					} else {
+						Node.next('div').css('height', '160px');
+					}
+				}
+			});
+		}
+	} else {
+		for (let i = 0; i < 6; i++) {
+			$($(".guide_restaurnat_box_title")[i]).next('div').css('height', '160px');
+		}
+	}
+	$("#guide_2020target_download").on({
+		"click": ()=> {
+			window.open('about:blank').location.href= '/static/saves/2020_sejongGuide.pdf';
 		}
 	});
 }
