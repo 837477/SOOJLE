@@ -230,6 +230,7 @@ async function auto_login() {
 
 // 로그인 후, 사용자 정보 수정
 function Menu_User_Info_Change(nickname) {
+	nickname = nickname.slice(0, nickname.lastIndexOf("#"));
 	let hello = greetings[Math.floor(Math.random() * greetings.length)];
 	nickname = nickname + "님, " + hello;
 	$("#user_info").text(nickname);

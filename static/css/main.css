@@ -56,9 +56,10 @@ input:focus, textarea {
 :root {
 	--sj_deepdark_color: #2A2A2A;
 	--sj_litedark_color: #E0E0E0;
-	--sj_accentdark_color: #050505;
 	--sj_deepred_color: #c30e2e;
 	--sj_litered_color: #DF0101;
+	--sj_litegreen_color: #12B886;
+	--sj_liteblue_color: #0071E3;
 }
 
 /*public element CSS*/

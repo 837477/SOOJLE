@@ -152,4 +152,15 @@ def SJ_api_v1_post__view(post_obi):
 		result = result
 	)
 
+###############################################################
+###############################################################
 
+#SOOJLE 모든 태그 반한
+@BP.route('/api/v1/post/all_tags')
+def SJ_api_v1_post__all_tags():
+	result = find_variable(g.db, 'all_tags')
+	
+	return jsonify(
+		result = "success",
+		all_tags = result
+	)
