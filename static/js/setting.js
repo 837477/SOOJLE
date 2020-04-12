@@ -345,6 +345,7 @@ function Insert_Auth_Open_Btn(result) {
 	if (result) {
 		$("#user_auth_btn").addClass("setting_btn_negative noselect");
 		$("#user_auth_btn").text("인증완료");
+		$("#user_auth_btn").removeAttr('onclick');
 	} else {
 		$("#user_auth_btn").addClass("setting_btn_positive");
 		$("#user_auth_btn").text("인증하기");
