@@ -412,8 +412,13 @@ function Run_Auth_Check() {
 	let sendData = {};
 	sendData['sj_id'] = id;
 	sendData['sj_pw'] = pw;
+
+	// 로딩모달 실행
+	Run_loading(true);
+
 	$.when(A_JAX(host_ip+"/api/v1/auth/sj_auth", "POST", null, sendData))
 	.done((data) => {
+		Run_loading(false);
 		if (data.result == "success") {
 			Close_Auth_Modal();
 			alert("인증이 완료되었습니다!");
@@ -427,7 +432,7 @@ function Run_Auth_Check() {
 		}
 	})
 	.catch((data) => {
-		console.log(data);
+		Run_loading(false);
 		if (data.status == 400) {
 			Snackbar("이미 인증된 계정입니다.");
 		} else if (data.status == 401) {

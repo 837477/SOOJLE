@@ -393,3 +393,22 @@ function Insert_user_recently_searchword(target) {
 						<i class="fas fa-grip-lines"></i>
 					</div>`);
 }
+
+// 로딩 모달 On/Off
+function Run_loading(active=true) {
+	if (active) {
+		let loading_div = 	`<div id="loading" class="loading_modal">
+								<svg width="200" height="200" viewBox="0 0 100 100">
+									<polyline class="line-cornered stroke-still" points="0,0 100,0 100,100" stroke-width="5" fill="none"></polyline>
+						  			<polyline class="line-cornered stroke-still" points="0,0 0,100 100,100" stroke-width="5" fill="none"></polyline>
+								 	<polyline class="line-cornered stroke-animation" points="0,0 100,0 100,100" stroke-width="5" fill="none"></polyline>
+									<polyline class="line-cornered stroke-animation" points="0,0 0,100 100,100" stroke-width="5" fill="none"></polyline>
+								</svg>
+							</div>`;
+		$("body").css('overflow', 'hidden');
+		$("body").append(loading_div);
+	} else {
+		$("#loading").remove();
+		$("body").removeAttr("style");
+	}
+}

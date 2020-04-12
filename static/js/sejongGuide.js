@@ -302,7 +302,6 @@ function Insert_Sejong_Guide() {
 }
 
 
-
 function guide_campus_search_event() {
 	$("#guide_campus_search").on({
 		"focus": ()=> {
