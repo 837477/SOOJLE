@@ -299,8 +299,9 @@ function Notice_Delete() {
 function Notice_Edit_Done() {
 	Check_ManagerInfo(function() {
 		let id = $("#notice_page_container").attr('data-id');
-		let title = $("#NB_te_title_input").val();
-		let post = $("#NB_te_post_cont").html();
+		let content = NBnoteData(true, true, false);
+		let title = content.get('title');
+		let post = content.get('post');
 		let actiavation_check = 0
 		if ($("#activation_toggle").is(":checked"))
 			actiavation_check = 1;
@@ -402,7 +403,9 @@ function writing_notice_cancel() {
 // 공지사항 작성 완료
 function writing_notice_done() {
 	check_managet_qualification_reload(function() {
-		let title = $("#NB_te_title_input").val();
+		let content = NBnoteData(true, true, false);
+		let title = content.get('title');
+		let pharagh = content.get('post');
 		if (title == "") {
 			Snackbar("제목을 입력해주세요.");
 			$("#NB_te_title_input").focus();
@@ -412,7 +415,6 @@ function writing_notice_done() {
     		$("#NB_te_title_input").focus();
     		return;
     	}
-		let pharagh = $("#NB_te_post_cont").html();
 		if (pharagh == "") {
 			Snackbar("내용을 입력해주세요.");
 			$("#NB-texteditor").focus();
@@ -436,17 +438,17 @@ function writing_notice_done() {
 				Snackbar("잠시 후 다시 시도해주세요.");
 			}
 		}).catch((data) => {
-      if (data.status == 400) {
-        Snackbar("잘못된 요청입니다.");
-        return false;
-     } else if (data.status == 403) {
-        Snackbar("권한이 없습니다.");
-        window.location.reload();
-        return false;
-      } else {
-        Snackbar("서버와의 연결이 원활하지 않습니다.");
-        return false;
-      }
-    });
+			if (data.status == 400) {
+				Snackbar("잘못된 요청입니다.");
+				return false;
+			} else if (data.status == 403) {
+				Snackbar("권한이 없습니다.");
+				window.location.reload();
+				return false;
+			} else {
+				Snackbar("서버와의 연결이 원활하지 않습니다.");
+				return false;
+			}
+	    });
 	});
 }
