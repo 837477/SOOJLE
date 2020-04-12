@@ -183,8 +183,10 @@ function change_autologin_st(){
 // 사용자 개인정보 설정 관련================================================================
 // 사용자 닉네임 표시
 function Set_nickname(nickname) {
+	let nickname_code = nickname.slice(nickname.lastIndexOf("#"));
 	nickname = nickname.slice(0, nickname.lastIndexOf("#"));
 	$("#setting_nickname_guideline").text(nickname);
+	$("#setting_nickname_guideline").append(`<span style="color:#aaa">${nickname_code}</span>`);
 }
 // 사용자 닉네임 변경준비
 function Edit_nickname() {
@@ -193,8 +195,9 @@ function Edit_nickname() {
 	$("#setting_nickname_check").removeClass("display_none");
 	$("#setting_nickname_cancel").removeClass("display_none");
 	$("#setting_nickname_edit_guideline").removeClass("display_none");
-	$("#setting_nickname_edit_guideline").val($("#setting_nickname_guideline").text());
-	$("#setting_nickname_edit_guideline").select();
+	let nickname = $("#setting_nickname_guideline").text();
+	nickname = nickname.slice(0, nickname.lastIndexOf("#"));
+	$("#setting_nickname_edit_guideline").val(nickname);
 	$("#setting_nickname_edit_guideline").focus();
 }
 // 사용자 닉네임 변경수신
@@ -412,8 +415,13 @@ function Run_Auth_Check() {
 	let sendData = {};
 	sendData['sj_id'] = id;
 	sendData['sj_pw'] = pw;
+
+	// 로딩모달 실행
+	Run_loading(true);
+
 	$.when(A_JAX(host_ip+"/api/v1/auth/sj_auth", "POST", null, sendData))
 	.done((data) => {
+		Run_loading(false);
 		if (data.result == "success") {
 			Close_Auth_Modal();
 			alert("인증이 완료되었습니다!");
@@ -427,7 +435,7 @@ function Run_Auth_Check() {
 		}
 	})
 	.catch((data) => {
-		console.log(data);
+		Run_loading(false);
 		if (data.status == 400) {
 			Snackbar("이미 인증된 계정입니다.");
 		} else if (data.status == 401) {
