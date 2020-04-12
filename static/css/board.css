@@ -1389,6 +1389,12 @@ html, body {
 .sr_domain_ct > a:link,a:visited,a:hover {
 	color: black; text-decoration: none;
 }
+.NB_NoteBoard a, .NB_link_btn {
+	position: relative;
+    display: inline-block;
+    color: #0071e3 !important;
+    text-decoration: none;
+}
 .sr_none_posts_cont {
 	position: relative;
 	width: 100%;

@@ -196,6 +196,29 @@ function Feedback_Messages() {
     });
   };
 
+  this.delete = function(target_id, now_category) {
+    let fbs = [];
+    if (now_category == '데스크탑 버그 및 오류') {
+      fbs = this.messages['desktop'];
+    } else if (now_category == '모바일/태블릿 버그 및 오류') {
+      fbs = this.messages['mobile'];
+    } else if (now_category == '취약점 및 보안 개선') {
+      fbs = this.messages['protection'];
+    } else if (now_category == '디자인 개선 아이디어') {
+      fbs = this.messages['design'];
+    } else if (now_category == '기능 개선 아이디어') {
+      fbs = this.messages['service'];
+    } else {
+      fbs = this.messages['etc'];
+    }
+    for (let idx in fbs) {
+      if (fbs[idx]['_id']['$oid'] == target_id) {
+        fbs.splice(idx, 1);
+        break;
+      }
+    }
+  }
+
   this.desktop = function() {
     if (this.selection == 'desktop') {
       this.page += 1;
@@ -307,10 +330,13 @@ function setting_feedback_monitoring() {
                   <div class="setting_feedback_box wow animated fadeInRight pointer" f-id="${fb_msg['_id']['$oid']}" onclick="Checkout_feedback(this)">
                     <p class="setting_feedback_box_author">${fb_msg['author']}</p>
                     <p class="setting_Feedback_box_date">${change_date_absolute(fb_msg['date']['$date'])}</p>
-                    <span>${fb_msg['post']}</span>
+                    <span></span>
                   </div>
                   `;
       $("#setting_feeback_box_cont").append(msg);
+      let fbs = $(".setting_feedback_box");
+      fbs=fbs[fbs.length - 1];
+      $(fbs).find('span').text(fb_msg['post']);
     }
   }
 }
@@ -339,7 +365,12 @@ function Checkout_feedback(tag) {
     .done((data) => {
       if (data['result'] == "success") {
         alert("피드백이 성공적으로 처리되었습니다!");
+        // html tag remove
         tag.remove();
+        // Object feedback remove
+        let now_category = $($(".setting_feeback_type_checkd")[0]).text();
+        feedback_msges.delete(id, now_category);
+
       } else {
         Snackbar("잠시 후 다시 시도해주세요.");
       }

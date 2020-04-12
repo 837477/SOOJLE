@@ -385,6 +385,12 @@ function Open_Auth_Modal() {
 	$("#auth_cancel").on({
 		"click": ()=>{Close_Auth_Modal();}
 	});
+	$("#auth_input_id").on({
+		"keypress": ()=> { Enter_Auth(); }
+	});
+	$("#auth_input_pw").on({
+		"keypress": ()=> { Enter_Auth(); }
+	});
 }
 function Close_Auth_Modal() {
 	$("body").removeAttr("style");
@@ -393,12 +399,12 @@ function Close_Auth_Modal() {
 function Run_Auth_Check() {
 	let id = $("#auth_input_id").val();
 	let pw = $("#auth_input_pw").val();
-	if (id.lenght == 0) {
+	if (id.length == 0) {
 		Snackbar("학번을 입력해주세요.");
 		$("#auth_input_id").focus();
 		return;
 	}
-	if (pw.lenght == 0) {
+	if (pw.length == 0) {
 		Snackbar("비밀번호를 입력해주세요.");
 		$("#auth_input_pw").focus();
 		return;
@@ -421,6 +427,7 @@ function Run_Auth_Check() {
 		}
 	})
 	.catch((data) => {
+		console.log(data);
 		if (data.status == 400) {
 			Snackbar("이미 인증된 계정입니다.");
 		} else if (data.status == 401) {
@@ -429,4 +436,21 @@ function Run_Auth_Check() {
 			Snackbar("서버와의 연결이 원활하지 않습니다.");
 		}
 	});
+}
+function Enter_Auth() {
+	if (window.event.keyCode == 13) {
+		let id = $("#auth_input_id").val();
+		let pw = $("#auth_input_pw").val();
+		if (id.length == 0) {
+			Snackbar("학번을 입력해주세요.");
+			$("#auth_input_id").focus();
+			return;
+		}
+		if (pw.length == 0) {
+			Snackbar("비밀번호를 입력해주세요.");
+			$("#auth_input_pw").focus();
+			return;
+		}
+		Run_Auth_Check();
+	}
 }
