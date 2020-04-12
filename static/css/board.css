@@ -3070,6 +3070,10 @@ span.selectbox_choose {
 .guide_restaurnat_box:hover {
 	border-top: 2px solid #12b886;
 }
+.guide_restaurnat_box > div {
+	overflow: hidden;
+	transition: .4s ease-in-out;
+}
 .guide_restaurnat_box_title {
 	position: relative;
 	font-size: 20px;
@@ -3150,7 +3154,7 @@ span.selectbox_choose {
 	width: 100%;
 	height: auto;
 	font-size: 16px;
-	line-height: 20px;
+	line-height: 24px;
 	padding-bottom: 20px;
 	word-break: keep-all;
 }
@@ -3176,6 +3180,19 @@ span.selectbox_choose {
 	margin-bottom: 10px;
 	font-size:20px;
 	font-weight: bold;
+	padding-left: 40px;
+	box-sizing: border-box;
+}
+.guide_library_text {
+	position: relative;
+	width: 100%;
+	height: auto;
+	font-size: 16px;
+	line-height: 24px;
+	padding-bottom: 20px;
+	word-break: keep-all;
+	padding-left: 40px;
+	box-sizing: border-box;
 }
 .guide_library_title_QnA {
 	font-size: 30px;
@@ -3304,6 +3321,37 @@ span.selectbox_choose {
 	margin: auto;
 	margin-bottom: 5px;
 	padding: 5px 0;
+}
+.guide_2020target_img {
+	position: relative;
+	display: block;
+	width: 80%;
+	max-width: 400px;
+	height: auto;
+	margin: 0 auto 40px auto;
+}
+.guide_2020target_download {
+	position: relative;
+	width: 140px;
+	height: 40px;
+	margin: 0 auto 40px auto;
+	cursor: pointer;
+	transition: .1s ease-in-out;
+	border: 1px solid black;
+	padding: 0 20px;
+	font-size: 16px;
+	line-height: 42px;
+	background-color: white;
+	color: black;
+}
+.guide_2020target_download:hover {
+	background-color: black;
+	color: white;
+}
+.donwload_icon {
+	position: absolute;
+	right: 20px;
+	top: 12.5px;
 }
 
 

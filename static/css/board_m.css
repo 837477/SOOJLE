@@ -1678,6 +1678,15 @@ z		z-index: 200;
 		margin-bottom: 40px;
 	}
 }
+
+
+
+
+
+
+
+
+
 /*=============================================================================*/
 /*                                    450px                                    */
 /*=============================================================================*/
@@ -2094,9 +2103,13 @@ z		z-index: 200;
 		width: 100%;
 	}
 	.guide_restaurnat_box {
+		border-top: none;
+		border-bottom: 2px solid #12b886;
 		width: 40%;
-		border-top: 2px solid #12b886;
 		margin-bottom: 20px;
+	}
+	.guide_restaurnat_box:hover {
+		border-top: none;
 	}
 	.guide_library_answer_box {
 		width: 150px;
@@ -2110,6 +2123,20 @@ z		z-index: 200;
 		font-size: 16px;
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*=============================================================================*/
 /*                                    350px                                    */
 /*=============================================================================*/
@@ -2167,6 +2194,9 @@ z		z-index: 200;
 	.post_view_card_img:active {
 		height: 260px;
 		opacity: 1;
+	}
+	.guide_library_subtitle, .guide_library_text {
+		padding-left: 20px;
 	}
 }
 
