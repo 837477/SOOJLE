@@ -19,10 +19,6 @@ from variable import *
 #BluePrint
 BP = Blueprint('search', __name__)
 
-
-#JAVA 스레드 이동.
-jpype.attachThreadToJVM()
-
 #유사도 스코어 측정
 def match_score(token1, token2):
 	MC = len(set(token1) & set(token2))
@@ -84,6 +80,9 @@ def SJ_api_v1_search__logging():
 @BP.route('/api/v1/search/category/<string:category_name>/<int:num>', methods = ['POST'])
 @jwt_optional
 def SJ_api_v1_search__category(category_name, num):
+	#JAVA 스레드 이동.
+	jpype.attachThreadToJVM()
+
 	#총 시간 측정#################################################
 	TOTAL_TIME_START = time.time()
 	###########################################################
