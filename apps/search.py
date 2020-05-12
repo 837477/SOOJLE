@@ -31,7 +31,7 @@ def match_score(token1, token2):
 def SJ_api_v1_search__logging():
 	#JAVA 스레드 이동.
 	jpype.attachThreadToJVM()
-	
+
 	#검색어 입력!
 	search_str = request.form['search']
 
