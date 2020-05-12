@@ -29,6 +29,9 @@ def match_score(token1, token2):
 @BP.route('/api/v1/search/logging', methods=['POST'])
 @jwt_optional
 def SJ_api_v1_search__logging():
+	#JAVA 스레드 이동.
+	jpype.attachThreadToJVM()
+	
 	#검색어 입력!
 	search_str = request.form['search']
 
@@ -242,6 +245,9 @@ def SJ_api_v1_search__category(category_name, num):
 @BP.route('/api/v1/search/category_no_limit/<string:category_name>/<int:num>', methods = ['POST'])
 @jwt_optional
 def SJ_api_v1_search__category_no_limit(category_name, num):
+	#JAVA 스레드 이동.
+	jpype.attachThreadToJVM()
+
 	#총 시간 측정#################################################
 	TOTAL_TIME_START = time.time()
 	###########################################################
@@ -396,6 +402,9 @@ def SJ_api_v1_search__category_no_limit(category_name, num):
 @BP.route('/api/v1/search/domain', methods = ['POST'])
 @jwt_optional
 def SJ_api_v1_search__domain():
+	#JAVA 스레드 이동.
+	jpype.attachThreadToJVM()
+
 	search_str = request.form['search']
 
 	#검색어 스플릿
@@ -433,6 +442,9 @@ def SJ_api_v1_search__domain():
 #입력된 str을 fasttext로 유사한 단어를 추출 해주는 API (연관검색어) (보류)
 @BP.route('/api/v1/search/similarity_words', methods = ['POST'])
 def simulation_fastext():
+	#JAVA 스레드 이동.
+	jpype.attachThreadToJVM()
+
 	input_str = request.form['search']
 
 	tokenizer_list = tknizer.get_tk(input_str)
