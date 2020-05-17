@@ -365,7 +365,7 @@ def create_variable(db):
 def create_dummy_post(db):
 	check_ = check_dummy_post(db)
 
-	if not 'title' in check_:
+	if not check_:
 		insert_dummy_post(db)
 
 #실시간 검색어 초기 설정
