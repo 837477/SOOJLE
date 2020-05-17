@@ -12,6 +12,7 @@ import numpy as np
 from tknizer import get_tk
 import LDA
 import FastText
+from db_management import *
 
 
 def get_db():
