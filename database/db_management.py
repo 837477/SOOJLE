@@ -970,7 +970,7 @@ def insert_dummy_post(db):
 	db[SJ_DB_POST].insert(
 		{
 			'title' : "(o^_^)o 안녕하세요. SOOJLE 입니다.",
-			'date': get_default_day(10000),
+			'date': global_func.get_default_day(10000),
 			'post': "안녕하세요. SOOJLE 입니다.",
 			'tag': [],
 			'img': 1,
