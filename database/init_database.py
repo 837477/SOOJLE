@@ -14,7 +14,6 @@ import LDA
 import FastText
 from db_management import *
 
-
 def get_db():
     if 'db_client' not in g:
         db_client = MongoClient('mongodb://%s:%s@%s' %(MONGODB_ID, MONGODB_PW, MONGODB_HOST))
