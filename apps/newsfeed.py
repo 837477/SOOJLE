@@ -42,28 +42,31 @@ def SJ_api_v1_newsfeed__topic(category_name):
 	###########################################################
 	
 	if category_name == "대학교":
-		#해당 카테고리에 관련된 게시글들을 불러온다.
 		POST_LIST = find_posts_of_category_default_date(g.db, category['info_num'], now_date, 60, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 
 	elif category_name == "동아리&모임":
-		#해당 카테고리에 관련된 게시글들을 불러온다.
 		POST_LIST = find_posts_of_category_default_date(g.db, category['info_num'], now_date, 60, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 
 	elif category_name == "공모전&행사":
-		#해당 카테고리에 관련된 게시글들을 불러온다.
 		POST_LIST = find_posts_of_category_default_date(g.db, category['info_num'], now_date, 90, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 
 	elif category_name == "진로&구인":
-		#해당 카테고리에 관련된 게시글들을 불러온다.
 		POST_LIST = find_posts_of_category(g.db, category['info_num'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 
-	else:
-		#해당 카테고리에 관련된 게시글들을 불러온다.
+	elif category_name == "카테고리":
 		POST_LIST = find_posts_of_category(g.db, category['info_num'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
+		POST_LIST = list(POST_LIST)
+	
+	elif category_name == "키오스크_1":
+		POST_LIST = find_posts_of_category_kiosk_1(g.db, SJ_RETURN_NUM)
+		POST_LIST = list(POST_LIST)
+
+	elif category_name == "키오스크_2":
+		POST_LIST = find_posts_of_category_kiosk_2(g.db, SJ_RETURN_NUM)
 		POST_LIST = list(POST_LIST)
 	
 	#find_posts_of_category 측정 종료 (불러와서 리스트화 시킨 시간)#####
