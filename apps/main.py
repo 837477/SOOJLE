@@ -29,9 +29,13 @@ def board():
 def testing_search():
 	return render_template('testing/testing_search.html')
 
+@BP.route('/kiosk/ai')
+def testing_search():
+	return render_template('testing/testing_search.html')
+
 @BP.route('/testing_recommend')
 def testing_recommend():
-	return render_template('testing/testing_recommend.html')
+	return render_template('kiosk/kiosk.html')
 
 @BP.route('/not_suported_IE')
 def not_suported_IE():
