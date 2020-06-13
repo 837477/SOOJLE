@@ -823,6 +823,63 @@ def find_posts_of_category_default_date(db, info_num_list, now_date, default_dat
 	).sort([('date', -1)]).limit(num).hint("info_num_1_end_date_-1_date_-1")
 	return result
 
+# 교내 공모전 : insideCampus
+# 교외 공모전 : outsideCampus
+# 데이터 개수 : limit
+def find_posts_of_category_kiosk_1(db, num):
+	result = db.posts.find(
+		{
+			"$and": 
+			[ 
+				{ "tag": "공모전&대외활동" },
+				{ "tag": "교내"},         
+			] 
+		},
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'view': 1,
+			'url': 1,
+			'title_token': 1,
+			'info': 1,
+			'tag': 1,
+			'topic': 1,
+			'ft_vector': 1,
+			'end_date': 1
+		}
+	).sort([('date', -1)]).limit(num)
+	return result
+
+def find_posts_of_category_kiosk_2(db, num):
+	result = db.posts.find(
+		{
+			"$and": 
+			[ 
+				{ "tag": "공모전&대외활동" },
+				{ "tag": {"$ne":"교내"} },          
+			] 
+		},
+		{
+			'_id': 1,
+			'title': 1,
+			'date': 1,
+			'img': 1,
+			'fav_cnt': 1,
+			'view': 1,
+			'url': 1,
+			'title_token': 1,
+			'info': 1,
+			'tag': 1,
+			'topic': 1,
+			'ft_vector': 1,
+			'end_date': 1
+		}
+	).sort([('date', -1)]).limit(num)
+	return result
+
 #추천 뉴스피드 포스트들 불러오기 (미사용)
 def find_posts_of_recommendation(db, now_date, num):
 	result = db[SJ_DB_POST].find(
@@ -1588,12 +1645,6 @@ def find_domain_post_regex(db, regex_str):
 			}
 		)
 	return result
-
-
-
-
-
-
 
 
 
