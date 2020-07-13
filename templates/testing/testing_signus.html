@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko" class="no-js">
+<head>
+	<title>SIGNUS</title>
+	<meta name="author" content="Team IML">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+	<!-- 모바일 브라우저 상태바 컬러 -->
+    <meta name="theme-color" content="##232833">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<!-- shortcut 아이콘 -->
+	<link rel="icon" type="image/png" href="/static/testing/signus/favicon_16x16.png">
+	<link rel="apple-touch-icon-precomposed" type="image/png" href="/static/testing/signus/favicon_16x16.png">
+	<!-- 아이콘 -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+	<!-- Animation CSS -->
+	<link href="/static/css/animation/animate.css" rel="stylesheet">
+	<!-- Custom CSS -->
+	<link rel="stylesheet" type="text/css" href="/static/testing/pipline_base.css" />
+	<link rel="stylesheet" type="text/css" href="/static/testing/signus/background.css" />
+	<link rel="stylesheet" type="text/css" href="/static/testing/scroll_base.css" />
+	<link rel="stylesheet" type="text/css" href="/static/testing/scroll_demo1.css" />
+	<!-- Chart JS -- >
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css" integrity="sha256-IvM9nJf/b5l2RoebiFno92E5ONttVyaEEsdemDC6iQA=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.js" integrity="sha256-qSIshlknROr4J8GMHRlW3fGKrPki733tLq+qeMCR05Q=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css" integrity="sha256-IvM9nJf/b5l2RoebiFno92E5ONttVyaEEsdemDC6iQA=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" integrity="sha256-arMsf+3JJK2LoTGqxfnuJPFTU4hAK57MtIPdFpiHXOU=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
+	<!-- pipline -->
+	<script>document.documentElement.className="js";var supportsCssVars=function(){var e,t=document.createElement("style");return t.innerHTML="root: { --tmp-var: bold; }",document.head.appendChild(t),e=!!(window.CSS&&window.CSS.supports&&window.CSS.supports("font-weight","var(--tmp-var)")),t.parentNode.removeChild(t),e};supportsCssVars()||alert("Please view this demo in a modern browser that supports CSS Variables.");</script>
+</head>
+<body class="demo-1 loading">
+	<main>
+		<div class="content content--canvas">
+			<img style="width: 300px; filter: invert(100%) sepia(100%) saturate(100%) hue-rotate(130deg) brightness(150%) contrast(100%);" class="content__title pointer" src="/static/testing/signus/logoBig.png" onclick="moveToinfo(1);">
+		</div>
+	</main>
+
+	<main style="position: relative; height: 750vh;">
+		<div class="content">
+			<div class="content__section">
+				<div class="content__link"><div class="content__img wow display_none" data-wow-duration="1.5s">
+					<div class="introduce_img_cont">
+						<img src="./static/image/introduce3.png" class="introduce_img noselect pointer" onclick="moveToinfo(2);">
+					</div>
+					<div class="introduce_text_box">
+						<div class="introduce_title">MZ세대를 위한 차별화된 검색</div>
+						<div class="introduce_post">SIGNUS는 20-30대 청년들이 관심을 가질만한 정보에 초점을 두고 있습니다. 또한 검색어의 잠재적인 의미를 분석하여, 보다 충실한 결과를 보여줍니다.</div>
+					</div>
+				</div></div>
+				<h2 class="content__text">SIGNUS</h2>
+			</div>
+			<div class="content__section">
+				<div class="content__link"><div class="content__img wow display_none" data-wow-duration="1.5s">
+					<div class="second_box">
+						<div class="typing_img"><img src="./static/testing/typing.png" class="typing_img_cont"></div>
+						<div class="typing_info noselect">검색어를 입력해주세요.</div>
+						<div id="SJ_main_page1_search_container" class="SJ_main_page1_search_container">
+							<div id="SJ_main_page1_search_box" class="SJ_main_page1_search_box">
+								<input type="text" id="pc_search_input" class="SJ_main_page1_search_input" onkeyup="search_focus(event.keyCode)" autocomplete="off">
+								<div class="SJ_main_page1_search_icon_box pointer" onclick="search_button()">
+									<img src="/static/icons/search.png" class="SJ_main_page1_search_icon_button">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div></div>
+				<div class="posts_creating_loading">
+						<div id="posts_creating_loading" class="posts_creating_loading_content loader-8 display_none"></div>
+					</div>
+				<h2 class="content__text">검색어 입력</h2>
+			</div>
+			<div class="content__section">
+				<div class="content__link"><div class="content__img wow display_none pointer" data-wow-duration="0s" onclick="moveToinfo(4)">
+					<div id="words_token_cont" class="words_token_cont"></div>
+					<div id="word_fasttext_cont" class="word_fasttext_cont"></div>
+				</div></div>
+				<h2 class="content__text">검색어 분석</h2>
+			</div>
+			<div class="content__section">
+				<div class="content__link"><div class="chart-container content__img wow display_none" data-wow-duration="1.5s">
+					<div class="words_token_title pointer noselect" onclick="moveToinfo(5)">연관도 Vector/수치화</div>
+					<div id="words__vector_chart" class="words__vector_chart">
+						<canvas id="area_vector" width="auto" height="auto"></canvas>
+					</div>
+					<div id="words__similarity_chart" class="words__similarity_chart">
+						<canvas id="hist_bar" width="auto" height="auto"></canvas>
+					</div>
+				</div></div>
+				<h2 class="content__text">검색어 잠재 의미 분석</h2>
+			</div>
+			<div class="content__section">
+				<div class="content__link"><div class="content__img wow display_none database" data-wow-duration="1.5s">
+					<div class="db_posts_cont noselect">
+						<div class="count_subtitle">SIGNUS의 데이터베이스</div>
+						<span class="count">674373</span>
+						<span class="count_title">게시글</span>
+					</div>
+					<div class="count_image_cont pointer" onclick="moveToinfo(6)"><img src="./static/testing/AI.gif" class="count_image"></div>
+				</div></div>
+				<h2 class="content__text">의미있는 검색결과 도출</h2>
+			</div>
+			<div class="content__section">
+				<div class="content__link"><div class="content__img wow display_none post-percent-view" data-wow-duration="1.5s">
+					<div class="view_posts_cont">
+						<div id="view_target" class="view_target2">
+							<div id="post1" class="view_posts2 noselect"></div>
+							<div id="post2" class="view_posts2 noselect"></div>
+							<div id="post3" class="view_posts2 noselect"></div>
+							<div id="post4" class="view_posts2 noselect"></div>
+							<div id="post5" class="view_posts2 noselect"></div>
+							<div id="post6" class="view_posts2 noselect"></div>
+						</div>
+					</div>
+				</div></div>
+				<h2 class="content__text">검색 결과</h2>
+			</div>
+		</div>
+		<div class="page_up pointer noselect" onclick="page_reload();">
+			<i class="fas fa-caret-up page_up_icon"></i>
+		</div>
+	</main>
+	<div id="snackbar_target" class="snackbar_target"></div>
+</body>
+
+
+<!-- Test Host JS -->
+<script src="/static/js/host.js"></script>
+<!-- JQuery JS -->
+<script src="/static/js/jquery/jquery.min.js"></script>
+<!-- Ajax JS -->
+<script src="/static/js/ajax.js"></script>
+<!-- Animation JS -->
+<script src="/static/js/wow/wow.min.js"></script>
+<script>new WOW().init();</script>
+<!-- Snackbar JS -->
+<script src="/static/js/snackbar.js"></script>
+<!-- MAIN JS -->
+<!-- <script src="/static/js/main.js"></script> -->
+<script src="/static/testing/noise.min.js"></script>
+<script src="/static/testing/util.js"></script>
+<!-- <script src="/static/testing/recommend/pipline.js"></script> -->
+<script src="/static/testing/imagesloaded.pkgd.min.js"></script>
+<script src="/static/testing/charming.min.js"></script>
+<script src="/static/testing/scroll_demo1.js"></script>
+<script src="/static/testing/testing.js"></script>
+</html>
