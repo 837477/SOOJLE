@@ -57,7 +57,7 @@ def SJ_api_v1_newsfeed__topic(category_name):
 		POST_LIST = find_posts_of_category(g.db, category['info_num'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 
-	elif category_name == "카테고리":
+	elif category_name == "커뮤니티":
 		POST_LIST = find_posts_of_category(g.db, category['info_num'], now_date, SJ_NEWSFEED_TOPIC_LIMIT)
 		POST_LIST = list(POST_LIST)
 	
