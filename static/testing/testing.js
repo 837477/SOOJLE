@@ -44,7 +44,7 @@ function search_text(text) {
 	$.when(a_jax_recommend).done(function () {
 		let json = a_jax_recommend.responseJSON;
 		if (json['result'] == 'success') {
-			word_similarity_display(json["similarity_words"]);
+			word_similarity_display(json["simulation"]);
 		} else {
 			Snackbar("다시 접속해주세요!");
 		}
