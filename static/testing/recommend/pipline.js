@@ -15,7 +15,7 @@ const baseWidth = 2;
 const rangeWidth = 4;
 const baseHue = 180;
 const rangeHue = 60;
-const backgroundColor = 'white';
+const backgroundColor = 'black';
 
 let container;
 let canvas;
