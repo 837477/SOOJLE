@@ -40,3 +40,4 @@ def testing_recommend():
 @BP.route('/not_suported_IE')
 def not_suported_IE():
 	return render_template('etc/ie.html')
+

@@ -1,28 +1,25 @@
 from flask import *
 from flask_jwt_extended import *
 from werkzeug import *
+##########################################
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from datetime import timedelta, datetime
+import operator
+import math
 from numpy import dot
 from numpy.linalg import norm
 import numpy
-import operator
-import math
-import jpype
 ##########################################
 from db_management import *
 from global_func import *
+import jpype
 import tknizer
 ##########################################
-from variable import *
-
-
-#BluePrint
 BP = Blueprint('simulation', __name__)
+##########################################
 
-
-#입력된 str을 split 해주는 API
+#입력된 str을 split 해주는 API OK
 @BP.route('/simulation_split/<string:input_str>')
 def simulation_split(input_str):
 	result = input_str.split(' ')
@@ -31,17 +28,49 @@ def simulation_split(input_str):
 		result = "success",
 		simulation = result)
 
-#입력된 str을 tokenizer 해주는 API
-@BP.route('/simulation_tokenizer', methods = ['POST'])
-def simulation_tokenizer():
-	search_str = request.form['search']
-	result = tknizer.get_tk(search_str)
+#입력된 str을 tokenizer 해주는 API OK
+@BP.route('/simulation_tokenizer/<string:input_str>')
+def simulation_tokenizer(input_str):
+	result = tknizer.get_tk(input_str)
 	
 	return jsonify(
 		result = "success",
 		simulation = result)
 
-#simulation_priority_검색 API
+#입력된 str을 fasttext로 유사한 단어를 추출 해주는 API - OK
+@BP.route('/simulation_fastext', methods = ['POST'])
+def simulation_fastext():
+	input_str = request.form['input_str']
+
+	tokenizer_list = tknizer.get_tk(input_str)
+	
+	result = {}
+	for word in tokenizer_list:
+		similarity_list = []
+		for sim_word in FastText.sim_words(word):
+			temp = {}
+			if sim_word[1] >= 0.5: 
+				temp[sim_word[0]] = sim_word[1]
+				similarity_list.append(temp)
+			else: break	
+		result[word] = similarity_list
+
+	return jsonify(
+		result = "success",
+		simulation = result)
+
+#해당 USER의 관심도 반환 API - OK
+@BP.route('/simulation_get_user_measurement/<string:user_id>')
+def simulation_get_user_measurement(user_id):
+	USER = find_user(g.db, user_id=user_id, user_nickname=1, topic=1, tag=1, ft_vector=1)
+
+	if USER is None: abort(400)
+
+	return jsonify(
+		result = "success",
+		user = USER)
+
+#simulation_priority_검색 API - 현재 API로 바꾸셈
 @BP.route('/simulation_priority_search/<int:num>', methods = ['POST'])
 def simulation_priority_search(num):
 	search_str = request.form['search']
@@ -56,7 +85,7 @@ def simulation_priority_search(num):
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
+			if sim_word[1] >= 0.7: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
@@ -93,7 +122,10 @@ def simulation_priority_search(num):
 		result = "success",
 		search_result = aggregate_posts[:num])
 
-#simulation_category_검색 API
+#/api/v1/search/category/<string:category_name>/<int:num>
+#/api/v1/search/category_no_limit/<string:category_name>/<int:num>
+
+#simulation_category_검색 API - 현재 API로 바꾸셈
 @BP.route('/simulation_category_search/<int:type_check>/<int:num>', methods = ['POST'])
 def simulation_category_search(type_check, num):
 	search_str = request.form['search']
@@ -108,7 +140,7 @@ def simulation_category_search(type_check, num):
 	ft_similarity_list = []
 	for word in tokenizer_list:
 		for sim_word in FastText.sim_words(word):
-			if sim_word[1] >= SJ_FASTTEXT_SIM_PERCENT: 
+			if sim_word[1] >= 0.7: 
 				ft_similarity_list.append(sim_word[0])
 			else: break	
 
@@ -116,7 +148,7 @@ def simulation_category_search(type_check, num):
 
 	aggregate_posts = list(aggregate_posts)
 
-	#regex와 aggregate로 뽑힌 포스트를 합친다.
+	#regex와 aggregate로 포스트를 합친다.
 	aggregate_posts += title_regex
 
 	for post in aggregate_posts:
@@ -149,19 +181,7 @@ def simulation_category_search(type_check, num):
 		result = "success",
 		search_result = aggregate_posts[:num])
 
-#해당 USER의 관심도 반환 API
-@BP.route('/simulation_get_user_measurement/<string:user_id>')
-def simulation_get_user_measurement(user_id):
-	USER = find_user(g.db, user_id=user_id, user_name=1, user_major=1, topic=1, tag=1, ft_vector=1)
-
-	if USER is None: abort(400)
-
-	return jsonify(
-		result = "success",
-		user = USER)
-
 def match_score(token1, token2):
 	MC = len(set(token1) & set(token2))
 	MR = MC / len(token1)
 	return MC * (1 + MR + math.floor(MR))
-
