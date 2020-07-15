@@ -37,6 +37,11 @@ def kiosk_ai():
 def testing_recommend():
 	return render_template('testing/testing_recommend.html')
 
+@BP.route('/testing_signus')
+def testing_signus():
+	return render_template('testing/testing_signus.html')
+
 @BP.route('/not_suported_IE')
 def not_suported_IE():
 	return render_template('etc/ie.html')
+

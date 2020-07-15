@@ -32,7 +32,7 @@ function search_text(text) {
 	let send_data = {search: text};
 	let a_jax_wordanalysis = A_JAX(host_ip+"/simulation_tokenizer", "POST", null, send_data);
 	let a_jax_recommend = A_JAX(host_ip+"/get_similarity_words", "POST", null, send_data);
-	let a_jax0 = A_JAX(host_ip+"/priority_search/200", "POST", null, send_data);
+	let a_jax0 = A_JAX(host_ip+"/api/v1/search/category/공모전&행사/100", "POST", null, send_data);
 	$.when(a_jax_wordanalysis).done(function () {
 		let json = a_jax_wordanalysis.responseJSON;
 		if (json['result'] == 'success') {
@@ -44,7 +44,7 @@ function search_text(text) {
 	$.when(a_jax_recommend).done(function () {
 		let json = a_jax_recommend.responseJSON;
 		if (json['result'] == 'success') {
-			word_similarity_display(json["similarity_words"]);
+			word_similarity_display(json["simulation"]);
 		} else {
 			Snackbar("다시 접속해주세요!");
 		}
@@ -103,32 +103,36 @@ function insert_search_post(target, posts) {
 	post_tags_search.push($("#post3"));
 	post_tags_search.push($("#post4"));
 	post_tags_search.push($("#post5"));
+	post_tags_search.push($("#post6"));
 	let date1 = new Date(posts[0]["date"]).SetTime(),
 		date2 = new Date(posts[1]["date"]).SetTime(),
 		date3 = new Date(posts[2]["date"]).SetTime(),
 		date4 = new Date(posts[3]["date"]).SetTime(),
-		date5 = new Date(posts[4]["date"]).SetTime();
+		date5 = new Date(posts[4]["date"]).SetTime(),
+		date6 = new Date(posts[5]["date"]).SetTime();
 	let dates = [];
 	dates.push(date1);
 	dates.push(date2);
 	dates.push(date3);
 	dates.push(date4);
 	dates.push(date5);
-	posts = posts.slice(0,5);
+	dates.push(date6);
+	posts = posts.slice(0,6);
 	let standard = 100/posts[0]["similarity"];
-	for (let i = 0; i< 5; i++) {
+	for (let i = 0; i < 6; i++) {
 		post_tags_percent.push(posts[i]["similarity"]);
-		let tag = `<div class="view_post_title">${posts[i]["title"]}</div>
-						<a href="${posts[i]["url"]}" target="_blank"><div class="view_post_url">${posts[i]["url"]}</div></a>
-						<div class="view_post_time">${dates[i]}</div>
+		posts[i]["title"] = posts[i]["title"].charAt(0).toUpperCase() + posts[i]["title"].slice(1);
+		let tag = `<div class="view_post_title2">${posts[i]["title"]}</div>
+						<a href="${posts[i]["url"]}" target="_blank"><div class="view_post_url2">${posts[i]["url"]}</div></a>
+						<div class="view_post_time2">${dates[i].split(" ")[0]}</div>
 						<div class="progress" data-label="${(posts[i]["similarity"]*standard-5).toFixed(3)}%">
-						<span class="value" style="width: 0%;"></span>
+						<span class="value" style="width: ${(posts[i]["similarity"]*standard-5).toFixed(3)}%;"></span>
 					</div>`;
 		post_tags_search[i].empty();
 		post_tags_search[i].append(tag);
 	}
 	
-	for (let i =0; i < 5; i++) {
+	for (let i =0; i < 6; i++) {
 		post_tags_percent[i] *= standard;
 	}
 }
