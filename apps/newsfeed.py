@@ -87,7 +87,7 @@ def SJ_api_v1_newsfeed__topic(category_name):
 		#접근한 뉴스피드 기록을 위한 obj 생성!
 		newsfeed_obj = {}
 		newsfeed_obj['newsfeed_name'] = category_name
-		#newsfeed_obj['tag'] = category['tag']
+		newsfeed_obj['tag'] = category['tag']
 		newsfeed_obj['date'] = datetime.now()
 		
 		#접근한 뉴스피드 기록!
