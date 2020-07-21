@@ -30,7 +30,7 @@ function search_text(text) {
 	$("#posts_creating_loading").removeClass("display_none");
 	$("#posts_target").empty();
 	let send_data = {search: text};
-	let a_jax_wordanalysis = A_JAX(host_ip+"/simulation_tokenizer", "POST", null, send_data);
+	let a_jax_wordanalysis = A_JAX(host_ip+"/simulation_tokenizer/"+text.split(' ').join('_'), "GET", null, null);
 	let a_jax_recommend = A_JAX(host_ip+"/get_similarity_words", "POST", null, send_data);
 	let a_jax0 = A_JAX(host_ip+"/api/v1/search/category/공모전&행사/100", "POST", null, send_data);
 	$.when(a_jax_wordanalysis).done(function () {
