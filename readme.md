@@ -37,7 +37,7 @@ python3 -m main
 ## Release History
 
 * 1.0
-    * First initialization
+    * First Service working
 
 
 
